@@ -1,0 +1,1 @@
+tableIt('brands');

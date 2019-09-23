@@ -1,5 +1,6 @@
 <?
 require $_SERVER['DOCUMENT_ROOT'] .  'AdDaemon/vendor/autoload.php';
+session_start();
 
 use Aws\S3\S3Client;
 use Ramsey\Uuid\Uuid;
@@ -429,6 +430,31 @@ function tasks() {
   return show('task');
 }
 
+function brands() {
+  return show('brand');
+}
+
+function orgs() {
+  return show('org');
+}
+function widgets() {
+  return show('widget');
+}
+function layouts() {
+  return show('layout');
+}
+function attributions() {
+  return show('attribution');
+}
+
+function schema($what) {
+  global $SCHEMA;
+  $table = aget($what, 'table');
+  if($table) {
+    return aget($SCHEMA, $table);
+  }
+}
+
 function task_dump() {
   return [
     'task' => show('task', 'order by id desc'),
@@ -494,6 +520,24 @@ function inject_priority($job, $screen, $campaign) {
   return $job;
 }
 
+function create($table, $payload) {
+  // TODO: whitelist the tables
+  global $SCHEMA;
+  foreach($payload as $k => $v) {
+    $typeRaw = $SCHEMA[$table][$k];
+    $parts = explode(' ', $typeRaw);
+    $type = $parts[0];
+    if($type == 'text') {
+      $payload[$k] = db_string($v);
+    }
+    if(empty($payload[$k])) {
+      unset($payload[$k]);
+    }
+  }
+
+  return db_insert($table, $payload);
+}
+
 function sow($payload) {
   global $SCHEMA;
   //error_log(json_encode($payload));
@@ -539,6 +583,7 @@ function sow($payload) {
         $job = Get::job($job_id);
       }
       if(isset( $job['campaign_id'] )) {
+        db_update('screen', $screen['id'], ['last_campaign_id' => $job['campaign_id']]);
         $campaignsToUpdateList[] = $job['campaign_id'];
       }
     }
@@ -654,6 +699,19 @@ function upload_s3($file) {
   return $name;
 }
 
+function guarded_show($what) {
+  global $SCHEMA;
+  $clause = [];
+  if($user = getUser()) {
+    foreach(['org_id','brand_id'] as $limit) {
+      if(isset($SCHEMA[$what][$limit]) && !empty($user[$limit])) {
+        $clause[$limit] = $user[$limit];
+      }
+    }
+  }
+  return show($what, $clause);
+}
+
 function show($what, $clause = '') {
   if(is_array($clause)) {
     if( !empty($clause) ) {
@@ -663,7 +721,7 @@ function show($what, $clause = '') {
     }
   }
   //error_log(preg_replace('/\s+/', ' ', "select * from $what $clause"));
-  return db_all("select * from $what $clause", $what);
+  return db_all("select * from $what $clause order by id desc", $what);
 }
 
 function make_infinite($campaign_id) {
@@ -827,5 +885,24 @@ function campaign_update($data, $fileList, $user = false) {
     db_update('campaign', $campaign_id, ['asset' => db_string(json_encode($assetList))]);
   }
   return $campaign_id;
+}
+
+function getUser() {
+  if(isset($_SESSION['user_id'])) {
+    return Get::user($_SESSION['user_id']);
+  }
+}
+
+function login($email) {
+  $user = Get::user(['email' => $email]);
+  if ($user) {
+    $_SESSION['user_id'] = $user['id'];
+    return doSuccess($user);
+  }
+  return doError("No user found");
+}
+
+function logout() {
+  session_destroy();
 }
 

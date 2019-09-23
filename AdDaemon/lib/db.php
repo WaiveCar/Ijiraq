@@ -35,6 +35,7 @@ $RULES = [
   ],
   'screen' => [
     'features' => $JSON,
+    'panels' => $JSON,
     'location' => $JSON
   ],
   'sensor_history' => [
@@ -44,6 +45,31 @@ $RULES = [
    ]
 ];
 
+// 
+// Screens 
+//  have 0 or 1 preset
+//
+// presets 
+//  have 0 or 1 layout
+//  have 0 or 1 exclusive sets 
+//  belong to many screens
+//
+// exclusive sets
+//  have 0 or more campaigns to include
+//  have 0 or more campaigns to exclude
+//
+// layouts
+//  have 0 or 1 template
+//  have 0 or more widgets
+//
+// organizations
+//  have 1 or more users
+//  have 0 or more brands
+//
+// brands
+//  have 0 or more campaigns
+//
+ 
 $SCHEMA = [
   'screen' => [
     'id'          => 'integer primary key autoincrement', 
@@ -57,11 +83,18 @@ $SCHEMA = [
 
     # If the device goes offline this will tell us
     # what it is that dissappeared so we can check
+    'last_campaign_id' => 'integer',
     'imei'        => 'text',
     'phone'       => 'text',
     'car'         => 'text',
     'project'     => 'text',
+    'widget_id'   => 'integer',
+    'ticker_id'   => 'integer',
     'model'       => 'text',
+    'panels'      => 'text',
+    'photo'       => 'text',
+    'revenue'     => 'integer',
+    'impact'      => 'integer',
     'lat'         => 'float default null',
     'lng'         => 'float default null',
     'location'    => 'text',
@@ -72,6 +105,7 @@ $SCHEMA = [
     'port'        => 'integer', 
     'active'      => 'boolean default true',
     'removed'     => 'boolean default false',
+    'is_fake'     => 'boolean default false',
     'features'    => 'text',
     'first_seen'  => 'datetime', 
     'last_task'   => 'integer default 0',
@@ -85,6 +119,79 @@ $SCHEMA = [
     'lat'    => 'float default null',
     'lng'    => 'float default null',
     'radius' => 'float default null'
+  ],
+
+  'attribution' => [
+    'id'         => 'integer primary key autoincrement',
+    'screen_id'  => 'integer',
+    'type'       => 'text',    // such as wifi/plate, etc
+    'signal'     => 'integer', // optional, could be distance, RSSI
+    'mark'       => 'text',    // such as the 48-bit MAC address
+    'created_at' => 'datetime default current_timestamp',
+  ],
+
+
+  'exclusive' => [
+    'id'          => 'integer primary key autoincrement',
+    'set_id'      => 'integer',
+    'whitelist'   => 'boolean', // if true then this is inclusive, if false 
+    'campaign_id' => 'integer'  // then we should leave it out.
+  ],
+    
+  // revenue historicals
+  'revenue_history' => [
+    'id'            => 'integer primary key autoincrement',
+    'screen_id'     => 'integer',
+    'revenue_total' => 'integer', // deltas can be manually computed for now
+    'created_at'    => 'datetime default current_timestamp',
+  ],
+
+  'organization' => [
+    'id'         => 'integer primary key autoincrement',
+    'name'       => 'text',
+    'image'      => 'text',
+  ],
+
+  'brand' => [
+    'id'         => 'integer primary key autoincrement',
+    'organization_id'     => 'integer',
+    'name'       => 'text',
+    'image'      => 'text',
+    'balance'    => 'integer',
+    'created_at' => 'datetime default current_timestamp',
+  ],
+
+  'social' => [
+    'id'         => 'integer primary key autoincrement',
+    'brand_id'   => 'integer',
+    'service'    => 'text',
+    'name'       => 'text',
+    'token'      => 'text',
+    'created_at' => 'datetime default current_timestamp',
+  ],
+
+  'user' => [
+    'id'         => 'integer primary key autoincrement',
+    'name'       => 'text',
+    'password'   => 'text',
+    'image'      => 'text',
+    'email'      => 'text',
+    'title'      => 'text',
+    'organization_id'     => 'integer',
+    'brand_id'   => 'integer',
+    'role'       => 'text', // either admin/manager/viewer
+    'phone'      => 'text',
+    'created_at' => 'datetime default current_timestamp',
+  ],
+
+  'addon' => [
+    'id'     => 'integer primary key autoincrement',
+    'name'   => 'text', // what to call it
+    'image'  => 'text', // url of logo or screenshot
+    'type'   => 'text', // ticker or app
+    'topic'  => 'text', // optional, such as "weather"
+    'source' => 'text', // The url where to get things
+    'created_at' => 'datetime default current_timestamp',
   ],
 
   //
@@ -104,7 +211,10 @@ $SCHEMA = [
   //
   'campaign' => [
     'id'          => 'integer primary key autoincrement',
+    'name'        => 'text',
     'ref_id'      => 'text',
+    'brand_id'    => 'integer',
+    'organization_id'    => 'integer',
     'order_id'    => 'integer',
     'asset'       => 'text not null',
     'duration_seconds' => 'integer',
@@ -132,9 +242,11 @@ $SCHEMA = [
 
     'start_minute'=> 'integer default null',
     'end_minute'  => 'integer default null',
+    'approved'    => 'boolean default false',
     'active'      => 'boolean default false',
     'is_default'  => 'boolean default false',
     'priority'    => 'integer default 0',
+    'impression_count' => 'integer',
 
     'start_time'  => 'datetime default current_timestamp',
     'end_time'    => 'datetime'
