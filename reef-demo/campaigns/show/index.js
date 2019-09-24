@@ -58,7 +58,6 @@ function changeSelected(newIdx) {
     'Overview',
     'Budget',
     'Performance',
-    'Controls',
     'Creatives',
     'Billing',
     'Summary',
@@ -86,8 +85,17 @@ function changeSelected(newIdx) {
   fetch(`http://waivescreen.com/api/campaigns?id=${id}`)
     .then(response => response.json())
     .then(json => {
+      self.j = json;
       campaign = json[0];
+      var e = Engine({
+        container: document.querySelector('#campaign-preview')
+      })
+      e.AddJob({url: json[0].asset});
+      _preview.AddJob({url: json[0].asset});
+      e.Start();
+      _preview.Start();
       renderCampaign(json[0]);
+      handleUploads(json[0].asset)
     })
     .catch(e => console.log('error fetching screens', e));
   document
@@ -99,6 +107,5 @@ function changeSelected(newIdx) {
   document
     .querySelector('.jqs-table tbody')
     .addEventListener('mouseup', calcItems);
-
 })();
 
