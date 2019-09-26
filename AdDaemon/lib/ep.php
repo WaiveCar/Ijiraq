@@ -26,6 +26,12 @@ try {
     $list = array_values($_FILES);
     move_uploaded_file(aget($list, '0.tmp_name'), "/var/states/" . aget($list, '0.name'));
     jemit(doSuccess('uploaded'));
+  } else if($func == 'me.css') {
+    emit_css();
+    exit;
+  } else if($func == 'me.js') {
+    emit_js();
+    exit;
   } else if($func == 'me') {
     jemit(doSuccess($_SESSION));
   } else if($func == 'instagram') {
@@ -40,16 +46,20 @@ try {
       $_SESSION['instagram'] = $token;
       header('Location: /campaigns/create');
       exit;
+    } else if(isset($all['logout'])) {
+      unset( $_SESSION['instagram'] );
+      header('Location: /campaigns/create');
+      exit;
     } else if(isset($all['info'])) {
       $token = aget($_SESSION, 'instagram.access_token');
       if($token) {
         $info = [
           //'me' => json_decode(file_get_contents("https://api.instagram.com/v1/users/self/?access_token=$token"), true),
-          'posts' => json_decode(file_get_contents("https://api.instagram.com/v1/users/self/media/recent/?access_token=$token&count=60"), true)
+          'posts' => json_decode(file_get_contents("https://api.instagram.com/v1/users/self/media/recent/?access_token=$token&count=18"), true)
         ];
         jemit(doSuccess($info['posts']));
       } else {
-        jemit(doError("login needed");
+        jemit(doError("login needed"));
       }
     }
   } else if($func == 'campaign') {
@@ -90,14 +100,17 @@ try {
     'car_history', 
     'command', 
     'ping', 
+    'login',
+    'logout',
     'response',
     'screen_tag', 
     'schema',
+    'signup',
     'sow', 
     'tag', 
     'task_dump' 
   ]) !== false) { 
-    jemit($func($all, $verb));
+    post_return($func($all, $verb));
   } else {
     jemit([
       'res' => false,

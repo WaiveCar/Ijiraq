@@ -10,6 +10,7 @@
     <link href="../css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="../common.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+<link href="/api/me.css" rel="stylesheet">
     <title>Screen Admin</title>
   </head>
   <style>
@@ -27,6 +28,12 @@
     }
     .edit:hover { color: #000 }
     #notice { position: absolute; top:0; left:0; width: 100%; z-index: 100;display:none}
+    .left {
+      color: #858796;
+    }
+    .right {
+      color: black;
+    }
   </style>
   <body id="page-top">
     <div class="menu-btn mt-1 top-bar">
@@ -44,14 +51,60 @@
     </div>
     <div id="wrapper" class="offset-top">
       <div id="menu">
-        <script src="../menu.js"></script>
       </div>
       <div class="container-fluid model-list">
-        <div class="jumbotron">
-          <h1 class="display-4">Map to go here</h1>
+        <div class="row mb-4">
+          <div class="col-lg-12 d-flex justify-content-center">
+            <div id="map" style="width: 100%; height: 30vw"></div>
+          </div>
         </div>
-        <div class="jumbotron">
-          <h1 class="display-4">Revenue info here</h1>
+        <div class="row mb-4">
+          <div class="col-lg-12 d-flex justify-content-center">
+            <div class="card" style="width: 28%">
+              <div class="card-body">
+                <select name="time-period" class="custom-select">
+                  <option value="3-months" selected>Last 3 Months</option>
+                  <option value="30-days">Last 30 Days</option>
+                  <option value="7-days">Last 7 Days</option>
+                </select>
+                <div class="d-flex flex-column justify-content-around mt-4" style="height: 70%"> 
+                  <div class="d-flex justify-content-between">
+                    <div class="left">Revenue Total</div>
+                    <div class="right">$512,287 <span class="up-right"><i class="fas fa-arrow-up"></i></i> 3%</span></div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div class="left">Per Screen</div>
+                    <div class="right">$10,341 <span class="down-right"><i class="fas fa-arrow-down"></i></i> 1%</span></div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div class="left">Impressions Total</div>
+                    <div class="right">1,511,513 <span class="up-right"><i class="fas fa-arrow-up"></i></i>2%</span></div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div class="left">Per Screen</div>
+                    <div class="right">74,302 <span class="down-right"><i class="fas fa-arrow-down"></i></i> 4%</span></div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div class="left">Best Performance</div>
+                    <div class="right">#13</div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div class="left">Worst Performance:</div>
+                    <div class="right">#101</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-center chart-contain">
+	                <div class="mobile-chart">
+	                	<canvas id="screen-chart-1"></canvas>
+	                </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div id="content-wrapper" class="d-flex flex-column">
           <h3>
@@ -59,13 +112,13 @@
           </h3>
 
           <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
               <thead>
                 <tr>
-                  <th scope="col">id</th>
-                  <th scope="col">city</th>
-                  <th scope="col">location</th>
-                  <th scope="col">phone</th>
+                  <th style="font-weight: 600" scope="col">id</th>
+                  <th style="font-weight: 600" scope="col">city</th>
+                  <th style="font-weight: 600" scope="col">location</th>
+                  <th style="font-weight: 600" scope="col">phone</th>
                 </tr>
               </thead>
               <tbody id="screen-table-body">
@@ -82,9 +135,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="../js/jquery.easing.min.js"></script>
+<script src="/api/me.js"></script>
     <script src="../js/sb-admin-2.min.js"></script>
     <script src="../js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+	  <script src="https://www.chartjs.org/dist/2.8.0/Chart.min.js"></script>
     <script src="../js/dataTables.bootstrap4.min.js"></script>
+    <script src="/map.js?1"></script>
+    <script src="./charts.js"></script>
+    <script src="../menu.js"></script>
     <script src="./index.js"></script>
   </body>
 </html>

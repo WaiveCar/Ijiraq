@@ -13,6 +13,7 @@
     <link href="../../common.css" rel="stylesheet">
     <link href="/engine.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+<link href="/api/me.css" rel="stylesheet">
     <title>Screen Admin</title>
   </head>
   <style>
@@ -44,10 +45,6 @@
     }
     .center {
       text-align: center;
-    }
-    .billing-table {
-      width: 80%;
-      margin: 0 auto;
     }
     .budget {
       width: 11rem;
@@ -113,6 +110,25 @@
 }
   </style>
   <body id="page-top">
+    <div class="modal fade" id="share-modal" tabindex="-1" role="dialog" aria-labelledby="share-modal-label" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Share This Campaign</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div id="campaign-url"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Add Password Protection</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <a name="Overview"></a>
     <div class="menu-btn mt-1 top-bar">
       <div class="top-bar-left" onclick="toggleMenu()">
@@ -123,7 +139,6 @@
     </div>
     <div id="wrapper" class="offset-top">
       <div id="menu" class="sticky-menu">
-        <script src="../../menu.js"></script>
       </div>
       <div class="container-fluid">
         <div id="campaign-preview">
@@ -142,6 +157,7 @@
             </div>
           </div>
           <div class="sub-users mt-3">
+            <img src="../../svg/share-alt.svg" data-toggle="modal" data-target="#share-modal" id="share-icon">
             <img src="../../svg/user-icon.svg" class="user-icon">
             <img src="../../svg/user-icon.svg" class="user-icon">
             <img src="../../svg/user-icon.svg" class="user-icon">
@@ -151,6 +167,11 @@
         </div>
 
         <div class="campaign-dates">
+        </div>
+        <div class="d-flex justify-content-between mt-3" style="width: 24%;">
+          <button class="btn control-btn">Pause</button>
+          <button class="btn control-btn">Extend</button>
+          <button class="btn control-btn">Modify</button>
         </div>
 
         <div class="row mb-4">
@@ -233,7 +254,7 @@
           </div>
         </div>
         -->
-        <div class="row mb-4 creatives-wrapper">
+        <div class="row mb-4 creatives-wrapper p-manager">
           <a name="Creatives"></a>
           <div class="col-lg-12">
             <div class="card">
@@ -354,7 +375,7 @@
           </div>
         </div>
 
-        <div class="row mb-4">
+        <div class="row mb-4 p-manager">
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
@@ -362,7 +383,7 @@
                 <div class="card-text">
                   <p>Your ad will start immediately and run indefinitely until it is paused.
 You will never spend more than $10,000 per month. Lastly, your ad needs to be approved by our team before delivery begins.</p>
-                  <button type="button" class="btn btn-primary btn-lg">Launch Campaign</button>
+                  <button type="button" class="btn btn-primary btn-lg">Update Campaign</button>
                 </div>
               </div>
             </div>
@@ -374,17 +395,16 @@ You will never spend more than $10,000 per month. Lastly, your ad needs to be ap
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
-                <h2 class="card-title">Billing</h2>
-                <b>Balance: $577.92</b>
-                <h4>Invoices:</h4>
-                <div class="table-responsive billing-table">
-                  <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <h2 class="card-title mb-3">Billing & Invoices</h2>
+                <b class="black">Balance <span class="amount">$577.92</span></b>
+                <div class="table-responsive billing-table mt-4">
+                  <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                       <tr>
-                        <th scope="col">id</th>
-                        <th scope="col">date</th>
-                        <th scope="col">cost</th>
-                        <th scope="col">paid</th>
+                        <th style="font-weight: 600" scope="col">id</th>
+                        <th style="font-weight: 600" scope="col">date</th>
+                        <th style="font-weight: 600" scope="col">cost</th>
+                        <th style="font-weight: 600" scope="col">paid</th>
                         <th></th>
                       </tr>
                     </thead>
@@ -394,14 +414,14 @@ You will never spend more than $10,000 per month. Lastly, your ad needs to be ap
                         <td>9/22/2019</td>
                         <td>$894.15</td>
                         <td class="center"><input type="checkbox" checked></td>
-                        <td class="center"><button class="btn btn-primary">download</button></td>
+                        <td class="center"><button class="btn btn-primary rounded-btn">download</button></td>
                       </tr>
                       <tr>
                         <td>15</td>
                         <td>10/1/2019</td>
                         <td>$577.92</td>
                         <td class="center"><input type="checkbox"></td>
-                        <td class="center"><button class="btn btn-primary">download</button></td>
+                        <td class="center"><button class="btn btn-primary rounded-btn">download</button></td>
                       </tr>
                     </tbody>
                   </table>
@@ -419,6 +439,7 @@ You will never spend more than $10,000 per month. Lastly, your ad needs to be ap
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="../../js/jquery.easing.min.js"></script>
+<script src="/api/me.js"></script>
     <script src="../../js/sb-admin-2.min.js"></script>
     <script src="../../js/jquery.dataTables.min.js"></script>
     <script src="../../js/dataTables.bootstrap4.min.js"></script>
@@ -430,6 +451,7 @@ You will never spend more than $10,000 per month. Lastly, your ad needs to be ap
     <script src="/map.js?1"></script>
     <script src="/engine.js"></script>
     <script src="/formBuilder.js"></script>
+    <script src="../../menu.js"></script>
     <script src="./index.js"></script>
     <script src="./charts.js"></script>
     </body>

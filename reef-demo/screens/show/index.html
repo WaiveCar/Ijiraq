@@ -11,6 +11,7 @@
     <link href="../../common.css" rel="stylesheet">
     <link href="/engine.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+<link href="/api/me.css" rel="stylesheet">
     <title>Screen Admin</title>
   </head>
   <style>
@@ -26,9 +27,6 @@
     }
     .edit:hover { color: #000 }
     #notice { position: absolute; top:0; left:0; width: 100%; z-index: 100;display:none}
-    .editor {
-      display: none;
-    }
     .show {
       display: block;
     }
@@ -43,7 +41,6 @@
     </div>
     <div id="wrapper" class="offset-top">
       <div id="menu">
-        <script src="../../menu.js"></script>
       </div>
       <div class="container-fluid">
         <div class="alert alert-primary" id="notice" role="alert"></div>
@@ -56,7 +53,6 @@
         <div class="jumbotron">
           <h1 class="display-4">View Cameras</h1>
         </div>
-        <button class="btn btn-primary mb-4" onclick="toggleEditor()">Show / Hide Editor</button>
         <div class="jumbotron editor">
           <div id=screen></div>
           <div class=section-title>Time & Date</div>
@@ -99,11 +95,32 @@
         <div class="jumbotron">
           <h1 class="display-4">Past / Future</h1>
         </div>
-        <div class="jumbotron">
-          <h1 class="display-4">Screen Details / Location</h1>
+        <div class="row mb-4">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <h2 class="card-title">Screen Details</h2>
+                <div class="d-flex justify-content-center chart-contain">
+                  <div class="card-text screen-details">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="jumbotron">
-          <h1 class="display-4">Impression Graph</h1>
+        <div class="row mb-4">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <h2 class="card-title">Impressions</h2>
+                <div class="d-flex justify-content-center chart-contain">
+	                <div style="width: 80%;" class="mobile-chart">
+	                	<canvas id="screen-chart-1"></canvas>
+	                </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -114,10 +131,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="../../js/jquery.easing.min.js"></script>
+<script src="/api/me.js"></script>
     <script src="../../js/sb-admin-2.min.js"></script>
     <script src="../../js/jquery.dataTables.min.js"></script>
     <script src="../../js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+	  <script src="https://www.chartjs.org/dist/2.8.0/Chart.min.js"></script>
     <script src="/engine.js"></script>
+    <script src="./charts.js"></script>
+    <script src="../../menu.js"></script>
     <script src="./index.js"></script>
     </body>
 </html>

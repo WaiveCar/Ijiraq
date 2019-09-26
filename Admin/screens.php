@@ -1,4 +1,5 @@
 <?
+include('../AdDaemon/lib/lib.php');
 include('lib.php');
 
 $screenList = get('screens', ['removed' => 0, 'active' => 1]);
@@ -47,7 +48,8 @@ $PROJECT_LIST = [
   '' => 'none',
   'LA' => 'LA', 
   'NY' => 'NY',
-  'dev' => 'dev'
+  'dev' => 'dev',
+  'REEF' => 'REEF'
 ];
 $MODEL_LIST = [
   '' => 'none',

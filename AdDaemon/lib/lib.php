@@ -11,12 +11,13 @@ include_once($mypath . 'db.php');
 
 $PORT_OFFSET = 7000;
 $DAY = 24 * 60 * 60;
-$PROJECT_LIST = ['LA', 'NY'];
+$PROJECT_LIST = ['LA', 'NY', 'REEF'];
 $DEFAULT_CAMPAIGN_MAP = [
   'none' => 1,
   'LA' => 1,
   'NY' => 2,
-  'dev' => 3
+  'dev' => 3,
+  'REEF' => 131
 ];
 
 // Play time in seconds of one ad.
@@ -524,13 +525,22 @@ function create($table, $payload) {
   // TODO: whitelist the tables
   global $SCHEMA;
   foreach($payload as $k => $v) {
-    $typeRaw = $SCHEMA[$table][$k];
-    $parts = explode(' ', $typeRaw);
-    $type = $parts[0];
-    if($type == 'text') {
-      $payload[$k] = db_string($v);
-    }
-    if(empty($payload[$k])) {
+    $typeRaw = aget($SCHEMA, "$table.$k");
+    if($typeRaw) {
+      $parts = explode(' ', $typeRaw);
+      $type = $parts[0];
+      if($k === 'password') {
+        $orig = $v;
+        $v = password_hash($v, PASSWORD_BCRYPT);
+        error_log("<$orig> -> <$v>");
+      }
+      if($type == 'text') {
+        $payload[$k] = db_string($v);
+      }
+      if(empty($payload[$k])) {
+        unset($payload[$k]);
+      }
+    } else {
       unset($payload[$k]);
     }
   }
@@ -667,71 +677,73 @@ function sow($payload) {
   return $server_response; 
 }
 
-function curldo($url, $params = false, $verb = false, $opts = []) {
-  if($verb === false) {
-    $verb = 'GET';
-    // this is a problem
-  }
-  $verb = strtoupper($verb);
-
-  $ch = curl_init();
-
-  $header = [];
-  if(isset($_SESSION['token']) && strlen($_SESSION['token']) > 2) {
-    $header[] = "Authorization: ${_SESSION['token']}";
-  }
-    
-  if($verb !== 'GET') {
-    if(!isset($opts['isFile'])) {
-      if(!$params) {
-        $params = [];
-      }
-      if(isset($opts['json'])) {
-        $params = json_encode($params);
-        $header[] = 'Content-Type: application/json';
-      } else {
-        $params = http_build_query($params);
-      }
-    } else {
-      $header[] = 'Content-Type: multipart/form-data';
+if(!function_exists('curl_do')) {
+  function curldo($url, $params = false, $verb = false, $opts = []) {
+    if($verb === false) {
+      $verb = 'GET';
+      // this is a problem
     }
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $params);  
-    // $header[] = 'Content-Length: ' . strlen($data_string);
-  }
+    $verb = strtoupper($verb);
 
-  if($verb === 'POST') {
-    curl_setopt($ch, CURLOPT_POST,1);
-  }
+    $ch = curl_init();
 
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $verb);  
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $header = [];
+    if(isset($_SESSION['token']) && strlen($_SESSION['token']) > 2) {
+      $header[] = "Authorization: ${_SESSION['token']}";
+    }
+      
+    if($verb !== 'GET') {
+      if(!isset($opts['isFile'])) {
+        if(!$params) {
+          $params = [];
+        }
+        if(isset($opts['json'])) {
+          $params = json_encode($params);
+          $header[] = 'Content-Type: application/json';
+        } else {
+          $params = http_build_query($params);
+        }
+      } else {
+        $header[] = 'Content-Type: multipart/form-data';
+      }
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $params);  
+      // $header[] = 'Content-Length: ' . strlen($data_string);
+    }
 
-  $res = curl_exec($ch);
-  
-  //if(isset($opts['log'])) {
-    $tolog = json_encode([
-        'verb' => $verb,
-        'header' => $header,
-        'url' => $url,
-        'params' => $params,
-        'res' => $res
-    ]);
-    //var_dump(['>>>', curl_getinfo ($ch), json_decode($tolog, true)]);
+    if($verb === 'POST') {
+      curl_setopt($ch, CURLOPT_POST,1);
+    }
 
-    error_log($tolog);
-  //}
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $verb);  
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-  if(isset($opts['raw'])) {
+    $res = curl_exec($ch);
+    
+    //if(isset($opts['log'])) {
+      $tolog = json_encode([
+          'verb' => $verb,
+          'header' => $header,
+          'url' => $url,
+          'params' => $params,
+          'res' => $res
+      ]);
+      //var_dump(['>>>', curl_getinfo ($ch), json_decode($tolog, true)]);
+
+      error_log($tolog);
+    //}
+
+    if(isset($opts['raw'])) {
+      return $res;
+    }
+    $resJSON = @json_decode($res, true);
+    if($resJSON) {
+      return $resJSON;
+    }
     return $res;
   }
-  $resJSON = @json_decode($res, true);
-  if($resJSON) {
-    return $resJSON;
-  }
-  return $res;
 }
 
 function upload_s3($file) {
@@ -779,16 +791,32 @@ function guarded_show($what) {
   return show($what, $clause);
 }
 
-function show($what, $clause = '') {
+function show($what, $clause = []) {
+  global $SCHEMA;
+  $me = me();
+  $where = [];
+  error_log(json_encode($_SESSION));
+  if($me) {
+    $schema = $SCHEMA[$what];
+    if($me['organization_id'] && isset($schema['organization_id'])) {
+      $where['organization_id'] = $me['organization_id'];
+    }
+  }
+
   if(is_array($clause)) {
+    $clause = array_merge($where, $clause);
+    error_log(json_encode($clause));
     if( !empty($clause) ) {
       $clause = " where " . implode(' and ', sql_kv($clause));
     } else {
       $clause = '';
     }
   }
+  if(strpos($clause, 'order by') === false) {
+    $clause .= ' order by id desc';
+  }
   //error_log(preg_replace('/\s+/', ' ', "select * from $what $clause"));
-  return db_all("select * from $what $clause order by id desc", $what);
+  return db_all("select * from $what $clause", $what);
 }
 
 function make_infinite($campaign_id) {
@@ -959,14 +987,80 @@ function getUser() {
     return Get::user($_SESSION['user_id']);
   }
 }
-
-function login($email) {
-  $user = Get::user(['email' => $email]);
-  if ($user) {
-    $_SESSION['user_id'] = $user['id'];
-    return doSuccess($user);
+function emit_js() {
+  $params = [
+    'admin' => false,
+    'manager' => false,
+    'viewer' => true
+  ];
+  
+  if(isset($_SESSION['user'])) {
+    $user = $_SESSION['user'];
+    $params = array_merge($params, $user);
+    $role = strtolower($user['role']);
+    unset($params['password']);
+    $params['manager'] = true;
+    if($role === 'admin') {
+      $params['admin'] = true;
+    }
   }
-  return doError("No user found");
+
+  echo 'self._me = ' . json_encode($params);
+}
+
+function emit_css() {
+  header("Content-type: text/css");
+  $manager = false;
+  $admin = false; 
+  if(isset($_SESSION['user'])) {
+    $user = $_SESSION['user'];
+    $role = strtolower($user['role']);
+    $manager = true;
+    if($role === 'admin') {
+      $admin = true;
+    }
+    echo '.p-nobody { display: none }';
+  }
+  if(!$manager) {
+    echo '.p-manager { display: none }';
+  }
+  if(!$admin) {
+    echo '.p-admin { display: none }';
+  }
+  return;
+}
+
+function me() {
+  if(isset($_SESSION['user'])) {
+    return $_SESSION['user'];
+  }
+}
+function signup($all) {
+  $organization = aget($all, 'organization');
+  $org_id = create('organization', ['name' => $organization]);
+  $all['organization_id'] = $org_id;
+  $all['role'] = 'Manager';
+  $user_id = create('user', $all);
+  if($user_id) {
+    $_SESSION['user'] = Get::user($user_id);
+  }
+  return $user_id;
+}
+
+function login($all) {
+  $who = aget($all, 'email');
+  if($who) {
+    $user = Get::user(['email' => $who]);
+    if ($user) {
+      if( password_verify($all['password'], $user['password'])) {
+        $_SESSION['user'] = $user;
+        return doSuccess($user);
+      } else {
+        return doError("Wrong password");
+      }
+    }
+  }
+  return doError("User $who not found");
 }
 
 function logout() {

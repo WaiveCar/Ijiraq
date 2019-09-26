@@ -7,11 +7,15 @@ var tableIt = (function() {
     }
     _map[what] = {}
 
-    $.getJSON(`/api/${what}s`, function(res) {
+    $.getJSON(`http://192.168.86.58/api/${what}s`, function(res) {
       res.forEach(row => _map[row.id] = row);
       $(`td.${what}_id`).each(function(ix, el) {
         var myid = el.innerHTML;
-        el.innerHTML = `<a href='/${what}/show/?id=${myid}'>${_map[myid].name}</a>`;
+        if(myid !== "null") {
+          el.innerHTML = `<a href='/${what}/show/?id=${myid}'>${_map[myid].name}</a>`;
+        } else {
+          el.innerHTML = "&mdash;";
+        }
       });
     });
   }
@@ -21,20 +25,34 @@ var tableIt = (function() {
       filter: (opts && opts.filter || []).concat(['id','password','created_at','image'])
     }, opts || {});
 
-    $.getJSON(`/api/${table}`, function(res) {
+    var pre = '';
+    if(document.location.hostname != '127.0.0.1') {
+      pre = `http://192.168.86.58/`;
+    }
+
+    $.getJSON(`${pre}/api/${table}`, function(res) {
       console.log(res);
       
       if(res.length === 0) {
         let singular = table.slice(0,-1);
-        $("#dataTable").parent().html(`<h2>Welcome to your ${table} dashboard!</h2><h5> Adding your first ${singular} is easy. Just click the button in the upper right labeled "New ${singular}" to get started.</h5>`);
+        let capital = singular[0].toUpperCase() + singular.slice(1);
+        $("#dataTable").parent().html(`<h2>Welcome to your ${table} dashboard!</h2><h5> Adding your first ${singular} is easy. Just click the button in the upper right labeled "New ${capital}" to get started.</h5>`);
         return;
       }
       let fields = Object.keys(res[0]).filter(row => !opts.filter.includes(row)) 
-      $("#table-head").html(
-        "<tr>" +
-        fields.map(field => `<th class="${field}" scope="col">${field}</th>`) +
-        "</tr>"
-      );
+      if(opts.perms) {
+        for(var x in opts.perms) {
+          let level = opts.perms[x];
+          if(!_me[level]) {
+            fields = fields.filter(row => row !== x);
+          }
+        }
+      }
+
+      var header = '<tr>' +
+        fields.map(field => `<th class="${field}" style="font-weight: 600" scope="col">${field}</th>`) +
+        "</tr>";
+      $("#table-head").html(header);
       $("#table-body").html(
         res.map(function(row) {
           return '<tr>' +

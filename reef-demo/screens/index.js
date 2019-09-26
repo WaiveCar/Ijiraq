@@ -1,4 +1,5 @@
 function renderScreens(screens, locations) {
+  screens.sort((a, b) => a.phone ? -1 : 1)
   const screenTableBody = document.getElementById('screen-table-body');
   screenTableBody.innerHTML = screens
     .map(
@@ -17,11 +18,18 @@ function renderScreens(screens, locations) {
 (() => {
   const screens = [];
   const locations = [];
-  fetch('http://waivescreen.com/api/screens')
+  fetch('http://192.168.86.58/api/screens')
     .then(response => response.json())
     .then(json => screens.push(...json))
     .then(() => {
       renderScreens(screens);
+      self._map = map({points: screens});
+      let success = false;
+      if(success) {
+        _map.load(_campaign.shape_list);
+      } else {
+        _map.center([-118.34,34.06], 11);
+      }
       // The fetching of locations currently doesn't work due to cors issues. Return to this later if time
       /*
       return fetch(

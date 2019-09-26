@@ -7,6 +7,60 @@ body {
   text-align: left;
 }
 
+.screen-details img {
+  width: 45%;
+}
+
+.screen-details-text {
+  width: 45%;
+}
+
+.screen-details-text img {
+  width: 80%;
+}
+
+.screen-details .left {
+  color: #858796;
+}
+
+.screen-details .right {
+  color: black;
+}
+
+.table, .table a {
+  color: black;
+  font-weight: 300;
+}
+
+.table a:hover {
+  color: blue;
+  text-decoration: none;
+}
+
+.black {
+  color: black;
+  font-weight: 300;
+}
+
+.amount {
+  color: #77c924;
+  margin-left: 55px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.table th {
+  line-height: 2.4;
+  text-transform: uppercase;
+  font-weight: 300;
+  padding: 0;
+}
+
+#screen-table-body .rounded-btn {
+  border-radius: 25px!important;
+  border: 1px solid;
+}
+
 .choice {
   background-color: #efefef;
   border-radius: 25px;
@@ -133,6 +187,14 @@ body {
   max-width: 100%;
 }
 
+.control-btn {
+  background-color: #E0E0E0;
+  border-radius: 25px;
+  color: #4F4F4F;
+  padding: 0.3rem 1.3rem;
+  font-weight: bold;
+}
+
 .campaign-title {
   font-weight: 700;
   color: black;
@@ -143,9 +205,6 @@ body {
   border: none;
 }
 
-.card img {
-  border-radius: 7px;
-}
 
 .campaign-dates {
   font-size: 12px;
@@ -288,6 +347,19 @@ body {
   height: 2.2rem;
 }
 
+#share-icon {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+#share-icon:hover {
+  cursor: pointer;
+}
+
+.user-area > * { 
+  display: none
+}
+
 .section-title {
   font-size: 1.2rem;
   margin-top: 2.8rem;
@@ -328,6 +400,10 @@ select.form-control:focus,.form-group input:focus
   }
 }
 
+.modal-content  {
+  border-radius: 0 !important;
+}
+
 .performance-download {
   width: 11rem;
   text-align: center;
@@ -346,5 +422,143 @@ select.form-control:focus,.form-group input:focus
 
 .plate-title {
   font-size: 14px;
+}
 
+.btn-primary {
+  background-color: white!important;
+  color: #5a5c69!important;
+  border-color: #5a5c69;
+  border-radius: 0!important;
+}
+
+.btn-primary:hover {
+  background-color: black!important;
+  border-color: #5a5c69!important;
+  color: white!important;
+}
+
+.btn-secondary {
+  border-radius: 0!important;
+}
+
+.user-icon-holder a:hover {
+  text-decoration: none;
+  color: black;
+}
+
+.up-right {
+  color: green;
+}
+/* This is so the hover works well */
+#createForm {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+.insta .info  {
+  display: inline-block;
+  height: 100%;
+  color: black;
+  margin-left: 1rem;
+}
+.insta .info .name {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+.insta .content .row .selector {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size:100px;
+  user-select: none;
+  cursor: pointer;
+  color: #fff;
+  opacity: 0.8;
+  border-radius: 6px;
+  background: rgba(0,0,0,.2);
+  border: 9px solid #fff;
+  font-weight: 800;
+}
+.insta .content .row * {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.insta .content .row img {
+  height: 100%;
+  width: 100%;
+}
+.insta .content .row > div {
+  height: 150px;
+  border-radius: 6px;
+  width: 150px;
+  margin: .5rem;
+  position: relative;
+}
+.insta .content .row div:hover {
+  box-shadow: 0 0 4px 1px rgba(125,125,125,.7);
+  opacity: 0.9;
+}
+.insta .mock { 
+  display: none;
+}
+.insta .preview {
+  border: 0;
+  width: calc(2rem + 150px * 3);
+  height: calc(0.35 * (2rem + 150px * 3));
+  box-shadow: 0 0 7px 1px #e4e4e4;
+  background: #eee;
+}
+.insta .loader {
+  height: 12rem;
+  width: calc(2rem + 150px * 3);
+  border: 2px solid #e6e6e6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.insta .header  {
+  height: 100px;
+  width: calc(2rem + 150px * 3);
+  margin: 1rem 0;
+}
+.insta .header .logout {
+  float: right;
+}
+.insta .profile  {
+  width: 150px;
+  text-align: center;
+  height: 100%;
+  float: left;
+}
+.insta .profile img {
+  height: 100%;
+  border-radius: 250px;
+}
+.insta .box img {
+  border-radius: 6px;
+}
+.insta .login {
+  display: none;
+  height: 12rem;
+  width: calc(2rem + 150px * 3);
+  border: 2px solid #e6e6e6;
+  justify-content: center;
+  font-size:1.7rem;
+  align-items: center;
+}
+.down-right {
+  color: red;
+}
+.engine-holder {
+  background: #222;
+  text-align: center;
+  font-size: 0;
+  width: 100%;
+}
+.engine-holder > div{
+  width: 100%;
+  display:inline-block;
 }

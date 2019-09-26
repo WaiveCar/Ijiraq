@@ -8,8 +8,10 @@
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
 		<link rel=stylesheet href=https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css>
     <link href="../css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='/engine.css'>
     <link href="../common.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+<link href="/api/me.css" rel="stylesheet">
     <title>Screen Admin</title>
   </head>
   <style>
@@ -26,27 +28,20 @@
         <img src="../svg/adcast.svg">
       </div>
       <span class="top-bar-right ml-4 mt-2">
-        <div class="vertical-flex">
+        <div class="vertical-flex p-manager">
           <span class="company-name">Company</span>
         </div>
-        <div class="vertical-flex">
+        <div class="vertical-flex p-manager">
           <a href="/campaigns/create" class="new-campaign-btn">New Campaign</a>
         </div>
       </span>
     </div>
     <div id="wrapper" class="campaign-show">
       <div id="menu">
-        <script src="../menu.js"></script>
       </div>
       <div class="container-fluid">
-        <div class="mt-2 mb-3">
-          <span class="brand-name">Brand #1</span>
+        <div class="campaign-list">
         </div>
-        <div class="row card-group ml-1 campaign-list" id="brand-1"></div>
-        <div class="mt-4 mb-3">
-          <span class="brand-name">Brand #2</span>
-        </div>
-        <div class="row card-group ml-1 campaign-list" id="brand-2"></div>
       </div>
     </div>
     <script
@@ -56,10 +51,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="../js/jquery.easing.min.js"></script>
+<script src="/api/me.js"></script>
     <script src="../js/sb-admin-2.min.js"></script>
     <script src="../js/jquery.dataTables.min.js"></script>
     <script src="../js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+    <script src="/engine.js"></script>
+    <script src="../menu.js"></script>
     <script src="./index.js"></script>
   </body>
 </html>

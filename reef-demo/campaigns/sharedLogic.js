@@ -1,6 +1,5 @@
 var 
   _preview,
-  _dq = document.querySelector,
   _assetList = [];
 
 function calcItems() {
@@ -67,7 +66,7 @@ function create_campaign(obj) {
 
   return axios({
     method: 'post',
-    url: '/api/campaign',
+    url: 'http://192.168.86.58/api/campaign',
     data: formData,
     config: {
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -119,17 +118,17 @@ function setRatio(container, what) {
   }
 }
 
-function get(ep, body, cb) {
+function get(ep, cb) {
   fetch(new Request(`/api/${ep}`))
     .then(res => {
       if (res.status === 200) {
         return res.json();
       }
-    }).then(res => cb(res.data));
+    }).then(cb);
 }
 
 function post(ep, body, cb) {
-  fetch(new Request(`/api/${ep}`, {
+  fetch(new Request(`http://192.168.86.58/api/${ep}`, {
     method: 'POST', 
     body: JSON.stringify(body)
   })).then(res => {
@@ -153,7 +152,7 @@ function show(what) {
 }
 
 function doMap() {
-  $.getJSON("/api/screens?active=1&removed=0", function(Screens) {
+  $.getJSON("http://192.168.86.58/api/screens?active=1&removed=0", function(Screens) {
     self._map = map({points:Screens});
     let success = false;
 
@@ -183,100 +182,181 @@ function geosave() {
 }
 
 function instaGet() {
+  var user;
+  function Gen() {
+    $(".insta .selector").remove();
+    var ix = 1;
+    var selected = [];
+    selector.forEach(function(row) {
+      row.innerHTML += `<div class=selector>${ix}</div>`;
+      ix++;
+      selected.push(row.dataset.standard);
+    })
+    var param = selected.map(row => `images[]=${row}`).join('&');
+    $('.insta .preview').attr('src', `/insta.php?user=${user.username}&${param}`);
+  }
+  var selector = [];
+  self.s = selector;
   get('instagram?info=1', function(res) {
-    let obj = res.data[0];
-    cosole.log(obj);
-   _dq('.insta.profile img').src = obj.user.profile_picture;
-   _dq('.insta.info.name').innerHTML = obj.user.username;
-   _dq('.insta.info.description').innerHTML = obj.user.full_name;
+    $(".insta .loader").slideUp();
+    if(!res.res) {
+      $(".insta .login").css("display","flex");
+      return;
+    }
+    res = res.data;
+    user = res.data[0].user;
+    var row, content = [];
+    $('.insta .profile img').attr('src', user.profile_picture);
+    $('.insta .info .name').html( user.username );
+    $('.insta .info .description').html( user.full_name );
+    for(var ix = 0; ix < res.data.length; ix++) {
+      if(!(ix % 3)) {
+        if(row) {
+          content.push("<div class=row>" + row.join('') + "</div>");
+        }
+        row = [];
+      }
+      var big = res.data[ix].images.standard_resolution.url,
+          small = res.data[ix].images.thumbnail.url;
+      row.push( `<div class='box' data-standard='${big}'><img src=${small}></div>`);
+    }
+    if(row) {
+      content.push("<div class=row>" + row.join('') + "</div>");
+    }
+    $('.insta .content').html( content.join('') );
+    setTimeout(function(){
+      $(".insta .content .box").each(function() {
+        console.log(this);
+        if(selector.length < 6) {
+          selector.push(this);
+        }
+      });
+      Gen();
+    }, 10);
+    $(".insta .content .box").click(function() {
+      var exists = selector.filter(row => row.dataset.standard == this.dataset.standard);
+      if(exists.length) {
+        selector = selector.filter(row => row.dataset.standard != this.dataset.standard);
+      } else {
+        if(selector.length < 6) {
+          selector.push(this);
+        } else {
+          // don't gen.
+          return;
+        }
+      }
+      Gen();
+    });
+    $(".insta .mock").fadeIn(1000);
+
   });
 }
+
 
 
 window.onload = function(){
   self._container =  document.getElementById('engine');
   doMap();
   var isFirst = true;
-  setRatio(_container, 'car'); 
-
-  self._preview = Engine({ 
+  if (self._container) {
+    setRatio(_container, 'car'); 
+    self._preview = Engine({ 
     container: _container,
     dynamicSize: true,
     _debug: true });
   self._job = _preview.AddJob();
 
+  instaGet();
   $(".controls .rewind").click(function() {
     // this is a lovely trick to force the current job
     // which effectively resets itself
-    _preview.PlayNow(_job, true);
+      _preview.PlayNow(_job, true);
+    });
+  }
+
+  $(".ratios button").click(function(){
+    $(this).siblings().removeClass('active');
+    $(this).addClass('active');
+    console.log("<" + this.innerHTML + ">");
+    if(this.innerHTML == "16:9") {
+      _container.style.width = _container.clientHeight * 16/9 + "px";
+    } else if(this.innerHTML == "3:2") {
+      _container.style.width = _container.clientHeight * 3/2 + "px";
+    } else {
+      _container.style.width = "100%";
+    }
   });
+
 
   // The event handler below handles the user uploading new files
   uploadInput = document.getElementById('image-upload');
-  uploadInput.addEventListener('change', function() {
-    var container = $(".preview-holder");
+    if (uploadInput) {
+    uploadInput.addEventListener('change', function() {
+      var container = $(".preview-holder");
 
-    addtime(false);
-    Array.prototype.slice.call(uploadInput.files).forEach(function(file) {
+      addtime(false);
+      Array.prototype.slice.call(uploadInput.files).forEach(function(file) {
 
-      let reader = new FileReader();
+        let reader = new FileReader();
 
-      reader.onload = function(e) {
-        var asset, reference;
+        reader.onload = function(e) {
+          var asset, reference;
 
-        let row = $(
-          ['<div class="screen">',
-             '<img src="/assets/screen-black.png" class="bg">',
-             '<button type="button" class="remove-asset btn btn-sm btn-dark">',
-             '<i class="fas fa-times"></i>',
-             '</button>',
-             '<div class="asset-container"></div>',
-          '</div>'].join(''));
+          let row = $(
+            ['<div class="screen">',
+               '<img src="/screen-black.png" class="bg">',
+               '<button type="button" class="remove-asset btn btn-sm btn-dark">',
+               '<i class="fas fa-times"></i>',
+               '</button>',
+               '<div class="asset-container"></div>',
+            '</div>'].join(''));
 
-        reference = _job.append(e.target.result);
+          reference = _job.append(e.target.result);
 
-        if(file.type.split('/')[0] === 'image') {
-          asset = document.createElement('img');
-          asset.onload = function() {
-            resize(asset, asset.width, asset.height);
-            container.append(row);
-            addtime( 7.5 );
+          if(file.type.split('/')[0] === 'image') {
+            asset = document.createElement('img');
+            asset.onload = function() {
+              resize(asset, asset.width, asset.height);
+              container.append(row);
+              addtime( 7.5 );
+            }
+
+            asset.src = e.target.result;
+            asset.className = 'asset';
+          } else {
+            asset = document.createElement('video');
+            var src = document.createElement('source');
+
+            asset.setAttribute('preload', 'auto');
+            asset.setAttribute('loop', 'true');
+            asset.appendChild(src);
+
+            src.src = e.target.result;
+
+            asset.ondurationchange = function(e) {
+              asset.currentTime = 0;
+              asset.play();
+              resize(asset, asset.videoWidth, asset.videoHeight);
+              container.append(row);
+              addtime( e.target.duration );
+            }
           }
 
-          asset.src = e.target.result;
-          asset.className = 'asset';
-        } else {
-          asset = document.createElement('video');
-          var src = document.createElement('source');
+          $(".remove-asset", row).click(function() {
+            _job.remove(reference);
+            row.remove();
+          });
 
-          asset.setAttribute('preload', 'auto');
-          asset.setAttribute('loop', 'true');
-          asset.appendChild(src);
+          $(".asset-container", row).append(asset);
+        };
+        reader.readAsDataURL(file);
+      });
 
-          src.src = e.target.result;
-
-          asset.ondurationchange = function(e) {
-            asset.currentTime = 0;
-            asset.play();
-            resize(asset, asset.videoWidth, asset.videoHeight);
-            container.append(row);
-            addtime( e.target.duration );
-          }
-        }
-
-        $(".remove-asset", row).click(function() {
-          _job.remove(reference);
-          row.remove();
-        });
-
-        $(".asset-container", row).append(asset);
-      };
-      reader.readAsDataURL(file);
+      if(isFirst) {
+        _preview.Play();
+        isFirst = false;
+      }
     });
-
-    if(isFirst) {
-      _preview.Play();
-      isFirst = false;
-    }
-  });
+  }
 }
+

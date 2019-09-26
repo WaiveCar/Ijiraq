@@ -12,6 +12,8 @@
     <link href="../../css/jquery.schedule.min.css" rel="stylesheet">
     <link href="../../common.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+<link href="/api/me.css" rel="stylesheet">
+<link href="/api/me.css" rel="stylesheet">
     <link rel='stylesheet' href='../../engine.css'>
     <title>Screen Admin</title>
   </head>
@@ -86,7 +88,6 @@
     </div>
     <div id="wrapper">
       <div id="menu">
-        <script src="../../menu.js"></script>
       </div>
       <div class="container main">
         <div class="row mb-4">
@@ -122,7 +123,9 @@
                 <h2 class="card-title">Add Creatives</h2>
                 <div class="card-body">
                   <div class="row no-gutters">
-                    <div id="engine" class="col-lg-12"></div>
+                    <div class="engine-holder">
+                      <div id="engine"></div>
+                    </div>
                   </div>
                   <div class="row no-gutters controls">
                     <div class="col-6">
@@ -139,6 +142,11 @@
                     </div>
                     <div class="col-6">
                       <div class="float-right">
+                        <div class="btn-group ratios" role="group" style='margin-bottom:0.5rem;margin-right:1rem' aria-label="Basic example">
+                          <button type="button" class="btn btn-dark">3:2</button>
+                          <button type="button" class="btn btn-dark">16:9</button>
+                          <button type="button" class="btn btn-dark active">Car</button>
+                        </div>
                         <label for="image-upload" class="btn btn-dark">
                           <i class="fas fa-plus-square"></i> Image/Video
                         </label>
@@ -166,34 +174,34 @@
                 <h2 class="card-title">Automatic Creation</h2>
                 <div class="card-body">
                   <div class="row no-gutters">
-                    <div class="col-lg-12" style=height:20vw;background:yellow>
-                    </div>
-                    Pause/Play
                   </div>
 
-                  <a href=https://api.instagram.com/oauth/authorize/?client_id=c49374cafc69431b945521bce7601840&redirect_uri=http://ads.waivecar.com/api/instagram&response_type=code> Log in with instagram</a>
 
                   <div class=insta>
-                    <div class=header>
-                      <div class=profile>
-                        <img />
-                      </div>
-                      <div class=info>
-                        <div class=name></div>
-                        <div class=description></div>
-                      </div>
+                    <div class=loader>
+                      <i class="fas fa-hourglass-start" style=margin-right:.5rem></i> Loading&hellip;
                     </div>
-                    <div class=content>
+                    <div class=login>
+                      <a href=https://api.instagram.com/oauth/authorize/?client_id=c49374cafc69431b945521bce7601840&redirect_uri=http://ads.waivecar.com/api/instagram&response_type=code>Log in with Instagram</a>
+                    </div>
+                    <div class=mock>
+                      <iframe class=preview></iframe>
+                      <div class=header>
+                        <div class=profile>
+                          <img />
+                        </div>
+                        <div class=info>
+                          <div style=height:100%;justify-content:center;display:flex;flex-direction:column;align-items:center;>
+                            <div class=name></div>
+                            <div class=description></div>
+                          </div>
+                        </div>
+                        <div class=logout><a class="btn btn-primary btn-sm" href="/api/instagram?logout=1">Switch User</a></div>
+                      </div>
+                      <div class=content>
+                      </div>
                     </div>
                   </div>
-
-
-  
-                  Show images
-
-                  Select images
-
-                  Confirm
 
                 </div>
               </div>
@@ -287,6 +295,7 @@ You will never spend more than $10,000 per month. Lastly, your ad needs to be ap
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="../../js/jquery.easing.min.js"></script>
+<script src="/api/me.js"></script>
     <script src="../../js/sb-admin-2.min.js"></script>
     <script src="../../js/jquery.dataTables.min.js"></script>
     <script src="../../js/dataTables.bootstrap4.min.js"></script>
@@ -297,6 +306,7 @@ You will never spend more than $10,000 per month. Lastly, your ad needs to be ap
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/formBuilder.js"></script>
     <script src="../sharedLogic.js"></script>
+    <script src="../../menu.js"></script>
     <script src="./index.js"></script>
     <script src="/engine.js"></script>
     </body>
