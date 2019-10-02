@@ -32,6 +32,9 @@ try {
   } else if($func == 'me.js') {
     emit_js();
     exit;
+  } else if($func == 'location') {
+    echo(file_get_contents('http://basic.waivecar.com/location.php?' . http_build_query($all)) );
+    exit;
   } else if($func == 'me') {
     jemit(doSuccess($_SESSION));
   } else if($func == 'feed') {
@@ -56,7 +59,6 @@ try {
       $token = aget($_SESSION, 'instagram.access_token');
       if($token) {
         $info = [
-          //'me' => json_decode(file_get_contents("https://api.instagram.com/v1/users/self/?access_token=$token"), true),
           'posts' => json_decode(file_get_contents("https://api.instagram.com/v1/users/self/media/recent/?access_token=$token&count=18"), true)
         ];
         jemit(doSuccess($info['posts']));
@@ -80,12 +82,12 @@ try {
   }
   else if($func == 'screens' && ($verb == 'POST' || $verb == 'PUT')) {
     jemit(screen_edit($all));
-  } else if(array_search($func, [ 'widgets', 'tickers' ]) !== false ) {
+  } else if(array_search($func, [ 'apps', 'tickers' ]) !== false ) {
     $type = rtrim($func, 's');
-    post_return(show('addon', array_merge(['type' => $type], $all)));
+    post_return(show('widget', array_merge(['type' => $type], $all)));
 
   } else if(array_search($func, [
-    'brands', 'organizations', 'attributions', 'users',
+    'brands', 'organizations', 'attributions', 'users', 'widgets',
     'jobs', 'sensor_history', 'campaigns', 'screens', 'tasks']) !== false) {
     $table = rtrim($func, 's');
     $action = 'show';

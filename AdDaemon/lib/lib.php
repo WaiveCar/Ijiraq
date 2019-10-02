@@ -431,15 +431,8 @@ function tasks() {
   return show('task');
 }
 
-function brands() {
-  return show('brand');
-}
-
 function orgs() {
   return show('org');
-}
-function widgets() {
-  return show('widget');
 }
 function layouts() {
   return show('layout');
@@ -805,7 +798,6 @@ function show($what, $clause = []) {
 
   if(is_array($clause)) {
     $clause = array_merge($where, $clause);
-    error_log(json_encode($clause));
     if( !empty($clause) ) {
       $clause = " where " . implode(' and ', sql_kv($clause));
     } else {
@@ -912,6 +904,16 @@ function campaign_create($data, $fileList, $user = false) {
     ],
   );
 
+  foreach(['title','organization_id','brand_id'] as $key) {
+    if(isset($data[$key])) {
+      if($key == 'title') {
+        $props[$key] = db_string($data[$key]);
+      } else {
+        $props[$key] = $data[$key];
+      }
+    }
+  }
+
   # This means we do #141
   if(aget($data, 'secret') === 'b3nYlMMWTJGNz40K7jR5Hw') {
     $ref_id = db_string(aget($data, 'ref_id'));
@@ -932,6 +934,8 @@ function campaign_create($data, $fileList, $user = false) {
     return doSuccess(Get::campaign($campaign_id));
   }
 
+  error_log(json_encode($data));
+  error_log(json_encode($fileList));
   foreach($fileList as $file) {
     $props['asset'][] = upload_s3($file);
   }

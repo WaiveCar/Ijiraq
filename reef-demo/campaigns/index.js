@@ -3,9 +3,7 @@ function renderCampaigns(campaigns, brand, brandIdx) {
   let campaignList = document.querySelector('.campaign-list');
   let newEl = document.createElement('div');
   newEl.innerHTML = `
-    <div class="mt-2 mb-3">
-      <span class="brand-name">${brand}</span>
-    </div>
+     <h3>${brand}</h3>
     <div class="row card-group ml-1 mb-3" id="brand-${brandIdx}">
       ${campaigns
         .map(
@@ -23,12 +21,6 @@ function renderCampaigns(campaigns, brand, brandIdx) {
                  )}   `}<i class="fas fa-play arrow"></i> ${`   ${moment(
               campaign.end_time,
             ).format('MMM D')}`}
-               </div>
-               <div class="user-icon-holder">
-                 <img src="../svg/user-icon.svg" class="user-icon">
-                 <img src="../svg/user-icon.svg" class="user-icon">
-                 <img src="../svg/user-icon.svg" class="user-icon">
-                 <img src="../svg/user-icon.svg" class="user-icon">
                </div>
              </a>
            </div>`,
@@ -63,12 +55,19 @@ function groupByBrand(response, brands) {
 }
 
 (() => {
+  var pre = 'http://adcast/';
+  /*
+  if(document.location.hostname != '127.0.0.1') {
+    pre = `http://192.168.86.58/`;
+  }
+  */
+
   const brandId = new URL(location.href).searchParams.get('brand_id');
-  fetch('http://192.168.86.58/api/brands')
+  fetch(`${pre}/api/brands`)
     .then(response => response.json())
     .then(brands => {
       fetch(
-        `http://192.168.86.58/api/campaigns${
+        `${pre}/api/campaigns${
           brandId ? `?brand_id=${brandId}` : ''
         }`,
       )

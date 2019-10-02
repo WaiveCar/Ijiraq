@@ -1,4 +1,5 @@
 var 
+  uploadInput,
   _preview,
   _assetList = [];
 
@@ -28,6 +29,7 @@ function calcItems() {
       document.querySelector(
         '#impressions',
       ).textContent = `${fakeNumImpressionsPerWeek}`;
+      document.querySelector('#price').textContent = `$${budget}`;
     }
   });
 }
@@ -49,54 +51,37 @@ function create_campaign(obj) {
   // Before the payment is processed by paypal, a user's purchase is sent to the server with 
   // the information that has so far been obtained including the picture.
   let formData = new FormData();
-  $(document.forms[0]).serializeArray().forEach(function(row) {
-    state[row.name] = row.value;
-    formData.append(row.name, row.value);
-  });
-  state.total = dealMap[state.option].price;
+  let valMap = myform.getValues();
+  for(var key in valMap) {
+    formData.append(key, valMap[key]);
+  }
+  formData.append('geofence', _map.save());
 
   /*
-  for(var ix = 0; ix < uploadInput.files.length; ix++) {
-    formData.append('file' + ix, uploadInput.files[ix]);
+  for(var ix = 0; ix < _job.assetList.length; ix++) {
+    formData.append('file' + ix, _job.assetList[ix].url);
   }
   */
-  for(var ix = 0; ix < _job.assetList.length; ix++) {
-    formData.append('file' + ix, _job.assetList[ix]);
+  for(var ix = 0; ix < uploadInput.files.length; ix++) {
+    formData.append('file' + ix, uploadInput.files[ix]);
   }
 
   return axios({
     method: 'post',
-    url: 'http://192.168.86.58/api/campaign',
+    url: 'http://adcast/api/campaign',
     data: formData,
     config: {
       headers: { 'Content-Type': 'multipart/form-data' },
     },
   }).then(function(resp) {
-    if(resp.res) {
-      state.campaign_id = res.data;
-    }
-    if(!obj) {
-      return true;
-    }
-    return obj.payment.create({
-      payment: {
-        transactions: [
-          {
-            amount: {
-              total: (state.total / 100).toFixed(2),
-              currency: 'USD',
-            }
-          }
-        ]
-      }
-    });
+    window.location = 'http://' + window.location.hostname + '/campaigns';
   });
 }
 function resize(asset, width, height) {
   if( height * (1920/756) > width) {
-    asset.style.height = '100%';
-  } else {
     asset.style.width = '100%';
+  } else {
+    asset.style.height = '100%';
   }
 }
 function addtime(n) {
@@ -119,7 +104,7 @@ function setRatio(container, what) {
 }
 
 function get(ep, cb) {
-  fetch(new Request(`/api/${ep}`))
+  fetch(new Request(`http://adcast/api/${ep}`))
     .then(res => {
       if (res.status === 200) {
         return res.json();
@@ -128,7 +113,7 @@ function get(ep, cb) {
 }
 
 function post(ep, body, cb) {
-  fetch(new Request(`http://192.168.86.58/api/${ep}`, {
+  fetch(new Request(`http://adcast/api/${ep}`, {
     method: 'POST', 
     body: JSON.stringify(body)
   })).then(res => {
@@ -152,7 +137,7 @@ function show(what) {
 }
 
 function doMap() {
-  $.getJSON("http://192.168.86.58/api/screens?active=1&removed=0", function(Screens) {
+  $.getJSON("http://adcast/api/screens?active=1&removed=0", function(Screens) {
     self._map = map({points:Screens});
     let success = false;
 
@@ -258,6 +243,7 @@ window.onload = function(){
   self._container =  document.getElementById('engine');
   doMap();
   var isFirst = true;
+  var ratio = 'car';
   if (self._container) {
     setRatio(_container, 'car'); 
     self._preview = Engine({ 
@@ -277,7 +263,7 @@ window.onload = function(){
   $(".ratios button").click(function(){
     $(this).siblings().removeClass('active');
     $(this).addClass('active');
-    console.log("<" + this.innerHTML + ">");
+    ratio = this.innerHTML.replace(':', '-').toLowerCase();
     if(this.innerHTML == "16:9") {
       _container.style.width = _container.clientHeight * 16/9 + "px";
     } else if(this.innerHTML == "3:2") {
@@ -285,6 +271,8 @@ window.onload = function(){
     } else {
       _container.style.width = "100%";
     }
+      $(`.preview-holder-${ratio}`).siblings().removeClass('selector');
+      $(`.preview-holder-${ratio}`).addClass('selector');
   });
 
 
@@ -292,7 +280,10 @@ window.onload = function(){
   uploadInput = document.getElementById('image-upload');
     if (uploadInput) {
     uploadInput.addEventListener('change', function() {
-      var container = $(".preview-holder");
+      console.log("<<" + ratio);
+      $(`.preview-holder-${ratio}`).siblings().removeClass('selector');
+      $(`.preview-holder-${ratio}`).addClass('selector');
+      var container = $(`.preview-holder-${ratio} .assets`);
 
       addtime(false);
       Array.prototype.slice.call(uploadInput.files).forEach(function(file) {

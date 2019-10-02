@@ -89,7 +89,7 @@ $SCHEMA = [
     'car'         => 'text',
     'project'     => 'text',
     'has_time'    => 'boolean default false',
-    'widget_id'   => 'integer',
+    'app_id'      => 'integer',
     'ticker_id'   => 'integer',
     'model'       => 'text',
     'panels'      => 'text',
@@ -184,7 +184,7 @@ $SCHEMA = [
     'created_at' => 'datetime default current_timestamp',
   ],
 
-  'addon' => [
+  'widget' => [
     'id'     => 'integer primary key autoincrement',
     'name'   => 'text', // what to call it
     'image'  => 'text', // url of logo or screenshot
@@ -211,7 +211,7 @@ $SCHEMA = [
   //
   'campaign' => [
     'id'          => 'integer primary key autoincrement',
-    'name'        => 'text',
+    'title'       => 'text',
     'ref_id'      => 'text',
     'brand_id'    => 'integer',
     'organization_id'    => 'integer',
@@ -357,6 +357,21 @@ $SCHEMA = [
   'ping_history' => [
     'id'        => 'integer primary key autoincrement',
     'screen_id' => 'integer',
+    'created_at'=> 'datetime default current_timestamp',
+  ],
+
+  # this is a normalized system. Dunno if it's a good idea
+  # becaue most of thetime this will return no results. Maybe
+  # keeping a counter in a screen definition of "has_campaigns"
+  # and then when they are purged from this list that gets updated.
+  #
+  # This "optimization" which shouldn't be done because of
+  # that word I just used, would avoid the extra query for no 
+  # results problem
+  'screen_campaign' => [
+    'id' => 'integer primary key autoincrement',
+    'screen_id' => 'integer',
+    'campaign_id' => 'integer',
     'created_at'=> 'datetime default current_timestamp',
   ],
 
@@ -557,7 +572,10 @@ function db_clean($kv) {
 function sql_kv($hash, $operator = '=', $quotes = "'", $intList = []) {
   $ret = [];
   foreach($hash as $key => $value) {
-    if ( is_string($value) ) {
+    if ( is_numeric($value) ) {
+      $ret[] = "$key $operator $value";
+    }
+    else if ( is_string($value) ) {
       if(in_array($key, $intList)) {
         $ret[] = "$key $operator $value";
       } else {

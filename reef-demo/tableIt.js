@@ -7,7 +7,7 @@ var tableIt = (function() {
     }
     _map[what] = {}
 
-    $.getJSON(`http://192.168.86.58/api/${what}s`, function(res) {
+    $.getJSON(`http://adcast/api/${what}s`, function(res) {
       res.forEach(row => _map[row.id] = row);
       $(`td.${what}_id`).each(function(ix, el) {
         var myid = el.innerHTML;
@@ -25,10 +25,7 @@ var tableIt = (function() {
       filter: (opts && opts.filter || []).concat(['id','password','created_at','image'])
     }, opts || {});
 
-    var pre = '';
-    if(document.location.hostname != '127.0.0.1') {
-      pre = `http://192.168.86.58/`;
-    }
+    var pre = 'http://adcast/';
 
     $.getJSON(`${pre}/api/${table}`, function(res) {
       console.log(res);
@@ -59,7 +56,7 @@ var tableIt = (function() {
             fields.map(function(field) {
               return '<td class=' + field + '>' + (
                 field === 'name' ?
-                  `<a href="/${table}/show/?id=${row.id}">${row[field]}</a>` :
+                  (table !== 'brands' ? `<a href="/${table}/show/?id=${row.id}">${row[field]}</a>`: `<a href="/campaigns/?brand_id=${row.id}">${row[field]}</a>`) :
                   row[field]
                ) + '</td>'
             }) + '</tr>'

@@ -12,8 +12,8 @@
     <link href="../../css/jquery.schedule.min.css" rel="stylesheet">
     <link href="../../common.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
-<link href="/api/me.css" rel="stylesheet">
-<link href="/api/me.css" rel="stylesheet">
+<link href="http://adcast/api/me.css" rel="stylesheet">
+<link href="http://adcast/api/me.css" rel="stylesheet">
     <link rel='stylesheet' href='../../engine.css'>
     <title>Screen Admin</title>
   </head>
@@ -50,9 +50,9 @@
     #engine { overflow: hidden; background: black }
 
 .screen {
-  background: black;
   text-align: center;
   position: relative;
+  margin: 0.5rem 0;
 }
 .screen .bg {
   width: 100%;
@@ -62,9 +62,10 @@
 }
  .controls { 
    padding: 10px;
-   background: #333;
+   background: #334;
    padding-bottom: 3px;
-   border-radius: 0 0 10px 10px;
+   margin-bottom: 1.5rem;
+   border-radius: 0 0 6px 6px;
  }
  .asset-container {
   position: absolute;
@@ -76,6 +77,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  overflow: hidden;
 }
   </style>
   <body id="page-top">
@@ -133,16 +135,11 @@
                         <button type="button" class="rewind btn btn-dark">
                           <i class="fas fa-backward"></i>
                         </button>
-                        <!--
-                        <button type="button" class="btn btn-dark">
-                          <i class="fas fa-play"></i>
-                        </button>
-                        -->
                       </div>
                     </div>
                     <div class="col-6">
                       <div class="float-right">
-                        <div class="btn-group ratios" role="group" style='margin-bottom:0.5rem;margin-right:1rem' aria-label="Basic example">
+                        <div class="btn-group ratios" role="group" style='margin-bottom:0.5rem;margin-right:1rem'>
                           <button type="button" class="btn btn-dark">3:2</button>
                           <button type="button" class="btn btn-dark">16:9</button>
                           <button type="button" class="btn btn-dark active">Car</button>
@@ -154,12 +151,20 @@
                       </div>
                     </div>
                   </div>
-                  <div class="row justify-content-md-center">
-                    <div class="preview-holder col-8">
+                  <div class="row justify-content-md-center preview-collection">
+                    <div class="preview-holder-3-2 col-4">
+                      <h4>3:2</h4>
+                      <div class="assets"></div>
+                    </div>
+                    <div class="preview-holder-16-9 col-4">
+                      <h4>16:9</h4>
+                      <div class="assets"></div>
+                    </div>
+                    <div class="preview-holder-car col-4">
+                      <h4>Car</h4>
+                      <div class="assets"></div>
                     </div>
                   </div>
-
-
                 </div>
               </div>
             </div>
@@ -167,7 +172,7 @@
         </div>
 
         
-        <div class="row mb-4 instagram-wrapper shown"><!-- style='display:none'>-->
+        <div class="row mb-4 instagram-wrapper shown" style='display:none'>
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
@@ -257,13 +262,11 @@
                 <div class="card-text">
                   <div id='summary'>
                   CPM:
-                  <div class="row no-gutters mb-2" id="cpm"> </div>
+                  <div style=font-size:1.3rem class="row no-gutters mb-2" id="cpm"> </div>
                   Estimated Impressions:
-                  <div class="row no-gutters mb-2" id="impressions"> </div>
-                  Guaranteed Hours
-                  <div class="row no-gutters mb-2" id="hours"> </div>
+                  <div style=font-size:1.3rem class="row no-gutters mb-2" id="impressions"> </div>
                   Price
-                  <div class="row no-gutters mb-2" id="price"> </div>
+                  <div  style=font-size:1.3rem class="row no-gutters mb-2" id="price"> </div>
                   </div>
 
                 </div>
@@ -276,11 +279,8 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
-                <h2 class="card-title">Finalize</h2>
                 <div class="card-text">
-                  <p>Your ad will start immediately and run indefinitely until it is paused.
-You will never spend more than $10,000 per month. Lastly, your ad needs to be approved by our team before delivery begins.</p>
-                  <button type="button" class="btn btn-primary btn-lg">Launch Campaign</button>
+                  <button onclick=create_campaign() type="button" class="btn btn-primary btn-lg">Launch Campaign</button>
                 </div>
               </div>
             </div>
@@ -295,7 +295,7 @@ You will never spend more than $10,000 per month. Lastly, your ad needs to be ap
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="../../js/jquery.easing.min.js"></script>
-<script src="/api/me.js"></script>
+<script src="http://adcast/api/me.js"></script>
     <script src="../../js/sb-admin-2.min.js"></script>
     <script src="../../js/jquery.dataTables.min.js"></script>
     <script src="../../js/dataTables.bootstrap4.min.js"></script>
