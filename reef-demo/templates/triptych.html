@@ -1,0 +1,25 @@
+<div>
+  <div class="triptych-images">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Aspect_ratio_-_4x3.svg/800px-Aspect_ratio_-_4x3.svg.png"> 
+  </div>
+  <canvas id="triptych-edit" width="768" height="270">
+  </canvas>
+</div>
+<style>
+  .triptych-images {
+    display: none;
+  }
+</style>
+<script>
+  let triptych = document.querySelector('#triptych-edit');
+  let height = triptych.height / 2;
+  let width = triptych.width / 2;
+  let ctx = triptych.getContext('2d');
+  let images = document.querySelectorAll('.triptych-images img');
+  images.forEach(img => {
+    ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 180, 135);
+  });
+  function getImageFromCanvas() {
+    
+  }
+</script>
