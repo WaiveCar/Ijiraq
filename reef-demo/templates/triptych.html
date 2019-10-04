@@ -1,9 +1,10 @@
-<div>
+<div class="editor-holder">
   <div class="triptych-images">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Aspect_ratio_-_4x3.svg/800px-Aspect_ratio_-_4x3.svg.png"> 
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Aspect_ratio_-_4x3.svg/800px-Aspect_ratio_-_4x3.svg.png" crossorigin="anonymous"> 
   </div>
   <canvas id="triptych-edit" width="768" height="270">
   </canvas>
+  <button onclick="getImageFromCanvas()">Choose This</button>
 </div>
 <style>
   .triptych-images {
@@ -15,11 +16,16 @@
   let height = triptych.height / 2;
   let width = triptych.width / 2;
   let ctx = triptych.getContext('2d');
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, 768, 270);
   let images = document.querySelectorAll('.triptych-images img');
   images.forEach(img => {
     ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 180, 135);
   });
   function getImageFromCanvas() {
-    
+    let src = triptych.toDataURL('img/jpeg');  
+    let newImg = document.createElement('img');
+    newImg.src = src;
+    document.querySelector('.editor-holder').appendChild(newImg);
   }
 </script>
