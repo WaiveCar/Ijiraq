@@ -4,7 +4,7 @@
   </div>
   <canvas id="triptych-edit" width="768" height="270">
   </canvas>
-  <button onclick="getImageFromCanvas()">Choose This</button>
+  <button class="choose-image">Choose This</button>
 </div>
 <style>
   .triptych-images {
@@ -12,20 +12,27 @@
   }
 </style>
 <script>
-  let triptych = document.querySelector('#triptych-edit');
-  let height = triptych.height / 2;
-  let width = triptych.width / 2;
-  let ctx = triptych.getContext('2d');
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, 768, 270);
+  function renderTriptych(images, backgroundColor, layout) {
+    let triptych = document.querySelector('#triptych-edit');
+    let height = triptych.height / 2;
+    let width = triptych.width / 2;
+    let ctx = triptych.getContext('2d');
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0, 0, 768, 270);
+    images.forEach(img => {
+      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 180, 135);
+    });
+  }
   let images = document.querySelectorAll('.triptych-images img');
-  images.forEach(img => {
-    ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 180, 135);
-  });
+  console.log(images);
+  renderTriptych(images, 'black');
   function getImageFromCanvas() {
+    console.log('here');
+    let triptych = document.querySelector('#triptych-edit');
     let src = triptych.toDataURL('img/jpeg');  
     let newImg = document.createElement('img');
     newImg.src = src;
     document.querySelector('.editor-holder').appendChild(newImg);
   }
+  document.querySelector('.choose-image').onclick = getImageFromCanvas;
 </script>
