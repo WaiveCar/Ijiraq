@@ -4,6 +4,7 @@
   </div>
   <canvas id="triptych-edit" width="768" height="270">
   </canvas>
+  <input type="color" name="color-picker"><label for="color-picker">Background Color</label>
   <button class="choose-image">Choose This</button>
 </div>
 <style>
@@ -12,27 +13,30 @@
   }
 </style>
 <script>
-  function renderTriptych(images, backgroundColor, layout) {
+  let backgroundColor = 'black';
+
+  function renderTriptych(e) {
+    let images = document.querySelectorAll('.triptych-images img');
     let triptych = document.querySelector('#triptych-edit');
     let height = triptych.height / 2;
     let width = triptych.width / 2;
     let ctx = triptych.getContext('2d');
-    ctx.fillStyle = backgroundColor;
+    ctx.fillStyle = e ? e.target.value : backgroundColor;
+    backgroundColor = ctx.fillStyle;
     ctx.fillRect(0, 0, 768, 270);
     images.forEach(img => {
       ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 180, 135);
     });
   }
-  let images = document.querySelectorAll('.triptych-images img');
-  console.log(images);
-  renderTriptych(images, 'black');
+
   function getImageFromCanvas() {
-    console.log('here');
     let triptych = document.querySelector('#triptych-edit');
     let src = triptych.toDataURL('img/jpeg');  
     let newImg = document.createElement('img');
     newImg.src = src;
     document.querySelector('.editor-holder').appendChild(newImg);
   }
+  renderTriptych();
   document.querySelector('.choose-image').onclick = getImageFromCanvas;
+  document.querySelector('[name=color-picker]').oninput = renderTriptych
 </script>
