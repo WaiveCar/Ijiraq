@@ -62,7 +62,7 @@
     });
   }
 
-  function renderOption(ratio) {
+  function renderOptions(ratio) {
     document.querySelector('.layout-options').innerHTML = aspectRatios[ratio].layouts.map(layout => 
       `
         <div>
@@ -89,9 +89,11 @@
     ctx.clearRect(0, 0, triptych.width, triptych.height);
     ctx.fillStyle = backgroundColor;
     ctx.fillRect(0, 0, triptych.width, triptych.height);
+    renderOptions(selectedRatio);
+    renderTriptych();
   }
 
-  renderOption(selectedRatio);
+  renderOptions(selectedRatio);
   renderTriptych();
 
   document.querySelector('.choose-image').onclick = getImageFromCanvas;
