@@ -1,8 +1,15 @@
 <div class="editor-holder">
-  <div class="triptych-images">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Aspect_ratio_-_4x3.svg/800px-Aspect_ratio_-_4x3.svg.png" crossorigin="anonymous"> 
+  <div class="aspect-selector">
+    <input type="radio" name="aspect-ratio" value="landscape" checked><label for="aspect-ratio">16x9 Landscape</label>
+    <input type="radio" name="aspect-ratio" value="portrait"><label for="aspect-ratio">16x9 Portrait</label>
+    <input type="radio" name="aspect-ratio" value="carScreen"><label for="aspect-ratio">Car Screen</label>
   </div>
-  <canvas id="triptych-edit" width="768" height="270">
+  <div class="triptych-images">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
+    <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
+    <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
+  </div>
+  <canvas id="triptych-edit" width="480" height="270">
   </canvas>
   <input type="color" name="color-picker"><label for="color-picker">Background Color</label>
   <button class="choose-image">Choose This</button>
@@ -13,7 +20,27 @@
   }
 </style>
 <script>
+  let aspectRatios = {
+    landscape: {
+      width: 480, 
+      height: 270,
+      layouts: [],
+    },
+    portrait: {
+      width: 270,
+      height: 480,
+      layouts: [],
+    },
+    carScreen: {
+      width: 768,
+      height: 270,
+      layouts: [[[10, 10, 160, 120], [10, 140, 160, 120], [180, 15, 320, 240]]],
+    }
+  };
   let backgroundColor = 'black';
+  let selectedRatio = 'landscape'
+
+  let layout = [[10, 10, 160, 120], [10, 140, 160, 120], [180, 15, 320, 240]];
 
   function renderTriptych(e) {
     let images = document.querySelectorAll('.triptych-images img');
@@ -23,9 +50,9 @@
     let ctx = triptych.getContext('2d');
     ctx.fillStyle = e ? e.target.value : backgroundColor;
     backgroundColor = ctx.fillStyle;
-    ctx.fillRect(0, 0, 768, 270);
-    images.forEach(img => {
-      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 180, 135);
+    ctx.fillRect(0, 0, triptych.width, triptych.height);
+    images.forEach((img, idx) => {
+      ctx.drawImage(img, 0, 0, img.width, img.height, ...layout[idx]);
     });
   }
 
@@ -36,7 +63,17 @@
     newImg.src = src;
     document.querySelector('.editor-holder').appendChild(newImg);
   }
+
+  function changeAspect(e) {
+    let triptych = document.querySelector('#triptych-edit');
+    let vals = aspectRatios[e.target.value];
+    triptych.width = vals.width;
+    triptych.height = vals.height;
+    selectedRatio = e.target.value;
+    renderTriptych();
+  }
   renderTriptych();
   document.querySelector('.choose-image').onclick = getImageFromCanvas;
-  document.querySelector('[name=color-picker]').oninput = renderTriptych
+  document.querySelector('[name=color-picker]').oninput = renderTriptych;
+  document.querySelector('.aspect-selector').onchange = changeAspect;
 </script>
