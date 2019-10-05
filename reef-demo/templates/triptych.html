@@ -1,8 +1,11 @@
 <div class="editor-holder">
   <div class="aspect-selector">
-    <input type="radio" name="aspect-ratio" value="landscape" checked><label for="aspect-ratio">16x9 Landscape</label>
-    <input type="radio" name="aspect-ratio" value="portrait"><label for="aspect-ratio">16x9 Portrait</label>
-    <input type="radio" name="aspect-ratio" value="carScreen"><label for="aspect-ratio">Car Screen</label>
+    <input type="radio" name="aspect-ratio" value="landscape" checked>
+    <label for="aspect-ratio">16x9 Landscape</label>
+    <input type="radio" name="aspect-ratio" value="portrait">
+    <label for="aspect-ratio">16x9 Portrait</label>
+    <input type="radio" name="aspect-ratio" value="carScreen">
+    <label for="aspect-ratio">Car Screen</label>
   </div>
   <div class="layout-options">
   </div>
@@ -26,7 +29,7 @@
     landscape: {
       width: 480, 
       height: 270,
-      layouts: [[[10, 10, 160, 120], [10, 140, 160, 120], [180, 15, 280, 210]]],
+      layouts: [[[10, 10, 160, 120], [10, 140, 160, 120], [180, 25, 292, 219]]],
     },
     portrait: {
       width: 270,
@@ -41,20 +44,21 @@
   };
   let backgroundColor = 'black';
   let selectedRatio = 'landscape'
+  let selectedLayout = 0;
   let triptych = document.querySelector('#triptych-edit');
   let ctx = triptych.getContext('2d');
 
-  let layout = [[8, 8, 160, 120], [8, 142, 160, 120], [180, 25, 292, 219]];
 
   function renderTriptych(e) {
     let images = document.querySelectorAll('.triptych-images img');
     let height = triptych.height / 2;
     let width = triptych.width / 2;
+    ctx.clearRect(0, 0, triptych.width, triptych.height);
     ctx.fillStyle = e ? e.target.value : backgroundColor;
     backgroundColor = ctx.fillStyle;
     ctx.fillRect(0, 0, triptych.width, triptych.height);
     images.forEach((img, idx) => {
-      ctx.drawImage(img, 0, 0, img.width, img.height, ...layout[idx]);
+      ctx.drawImage(img, 0, 0, img.width, img.height, ...aspectRatios[selectedRatio].layouts[selectedLayout][idx]);
     });
   }
 
