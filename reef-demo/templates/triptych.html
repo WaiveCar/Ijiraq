@@ -4,6 +4,8 @@
     <input type="radio" name="aspect-ratio" value="portrait"><label for="aspect-ratio">16x9 Portrait</label>
     <input type="radio" name="aspect-ratio" value="carScreen"><label for="aspect-ratio">Car Screen</label>
   </div>
+  <div class="layout-options">
+  </div>
   <div class="triptych-images">
     <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
     <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
@@ -24,7 +26,7 @@
     landscape: {
       width: 480, 
       height: 270,
-      layouts: [],
+      layouts: [[[10, 10, 160, 120], [10, 140, 160, 120], [180, 15, 280, 210]]],
     },
     portrait: {
       width: 270,
@@ -39,21 +41,31 @@
   };
   let backgroundColor = 'black';
   let selectedRatio = 'landscape'
+  let triptych = document.querySelector('#triptych-edit');
+  let ctx = triptych.getContext('2d');
 
-  let layout = [[10, 10, 160, 120], [10, 140, 160, 120], [180, 15, 320, 240]];
+  let layout = [[8, 8, 160, 120], [8, 142, 160, 120], [180, 25, 292, 219]];
 
   function renderTriptych(e) {
     let images = document.querySelectorAll('.triptych-images img');
-    let triptych = document.querySelector('#triptych-edit');
     let height = triptych.height / 2;
     let width = triptych.width / 2;
-    let ctx = triptych.getContext('2d');
     ctx.fillStyle = e ? e.target.value : backgroundColor;
     backgroundColor = ctx.fillStyle;
     ctx.fillRect(0, 0, triptych.width, triptych.height);
     images.forEach((img, idx) => {
       ctx.drawImage(img, 0, 0, img.width, img.height, ...layout[idx]);
     });
+  }
+
+  function renderOption(ratio) {
+    document.querySelector('.layout-options').innerHTML = aspectRatios[ratio].layouts.map(layout => 
+      `
+        <div>
+          option
+        </div>
+      `
+    ).join('');
   }
 
   function getImageFromCanvas() {
@@ -70,9 +82,14 @@
     triptych.width = vals.width;
     triptych.height = vals.height;
     selectedRatio = e.target.value;
-    renderTriptych();
+    ctx.clearRect(0, 0, triptych.width, triptych.height);
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0, 0, triptych.width, triptych.height);
   }
+
+  renderOption(selectedRatio);
   renderTriptych();
+
   document.querySelector('.choose-image').onclick = getImageFromCanvas;
   document.querySelector('[name=color-picker]').oninput = renderTriptych;
   document.querySelector('.aspect-selector').onchange = changeAspect;
