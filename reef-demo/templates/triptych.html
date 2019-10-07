@@ -43,7 +43,7 @@
   };
   let backgroundColor = 'black';
   let selectedRatio = 'landscape'
-  let selectedLayout = 1;
+  let selectedLayout = 0;
   let triptych = document.querySelector('#triptych-edit');
   let ctx = triptych.getContext('2d');
 
@@ -62,11 +62,10 @@
   }
 
   function renderOptions(ratio) {
-    document.querySelector('.layout-options').innerHTML = aspectRatios[ratio].layouts.map(layout => 
+    document.querySelector('.layout-options').innerHTML = aspectRatios[ratio].layouts.map((layout, i) => 
       `
-        <div>
-          option
-        </div>
+      <input type="radio" name="triptych-options" value="${i}" ${i === 0 ? 'checked' : ''}>
+      <label for="option${i}">${i}</label>
       `
     ).join('');
   }
@@ -92,10 +91,15 @@
     renderTriptych();
   }
 
+  function chooseTriptych(e) {
+    console.log('e.target', e.target.value);
+  }
+
   renderOptions(selectedRatio);
   renderTriptych();
 
   document.querySelector('.choose-image').onclick = getImageFromCanvas;
   document.querySelector('[name=color-picker]').oninput = renderTriptych;
   document.querySelector('.aspect-selector').onchange = changeAspect;
+  document.querySelector('.layout-options').onchange = chooseTriptych;
 </script>
