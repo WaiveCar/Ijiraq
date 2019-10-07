@@ -12,7 +12,6 @@
   <div class="triptych-images">
     <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
     <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
   </div>
   <canvas id="triptych-edit" width="480" height="270">
   </canvas>
@@ -29,7 +28,7 @@
     landscape: {
       width: 480, 
       height: 270,
-      layouts: [[[10, 10, 160, 120], [10, 140, 160, 120], [180, 25, 292, 219]]],
+      layouts: [[[10, 10, 160, 120], [10, 140, 160, 120], [180, 25, 292, 219]], [[15, 50, 220, 165], [245, 50, 220, 165]]],
     },
     portrait: {
       width: 270,
@@ -44,7 +43,7 @@
   };
   let backgroundColor = 'black';
   let selectedRatio = 'landscape'
-  let selectedLayout = 0;
+  let selectedLayout = 1;
   let triptych = document.querySelector('#triptych-edit');
   let ctx = triptych.getContext('2d');
 
