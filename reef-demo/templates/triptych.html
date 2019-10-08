@@ -34,7 +34,7 @@
     landscape: {
       width: 480, 
       height: 270,
-      layouts: [[[10, 10, 160, 120], [10, 140, 160, 120], [180, 25, 292, 219]], [[15, 50, 220, 165], [245, 50, 220, 165]]],
+      layouts: [[[10, 10, 160, 120], [10, 135, 160, 120], [180, 25, 292, 219]], [[15, 50, 220, 165], [245, 50, 220, 165]]],
     },
     portrait: {
       width: 270,
@@ -65,10 +65,6 @@
     aspectRatios[selectedRatio].layouts[selectedLayout].forEach((place, i) => {
       ctx.drawImage(images[i], 0, 0, images[i].width, images[i].height, ...place);
     });
-    /*
-    images.forEach((img, idx) => {
-      ctx.drawImage(img, 0, 0, img.width, img.height, ...aspectRatios[selectedRatio].layouts[selectedLayout][idx]);
-    });*/
   }
 
   function renderOptions(ratio) {
