@@ -20,8 +20,13 @@
     <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
     <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
   </div>
-  <canvas id="triptych-edit" width="480" height="270">
-  </canvas>
+  <button class="add-text">Add Text</button>
+  <button class="clear-text">Clear Text</button>
+  <input type="text" class="triptych-text" placeholder="enter text">
+  <div>
+    <canvas id="triptych-edit" width="480" height="270">
+    </canvas>
+  </div>
   <button class="choose-image">Choose This</button>
 </div>
 <style>
@@ -62,6 +67,7 @@
   let backgroundColor = 'black';
   let selectedRatio = 'landscape'
   let selectedLayout = 0;
+  let addingText = false;
   let triptych = document.querySelector('#triptych-edit');
   let ctx = triptych.getContext('2d');
 
@@ -115,11 +121,32 @@
     renderTriptych();
   }
 
+  function handleCanvasText(e) {
+    let text = document.querySelector('.triptych-text').value;
+    let rect = triptych.getBoundingClientRect();
+    console.log(e.clientX - rect.left, e.clientY - rect.top, '\n', rect, text);
+    ctx.font = "30px Arial";
+    ctx.fillStyle = 'black';
+    ctx.fillText(text, e.clientX - rect.left, e.clientY - rect.top);
+    ctx.fillStyle = backgroundColor;
+  }
+
+  function toggleTextAdd() {
+    if (this.textContent === 'Add Text') {
+      this.textContent = 'Cancel Adding Text';
+      triptych.addEventListener('click', handleCanvasText);
+    } else {
+      this.textContent = 'Add Text';
+      triptych.removeEventListener('click', handleCanvasText);
+    }
+  }
+
   renderOptions(selectedRatio);
   renderTriptych();
-
   document.querySelector('.choose-image').onclick = getImageFromCanvas;
   document.querySelector('[name=color-picker]').oninput = renderTriptych;
   document.querySelector('.aspect-selector').onchange = changeAspect;
   document.querySelector('.layout-options').onchange = chooseTriptych;
+  document.querySelector('.add-text').onclick = toggleTextAdd;
+  document.querySelector('.clear-text').onclick = renderTriptych;
 </script>
