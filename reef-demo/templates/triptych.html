@@ -1,5 +1,5 @@
 <div class="editor-holder">
-  <input type="color" name="color-picker"><label for="color-picker">Background Color</label>
+  <input type="color" name="background-color-picker"><label for="background-color-picker">Background Color</label>
   <div class="aspect-selector">
     <input type="radio" name="aspect-ratio" value="landscape" checked>
     <label for="aspect-ratio">16x9 Landscape</label>
@@ -21,8 +21,9 @@
     <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
   </div>
   <button class="add-text">Add Text</button>
-  <button class="clear-text">Clear Text</button>
+  <input type="color" name="text-color-picker"><label for="text-color-picker">Text Color</label>
   <input type="text" class="triptych-text" placeholder="enter text">
+  <button class="clear-text">Clear Text</button>
   <div>
     <canvas id="triptych-edit" width="480" height="270">
     </canvas>
@@ -151,9 +152,10 @@
   
   function handleCanvasText(e) {
     let text = document.querySelector('.triptych-text').value;
+    let textColor = document.querySelector('[name=text-color-picker]').value;
     let rect = triptych.getBoundingClientRect();
     ctx.font = '30px Arial';
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = textColor;
     ctx.fillText(text, e.clientX - rect.left, e.clientY - rect.top);
     ctx.fillStyle = backgroundColor;
   }
@@ -172,7 +174,7 @@
   renderTriptych();
   
   document.querySelector('.choose-image').onclick = getImageFromCanvas;
-  document.querySelector('[name=color-picker]').oninput = renderTriptych;
+  document.querySelector('[name=background-color-picker]').oninput = renderTriptych;
   document.querySelector('.aspect-selector').onchange = changeAspect;
   document.querySelector('.layout-options').onchange = chooseTriptych;
   document.querySelector('.add-text').onclick = toggleTextAdd;
