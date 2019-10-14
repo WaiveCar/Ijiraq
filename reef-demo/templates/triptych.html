@@ -2,11 +2,11 @@
   <input type="color" name="background-color-picker"><label for="background-color-picker">Background Color</label>
   <div class="category-selector">
     <input type="radio" name="post-category" value="announcement" checked>
-    <label for="post-category">16x9 Landscape</label>
+    <label for="post-category">Announcement</label>
     <input type="radio" name="post-category" value="promo">
-    <label for="post-category">16x9 Portrait</label>
+    <label for="post-category">Promo</label>
     <input type="radio" name="post-category" value="notice">
-    <label for="post-category">Car Screen</label>
+    <label for="post-category">Notice</label>
   </div>
   <div class="layout-options">
   </div>
@@ -34,12 +34,13 @@
   .triptych-images {
     display: none;
   }
+  #triptych-edit {
+    border: 1px solid black;
+  }
 </style>
 <script>
   let postTypes = {
     announcement: {
-      width: 768,
-      height: 270,
       layouts: [
         [
           [10, 10, 160, 120],
@@ -58,37 +59,44 @@
       ],
     },
     promo: {
-      width: 480,
-      height: 270,
       layouts: [
         [
-          [53.3, 10, 160, 120],
-          [53.3, 140, 160, 120],
-          [266.6, 10, 160, 120],
-          [266.6, 140, 160, 120],
+          [10, 10, 160, 120],
+          [10, 140, 160, 120],
+          [224, 15, 320, 240],
+          [598, 10, 160, 120],
+          [598, 140, 160, 120],
         ],
-        [[10, 10, 160, 120], [10, 140, 160, 120], [180, 25, 292, 219]],
-        [[15, 50, 220, 165], [245, 50, 220, 165]],
+        [[16, 45, 240, 180], [264, 45, 240, 180], [512, 45, 240, 180]],
+        [
+          [32, 45, 240, 180],
+          [304, 45, 240, 180],
+          [576, 15, 160, 120],
+          [576, 140, 160, 120],
+        ],
       ],
     },
     notice: {
-      width: 270,
-      height: 480,
       layouts: [
-        [[5, 30, 260, 195], [5, 255, 260, 195]],
-        [[7, 70, 124, 93], [139, 70, 124, 93], [5, 255, 260, 195]],
         [
-          [7, 13.5, 124, 93],
-          [139, 13.5, 124, 93],
-          [7, 133.5, 124, 93],
-          [139, 133.5, 124, 93],
-          [5, 255, 260, 195],
+          [10, 10, 160, 120],
+          [10, 140, 160, 120],
+          [224, 15, 320, 240],
+          [598, 10, 160, 120],
+          [598, 140, 160, 120],
+        ],
+        [[16, 45, 240, 180], [264, 45, 240, 180], [512, 45, 240, 180]],
+        [
+          [32, 45, 240, 180],
+          [304, 45, 240, 180],
+          [576, 15, 160, 120],
+          [576, 140, 160, 120],
         ],
       ],
     },
   };
 
-  let backgroundColor = 'black';
+  let backgroundColor = 'white';
   let selectedCategory = 'announcement';
   let selectedLayout = 0;
   let addingText = false;
@@ -132,11 +140,9 @@
     document.querySelector('.editor-holder').appendChild(newImg);
   }
   
-  function changeAspect(e) {
+  function changeCategory(e) {
     let triptych = document.querySelector('#triptych-edit');
     let vals = postTypes[e.target.value];
-    triptych.width = vals.width;
-    triptych.height = vals.height;
     selectedCategory = e.target.value;
     ctx.clearRect(0, 0, triptych.width, triptych.height);
     ctx.fillStyle = backgroundColor;
@@ -176,7 +182,7 @@
   
   document.querySelector('.choose-image').onclick = getImageFromCanvas;
   document.querySelector('[name=background-color-picker]').oninput = renderTriptych;
-  document.querySelector('.category-selector').onchange = changeAspect;
+  document.querySelector('.category-selector').onchange = changeCategory;
   document.querySelector('.layout-options').onchange = chooseTriptych;
   document.querySelector('.add-text').onclick = toggleTextAdd;
   document.querySelector('.clear-text').onclick = renderTriptych;
