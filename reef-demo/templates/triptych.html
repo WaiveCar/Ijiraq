@@ -152,6 +152,9 @@
       image = new Image();
       image.onload = function() {
         renderTriptych();
+        let event = new Event('input');
+        let textInput = document.querySelector('.triptych-text');
+        textInput.dispatchEvent(event);
       }
       image.src = URL.createObjectURL(this.files[0]);
     }
