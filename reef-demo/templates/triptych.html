@@ -103,9 +103,6 @@
     backgroundColor = ctx.fillStyle;
     ctx.fillRect(0, 0, triptych.width, triptych.height);
     if (layout.hasImage) {
-      console.log(image);
-      console.log(image.width, image.height)
-      document.querySelector('.editor-holder').appendChild(image);
       ctx.drawImage(image, 0, 0, image.width, image.height, ...layout.imagePosition);
     }
   }
@@ -158,6 +155,7 @@
       }
       image.src = URL.createObjectURL(this.files[0]);
     }
+    document.querySelector('.input-options').appendChild(fileUpload);
   }
 
   function chooseTriptych(e) {
@@ -216,6 +214,9 @@
   }
   
   renderOptions(selectedCategory);
+  if (postTypes[selectedCategory].layouts[selectedLayout].hasImage) {
+    addFileInput();
+  }
   renderTriptych();
   
   document.querySelector('.choose-image').onclick = getImageFromCanvas;
