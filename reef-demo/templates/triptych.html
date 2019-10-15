@@ -105,19 +105,16 @@
   let triptych = document.querySelector('#triptych-edit');
   let ctx = triptych.getContext('2d');
   let image = document.querySelector('.triptych-images img');
+  let scale = 1;
 
-  function renderTriptych(e, currentTriptych, currentCtx, forUpload) {
-    currentTriptych = currentTriptych ? currentTriptych : triptych;
-    currentCtx = currentCtx ? currentCtx : ctx;
+  function renderTriptych(e) {
     let layout = postTypes[selectedCategory].layouts[selectedLayout];
-    currentCtx.clearRect(0, 0, currentTriptych.width, currentTriptych.height);
-    currentCtx.fillStyle = e ? e.target.value : backgroundColor;
-    backgroundColor = currentCtx.fillStyle;
-    currentCtx.fillRect(0, 0, currentTriptych.width, currentTriptych.height);
+    ctx.clearRect(0, 0, triptych.width, triptych.height);
+    ctx.fillStyle = e ? e.target.value : backgroundColor;
+    backgroundColor = ctx.fillStyle;
+    ctx.fillRect(0, 0, triptych.width, triptych.height);
     if (layout.hasImage) {
-      let positionList = forUpload ? layout.imagePosition.map(num => num * 3) : layout.imagePosition;
-      console.log('list', positionList, 'forUpload', forUpload);
-      currentCtx.drawImage(image, 0, 0, image.width, image.height, ...positionList);
+      ctx.drawImage(image, 0, 0, image.width, image.height, ...layout.imagePosition.map(num => num * scale));
     }
   }
   
@@ -138,20 +135,33 @@
   }
   
   function getImageFromCanvas() {
+    let oldCanvas = triptych;
     let newCanvas = document.createElement('canvas');
     newCanvas.width = 1920;
     newCanvas.height = 675;
+    triptych = newCanvas;
+    scale = 3;
     //newCanvas.style.display = 'none';
+    let oldCtx = ctx;
     let newCtx = newCanvas.getContext('2d');
-    renderTriptych(null, newCanvas, newCtx, true);
+    ctx = newCtx;
+    renderTriptych();
+    reRenderText();
+
+    triptych = oldCanvas;
+    ctx = oldCtx;
     document.querySelector('.editor-holder').appendChild(newCanvas);
     
-
+    // Change everything back here;
+    scale = 1;
+    /*
     let triptych = document.querySelector('#triptych-edit');
     let src = triptych.toDataURL('img/jpeg');
     let newImg = document.createElement('img');
     newImg.src = src;
+
     //document.querySelector('.editor-holder').appendChild(newImg);
+    */
   }
   
   function changeCategory(e) {
@@ -204,18 +214,18 @@
     reRenderText();
   }
   
-  function handleCanvasText(e, currentCtx, forUpload) {
-    currentCtx = currentCtx ? currentCtx : ctx
+  function handleCanvasText(e) {
     let layout = postTypes[selectedCategory].layouts[selectedLayout];
+    ctx.font = `${layout.textSize * scale}px Arial`;
     let words = e.target.value.split(' ');
     let lines = [];
     let currentLine = '';
     for (let i = 0; i < words.length; i++) {
       let word = words[i];
-      if (currentCtx.measureText(word).width > layout.textMaxWidth) {
+      if (ctx.measureText(word).width * scale > layout.textMaxWidth * scale) {
         let firstPart = '';
         let idx = 0;
-        while (currentCtx.measureText(firstPart + word[idx]).width < layout.textMaxWidth) {
+        while (ctx.measureText(firstPart + word[idx]).width * scale < layout.textMaxWidth * scale) {
           firstPart += word[idx];
           idx++;
         }
@@ -223,7 +233,7 @@
         word = firstPart;
         words.splice(i + 1, 0, secondPart);
       }
-      if (currentCtx.measureText(currentLine + word).width < layout.textMaxWidth) {
+      if (ctx.measureText(currentLine + word).width * scale < layout.textMaxWidth * scale) {
         currentLine += word + ' ';
       } else {
         lines.push(currentLine);
@@ -238,12 +248,11 @@
     }
     renderTriptych();
     let textColor = document.querySelector('[name=text-color-picker]').value;
-    currentCtx.font = `${layout.textSize}px Arial`;
-    currentCtx.fillStyle = textColor;
+    ctx.fillStyle = textColor;
     for (let i = 0; i < lines.length && i < layout.maxLines; i++) {
-      currentCtx.fillText(lines[i], layout.textPosition[0], layout.textPosition[1] + 2 + layout.textSize * i);
+      ctx.fillText(lines[i], layout.textPosition[0] * scale, (layout.textPosition[1] + 2 + layout.textSize * i) * scale);
     }
-    currentCtx.fillStyle = backgroundColor;
+    ctx.fillStyle = backgroundColor;
   }
   
   renderOptions(selectedCategory);
