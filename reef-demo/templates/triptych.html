@@ -154,7 +154,7 @@
       if (ctx.measureText(word).width > layout.textMaxWidth) {
         let firstPart = '';
         let idx = 0;
-        while (ctx.measureText(firstPart + '-').width < layout.textMaxWidth) {
+        while (ctx.measureText(firstPart + word[idx] + '-').width < layout.textMaxWidth) {
           firstPart += word[idx];
           idx++;
         }
@@ -171,7 +171,7 @@
     }
     lines.push(currentLine);
     for (let i = 0; i < lines.length; i++) {
-      ctx.fillText(lines[i], layout.textPosition[0], layout.textPosition[1] + layout.textSize * i, layout.textMaxWidth);
+      ctx.fillText(lines[i], layout.textPosition[0], layout.textPosition[1] + 2 + layout.textSize * i, layout.textMaxWidth);
     }
     ctx.fillStyle = backgroundColor;
   }
