@@ -107,7 +107,7 @@
   let image = document.querySelector('.triptych-images img');
   let scale = 1;
 
-  function renderTriptych(e) {
+  function drawImage(e) {
     let layout = postTypes[selectedCategory].layouts[selectedLayout];
     ctx.clearRect(0, 0, triptych.width, triptych.height);
     ctx.fillStyle = e ? e.target.value : backgroundColor;
@@ -145,7 +145,7 @@
     let oldCtx = ctx;
     let newCtx = newCanvas.getContext('2d');
     ctx = newCtx;
-    renderTriptych();
+    drawImage();
     reRenderText();
 
     triptych = oldCanvas;
@@ -173,7 +173,7 @@
     ctx.fillRect(0, 0, triptych.width, triptych.height);
     renderOptions(selectedCategory);
     selectedLayout = 0;
-    renderTriptych();
+    drawImage();
     reRenderText();
   }
 
@@ -191,7 +191,7 @@
     fileUpload.oninput = function() {
       image = new Image();
       image.onload = function() {
-        renderTriptych();
+        drawImage();
         reRenderText();
       }
       image.src = URL.createObjectURL(this.files[0]);
@@ -210,7 +210,7 @@
         document.querySelector('.input-options').removeChild(input);
       }
     }
-    renderTriptych();
+    drawImage();
     reRenderText();
   }
   
@@ -222,7 +222,7 @@
     let currentLine = '';
     for (let i = 0; i < words.length; i++) {
       let word = words[i];
-      if (ctx.measureText(word).width > layout.textMaxWidth) {
+      if (ctx.measureText(word).width > layout.textMaxWidth * scale) {
         let firstPart = '';
         let idx = 0;
         while (ctx.measureText(firstPart + word[idx]).width < layout.textMaxWidth * scale) {
@@ -246,7 +246,7 @@
       document.querySelector('.triptych-text').value = text.slice(0, text.length - 1);
       return;
     }
-    renderTriptych();
+    drawImage();
     let textColor = document.querySelector('[name=text-color-picker]').value;
     ctx.fillStyle = textColor;
     for (let i = 0; i < lines.length && i < layout.maxLines; i++) {
@@ -259,10 +259,10 @@
   if (postTypes[selectedCategory].layouts[selectedLayout].hasImage) {
     addFileInput();
   }
-  renderTriptych();
+  drawImage();
   
   document.querySelector('.choose-image').onclick = getImageFromCanvas;
-  document.querySelector('[name=background-color-picker]').oninput = renderTriptych;
+  document.querySelector('[name=background-color-picker]').oninput = drawImage;
   document.querySelector('.category-selector').onchange = changeCategory;
   document.querySelector('.layout-options').onchange = chooseTriptych;
   document.querySelector('.triptych-text').oninput = handleCanvasText;
