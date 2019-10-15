@@ -141,7 +141,6 @@
     newCanvas.height = 675;
     triptych = newCanvas;
     scale = 3;
-    //newCanvas.style.display = 'none';
     let oldCtx = ctx;
     let newCtx = newCanvas.getContext('2d');
     ctx = newCtx;
@@ -150,18 +149,12 @@
 
     triptych = oldCanvas;
     ctx = oldCtx;
-    document.querySelector('.editor-holder').appendChild(newCanvas);
-    
-    // Change everything back here;
+    // Change scale back here so that the further editing can be done if necessary
     scale = 1;
-    /*
-    let triptych = document.querySelector('#triptych-edit');
-    let src = triptych.toDataURL('img/jpeg');
+    let src = newCanvas.toDataURL('img/jpeg');
     let newImg = document.createElement('img');
     newImg.src = src;
-
-    //document.querySelector('.editor-holder').appendChild(newImg);
-    */
+    document.querySelector('.editor-holder').appendChild(newImg);
   }
   
   function changeCategory(e) {
