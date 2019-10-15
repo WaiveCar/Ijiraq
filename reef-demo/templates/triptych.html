@@ -44,13 +44,15 @@
         {
           hasImage: true,
           imagePosition: [10, 10, 160, 120],
-          textPosition: [0, 0],
-          textSize: '14px',
+          textPosition: [30, 100],
+          textMaxWidth: 400,
+          textSize: '36px',
         },
         {
           hasImage: false,
-          textPosition: [0, 0],
-          textSize: '20px',
+          textPosition: [30, 100],
+          textMaxWidth: 400,
+          textSize: '48px',
         },
       ]
     },
@@ -147,13 +149,11 @@
   }
   
   function handleCanvasText(e) {
-    let text = document.querySelector('.triptych-text').value;
     let textColor = document.querySelector('[name=text-color-picker]').value;
-    let rect = triptych.getBoundingClientRect();
     let layout = postTypes[selectedCategory].layouts[selectedLayout];
     ctx.font = `${layout.textSize} Arial`;
     ctx.fillStyle = textColor;
-    ctx.fillText(text, layout.textPosition[0], layout.textPosition[1]);
+    ctx.fillText(e.target.value, layout.textPosition[0], layout.textPosition[1], layout.textMaxWidth);
     ctx.fillStyle = backgroundColor;
   }
   
@@ -165,4 +165,5 @@
   document.querySelector('.category-selector').onchange = changeCategory;
   document.querySelector('.layout-options').onchange = chooseTriptych;
   document.querySelector('.clear-text').onclick = renderTriptych;
+  document.querySelector('.triptych-text').oninput = handleCanvasText;
 </script>
