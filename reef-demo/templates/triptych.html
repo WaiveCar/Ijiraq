@@ -18,7 +18,9 @@
     <textarea type="text" class="triptych-text" placeholder="enter text"></textarea>
   </div>
   <div>
-    <canvas id="triptych-edit" width="768" height="270">
+    <div style="width: 100px; height 200px;">
+      <canvas id="triptych-edit" width="640" height="225">
+    </div>
     </canvas>
   </div>
   <button class="choose-image">Choose This</button>
@@ -104,14 +106,18 @@
   let ctx = triptych.getContext('2d');
   let image = document.querySelector('.triptych-images img');
 
-  function renderTriptych(e) {
+  function renderTriptych(e, currentTriptych, currentCtx, forUpload) {
+    currentTriptych = currentTriptych ? currentTriptych : triptych;
+    currentCtx = currentCtx ? currentCtx : ctx;
     let layout = postTypes[selectedCategory].layouts[selectedLayout];
-    ctx.clearRect(0, 0, triptych.width, triptych.height);
-    ctx.fillStyle = e ? e.target.value : backgroundColor;
-    backgroundColor = ctx.fillStyle;
-    ctx.fillRect(0, 0, triptych.width, triptych.height);
+    currentCtx.clearRect(0, 0, currentTriptych.width, currentTriptych.height);
+    currentCtx.fillStyle = e ? e.target.value : backgroundColor;
+    backgroundColor = currentCtx.fillStyle;
+    currentCtx.fillRect(0, 0, currentTriptych.width, currentTriptych.height);
     if (layout.hasImage) {
-      ctx.drawImage(image, 0, 0, image.width, image.height, ...layout.imagePosition);
+      let positionList = forUpload ? layout.imagePosition.map(num => num * 3) : layout.imagePosition;
+      console.log('list', positionList, 'forUpload', forUpload);
+      currentCtx.drawImage(image, 0, 0, image.width, image.height, ...positionList);
     }
   }
   
@@ -132,11 +138,20 @@
   }
   
   function getImageFromCanvas() {
+    let newCanvas = document.createElement('canvas');
+    newCanvas.width = 1920;
+    newCanvas.height = 675;
+    //newCanvas.style.display = 'none';
+    let newCtx = newCanvas.getContext('2d');
+    renderTriptych(null, newCanvas, newCtx, true);
+    document.querySelector('.editor-holder').appendChild(newCanvas);
+    
+
     let triptych = document.querySelector('#triptych-edit');
     let src = triptych.toDataURL('img/jpeg');
     let newImg = document.createElement('img');
     newImg.src = src;
-    document.querySelector('.editor-holder').appendChild(newImg);
+    //document.querySelector('.editor-holder').appendChild(newImg);
   }
   
   function changeCategory(e) {
