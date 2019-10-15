@@ -38,13 +38,13 @@
           imagePosition: [10, 10, 160, 120],
           textPosition: [30, 100],
           textMaxWidth: 400,
-          textSize: '36px',
+          textSize: 36,
         },
         {
           hasImage: false,
           textPosition: [30, 100],
           textMaxWidth: 400,
-          textSize: '48px',
+          textSize: 48,
         },
       ]
     },
@@ -144,9 +144,28 @@
     renderTriptych();
     let textColor = document.querySelector('[name=text-color-picker]').value;
     let layout = postTypes[selectedCategory].layouts[selectedLayout];
-    ctx.font = `${layout.textSize} Arial`;
+    ctx.font = `${layout.textSize}px Arial`;
     ctx.fillStyle = textColor;
-    ctx.fillText(e.target.value, layout.textPosition[0], layout.textPosition[1], layout.textMaxWidth);
+    let textWidth = ctx.measureText(e.target.value).width;
+    if (textWidth > layout.textMaxWidth) {
+      let words = e.target.value.split(' ');
+      let lines = [];
+      let currentLine = '';
+      for (let word of words) {
+        if (ctx.measureText(currentLine + word).width < layout.textMaxWidth) {
+          currentLine += word + ' ';
+        } else {
+          lines.push(currentLine);
+          currentLine = word;
+        }
+      }
+      lines.push(currentLine);
+      for (let i = 0; i < lines.length; i++) {
+        ctx.fillText(lines[i], layout.textPosition[0], layout.textPosition[1] + layout.textSize * i, layout.textMaxWidth);
+      }
+    } else {
+      ctx.fillText(e.target.value, layout.textPosition[0], layout.textPosition[1], layout.textMaxWidth);
+    }
     ctx.fillStyle = backgroundColor;
   }
   
