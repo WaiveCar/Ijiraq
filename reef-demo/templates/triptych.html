@@ -20,7 +20,6 @@
     <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
     <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
   </div>
-  <button class="add-text">Add Text</button>
   <input type="color" name="text-color-picker"><label for="text-color-picker">Text Color</label>
   <input type="text" class="triptych-text" placeholder="enter text">
   <button class="clear-text">Clear Text</button>
@@ -42,57 +41,48 @@
   let postTypes = {
     announcement: {
       layouts: [
-        [
-          [10, 10, 160, 120],
-          [10, 140, 160, 120],
-          [224, 15, 320, 240],
-          [598, 10, 160, 120],
-          [598, 140, 160, 120],
-        ],
-        [[16, 45, 240, 180], [264, 45, 240, 180], [512, 45, 240, 180]],
-        [
-          [32, 45, 240, 180],
-          [304, 45, 240, 180],
-          [576, 15, 160, 120],
-          [576, 140, 160, 120],
-        ],
-      ],
+        {
+          hasImage: true,
+          imagePosition: [10, 10, 160, 120],
+          textPosition: [0, 0],
+          textSize: '14px',
+        },
+        {
+          hasImage: false,
+          textPosition: [0, 0],
+          textSize: '20px',
+        },
+      ]
     },
     promo: {
       layouts: [
-        [
-          [10, 10, 160, 120],
-          [10, 140, 160, 120],
-          [224, 15, 320, 240],
-          [598, 10, 160, 120],
-          [598, 140, 160, 120],
-        ],
-        [[16, 45, 240, 180], [264, 45, 240, 180], [512, 45, 240, 180]],
-        [
-          [32, 45, 240, 180],
-          [304, 45, 240, 180],
-          [576, 15, 160, 120],
-          [576, 140, 160, 120],
-        ],
-      ],
+        {
+          hasImage: true,
+          imagePosition: [10, 10, 160, 120],
+          textPosition: [0, 0],
+          textSize: '14px',
+        },
+        {
+          hasImage: false,
+          textPosition: [0, 0],
+          textSize: '20px',
+        },
+      ]
     },
     notice: {
       layouts: [
-        [
-          [10, 10, 160, 120],
-          [10, 140, 160, 120],
-          [224, 15, 320, 240],
-          [598, 10, 160, 120],
-          [598, 140, 160, 120],
-        ],
-        [[16, 45, 240, 180], [264, 45, 240, 180], [512, 45, 240, 180]],
-        [
-          [32, 45, 240, 180],
-          [304, 45, 240, 180],
-          [576, 15, 160, 120],
-          [576, 140, 160, 120],
-        ],
-      ],
+        {
+          hasImage: true,
+          imagePosition: [10, 10, 160, 120],
+          textPosition: [0, 0],
+          textSize: '14px',
+        },
+        {
+          hasImage: false,
+          textPosition: [0, 0],
+          textSize: '20px',
+        },
+      ]
     },
   };
 
@@ -102,18 +92,17 @@
   let addingText = false;
   let triptych = document.querySelector('#triptych-edit');
   let ctx = triptych.getContext('2d');
-  
+
   function renderTriptych(e) {
-    let images = document.querySelectorAll('.triptych-images img');
-    let height = triptych.height / 2;
-    let width = triptych.width / 2;
+    let image = document.querySelector('.triptych-images img');
     ctx.clearRect(0, 0, triptych.width, triptych.height);
     ctx.fillStyle = e ? e.target.value : backgroundColor;
     backgroundColor = ctx.fillStyle;
     ctx.fillRect(0, 0, triptych.width, triptych.height);
-    postTypes[selectedCategory].layouts[selectedLayout].forEach((place, i) => {
-      ctx.drawImage(images[i], 0, 0, images[i].width, images[i].height, ...place);
-    });
+    let layout = postTypes[selectedCategory].layouts[selectedLayout];
+    if (layout.hasImage) {
+      ctx.drawImage(image, 0, 0, image.width, image.height, ...layout.imagePosition);
+    }
   }
   
   function renderOptions(ratio) {
@@ -161,20 +150,11 @@
     let text = document.querySelector('.triptych-text').value;
     let textColor = document.querySelector('[name=text-color-picker]').value;
     let rect = triptych.getBoundingClientRect();
-    ctx.font = '30px Arial';
+    let layout = postTypes[selectedCategory].layouts[selectedLayout];
+    ctx.font = `${layout.textSize} Arial`;
     ctx.fillStyle = textColor;
-    ctx.fillText(text, e.clientX - rect.left, e.clientY - rect.top);
+    ctx.fillText(text, layout.textPosition[0], layout.textPosition[1]);
     ctx.fillStyle = backgroundColor;
-  }
-  
-  function toggleTextAdd() {
-    if (this.textContent === 'Add Text') {
-      this.textContent = 'Cancel Adding Text';
-      triptych.addEventListener('click', handleCanvasText);
-    } else {
-      this.textContent = 'Add Text';
-      triptych.removeEventListener('click', handleCanvasText);
-    }
   }
   
   renderOptions(selectedCategory);
@@ -184,6 +164,5 @@
   document.querySelector('[name=background-color-picker]').oninput = renderTriptych;
   document.querySelector('.category-selector').onchange = changeCategory;
   document.querySelector('.layout-options').onchange = chooseTriptych;
-  document.querySelector('.add-text').onclick = toggleTextAdd;
   document.querySelector('.clear-text').onclick = renderTriptych;
 </script>
