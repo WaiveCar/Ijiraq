@@ -12,17 +12,9 @@
   </div>
   <div class="triptych-images">
     <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
   </div>
   <input type="color" name="text-color-picker"><label for="text-color-picker">Text Color</label>
   <input type="text" class="triptych-text" placeholder="enter text">
-  <button class="clear-text">Clear Text</button>
   <div>
     <canvas id="triptych-edit" width="768" height="270">
     </canvas>
@@ -149,6 +141,7 @@
   }
   
   function handleCanvasText(e) {
+    renderTriptych();
     let textColor = document.querySelector('[name=text-color-picker]').value;
     let layout = postTypes[selectedCategory].layouts[selectedLayout];
     ctx.font = `${layout.textSize} Arial`;
@@ -164,6 +157,5 @@
   document.querySelector('[name=background-color-picker]').oninput = renderTriptych;
   document.querySelector('.category-selector').onchange = changeCategory;
   document.querySelector('.layout-options').onchange = chooseTriptych;
-  document.querySelector('.clear-text').onclick = renderTriptych;
   document.querySelector('.triptych-text').oninput = handleCanvasText;
 </script>
