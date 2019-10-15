@@ -14,7 +14,7 @@
     <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
   </div>
   <input type="color" name="text-color-picker"><label for="text-color-picker">Text Color</label>
-  <input type="text" class="triptych-text" placeholder="enter text">
+  <textarea type="text" class="triptych-text" placeholder="enter text"></textarea>
   <div>
     <canvas id="triptych-edit" width="768" height="270">
     </canvas>
@@ -24,6 +24,10 @@
 <style>
   .triptych-images {
     display: none;
+  }
+  .triptych-text {
+    width: 500px;
+    height: 60px;
   }
   #triptych-edit {
     border: 1px solid black;
