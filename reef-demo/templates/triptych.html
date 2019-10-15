@@ -60,14 +60,18 @@
       layouts: [
         {
           hasImage: true,
-          imagePosition: [10, 10, 160, 120],
-          textPosition: [0, 0],
-          textSize: '14px',
+          imagePosition: [440, 15, 320, 240],
+          textPosition: [15, 100],
+          textMaxWidth: 400,
+          textSize: 36,
+          maxLines: 3,
         },
         {
           hasImage: false,
-          textPosition: [0, 0],
-          textSize: '20px',
+          textPosition: [30, 100],
+          textMaxWidth: 400,
+          textSize: 48,
+          maxLines: 3,
         },
       ]
     },
@@ -75,14 +79,18 @@
       layouts: [
         {
           hasImage: true,
-          imagePosition: [10, 10, 160, 120],
-          textPosition: [0, 0],
-          textSize: '14px',
+          imagePosition: [440, 15, 320, 240],
+          textPosition: [15, 100],
+          textMaxWidth: 400,
+          textSize: 36,
+          maxLines: 3,
         },
         {
           hasImage: false,
-          textPosition: [0, 0],
-          textSize: '20px',
+          textPosition: [30, 100],
+          textMaxWidth: 400,
+          textSize: 48,
+          maxLines: 3,
         },
       ]
     },
@@ -141,6 +149,13 @@
     renderOptions(selectedCategory);
     selectedLayout = 0;
     renderTriptych();
+    reRenderText();
+  }
+
+  function reRenderText() {
+    let event = new Event('input');
+    let textInput = document.querySelector('.triptych-text');
+    textInput.dispatchEvent(event);
   }
   
   function addFileInput() {
@@ -152,9 +167,7 @@
       image = new Image();
       image.onload = function() {
         renderTriptych();
-        let event = new Event('input');
-        let textInput = document.querySelector('.triptych-text');
-        textInput.dispatchEvent(event);
+        reRenderText();
       }
       image.src = URL.createObjectURL(this.files[0]);
     }
@@ -173,6 +186,7 @@
       }
     }
     renderTriptych();
+    reRenderText();
   }
   
   function handleCanvasText(e) {
