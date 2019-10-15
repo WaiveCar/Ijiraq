@@ -154,6 +154,7 @@
     let src = newCanvas.toDataURL('img/jpeg');
     let newImg = document.createElement('img');
     newImg.src = src;
+    newImg.style.border = '1px solid black';
     document.querySelector('.editor-holder').appendChild(newImg);
   }
   
@@ -243,7 +244,7 @@
     let textColor = document.querySelector('[name=text-color-picker]').value;
     ctx.fillStyle = textColor;
     for (let i = 0; i < lines.length && i < layout.maxLines; i++) {
-      ctx.fillText(lines[i], layout.textPosition[0] * scale, (layout.textPosition[1] + 2 + (layout.textSize * scale) * i));
+      ctx.fillText(lines[i], layout.textPosition[0] * scale, ((layout.textPosition[1] * scale) + 2 + (layout.textSize * scale * i)));
     }
     ctx.fillStyle = backgroundColor;
   }
