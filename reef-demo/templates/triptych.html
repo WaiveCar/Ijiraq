@@ -222,10 +222,10 @@
     let currentLine = '';
     for (let i = 0; i < words.length; i++) {
       let word = words[i];
-      if (ctx.measureText(word).width * scale > layout.textMaxWidth * scale) {
+      if (ctx.measureText(word).width > layout.textMaxWidth) {
         let firstPart = '';
         let idx = 0;
-        while (ctx.measureText(firstPart + word[idx]).width * scale < layout.textMaxWidth * scale) {
+        while (ctx.measureText(firstPart + word[idx]).width < layout.textMaxWidth * scale) {
           firstPart += word[idx];
           idx++;
         }
@@ -233,7 +233,7 @@
         word = firstPart;
         words.splice(i + 1, 0, secondPart);
       }
-      if (ctx.measureText(currentLine + word).width * scale < layout.textMaxWidth * scale) {
+      if (ctx.measureText(currentLine + word).width < layout.textMaxWidth * scale) {
         currentLine += word + ' ';
       } else {
         lines.push(currentLine);
@@ -250,7 +250,7 @@
     let textColor = document.querySelector('[name=text-color-picker]').value;
     ctx.fillStyle = textColor;
     for (let i = 0; i < lines.length && i < layout.maxLines; i++) {
-      ctx.fillText(lines[i], layout.textPosition[0] * scale, (layout.textPosition[1] + 2 + layout.textSize * i) * scale);
+      ctx.fillText(lines[i], layout.textPosition[0] * scale, (layout.textPosition[1] + 2 + (layout.textSize * scale) * i));
     }
     ctx.fillStyle = backgroundColor;
   }
