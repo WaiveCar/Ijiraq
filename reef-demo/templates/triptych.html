@@ -143,11 +143,7 @@
   }
   
   function handleCanvasText(e) {
-    renderTriptych();
-    let textColor = document.querySelector('[name=text-color-picker]').value;
     let layout = postTypes[selectedCategory].layouts[selectedLayout];
-    ctx.font = `${layout.textSize}px Arial`;
-    ctx.fillStyle = textColor;
     let words = e.target.value.split(' ');
     let lines = [];
     let currentLine = '';
@@ -173,10 +169,16 @@
     }
     lines.push(currentLine);
     if (lines.length > layout.maxLines) {
-      document.querySelector('.triptych-text').value = e.target.value.slice(0, e.target.value.length - 1);
+      let text = e.target.value;
+      document.querySelector('.triptych-text').value = text.slice(0, text.length - 1);
+      return;
     }
+    renderTriptych();
+    let textColor = document.querySelector('[name=text-color-picker]').value;
+    ctx.font = `${layout.textSize}px Arial`;
+    ctx.fillStyle = textColor;
     for (let i = 0; i < lines.length && i < layout.maxLines; i++) {
-      ctx.fillText(lines[i], layout.textPosition[0], layout.textPosition[1] + 2 + layout.textSize * i, layout.textMaxWidth);
+      ctx.fillText(lines[i], layout.textPosition[0], layout.textPosition[1] + 2 + layout.textSize * i);
     }
     ctx.fillStyle = backgroundColor;
   }
