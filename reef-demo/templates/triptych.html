@@ -13,8 +13,10 @@
   <div class="triptych-images">
     <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
   </div>
-  <input type="color" name="text-color-picker"><label for="text-color-picker">Text Color</label>
-  <textarea type="text" class="triptych-text" placeholder="enter text"></textarea>
+  <div class="input-options">
+    <input type="color" name="text-color-picker"><label for="text-color-picker">Text Color</label>
+    <textarea type="text" class="triptych-text" placeholder="enter text"></textarea>
+  </div>
   <div>
     <canvas id="triptych-edit" width="768" height="270">
     </canvas>
@@ -39,8 +41,8 @@
       layouts: [
         {
           hasImage: true,
-          imagePosition: [10, 10, 160, 120],
-          textPosition: [30, 100],
+          imagePosition: [440, 15, 320, 240],
+          textPosition: [15, 100],
           textMaxWidth: 400,
           textSize: 36,
           maxLines: 3,
@@ -92,15 +94,18 @@
   let addingText = false;
   let triptych = document.querySelector('#triptych-edit');
   let ctx = triptych.getContext('2d');
+  let image = document.querySelector('.triptych-images img');
 
   function renderTriptych(e) {
-    let image = document.querySelector('.triptych-images img');
+    let layout = postTypes[selectedCategory].layouts[selectedLayout];
     ctx.clearRect(0, 0, triptych.width, triptych.height);
     ctx.fillStyle = e ? e.target.value : backgroundColor;
     backgroundColor = ctx.fillStyle;
     ctx.fillRect(0, 0, triptych.width, triptych.height);
-    let layout = postTypes[selectedCategory].layouts[selectedLayout];
     if (layout.hasImage) {
+      console.log(image);
+      console.log(image.width, image.height)
+      document.querySelector('.editor-holder').appendChild(image);
       ctx.drawImage(image, 0, 0, image.width, image.height, ...layout.imagePosition);
     }
   }
@@ -141,8 +146,31 @@
     renderTriptych();
   }
   
+  function addFileInput() {
+    let fileUpload = document.createElement('input');
+    fileUpload.type = 'file';
+    fileUpload.id = 'fileUpload';
+    fileUpload.accept = "image/png, image/jpeg";
+    fileUpload.oninput = function() {
+      image = new Image();
+      image.onload = function() {
+        renderTriptych();
+      }
+      image.src = URL.createObjectURL(this.files[0]);
+    }
+  }
+
   function chooseTriptych(e) {
     selectedLayout = Number(e.target.value);
+    let layout = postTypes[selectedCategory].layouts[selectedLayout];
+    if (layout.hasImage) {
+      addFileInput();
+    } else {
+      let input = document.querySelector('#fileUpload');
+      if (input) {
+        document.querySelector('.input-options').removeChild(input);
+      }
+    }
     renderTriptych();
   }
   
