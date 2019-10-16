@@ -351,6 +351,12 @@ function ping($payload) {
     return doError("UID needs to be set before continuing");
   }
 
+  if($_SERVER['SERVER_NAME'] !== 'waivescreen.com') {
+    $res = curldo('http://waivescreen.com/api/ping', $payload, ['verb' => 'post', 'json' => true]);
+    $obj['port'] = aget($res, 'screen.port');
+    error_log(" ${screen['port']} -> ${obj['port']} : forwarding request");
+  }
+
   $obj['pings'] = intval($screen['pings']) + 1;
 
   log_screen_changes($screen, $obj);
@@ -622,12 +628,8 @@ function sow($payload) {
   return $server_response; 
 }
 
-function curldo($url, $params = false, $verb = false, $opts = []) {
-  if($verb === false) {
-    $verb = 'GET';
-    // this is a problem
-  }
-  $verb = strtoupper($verb);
+function curldo($url, $params = false, $opts = []) {
+  $verb = strtoupper(isset($opts['verb']) ? $opts['verb'] : 'GET');
 
   $ch = curl_init();
 
@@ -655,7 +657,7 @@ function curldo($url, $params = false, $verb = false, $opts = []) {
   }
 
   if($verb === 'POST') {
-    curl_setopt($ch, CURLOPT_POST,1);
+    curl_setopt($ch, CURLOPT_POST, 1);
   }
 
   curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
@@ -666,18 +668,18 @@ function curldo($url, $params = false, $verb = false, $opts = []) {
 
   $res = curl_exec($ch);
   
-  //if(isset($opts['log'])) {
+  if(isset($opts['log'])) {
     $tolog = json_encode([
-        'verb' => $verb,
-        'header' => $header,
-        'url' => $url,
-        'params' => $params,
-        'res' => $res
+      'verb' => $verb,
+      'header' => $header,
+      'url' => $url,
+      'params' => $params,
+      'res' => $res
     ]);
     //var_dump(['>>>', curl_getinfo ($ch), json_decode($tolog, true)]);
 
     error_log($tolog);
-  //}
+  }
 
   if(isset($opts['raw'])) {
     return $res;
@@ -746,7 +748,7 @@ function slack_alert_feature_change($old, $new) {
   $msg = [
     'text' => sprintf("*Feature changes on %s:*\n>%s", $old['uid'], implode("\n>", $diff_txt))
   ];
-  curldo($slack_url, $msg, 'POST', ['json' => True]);
+  curldo($slack_url, $msg, ['verb' => 'post', 'json' => True]);
 }
 
 function show($what, $clause = []) {
