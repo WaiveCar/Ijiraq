@@ -24,16 +24,23 @@ def charge_for_ad(user_id, email, card_number, exp_month, exp_year, cvc,  amount
         'currency': 'usd',
       },  
     )
-    print('card', card)
     charge = stripe.Charge.create(
         amount=amount, 
         currency='usd', 
         customer=customer.id, 
         description='Charge for Oliver ad #{}'.format(ad_id),
     )
-    print('charge object', charge)
+    return charge
   except Exception as e:
     print('error making stripe request', e)
+    raise Exception
 
+def retrieve_for_user(stripe_id):
+  try: 
+    return stripe.Customer.list_sources(stripe_id)
+  except Exception as e:
+    print('error making stripe request', e)
+    raise Exception
 
-charge_for_ad(1, 'daleighan@gmail.com', '4242424242424242', 1, 2021, 113, 1000, 1)
+#print(charge_for_ad(1, 'daleighan@gmail.com', '4242424242424242', 1, 2021, 113, 1000, 1))
+print(retrieve_for_user('cus_G0OgG30WYANHBs'))
