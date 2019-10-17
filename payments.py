@@ -32,14 +32,14 @@ def charge_for_ad(user_id, email, card, amount, ad_id):
     )
     return charge
   except Exception as e:
-    print('error making stripe request', e)
+    print('Error charging user', e)
     raise Exception
 
 def retrieve_cards_for_user(stripe_id):
   try: 
     return stripe.Customer.list_sources(stripe_id)
   except Exception as e:
-    print('error making stripe request', e)
+    print('Error retrieving cards', e)
     raise Exception
 
 def create_card(stripe_id, card_info):
@@ -49,7 +49,7 @@ def create_card(stripe_id, card_info):
       source=card_info,
     )
   except Exception as e:
-    print('error making stripe request', e)
+    print('Error adding new card', e)
     raise Exception
 
 def update_card(stripe_id, card_id, update_obj):
@@ -60,7 +60,7 @@ def update_card(stripe_id, card_id, update_obj):
       metadata=update_obj,
     )
   except Exception as e:
-    print('error making stripe request', e)
+    print('Error upadating card', e)
     raise Exception
 
 def delete_card(stripe_id, card_id):
@@ -70,12 +70,11 @@ def delete_card(stripe_id, card_id):
       card_id,
     )
   except Exception as e:
-    print('error making stripe request', e)
+    print('Error deleting card', e)
     raise Exception
 
 
 
 #print(charge_for_ad(1, 'daleighan@gmail.com', {'card_number': '4242424242424242', 'exp_month': 1, 'exp_year': 2021, 'cvc': 111}, 1000, 1))
-print(retrieve_cards_for_user('cus_G0OgG30WYANHBs'))
-print(update_card('cus_G0OgG30WYANHBs', 'card_1FUNsxHjZj603nmB4Cp2KNST', {'exp_month': 5}))
-print(delete_card('cus_G0PKCEbyzC1UYU', 'card_1FUOVtHjZj603nmB39Xg3zQT'))
+#print(retrieve_cards_for_user('cus_G0OgG30WYANHBs'))
+#print(update_card('cus_G0OgG30WYANHBs', 'card_1FUNsxHjZj603nmB4Cp2KNST', {'exp_month': 5}))
