@@ -63,7 +63,19 @@ def update_card(stripe_id, card_id, update_obj):
     print('error making stripe request', e)
     raise Exception
 
+def delete_card(stripe_id, card_id):
+  try: 
+    return stripe.Customer.delete_source(
+      stripe_id,
+      card_id,
+    )
+  except Exception as e:
+    print('error making stripe request', e)
+    raise Exception
 
-print(charge_for_ad(1, 'daleighan@gmail.com', {'card_number': '4242424242424242', 'exp_month': 1, 'exp_year': 2021, 'cvc': 111}, 1000, 1))
+
+
+#print(charge_for_ad(1, 'daleighan@gmail.com', {'card_number': '4242424242424242', 'exp_month': 1, 'exp_year': 2021, 'cvc': 111}, 1000, 1))
 print(retrieve_cards_for_user('cus_G0OgG30WYANHBs'))
 print(update_card('cus_G0OgG30WYANHBs', 'card_1FUNsxHjZj603nmB4Cp2KNST', {'exp_month': 5}))
+print(delete_card('cus_G0PKCEbyzC1UYU', 'card_1FUOVtHjZj603nmB39Xg3zQT'))
