@@ -105,7 +105,19 @@ def list_charges_by_user(stripe_id):
     print('Error retrieving charges', e)
     raise Exception
 
+def refund_charge(charge_id, amount=None):
+  try:
+    return stripe.Refund.create(
+      charge=charge_id,
+      amount=amount,
+    )
+  except Exception as e:
+    print('Error refunding charge', e)
+    raise Exception
+  
+
 #print(charge_for_ad(1, 'daleighan@gmail.com', {'card_number': '4242424242424242', 'exp_month': 1, 'exp_year': 2021, 'cvc': 111}, 1000, 1))
 #print(retrieve_cards_for_user('cus_G0OgG30WYANHBs'))
 #print(update_card('cus_G0OgG30WYANHBs', 'card_1FUNsxHjZj603nmB4Cp2KNST', {'exp_month': 5}))
+#print(refund_charge('ch_1FUNsyHjZj603nmBHhEzZDOs'))
 print(list_charges_by_user('cus_G0OgG30WYANHBs'))
