@@ -10,25 +10,22 @@ config = {
   }
 stripe.api_key = config['secret']
 
+# The function below will be what is used to actually charge users for an ad. 
+# I am going to add an outline of additional logic that will need to be here once 
+# this code is incorporated into the server
 def charge_for_ad(user_id, email, card, amount, ad_id):
   try:
+    # First, a user will be checked for a stripe_id. If no stripe_id is present,
+    # create_customer will need to be called
     customer = create_customer(user_id, email)
+    # Then, we will need to check if a user has a card in stripe already or if they 
+    # provided one with this request. If neither, we need to create a card in stripe 
+    # as below
     card = create_card(customer.id, card)
-    return create_charge(customer.id, amount, ad_id)
+    # Lastly, we will need to charge the user for their purchase
+    return create_charge(customer.id, amount, ad_id, email)
   except Exception as e:
     print('Error charging user', e)
-    raise Exception
-
-def create_charge(customer_id, amount, ad_id):
-  try: 
-    return stripe.Charge.create(
-        amount=amount, 
-        currency='usd', 
-        customer=customer_id, 
-        description='Charge for Oliver ad #{}'.format(ad_id),
-    )
-  except Exception as e:
-    print('Error creating charge', e)
     raise Exception
 
 def create_customer(user_id, email):
@@ -81,6 +78,18 @@ def delete_card(stripe_id, card_id):
     )
   except Exception as e:
     print('Error deleting card', e)
+    raise Exception
+
+def create_charge(customer_id, amount, ad_id, email):
+  try: 
+    return stripe.Charge.create(
+        amount=amount, 
+        currency='usd', 
+        customer=customer_id, 
+        description='Charge for Oliver ad #{} for user with email {}'.format(ad_id, email),
+    )
+  except Exception as e:
+    print('Error creating charge', e)
     raise Exception
 
 
