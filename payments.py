@@ -24,15 +24,21 @@ def charge_for_ad(user_id, email, card, amount, ad_id):
         'currency': 'usd',
       },  
     )
-    charge = stripe.Charge.create(
-        amount=amount, 
-        currency='usd', 
-        customer=customer.id, 
-        description='Charge for Oliver ad #{}'.format(ad_id),
-    )
-    return charge
+    return create_charge(customer.id, amount, ad_id)
   except Exception as e:
     print('Error charging user', e)
+    raise Exception
+
+def create_charge(customer_id, amount, ad_id):
+  try: 
+    return stripe.Charge.create(
+        amount=amount, 
+        currency='usd', 
+        customer=customer_id, 
+        description='Charge for Oliver ad #{}'.format(ad_id),
+    )
+  except Exception as e:
+    print('Error retrieving cards', e)
     raise Exception
 
 def retrieve_cards_for_user(stripe_id):
