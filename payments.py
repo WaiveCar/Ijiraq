@@ -4,7 +4,7 @@ import os
 config = {
     'secret': 'sk_test_n9MTqk5eeeQeqwN19XVnTjhN',
     'key': 'pk_test_zO3lYXra7dNIcI4JyFBitshk',
-  } if os.environ['ENV'] == 'development' else {
+  } if 'ENV' not in os.environ or os.environ['ENV'] != 'production' else {
     'secret': 'sk_live_cJmUPQAyZcQG67pnUEH81Bi5',
     'key': 'pk_live_aT8u3UGOje5ryCk1Q0R9rleK',
   }
