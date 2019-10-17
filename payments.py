@@ -23,7 +23,13 @@ def charge_for_ad(user_id, email, card, amount, ad_id):
     # as below
     card = create_card(customer.id, card)
     # Lastly, we will need to charge the user for their purchase
-    return create_charge(customer.id, amount, ad_id, email)
+    return create_charge(
+        customer.id, 
+        amount, 
+        ad_id, 
+        email, 
+        'Charge for Oliver ad #{} for user with email {}'.format(ad_id, email)
+    )
   except Exception as e:
     print('Error charging user', e)
     raise Exception
@@ -80,13 +86,13 @@ def delete_card(stripe_id, card_id):
     print('Error deleting card', e)
     raise Exception
 
-def create_charge(customer_id, amount, ad_id, email):
+def create_charge(customer_id, amount, descirption):
   try: 
     return stripe.Charge.create(
         amount=amount, 
         currency='usd', 
         customer=customer_id, 
-        description='Charge for Oliver ad #{} for user with email {}'.format(ad_id, email),
+        description=description,
     )
   except Exception as e:
     print('Error creating charge', e)
