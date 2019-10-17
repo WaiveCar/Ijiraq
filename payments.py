@@ -12,18 +12,8 @@ stripe.api_key = config['secret']
 
 def charge_for_ad(user_id, email, card, amount, ad_id):
   try:
-    customer = stripe.Customer.create(description='Stripe customer for Oliver with id {} and email {}'.format(user_id, email))
-    card = create_card(
-      customer.id,
-      {
-        'object': 'card',
-        'number': card['card_number'],
-        'exp_month': card['exp_month'],
-        'exp_year': card['exp_year'],
-        'cvc': card['cvc'],
-        'currency': 'usd',
-      },  
-    )
+    customer = create_customer(user_id, email)
+    card = create_card(customer.id, card)
     return create_charge(customer.id, amount, ad_id)
   except Exception as e:
     print('Error charging user', e)
@@ -38,7 +28,14 @@ def create_charge(customer_id, amount, ad_id):
         description='Charge for Oliver ad #{}'.format(ad_id),
     )
   except Exception as e:
-    print('Error retrieving cards', e)
+    print('Error creating charge', e)
+    raise Exception
+
+def create_customer(user_id, email):
+  try: 
+    return stripe.Customer.create(description='Stripe customer for Oliver with id {} and email {}'.format(user_id, email))
+  except Exception as e:
+    print('Error creating user', e)
     raise Exception
 
 def retrieve_cards_for_user(stripe_id):
@@ -48,11 +45,18 @@ def retrieve_cards_for_user(stripe_id):
     print('Error retrieving cards', e)
     raise Exception
 
-def create_card(stripe_id, card_info):
+def create_card(stripe_id, card):
   try: 
     return stripe.Customer.create_source(
       stripe_id,
-      source=card_info,
+      source={
+        'object': 'card',
+        'number': card['card_number'],
+        'exp_month': card['exp_month'],
+        'exp_year': card['exp_year'],
+        'cvc': card['cvc'],
+        'currency': 'usd',
+      },  
     )
   except Exception as e:
     print('Error adding new card', e)
