@@ -1,42 +1,61 @@
 (() => {
-  let pages = {
-    category: `
+  let pages = [
+    `
       <div>
         Select Category
       </div>
     `,
-    targeting: `
+    `
       <div>
         Select Targeting
       </div>
     `,
-    layout: `
+    `
       <div>
         Select Layout
       </div>
     `,
-    info: `
+    `
       <div>
         Add Info
       </div>
     `,
-    budget: `
+    `
       <div>
         Edit Budget
       </div>
     `,
-    summary: `
+    `
       <div>
-        Summary,
+        Summary
       </div>
     `,
-    payment: `
+    `
       <div>
         Payment
       </div>
     `,
-  };
+  ];
 
-  console.log(window.location.pathname.split('/').pop());
-  document.querySelector('#anchor').innerHTML = pages[window.location.pathname.split('/').pop()];
+  let currentPage = Number(window.location.pathname.split('/').pop());
+
+  function showPage(pageNum) {
+    if (pageNum < 0 || pageNum > pages.length - 1) {
+      return;
+    }
+    document.querySelector('#anchor').innerHTML = pages[pageNum];
+    if (currentPage !== pageNum) {
+      window.history.pushState({}, pageNum, window.location.origin + '/campaigns/wizard/' +  pageNum)
+    }
+    currentPage = pageNum;
+  }
+  showPage(currentPage);
+  
+  document.querySelector('#forward-btn').onclick = function() {
+    showPage.call(this, currentPage + 1);
+  }
+  document.querySelector('#back-btn').onclick = function() {
+    showPage.call(this, currentPage - 1);
+  }
+
 })();
