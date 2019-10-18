@@ -1,40 +1,42 @@
 (() => {
   let pages = {
-    '/category': html`
+    category: `
       <div>
         Select Category
       </div>
     `,
-    '/targeting': html`
+    targeting: `
       <div>
         Select Targeting
       </div>
     `,
-    '/layout': html`
+    layout: `
       <div>
         Select Layout
       </div>
     `,
-    '/info': html`
+    info: `
       <div>
         Add Info
       </div>
     `,
-    '/budget': html`
+    budget: `
       <div>
         Edit Budget
       </div>
     `,
-    '/summary': html`
+    summary: `
       <div>
         Summary,
       </div>
     `,
-    '/payment': html`
+    payment: `
       <div>
         Payment
       </div>
     `,
   };
-  document.querySelector('#anchor').innerHTML = 'wizard';
+
+  console.log(window.location.pathname.split('/').pop());
+  document.querySelector('#anchor').innerHTML = pages[window.location.pathname.split('/').pop()];
 })();
