@@ -755,7 +755,7 @@ function show($what, $clause = []) {
   global $SCHEMA;
   $me = me();
   $where = [];
-  error_log(json_encode($_SESSION));
+  //error_log(json_encode($_SESSION));
   if($me) {
     $schema = $SCHEMA[$what];
     if($me['organization_id'] && isset($schema['organization_id'])) {
@@ -980,7 +980,7 @@ function campaign_update($data, $fileList, $user = false) {
 }
 
 function ignition_status($payload) {
-  $car = aget($payload, 'car');
+  $car = aget($payload, 'name');
 
   if(isset($payload['ignitionOn'])) {
     $state = $payload['ignitionOn'];
@@ -989,9 +989,10 @@ function ignition_status($payload) {
   }
 
   if($car) {
-    $res = (db_connect())->querySingle("select * from screen where car like $car");
+    $qstr = "select * from screen where car like '$car'";
+    $res = (db_connect())->querySingle($qstr, true);
   } else {
-    return error_log("Unable to find 'car' in payload: " . json_encode($payload));
+    return error_log("Unable to find 'name' in payload: " . json_encode($payload));
   }
 
   if($res) {
@@ -1001,12 +1002,12 @@ function ignition_status($payload) {
   }
 
   if($uid) {
-    return db_update('screen', ['uid' => $uid], [
-      'ignition_state' => $state ? 'on' : 'off',
+    return db_update('screen', ['uid' => db_string($uid)], [
+      'ignition_state' => db_string($state ? 'on' : 'off'),
       'ignition_time' => 'current_timestamp'
     ]);
   } else {
-    return error_log("Could not find a uid in the result of ignition_status for $car");
+    return error_log("Could not find a uid in the result of ignition_status for $car: ($qstr) " . json_encode($res) );
   }
 }
 
