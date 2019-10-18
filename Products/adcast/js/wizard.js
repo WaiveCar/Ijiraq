@@ -1,47 +1,47 @@
 (() => {
-  function categoryPage() {
+  function categoryPage(props) {
     return `
       <div>
         Select Category
       </div>
     `
   }
-  function targetingPage() {
+  function targetingPage(props) {
     return `
       <div>
         Select Targeting
       </div>
     `
   }
-  function layoutPage() {
+  function layoutPage(props) {
     return `
       <div>
         Select Layout
       </div>
     `
   }
-  function infoPage() {
+  function infoPage(props) {
     return `
       <div>
         Add Info
       </div>
     `;
   }
-  function budgetPage() {
+  function budgetPage(props) {
     return `
       <div>
         Edit Budget
       </div>
     `
   }
-  function summaryPage() {
+  function summaryPage(props) {
     return `
       <div>
         Summary
       </div>
     `
   }
-  function paymentPage() {
+  function paymentPage(props) {
     return `
       <div>
         Payment
@@ -59,10 +59,14 @@
     paymentPage,
   ];
 
+  let initialState = {
+    category: '',
+  }
+
   let currentPage = Number(window.location.pathname.split('/').pop());
   let backBtn = document.querySelector('#back-btn');
   let nextBtn = document.querySelector('#next-btn');
-  let state = {};
+  let state = Object.assign({}, initialState);
 
   function showPage(pageNum) {
     if (pageNum < 0 || pageNum > pages.length - 1) {
@@ -74,7 +78,7 @@
       pageNum !== pages.length - 1
         ? () => showPage(currentPage + 1)
         : () => submit(state);
-    document.querySelector('#anchor').innerHTML = pages[pageNum]();
+    document.querySelector('#anchor').innerHTML = pages[pageNum](state);
     if (currentPage !== pageNum) {
       window.history.pushState(
         {},
