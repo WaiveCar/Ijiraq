@@ -1,46 +1,68 @@
 (() => {
-  let pages = [
-    `
+  function categoryPage() {
+    return `
       <div>
         Select Category
       </div>
-    `,
     `
+  }
+  function targetingPage() {
+    return `
       <div>
         Select Targeting
       </div>
-    `,
     `
+  }
+  function layoutPage() {
+    return `
       <div>
         Select Layout
       </div>
-    `,
     `
+  }
+  function infoPage() {
+    return `
       <div>
         Add Info
       </div>
-    `,
-    `
+    `;
+  }
+  function budgetPage() {
+    return `
       <div>
         Edit Budget
       </div>
-    `,
     `
+  }
+  function summaryPage() {
+    return `
       <div>
         Summary
       </div>
-    `,
     `
+  }
+  function paymentPage() {
+    return `
       <div>
         Payment
       </div>
-    `,
+    `
+
+  }
+  let pages = [
+    categoryPage,
+    targetingPage,
+    layoutPage,
+    infoPage,
+    budgetPage,
+    summaryPage,
+    paymentPage,
   ];
 
   let currentPage = Number(window.location.pathname.split('/').pop());
   let backBtn = document.querySelector('#back-btn');
   let nextBtn = document.querySelector('#next-btn');
-  let adData = {};
+  let state = {};
 
   function showPage(pageNum) {
     if (pageNum < 0 || pageNum > pages.length - 1) {
@@ -51,8 +73,8 @@
     nextBtn.onclick =
       pageNum !== pages.length - 1
         ? () => showPage(currentPage + 1)
-        : () => submit(adData);
-    document.querySelector('#anchor').innerHTML = pages[pageNum];
+        : () => submit(state);
+    document.querySelector('#anchor').innerHTML = pages[pageNum]();
     if (currentPage !== pageNum) {
       window.history.pushState(
         {},

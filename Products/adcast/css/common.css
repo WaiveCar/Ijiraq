@@ -581,3 +581,6 @@ select.form-control:focus,
   margin-bottom: 0.5rem;
 }
 
+.wizard-page {
+  width: 100%;
+}
