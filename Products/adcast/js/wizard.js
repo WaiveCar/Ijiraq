@@ -172,13 +172,17 @@
     triptych = document.querySelector('#triptych-edit');
     ctx = triptych.getContext('2d');
     image = document.querySelector('.triptych-images img');
-    document.querySelector('[name=background-color-picker]').oninput = drawImage;
+    document.querySelector('[name=background-color-picker]').oninput = function(e) {
+      drawImage(e);
+      reRenderText();
+    }
     document.querySelector('.triptych-text').oninput = handleCanvasText;
     document.querySelector('[name=text-color-picker]').oninput = reRenderText;
+    drawImage();
+    reRenderText();
   }
 
   function drawImage(e) {
-    console.log('scale', state);
     let layout = adTypes[state.category].layouts[state.selectedLayout];
     ctx.clearRect(0, 0, triptych.width, triptych.height);
     ctx.fillStyle = e ? e.target.value : state.backgroundColor;
@@ -223,7 +227,6 @@
 
   function handleCanvasText(e) {
     let layout = adTypes[state.category].layouts[state.selectedLayout];
-    console.log('layout', layout);
     ctx.font = `${layout.textSize * state.scale}px Arial`;
     let words = e.target.value.split(' ');
     let lines = [];
