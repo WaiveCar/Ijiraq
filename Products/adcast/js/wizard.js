@@ -1,64 +1,4 @@
 (() => {
-  let adTypes = {
-    announcement: {
-      layouts: [
-        {
-          hasImage: true,
-          imagePosition: [360, 12, 268, 201],
-          textPosition: [12, 80],
-          textMaxWidth: 340,
-          textSize: 36,
-          maxLines: 3,
-        },
-        {
-          hasImage: false,
-          textPosition: [12, 72],
-          textMaxWidth: 616,
-          textSize: 48,
-          maxLines: 3,
-        },
-      ],
-    },
-    promo: {
-      layouts: [
-        {
-          hasImage: true,
-          imagePosition: [360, 12, 268, 201],
-          textPosition: [12, 80],
-          textMaxWidth: 340,
-          textSize: 36,
-          maxLines: 3,
-        },
-        {
-          hasImage: false,
-          textPosition: [12, 72],
-          textMaxWidth: 616,
-          textSize: 48,
-          maxLines: 3,
-        },
-      ],
-    },
-    notice: {
-      layouts: [
-        {
-          hasImage: true,
-          imagePosition: [360, 12, 268, 201],
-          textPosition: [12, 80],
-          textMaxWidth: 340,
-          textSize: 36,
-          maxLines: 3,
-        },
-        {
-          hasImage: false,
-          textPosition: [12, 72],
-          textMaxWidth: 616,
-          textSize: 48,
-          maxLines: 3,
-        },
-      ],
-    },
-  };
-
   let initialState = {
     categories: ['announcement', 'promo', 'notice'],
     category: '',
@@ -166,107 +106,21 @@
     `;
   }
 
-  let triptych = null;
-  let ctx = null;
-  let image = null;
-
   function adCreateLoad() {
     triptych = document.querySelector('#triptych-edit');
     ctx = triptych.getContext('2d');
     image = document.querySelector('.triptych-images img');
     document.querySelector('[name=background-color-picker]').oninput = function(e) {
-      drawImage(e);
+      drawImage(e, state);
       reRenderText();
     }
-    document.querySelector('.triptych-text').oninput = handleCanvasText;
+    document.querySelector('.triptych-text').oninput = function(e) {
+      handleCanvasText(e, state);
+    }
     document.querySelector('[name=text-color-picker]').oninput = reRenderText;
-    drawImage();
+    drawImage(null, state);
     reRenderText();
-    handleFileInput(adTypes[state.category].layouts[state.selectedLayout]);
-  }
-
-  function drawImage(e) {
-    let layout = adTypes[state.category].layouts[state.selectedLayout];
-    ctx.clearRect(0, 0, triptych.width, triptych.height);
-    ctx.fillStyle = e ? e.target.value : state.backgroundColor;
-    setState({backgroundColor: ctx.fillStyle});
-    ctx.fillRect(0, 0, triptych.width, triptych.height);
-    if (layout.hasImage) {
-      ctx.drawImage(image, 0, 0, image.width, image.height, ...layout.imagePosition.map(num => num * state.scale));
-    }
-  }
-
-  function reRenderText() {
-    let event = new Event('input');
-    let textInput = document.querySelector('.triptych-text');
-    textInput.dispatchEvent(event);
-  }
-  
-  function handleFileInput(layout) {
-    if (layout.hasImage) {
-      let hasInput = document.querySelector('#fileUpload');
-      if (!hasInput) {
-        let fileUpload = document.createElement('input');
-        fileUpload.type = 'file';
-        fileUpload.id = 'fileUpload';
-        fileUpload.accept = "image/png, image/jpeg";
-        fileUpload.oninput = function() {
-          image = new Image();
-          image.onload = function() {
-            drawImage();
-            reRenderText();
-          }
-          image.src = URL.createObjectURL(this.files[0]);
-        }
-        document.querySelector('.input-options').appendChild(fileUpload);
-      }
-    } else {
-      let input = document.querySelector('#fileUpload');
-      if (input) {
-        document.querySelector('.input-options').removeChild(input);
-      }
-    }
-  }
-
-  function handleCanvasText(e) {
-    let layout = adTypes[state.category].layouts[state.selectedLayout];
-    ctx.font = `${layout.textSize * state.scale}px Arial`;
-    let words = e.target.value.split(' ');
-    let lines = [];
-    let currentLine = '';
-    for (let i = 0; i < words.length; i++) {
-      let word = words[i];
-      if (ctx.measureText(word).width > layout.textMaxWidth * state.scale) {
-        let firstPart = '';
-        let idx = 0;
-        while (ctx.measureText(firstPart + word[idx]).width < layout.textMaxWidth * state.scale) {
-          firstPart += word[idx];
-          idx++;
-        }
-        let secondPart = word.slice(firstPart.length);
-        word = firstPart;
-        words.splice(i + 1, 0, secondPart);
-      }
-      if (ctx.measureText(currentLine + word).width < layout.textMaxWidth * state.scale) {
-        currentLine += word + ' ';
-      } else {
-        lines.push(currentLine);
-        currentLine = word + ' ';
-      }
-    }
-    lines.push(currentLine);
-    if (lines.length > layout.maxLines) {
-      let text = e.target.value;
-      document.querySelector('.triptych-text').value = text.slice(0, text.length - 1);
-      return;
-    }
-    drawImage();
-    let textColor = document.querySelector('[name=text-color-picker]').value;
-    ctx.fillStyle = textColor;
-    for (let i = 0; i < lines.length && i < layout.maxLines; i++) {
-      ctx.fillText(lines[i], layout.textPosition[0] * state.scale, ((layout.textPosition[1] * state.scale) + 2 + (layout.textSize * state.scale * i)));
-    }
-    ctx.fillStyle = state.backgroundColor;
+    handleFileInput(adTypes[state.category].layouts[state.selectedLayout], state);
   }
 
   function budgetPage(props) {
