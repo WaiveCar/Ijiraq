@@ -118,9 +118,9 @@
     }
   }
   
-  function renderOptions(ratio) {
+  function renderOptions(category) {
     document.querySelector('.layout-options').innerHTML = postTypes[
-      ratio
+      category
     ].layouts
       .map(
         (layout, i) =>

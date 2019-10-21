@@ -1,7 +1,68 @@
 (() => {
+  let postTypes = {
+    announcement: {
+      layouts: [
+        {
+          hasImage: true,
+          imagePosition: [360, 12, 268, 201],
+          textPosition: [12, 80],
+          textMaxWidth: 340,
+          textSize: 36,
+          maxLines: 3,
+        },
+        {
+          hasImage: false,
+          textPosition: [12, 72],
+          textMaxWidth: 616,
+          textSize: 48,
+          maxLines: 3,
+        },
+      ]
+    },
+    promo: {
+      layouts: [
+        {
+          hasImage: true,
+          imagePosition: [360, 12, 268, 201],
+          textPosition: [12, 80],
+          textMaxWidth: 340,
+          textSize: 36,
+          maxLines: 3,
+        },
+        {
+          hasImage: false,
+          textPosition: [12, 72],
+          textMaxWidth: 616,
+          textSize: 48,
+          maxLines: 3,
+        },
+      ]
+    },
+    notice: {
+      layouts: [
+        {
+          hasImage: true,
+          imagePosition: [360, 12, 268, 201],
+          textPosition: [12, 80],
+          textMaxWidth: 340,
+          textSize: 36,
+          maxLines: 3,
+        },
+        {
+          hasImage: false,
+          textPosition: [12, 72],
+          textMaxWidth: 616,
+          textSize: 48,
+          maxLines: 3,
+        },
+      ]
+    },
+  };
+
   let initialState = {
     categories: ['announcement', 'promo', 'notice'],
     category: '',
+    selectedLayout: 0,
   };
   let state = {};
 
@@ -21,7 +82,6 @@
   }
 
   function categoryPage(props) {
-    this.setState = setState;
     return `
       <div>
         Select Category
@@ -54,8 +114,26 @@
     return `
       <div>
         Select Layout
+        <div class="layout-options">
+        </div>
       </div>
     `;
+  }
+
+  function renderOptions() {
+    document.querySelector('.layout-options').innerHTML = postTypes[
+      state.category
+    ].layouts
+      .map(
+        (layout, i) =>
+          `
+        <input type="radio" name="triptych-options" value="${i}" ${
+            i === 0 ? 'checked' : ''
+          }>
+        <label for="option${i}">${i}</label>
+        `,
+      )
+      .join('');
   }
 
   function infoPage(props) {
@@ -93,7 +171,7 @@
   let pages = [
     {html: categoryPage},
     {html: targetingPage, loadFunc: attachScript.bind(this, '/js/map.js')},
-    {html: layoutPage},
+    {html: layoutPage, loadFunc: renderOptions},
     {html: infoPage},
     {html: budgetPage},
     {html: summaryPage},
@@ -134,7 +212,8 @@
   function submit(data) {
     console.log('Submitting: ', data);
   }
-
   showPage(currentPage);
   document.querySelector('#back-btn').onclick = () => showPage(currentPage - 1);
+
+  
 })();
