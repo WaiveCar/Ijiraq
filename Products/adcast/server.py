@@ -10,7 +10,6 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 @app.route('/<path:path>')
 def serve(path):
-  print('path', path)
   if "campaigns/wizard" in path:
     return render_template("campaigns/wizard/index.html".format(ROOT))
 

@@ -2,7 +2,7 @@
   let initialState = {
     categories: ['announcement', 'promo', 'notice'],
     category: '',
-  }
+  };
   let state = {};
 
   function setState(updateObj) {
@@ -14,28 +14,40 @@
   window.setState = setState;
   setState(initialState);
 
+  function attachScript(src) {
+    let script = document.createElement('script');
+    script.src = src;
+    document.body.appendChild(script);
+  }
+
   function categoryPage(props) {
     this.setState = setState;
     return `
       <div>
         Select Category
-        ${props.categories.map(cat => `
+        ${props.categories
+          .map(
+            cat => `
           <div oninput="setState({category : '${cat}'})">
-            <input type="radio" name="category" value="${cat}" ${props.category === cat ? 'checked' : ''}>
+            <input type="radio" name="category" value="${cat}" ${
+              props.category === cat ? 'checked' : ''
+            }>
             <label for="${cat}">${cat}</label>
           </div>
-        `
-        ).join('')}
+        `,
+          )
+          .join('')}
       </div>
-    `
+    `;
   }
 
   function targetingPage(props) {
     return `
       <div>
         Select Targeting
+        <div id="map" style="width: 100%; height: 30vw"></div>
       </div>
-    `
+    `;
   }
 
   function layoutPage(props) {
@@ -43,7 +55,7 @@
       <div>
         Select Layout
       </div>
-    `
+    `;
   }
 
   function infoPage(props) {
@@ -59,7 +71,7 @@
       <div>
         Edit Budget
       </div>
-    `
+    `;
   }
 
   function summaryPage(props) {
@@ -67,7 +79,7 @@
       <div>
         Summary
       </div>
-    `
+    `;
   }
 
   function paymentPage(props) {
@@ -75,20 +87,18 @@
       <div>
         Payment
       </div>
-    `
-
+    `;
   }
-  
-  let pages = [
-    categoryPage,
-    targetingPage,
-    layoutPage,
-    infoPage,
-    budgetPage,
-    summaryPage,
-    paymentPage,
-  ];
 
+  let pages = [
+    {html: categoryPage},
+    {html: targetingPage, loadFunc: attachScript.bind(this, '/js/map.js')},
+    {html: layoutPage},
+    {html: infoPage},
+    {html: budgetPage},
+    {html: summaryPage},
+    {html: paymentPage},
+  ];
 
   let currentPage = Number(window.location.pathname.split('/').pop());
   let backBtn = document.querySelector('#back-btn');
@@ -104,7 +114,13 @@
       pageNum !== pages.length - 1
         ? () => showPage(currentPage + 1)
         : () => submit(state);
-    document.querySelector('#anchor').innerHTML = pages[pageNum](state);
+    document.querySelector('#anchor').innerHTML = pages[pageNum].html(
+      state,
+      anchor,
+    );
+    if (pages[pageNum].loadFunc) {
+      pages[pageNum].loadFunc();
+    }
     if (currentPage !== pageNum) {
       window.history.pushState(
         {},
