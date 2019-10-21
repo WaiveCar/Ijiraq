@@ -220,6 +220,10 @@
     setState(initialState);
   }
 
+  window.onpopstate = function() {
+    currentPage = Number(window.location.pathname.split('/').pop());
+    showPage(currentPage);  
+  }
   showPage(currentPage);
 
   document.querySelector('#back-btn').onclick = () => showPage(currentPage - 1);
