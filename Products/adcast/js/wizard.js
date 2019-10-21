@@ -69,11 +69,11 @@
   function setState(updateObj) {
     console.log('old state', state);
     Object.assign(state, updateObj);
+    localStorage.setItem('savedState', JSON.stringify(state));
     console.log('new state', state);
   }
 
   window.setState = setState;
-  setState(initialState);
 
   function attachScript(src) {
     let script = document.createElement('script');
@@ -212,8 +212,15 @@
   function submit(data) {
     console.log('Submitting: ', data);
   }
-  showPage(currentPage);
-  document.querySelector('#back-btn').onclick = () => showPage(currentPage - 1);
 
-  
+  let savedState = localStorage.getItem('savedState');
+  if (savedState) {
+    setState(JSON.parse(savedState));
+  } else {
+    setState(initialState);
+  }
+
+  showPage(currentPage);
+
+  document.querySelector('#back-btn').onclick = () => showPage(currentPage - 1);
 })();
