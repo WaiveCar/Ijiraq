@@ -165,9 +165,11 @@
       </div>
     `;
   }
+
   let triptych = null;
   let ctx = null;
   let image = null;
+
   function adCreateLoad() {
     triptych = document.querySelector('#triptych-edit');
     ctx = triptych.getContext('2d');
@@ -180,6 +182,7 @@
     document.querySelector('[name=text-color-picker]').oninput = reRenderText;
     drawImage();
     reRenderText();
+    handleFileInput(adTypes[state.category].layouts[state.selectedLayout]);
   }
 
   function drawImage(e) {
