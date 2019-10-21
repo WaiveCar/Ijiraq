@@ -1,5 +1,5 @@
 (() => {
-  let postTypes = {
+  let adTypes = {
     announcement: {
       layouts: [
         {
@@ -17,7 +17,7 @@
           textSize: 48,
           maxLines: 3,
         },
-      ]
+      ],
     },
     promo: {
       layouts: [
@@ -36,7 +36,7 @@
           textSize: 48,
           maxLines: 3,
         },
-      ]
+      ],
     },
     notice: {
       layouts: [
@@ -55,7 +55,7 @@
           textSize: 48,
           maxLines: 3,
         },
-      ]
+      ],
     },
   };
 
@@ -115,33 +115,39 @@
       <div>
         Select Layout
         <div class="layout-options">
+          ${adTypes[state.category].layouts
+            .map(
+              (layout, i) =>
+                `
+        <input oninput="setState({selectedLayout: ${i}})" type="radio" name="triptych-options" value="${i}" ${
+                  i === state.selectedLayout ? 'checked' : ''
+                }>
+        <label for="option${i}">${i}</label>
+        `,
+            )
+            .join('')}
         </div>
       </div>
     `;
   }
 
-  function renderLayoutOptions() {
-    document.querySelector('.layout-options').innerHTML = postTypes[
-      state.category
-    ].layouts
-      .map(
-        (layout, i) =>
-          `
-        <input oninput="setState({selectedLayout: ${i}})" type="radio" name="triptych-options" value="${i}" ${
-            i === state.selectedLayout ? 'checked' : ''
-          }>
-        <label for="option${i}">${i}</label>
-        `,
-      )
-      .join('');
-  }
-
-  function infoPage(props) {
+  function adCreatePage(props) {
     return `
       <div>
         Add Info
       </div>
     `;
+  }
+
+  function drawImage(e) {
+    let layout = postTypes[selectedCategory].layouts[selectedLayout];
+    ctx.clearRect(0, 0, triptych.width, triptych.height);
+    ctx.fillStyle = e ? e.target.value : backgroundColor;
+    backgroundColor = ctx.fillStyle;
+    ctx.fillRect(0, 0, triptych.width, triptych.height);
+    if (layout.hasImage) {
+      ctx.drawImage(image, 0, 0, image.width, image.height, ...layout.imagePosition.map(num => num * scale));
+    }
   }
 
   function budgetPage(props) {
@@ -171,8 +177,8 @@
   let pages = [
     {html: categoryPage},
     {html: targetingPage, loadFunc: attachScript.bind(this, '/js/map.js')},
-    {html: layoutPage, loadFunc: renderLayoutOptions},
-    {html: infoPage},
+    {html: layoutPage},
+    {html: adCreatePage},
     {html: budgetPage},
     {html: summaryPage},
     {html: paymentPage},
@@ -222,8 +228,8 @@
 
   window.onpopstate = function() {
     currentPage = Number(window.location.pathname.split('/').pop());
-    showPage(currentPage);  
-  }
+    showPage(currentPage);
+  };
   showPage(currentPage);
 
   document.querySelector('#back-btn').onclick = () => showPage(currentPage - 1);
