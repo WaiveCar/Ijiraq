@@ -120,15 +120,15 @@
     `;
   }
 
-  function renderOptions() {
+  function renderLayoutOptions() {
     document.querySelector('.layout-options').innerHTML = postTypes[
       state.category
     ].layouts
       .map(
         (layout, i) =>
           `
-        <input type="radio" name="triptych-options" value="${i}" ${
-            i === 0 ? 'checked' : ''
+        <input oninput="setState({selectedLayout: ${i}})" type="radio" name="triptych-options" value="${i}" ${
+            i === state.selectedLayout ? 'checked' : ''
           }>
         <label for="option${i}">${i}</label>
         `,
@@ -171,7 +171,7 @@
   let pages = [
     {html: categoryPage},
     {html: targetingPage, loadFunc: attachScript.bind(this, '/js/map.js')},
-    {html: layoutPage, loadFunc: renderOptions},
+    {html: layoutPage, loadFunc: renderLayoutOptions},
     {html: infoPage},
     {html: budgetPage},
     {html: summaryPage},
