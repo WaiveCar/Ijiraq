@@ -1,9 +1,10 @@
 (() => {
+  let categories = ['announcement', 'promo', 'notice'];
   let initialState = {
-    categories: ['announcement', 'promo', 'notice'],
-    category: '',
+    category: categories[0],
     selectedLayout: 0,
     backgroundColor: 'white',
+    canvasText: '',
     scale: 1,
   };
   let state = {};
@@ -25,7 +26,7 @@
     return `
       <div>
         Select Category
-        ${props.categories
+        ${categories
           .map(
             cat => `
           <div oninput="setState({category : '${cat}'})">
@@ -101,7 +102,6 @@
           </div>
           </canvas>
         </div>
-        <button class="choose-image">Choose This</button>
       </div>
     `;
   }
@@ -114,7 +114,9 @@
       drawImage(e, state);
       reRenderText();
     }
+    document.querySelector('.triptych-text').value = state.canvasText;
     document.querySelector('.triptych-text').oninput = function(e) {
+      setState({canvasText: e.target.value});
       handleCanvasText(e, state);
     }
     document.querySelector('[name=text-color-picker]').oninput = reRenderText;
