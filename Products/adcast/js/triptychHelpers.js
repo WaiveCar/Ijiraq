@@ -66,7 +66,6 @@ function drawImage(e, state) {
   let layout = adTypes[state.category].layouts[state.selectedLayout];
   ctx.clearRect(0, 0, triptych.width, triptych.height);
   ctx.fillStyle = e ? e.target.value : state.backgroundColor;
-  setState({backgroundColor: ctx.fillStyle});
   ctx.fillRect(0, 0, triptych.width, triptych.height);
   if (layout.hasImage) {
     ctx.drawImage(

@@ -4,6 +4,7 @@
     category: categories[0],
     selectedLayout: 0,
     backgroundColor: 'white',
+    textColor: 'black',
     canvasText: '',
     scale: 1,
   };
@@ -110,19 +111,32 @@
     triptych = document.querySelector('#triptych-edit');
     ctx = triptych.getContext('2d');
     image = document.querySelector('.triptych-images img');
-    document.querySelector('[name=background-color-picker]').oninput = function(e) {
+    let backgroundColorPicker = document.querySelector(
+      '[name=background-color-picker]',
+    );
+    backgroundColorPicker.value = state.backgroundColor;
+    backgroundColorPicker.oninput = function(e) {
       drawImage(e, state);
+      setState({backgroundColor: e.target.value});
       reRenderText();
-    }
+    };
     document.querySelector('.triptych-text').value = state.canvasText;
     document.querySelector('.triptych-text').oninput = function(e) {
       setState({canvasText: e.target.value});
       handleCanvasText(e, state);
-    }
-    document.querySelector('[name=text-color-picker]').oninput = reRenderText;
+    };
+    let textColorPicker = document.querySelector('[name=text-color-picker]');
+    textColorPicker.value = state.textColor;
+    textColorPicker.oninput = function(e) {
+      reRenderText();
+      setState({textColor: e.target.value});
+    };
     drawImage(null, state);
     reRenderText();
-    handleFileInput(adTypes[state.category].layouts[state.selectedLayout], state);
+    handleFileInput(
+      adTypes[state.category].layouts[state.selectedLayout],
+      state,
+    );
   }
 
   function budgetPage(props) {
