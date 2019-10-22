@@ -15,7 +15,6 @@
   function setState(updateObj) {
     Object.assign(state, updateObj);
     localStorage.setItem('savedState', JSON.stringify(state));
-    console.log('new state', state);
   }
 
   window.setState = setState;
@@ -153,14 +152,6 @@
     }
   }
 
-  function budgetPage(props) {
-    return `
-      <div>
-        Edit Budget
-      </div>
-    `;
-  }
-
   function summaryPage(props) {
     return `
       <div>
@@ -182,7 +173,6 @@
     {html: targetingPage, loadFunc: attachScript.bind(this, '/js/map.js')},
     {html: layoutPage},
     {html: adCreatePage, loadFunc: adCreateLoad},
-    {html: budgetPage},
     {html: summaryPage},
     {html: paymentPage},
   ];

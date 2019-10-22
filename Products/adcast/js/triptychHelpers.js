@@ -180,7 +180,6 @@ function getImageFromCanvas(e, state) {
   ctx = newCtx;
   drawImage(null, state);
   reRenderText();
-
   triptych = oldCanvas;
   ctx = oldCtx;
   // Change scale back here so that the further editing can be done if necessary
