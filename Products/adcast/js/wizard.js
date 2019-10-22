@@ -25,7 +25,7 @@
     document.body.appendChild(script);
   }
 
-  function categoryPage(props) {
+  function categoryPage(state) {
     return `
       <div>
         Select Category
@@ -34,7 +34,7 @@
             cat => `
           <div oninput="setState({category : '${cat}'})">
             <input type="radio" name="category" value="${cat}" ${
-              props.category === cat ? 'checked' : ''
+              state.category === cat ? 'checked' : ''
             }>
             <label for="${cat}">${cat}</label>
           </div>
@@ -45,7 +45,7 @@
     `;
   }
 
-  function targetingPage(props) {
+  function targetingPage(state) {
     return `
       <div>
         Select Targeting
@@ -54,7 +54,7 @@
     `;
   }
 
-  function layoutPage(props) {
+  function layoutPage(state) {
     return `
       <div>
         Select Layout
@@ -75,7 +75,7 @@
     `;
   }
 
-  function adCreatePage(props) {
+  function adCreatePage(state) {
     return `
       <style>
         .triptych-images {
@@ -152,15 +152,18 @@
     }
   }
 
-  function summaryPage(props) {
+  function summaryPage(state) {
     return `
       <div>
         Summary
+        <div>
+          <img src="${state.finalImageSrc}" width="50%">
+        </div>
       </div>
     `;
   }
 
-  function paymentPage(props) {
+  function paymentPage(state) {
     return `
       <div>
         Payment
