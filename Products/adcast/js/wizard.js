@@ -8,12 +8,14 @@
     canvasText: '',
     scale: 1,
     imageSrc: null,
+    finalImageSrc: null,
   };
   let state = {};
 
   function setState(updateObj) {
     Object.assign(state, updateObj);
     localStorage.setItem('savedState', JSON.stringify(state));
+    console.log('new state', state);
   }
 
   window.setState = setState;
@@ -102,7 +104,6 @@
           <div style="width: 100px; height 200px;">
             <canvas id="triptych-edit" width="640" height="225">
           </div>
-          </canvas>
         </div>
       </div>
     `;
@@ -144,6 +145,12 @@
       adTypes[state.category].layouts[state.selectedLayout],
       state,
     );
+    let nextBtn = document.querySelector('#next-btn');
+    let nextOnClick = nextBtn.onclick;
+    nextBtn.onclick = function(e) {
+      getImageFromCanvas(e, state);
+      nextOnClick();
+    }
   }
 
   function budgetPage(props) {

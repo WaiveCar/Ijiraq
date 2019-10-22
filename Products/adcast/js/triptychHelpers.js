@@ -167,3 +167,24 @@ function handleCanvasText(e, state) {
   }
   ctx.fillStyle = state.backgroundColor;
 }
+
+function getImageFromCanvas(e, state) {
+  let oldCanvas = triptych;
+  let newCanvas = document.createElement('canvas');
+  newCanvas.width = 1920;
+  newCanvas.height = 675;
+  triptych = newCanvas;
+  setState({scale: 3});
+  let oldCtx = ctx;
+  let newCtx = newCanvas.getContext('2d');
+  ctx = newCtx;
+  drawImage(null, state);
+  reRenderText();
+
+  triptych = oldCanvas;
+  ctx = oldCtx;
+  // Change scale back here so that the further editing can be done if necessary
+  setState({scale: 1});
+  let src = newCanvas.toDataURL('img/jpeg');
+  setState({finalImageSrc: src});
+}
