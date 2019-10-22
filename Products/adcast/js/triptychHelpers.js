@@ -100,6 +100,7 @@ function handleFileInput(layout, state) {
           reRenderText();
         };
         image.src = URL.createObjectURL(this.files[0]);
+        setState({imageSrc: image.src});
       };
       document.querySelector('.input-options').appendChild(fileUpload);
     }

@@ -7,6 +7,7 @@
     textColor: 'black',
     canvasText: '',
     scale: 1,
+    imageSrc: null,
   };
   let state = {};
 
@@ -110,7 +111,13 @@
   function adCreateLoad() {
     triptych = document.querySelector('#triptych-edit');
     ctx = triptych.getContext('2d');
-    image = document.querySelector('.triptych-images img');
+    if (state.imageSrc) {
+      image = document.createElement('img');
+      image.src = state.imageSrc;
+    } else {
+      image = document.querySelector('.triptych-images img');
+    }
+
     let backgroundColorPicker = document.querySelector(
       '[name=background-color-picker]',
     );
