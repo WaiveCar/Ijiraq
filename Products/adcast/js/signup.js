@@ -15,6 +15,23 @@ function handleGoogleSignIn(googleUser) {
   console.log('ID Token: ' + id_token);
 }
 
+function fbLogin(e) {
+  e.preventDefault();
+  FB.getLoginStatus(function(response) {
+    if (response.session) {
+      top.location.href = 'https://localhost:5000/signup';
+    } else {
+      top.location.href = `https://www.facebook.com/dialog/oauth?client_id=536536940468408&redirect_uri=https://localhost:5000/signup&scope=email,read_stream`;
+    }
+  });
+}
+
+function checkFacebookLoginState() {
+  FB.getLoginStatus(function(response) {
+    console.log('respons', response);
+  });
+}
+
 function signup() {
   let data = new FormData(form);
   let object = {};
@@ -48,6 +65,7 @@ function signup() {
   `,
     )
     .join('');
+  // Google Login init
   gapi.load('auth2', function() {
     let GoogleAuth = gapi.auth2
       .init({
@@ -61,4 +79,30 @@ function signup() {
         }
       })
       .catch(e => console.log('Error loading google sigin api', e));
+  });
+  // Facebook login init
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId: '536536940468408',
+      cookie: true,
+      xfbml: true,
+      version: 'v4.0',
+    });
+
+    FB.getLoginStatus(function(response) {
+      // Do something here if user is already logged in
+      console.log('getting login status', response);
+    });
+  };
+  (function(d, s, id) {
+    var js,
+      fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {
+      return;
+    }
+    js = d.createElement(s);
+    js.id = id;
+    js.src = 'https://connect.facebook.net/en_US/sdk.js';
+    fjs.parentNode.insertBefore(js, fjs);
+  })(document, 'script', 'facebook-jssdk');
 })();

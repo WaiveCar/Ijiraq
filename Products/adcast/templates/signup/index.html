@@ -19,17 +19,20 @@
     <img src="/assets/adcast.svg" style="max-width: 10rem">
   </div>
   <div class="row d-flex justify-content-center">
-    <form method=post action=http://adcast/api/signup?next=/brands>
-      <div class="d-flex justify-content-center">
-        <div class="g-signin2" data-theme="dark" data-ux_mode="redirect"></div>
-      </div>
-      <div class="form-fields">
-      </div>
-      <div class="d-flex justify-content-center">
-        <button type="submit" class="btn btn-outline-dark">Sign up</button>
-      </div>
-      <Br/> <center> <a href="/signin">Sign In</a></center>
-    </form>
+    <div>
+      <form method=post action=http://adcast/api/signup?next=/brands>
+        <div class="d-flex justify-content-center">
+          <div class="g-signin2" data-onsuccess="onGoogleSignIn" data-theme="dark" data-ux_mode="redirect"></div>
+          <button onclick="fbLogin(event)">FB Login</button>
+        </div>
+        <div class="form-fields">
+        </div>
+        <div class="d-flex justify-content-center">
+          <button type="submit" class="btn btn-outline-dark">Sign up</button>
+        </div>
+        <Br/> <center> <a href="/signin">Sign In</a></center>
+      </form>
+    </div>
   </div>
 </div>
 {% endblock %}
