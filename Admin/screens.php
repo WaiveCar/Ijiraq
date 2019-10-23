@@ -2,7 +2,7 @@
 include('../AdDaemon/lib/lib.php');
 include('lib.php');
 
-$screenList = get('screens', ['removed' => 0, 'active' => 1]);
+$screenList = get('screens', ['active' => 1]);
 $addrList = get_addressList(array_map(function($row) { 
   if($row['lat'] && $row['lng']) {
     return [$row['lat'],$row['lng']]; 
@@ -40,6 +40,13 @@ for($ix = 0; $ix < count($screenList); $ix++){
     $screenList[$ix]['loc_sec'] = 99999999999;
     $screenList[$ix]['diff_loc'] = '<em>never</em>';
   }
+  if(isset($screenList[$ix]['ignition_time'])) {
+    $screenList[$ix]['expected_hour'] = (strtotime($screenList[$ix]['ignition_time']) - strtotime($screenList[$ix]['last_seen'])) / 60 / 60;
+    $screenList[$ix]['expected'] = round( abs($screenList[$ix]['expected_hour']) );
+  }
+  
+  $id = $screenList[$ix]['uid'];
+  $screenList[$ix]['shortid'] = substr($id, 0, 4) . '&hellip;' . substr($id, -4);
 }
 
 //$tagList = db_all("select name from tag");
@@ -63,11 +70,10 @@ $fieldList = [
   'car' => 'car',
   'serial' => 'serial',
   'location' => 'addr',
-  'updated' => 'diff_loc',
-  'phone' => 'phone',
   'port' => 'port',
   'version' => 'version',
   'uptime' => 'uptime',
+  'expected' => 'expected',
   'last' => 'last_local',
   'first' => 'first_local'
 ];
@@ -123,13 +129,15 @@ function split($str) {
     em { color: #555 }
     .table td {padding: .75rem .2rem; }
     td.edit { white-space: nowrap; }
+    .removed { opacity: 0.5;background:#ddd }
     .modal-body span {
-      min-width: 5rem; 
+      min-width: 7rem; 
       display: inline-block;
       vertical-align: top;
     }
     .edit:hover { color: #000 }
     #notice { position: absolute; top:0; left:0; width: 100%; z-index: 100;display:none}
+    .btn.disabled,.btn-primary.disabled { background: #aaa !important }
   </style>
   <body id="page-top">
   <div id="wrapper">
@@ -156,10 +164,16 @@ function split($str) {
           </tr>
         </thead>
         <tbody>
-        <? foreach($screenList as $screen) { ?>
-          <tr>
+        <? foreach($screenList as $screen) {
+          if($screen['removed']) {
+            $klass = ' class="removed"';
+          } else {
+            $klass = '';
+          }
+ ?>
+          <tr<?=$klass?>>
             <td>
-              <a href="#<?=$screen['id']?>" onclick='edit("<?=$screen['id']?>")' class=id><?= split($screen['uid']) ?></a>
+              <a href="#<?=$screen['id']?>" onclick='edit("<?=$screen['id']?>")' class=id><?= $screen['shortid'] ?></a>
             </td>
             <td>
               <select onchange=change(<?=$screen['id']?>,'project',this)>
@@ -225,7 +239,8 @@ function split($str) {
           </div>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-sm mr-auto" onclick=remove()>Remove Screen</button>
+            <button type="button" class="btn btn-danger btn-sm mr-auto" id="remove" onclick=remove()>Remove Screen</button>
+            <button type="button" class="btn btn-primary btn-sm mr-auto" id="unremove" onclick=unremove()>Unremove Screen</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -234,7 +249,7 @@ function split($str) {
 
   </div>
     <script>
-    var Data=<?=json_encode($screenList);?>
+    var Data=<?=json_encode($screenList)?>,now='<?= date("Y-m-d H:i:s")?>';
     </script>
   <script
     src="https://code.jquery.com/jquery-3.4.1.min.js"

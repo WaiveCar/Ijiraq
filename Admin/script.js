@@ -83,6 +83,14 @@ function obj2span(obj) {
   return '<div>' + out.join('</div><div>') + '</div>';
 }
 
+function unremove() {
+  if(confirm(`Are you sure you want to unremove ${_screen.uid}?`)) {
+    post('screens', {id: _screen.id, removed: false}, res => {
+      show({data: 'Updated screen'}, 1000);
+    });
+    $("#editModal").modal('hide');
+  }
+}
 function remove() {
   if(confirm(`Are you sure you want to remove ${_screen.uid}?`)) {
     post('screens', {id: _screen.id, removed: true }, res => {
@@ -94,12 +102,31 @@ function remove() {
 
 function edit(id) {
   var screen = get(id);
-  var keylist = ['imei','pings','last_task'];
-  var out = keylist.map(row => `<span>${row}</span><span>${JSON.stringify(screen[row]).replace(/\"/g,'')}</span>`);
+  var keylist = ['last_seen','ignition_time','ignition_state','expected_hour','phone','imei','pings','last_task'];
+  var out = keylist.map(row => screen[row] ? 
+    `<span>${row}</span><span>${JSON.stringify(screen[row]).replace(/\"/g,'')}</span>`:
+    `<span>${row}</span><span>&mdash;</span>`
+  );
   out.push(`<span>features</span><span>${obj2span(screen.features)}</span>`); 
+  out.unshift(`<span>Now</span><span>${now}</span>`); 
   
   _screen = screen;
+  var remove =  document.getElementById('remove');
+  var unremove =  document.getElementById('unremove');
 
+  if(screen.removed) {
+    remove.setAttribute('disabled','');
+    remove.classList.add('disabled');
+
+    unremove.removeAttribute('disabled');
+    unremove.classList.remove('disabled');
+  } else {
+    remove.removeAttribute('disabled');
+    remove.classList.remove('disabled');
+
+    unremove.setAttribute('disabled','');
+    unremove.classList.add('disabled');
+  }
   $("#editModal .modal-body").html('<div>' + out.join('</div><div>') + '</div>');
   $("#ModalLabel").html(screen.uid);
   $("#editModal").modal();
