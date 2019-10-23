@@ -85,32 +85,6 @@ function reRenderText() {
   textInput.dispatchEvent(event);
 }
 
-function handleFileInput(layout, state) {
-  if (layout.hasImage) {
-    let hasInput = document.querySelector('#fileUpload');
-    if (!hasInput) {
-      let fileUpload = document.createElement('input');
-      fileUpload.type = 'file';
-      fileUpload.id = 'fileUpload';
-      fileUpload.accept = 'image/png, image/jpeg';
-      fileUpload.oninput = function() {
-        image = new Image();
-        image.onload = function() {
-          drawImage(null, state);
-          reRenderText();
-        };
-        image.src = URL.createObjectURL(this.files[0]);
-        setState({imageSrc: image.src});
-      };
-      document.querySelector('.input-options').appendChild(fileUpload);
-    }
-  } else {
-    let input = document.querySelector('#fileUpload');
-    if (input) {
-      document.querySelector('.input-options').removeChild(input);
-    }
-  }
-}
 
 function handleCanvasText(e, state) {
   let layout = adTypes[state.category].layouts[state.selectedLayout];
@@ -166,6 +140,33 @@ function handleCanvasText(e, state) {
     );
   }
   ctx.fillStyle = state.backgroundColor;
+}
+
+function handleFileInput(layout, state) {
+  if (layout.hasImage) {
+    let hasInput = document.querySelector('#fileUpload');
+    if (!hasInput) {
+      let fileUpload = document.createElement('input');
+      fileUpload.type = 'file';
+      fileUpload.id = 'fileUpload';
+      fileUpload.accept = 'image/png, image/jpeg';
+      fileUpload.oninput = function() {
+        image = new Image();
+        image.onload = function() {
+          drawImage(null, state);
+          reRenderText();
+        };
+        image.src = URL.createObjectURL(this.files[0]);
+        setState({imageSrc: image.src});
+      };
+      document.querySelector('.input-options').appendChild(fileUpload);
+    }
+  } else {
+    let input = document.querySelector('#fileUpload');
+    if (input) {
+      document.querySelector('.input-options').removeChild(input);
+    }
+  }
 }
 
 function getImageFromCanvas(e, state) {
