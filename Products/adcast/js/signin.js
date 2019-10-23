@@ -32,9 +32,18 @@ function handleGoogleSignIn(googleUser) {
   `;
     })
     .join('');
-  let GoogleAuth = gapi.auth2.init();
-  if (GoogleAuth.isSignedIn.get()) {
-    let user = GoogleAuth.currentUser.get();
-    handleGoogleSignIn(user);
-  }
+  gapi.load('auth2', function() {
+    let GoogleAuth = gapi.auth2
+      .init({
+        client_id:
+          '237832253799-vrn0c73js364ub4pqob679obhp2m14dm.apps.googleusercontent.com',
+      })
+      .then(GoogleAuth => {
+        if (GoogleAuth.isSignedIn.get()) {
+          let user = GoogleAuth.currentUser.get();
+          handleGoogleSignIn(user);
+        }
+      })
+      .catch(e => console.log('Error loading google sigin api', e));
+  });
 })();
