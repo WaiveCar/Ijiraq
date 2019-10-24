@@ -17,20 +17,28 @@ function handleGoogleSignIn(googleUser) {
   */
 }
 
-function fbLogin(e) {
-  e.preventDefault();
-  FB.getLoginStatus(function(response) {
-    if (response.session) {
-      top.location.href = 'https://localhost:5000/signup';
-    } else {
-      top.location.href = `https://www.facebook.com/dialog/oauth?client_id=536536940468408&redirect_uri=https://localhost:5000/signup&scope=email,read_stream`;
-    }
+function onFbLogin() {
+  getProfileInfo(function(profile) {
+    console.log('profile', profile);
   });
 }
-
-function checkFacebookLoginState() {
+function getProfileInfo(cb) {
   FB.getLoginStatus(function(response) {
-    console.log('respons', response);
+    console.log('FB status on load', response);
+    // Do something here if user is already logged in
+    if (response.status === 'connected') {
+      FB.api(
+        '/me',
+        {
+          fields: 'id,picture,email,first_name,last_name,name',
+        },
+        function(response) {
+          if (cb) {
+            cb(response);
+          }
+        },
+      );
+    }
   });
 }
 
@@ -82,6 +90,10 @@ function signup() {
       })
       .catch(e => console.log('Error loading google sigin api', e));
   });
+
+  getProfileInfo(function(profile) {
+    console.log('profile', profile);
+  });
   // Facebook login init
   window.fbAsyncInit = function() {
     FB.init({
@@ -90,31 +102,5 @@ function signup() {
       xfbml: true,
       version: 'v4.0',
     });
-
-    FB.getLoginStatus(function(response) {
-      // Do something here if user is already logged in
-      if (response.status === 'connected') {
-        FB.api(
-          '/me',
-          {
-            fields: 'id,picture,email,first_name,last_name,name',
-          },
-          function(response) {
-            console.log('profile info: ', response);
-          },
-        );
-      }
-    });
   };
-  (function(d, s, id) {
-    var js,
-      fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {
-      return;
-    }
-    js = d.createElement(s);
-    js.id = id;
-    js.src = 'https://connect.facebook.net/en_US/sdk.js';
-    fjs.parentNode.insertBefore(js, fjs);
-  })(document, 'script', 'facebook-jssdk');
 })();
