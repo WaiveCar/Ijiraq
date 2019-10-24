@@ -3,6 +3,7 @@ let form = document.querySelector('form');
 function handleGoogleSignIn(googleUser) {
   // Useful data for your client-side scripts:
   let profile = googleUser.getBasicProfile();
+  /*
   console.log('ID: ' + profile.getId()); // Don't send this directly to your server!
   console.log('Full Name: ' + profile.getName());
   console.log('Given Name: ' + profile.getGivenName());
@@ -13,6 +14,7 @@ function handleGoogleSignIn(googleUser) {
   // The ID token you need to pass to your backend:
   let id_token = googleUser.getAuthResponse().id_token;
   console.log('ID Token: ' + id_token);
+  */
 }
 
 function fbLogin(e) {
@@ -91,7 +93,17 @@ function signup() {
 
     FB.getLoginStatus(function(response) {
       // Do something here if user is already logged in
-      console.log('getting login status', response);
+      if (response.status === 'connected') {
+        FB.api(
+          '/me',
+          {
+            fields: 'id,picture,email,first_name,last_name,name',
+          },
+          function(response) {
+            console.log('profile info: ', response);
+          },
+        );
+      }
     });
   };
   (function(d, s, id) {
