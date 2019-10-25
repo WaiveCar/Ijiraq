@@ -17,12 +17,6 @@ function handleGoogleSignIn(googleUser) {
   */
 }
 
-function onFbSignIn() {
-  getProfileInfo(function(profile) {
-    console.log('profile after signin: ', profile);
-  });
-}
-
 function getProfileInfo(cb) {
   FB.getLoginStatus(function(response) {
     console.log('FB status on load', response);
@@ -43,6 +37,11 @@ function getProfileInfo(cb) {
       cb('not logged in');
     }
   });
+}
+
+function fbLogin(e) {
+  e.preventDefault();
+  FB.login(getProfileInfo.bind(this, info => console.log('info', info)));
 }
 
 function signup() {
