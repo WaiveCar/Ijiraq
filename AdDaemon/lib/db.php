@@ -37,12 +37,7 @@ $RULES = [
     'features' => $JSON,
     'panels' => $JSON,
     'location' => $JSON
-  ],
-  'sensor_history' => [
-    'created_at' => [
-      'pre' => function($v) { return db_string($v); },
-     ]
-   ]
+  ]
 ];
 
 // 
@@ -245,6 +240,13 @@ $SCHEMA = [
     'completed_seconds' => 'integer default 0',
     'project'     => 'text default "dev"',
 
+    // 
+    // This is a cheap classification system
+    // for the Oliver project. It'll probably
+    // change.
+    //
+    'topic'       => 'text',
+
     //
     // For now, until we get a geo db system
     // this makes things easily queriable
@@ -266,21 +268,15 @@ $SCHEMA = [
 
     'start_minute'=> 'integer default null',
     'end_minute'  => 'integer default null',
-    'approved'    => 'boolean default false',
-    'active'      => 'boolean default false',
+    'is_active'   => 'boolean default false',
+    'is_approved' => 'boolean default false',
     'is_default'  => 'boolean default false',
+
     'priority'    => 'integer default 0',
     'impression_count' => 'integer',
 
     'start_time'  => 'datetime default current_timestamp',
     'end_time'    => 'datetime'
-  ],
-
-  'kv' => [
-    'id'         => 'integer primary key autoincrement',
-    'key'        => 'text',
-    'value'      => 'text',
-    'created_at' => 'datetime default current_timestamp',
   ],
 
   'job' => [
@@ -407,38 +403,6 @@ $SCHEMA = [
     'lng'         => 'float default null',
     'created_at'  => 'datetime default current_timestamp',
   ],
-
-  // This is going to be a monstrosity really and will
-  // be the majority of the storage.
-  'sensor_history' => [
-    'id'        => 'integer primary key autoincrement',
-    'job_id'    => 'integer',
-    // this is duplicate but honestly I'm thinking this
-    // will be a common request - let's not make it expensive
-    'screen_id' => 'integer',
-    'lat'       => 'float default null',
-    'lng'       => 'float default null',
-    'created_at' => 'datetime',
-
-    // The rest here is kind of a copy and paste for now.
-    // We probably don't *truly* care about this but we'll see
-    'Light' => 'float default null',
-    'Fan' => 'float default null',
-    'Current' => 'float default null',
-    'Voltage' => 'float default null',
-    'Temp' => 'float default null',
-    'Tread' => 'float default null',
-    'Tres' => 'float default null',
-    'Pitch' => 'float default null',
-    'Roll' => 'float default null',
-    'Yaw' => 'float default null',
-    'Accel_x' => 'float default null',
-    'Accel_y' => 'float default null',
-    'Accel_z' => 'float default null',
-    'Gyro_x' => 'float default null',
-    'Gyro_y' => 'float default null',
-    'Gyro_z' => 'float default null'
-  ]
 ];
 $_db = false;
 function db_connect() {
