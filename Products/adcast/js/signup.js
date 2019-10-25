@@ -3,7 +3,6 @@ let form = document.querySelector('form');
 function handleGoogleSignIn(googleUser) {
   // Useful data for your client-side scripts:
   let profile = googleUser.getBasicProfile();
-  /*
   console.log('ID: ' + profile.getId()); // Don't send this directly to your server!
   console.log('Full Name: ' + profile.getName());
   console.log('Given Name: ' + profile.getGivenName());
@@ -14,7 +13,6 @@ function handleGoogleSignIn(googleUser) {
   // The ID token you need to pass to your backend:
   let id_token = googleUser.getAuthResponse().id_token;
   console.log('ID Token: ' + id_token);
-  */
 }
 
 function getProfileInfo(cb) {
