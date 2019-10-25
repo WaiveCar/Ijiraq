@@ -17,11 +17,12 @@ function handleGoogleSignIn(googleUser) {
   */
 }
 
-function onFbLogin() {
+function onFbSignIn() {
   getProfileInfo(function(profile) {
-    console.log('profile', profile);
+    console.log('profile after signin: ', profile);
   });
 }
+
 function getProfileInfo(cb) {
   FB.getLoginStatus(function(response) {
     console.log('FB status on load', response);
@@ -38,6 +39,8 @@ function getProfileInfo(cb) {
           }
         },
       );
+    } else {
+      cb('not logged in');
     }
   });
 }
@@ -49,7 +52,6 @@ function signup() {
     object[key] = value;
   });
   let json = JSON.stringify(object);
-  console.log(json);
 }
 
 (() => {
@@ -91,16 +93,17 @@ function signup() {
       .catch(e => console.log('Error loading google sigin api', e));
   });
 
-  getProfileInfo(function(profile) {
-    console.log('profile', profile);
-  });
   // Facebook login init
   window.fbAsyncInit = function() {
     FB.init({
       appId: '536536940468408',
+      status: true,
       cookie: true,
       xfbml: true,
       version: 'v4.0',
+    });
+    getProfileInfo(function(profile) {
+      console.log('profile', profile);
     });
   };
 })();
