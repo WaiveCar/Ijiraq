@@ -69,5 +69,11 @@ function getProfileInfo(cb) {
 
 function fbLogin(e) {
   e.preventDefault();
-  FB.login(getProfileInfo.bind(this, info => console.log('info', info)));
+  FB.getLoginStatus(function(response) {
+    if (response.status !== 'connected') {
+      FB.login(getProfileInfo.bind(this, info => console.log('info', info)));
+    } else {
+      console.log('Already logged in');
+    }
+  });
 }
