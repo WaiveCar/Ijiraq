@@ -46,6 +46,8 @@ class Screen(db.Model):
   last_seen = db.Column(db.DateTime)
   ignition_state = db.Column(db.Text)
   ignition_time = db.Column(db.DateTime)
+  def __repr__(self):
+      return '<Screen %r>' % self.id
 
 class Place(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -53,6 +55,24 @@ class Place(db.Model):
   lat = db.Column(db.Float, default=None)
   lng = db.Column(db.Float, default=None)
   radius = db.Column(db.Float, default=None)
+  def __repr__(self):
+      return '<Place %r>' % self.id
+
+class Exclusive(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  set_id = db.Column(db.Integer)
+  whitelist = db.Column(db.Boolean) #if true then this is inclusive, if false 
+  campaign_id = db.Column(db.Integer) #then we should leave it out.
+  def __repr__(self):
+      return '<Exclusive %r>' % self.id
+
+class RevenueHistory(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  screen_id = db.Column(db.Integer)
+  revenue_total = db.Column(db.Integer) #deltas can be manually computed for now
+  created_at = db.Column(db.DateTime, default=datetime.utcnow)
+  def __repr__(self):
+      return '<RevenueHistory %r>' % self.id
 
 class Attribution(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -61,12 +81,16 @@ class Attribution(db.Model):
   signal = db.Column(db.Integer) #optional, could be distance, RSSI
   mark = db.Column(db.Text) #such as the 48-bit MAC address
   created_at = db.Column(db.DateTime, default=datetime.utcnow)
+  def __repr__(self):
+      return '<Attribution %r>' % self.id
 
 class ScreenCampaign(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   screen_id = db.Column(db.Integer)
   campaign_id = db.Column(db.Integer)
   created_at = db.Column(db.DateTime, default=datetime.utcnow)
+  def __repr__(self):
+      return '<ScreenCampaign %r>' % self.id
 
 class LocationHistory(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -82,7 +106,7 @@ class LocationHistory(db.Model):
 #SC = ScreenCampaign(screen_id=2, campaign_id=3)
 #db.session.add(SC)
 #db.session.commit()
-found = Attribution.query.filter_by(id=1).all()
+found = RevenueHistory.query.filter_by(id=1).all()
 
 for each in found:
   print(each.__dict__)
