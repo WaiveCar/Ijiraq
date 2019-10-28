@@ -143,6 +143,17 @@ class User(db.Model):
   def __repr__(self):
       return '<User %r>' % self.id
 
+class Widget(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.Text) #what to call it
+  image = db.Column(db.Text) #url of logo or screenshot
+  type = db.Column(db.Text) #ticker or app
+  topic = db.Column(db.Text) #optional, such as weather
+  source = db.Column(db.Text) #The url where to get things
+  created_at = db.Column(db.DateTime, default=datetime.utcnow)
+  def __repr__(self):
+      return '<Widget %r>' % self.id
+
 class ScreenCampaign(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   screen_id = db.Column(db.Integer)
@@ -164,7 +175,7 @@ class LocationHistory(db.Model):
 #SC = ScreenCampaign(screen_id=2, campaign_id=3)
 #db.session.add(SC)
 #db.session.commit()
-found = User.query.filter_by(id=1).all()
+found = Widget.query.filter_by(id=1).all()
 
 for each in found:
   print(each.__dict__)
