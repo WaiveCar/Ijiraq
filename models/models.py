@@ -97,6 +97,15 @@ class Organization(db.Model):
   def __repr__(self):
       return '<Organization %r>' % self.id
 
+class Brand(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  organization_id = db.Column(db.Integer)
+  name = db.Column(db.Text)
+  image = db.Column(db.Text)
+  balance = db.Column(db.Integer)
+  created_at = db.Column(db.DateTime, default=datetime.utcnow)
+  def __repr__(self):
+      return '<Brand %r>' % self.id
 
 class ScreenCampaign(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -120,7 +129,7 @@ class LocationHistory(db.Model):
 #SC = ScreenCampaign(screen_id=2, campaign_id=3)
 #db.session.add(SC)
 #db.session.commit()
-found = Organization.query.filter_by(id=1).all()
+found = Brand.query.filter_by(id=1).all()
 
 for each in found:
   print(each.__dict__)
