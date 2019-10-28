@@ -8,7 +8,14 @@ db = SQLAlchemy(app)
 
 class Screen(db.Model):
   id = db.Column(db.Integer, primary_key=True)
+  # A uid self-reported by the screen (as of the writing
+  # of this comment, using dmidecode to get the CPU ID)
   uid = db.Column(db.Text, nullable=False)
+  # A human readable name
+  serial = db.Column(db.Text)
+  # If the device goes offline this will tell us
+  # what it is that dissappeared so we can check
+  last_campaign_id = db.Column(db.Integer)
   imei = db.Column(db.Text)
   phone = db.Column(db.Text)
   car = db.Column(db.Text)
@@ -39,16 +46,7 @@ class Screen(db.Model):
   last_seen = db.Column(db.DateTime)
   ignition_state = db.Column(db.Text)
   ignition_time = db.Column(db.DateTime)
-  '''
 
-  'place' => [
-    'id'     => 'integer primary key autoincrement',
-    'name'   => 'text not null',
-    'lat'    => 'float default null',
-    'lng'    => 'float default null',
-    'radius' => 'float default null'
-  ],
-  '''
 class Place(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.Text, nullable=False)
@@ -56,6 +54,13 @@ class Place(db.Model):
   lng = db.Column(db.Float, default=None)
   radius = db.Column(db.Float, default=None)
 
+class Attribution(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  screen_id = db.Column(db.Integer)
+  type = db.Column(db.Text) #such as wifi/plate, etc
+  signal = db.Column(db.Integer) #optional, could be distance, RSSI
+  mark = db.Column(db.Text) #such as the 48-bit MAC address
+  created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class ScreenCampaign(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -77,7 +82,7 @@ class LocationHistory(db.Model):
 #SC = ScreenCampaign(screen_id=2, campaign_id=3)
 #db.session.add(SC)
 #db.session.commit()
-found = Place.query.filter_by(id=1).all()
+found = Attribution.query.filter_by(id=1).all()
 
 for each in found:
   print(each.__dict__)
