@@ -84,12 +84,6 @@ class Attribution(db.Model):
   def __repr__(self):
       return '<Attribution %r>' % self.id
 
-class Example(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-  created_at = db.Column(db.DateTime, default=datetime.utcnow)
-  def __repr__(self):
-      return '<Example %r>' % self.id
-
 class Organization(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.Text)
@@ -106,6 +100,16 @@ class Brand(db.Model):
   created_at = db.Column(db.DateTime, default=datetime.utcnow)
   def __repr__(self):
       return '<Brand %r>' % self.id
+
+class Social(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  brand_id = db.Column(db.Integer)
+  service = db.Column(db.Text)
+  name = db.Column(db.Text)
+  token = db.Column(db.Text)
+  created_at = db.Column(db.DateTime, default=datetime.utcnow)
+  def __repr__(self):
+      return '<Social %r>' % self.id
 
 class ScreenCampaign(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -129,7 +133,7 @@ class LocationHistory(db.Model):
 #SC = ScreenCampaign(screen_id=2, campaign_id=3)
 #db.session.add(SC)
 #db.session.commit()
-found = Brand.query.filter_by(id=1).all()
+found = Social.query.filter_by(id=1).all()
 
 for each in found:
   print(each.__dict__)
