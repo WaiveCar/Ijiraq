@@ -34,11 +34,28 @@ class Screen(db.Model):
   is_fake = db.Column(db.Boolean, default=False)
   features = db.Column(db.Text)
   first_seen = db.Column(db.DateTime)
-  last_tast = db.Column(db.Integer, default=0)
+  last_task = db.Column(db.Integer, default=0)
   last_loc = db.Column(db.DateTime)
   last_seen = db.Column(db.DateTime)
   ignition_state = db.Column(db.Text)
   ignition_time = db.Column(db.DateTime)
+  '''
+
+  'place' => [
+    'id'     => 'integer primary key autoincrement',
+    'name'   => 'text not null',
+    'lat'    => 'float default null',
+    'lng'    => 'float default null',
+    'radius' => 'float default null'
+  ],
+  '''
+class Place(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.Text, nullable=False)
+  lat = db.Column(db.Float, default=None)
+  lng = db.Column(db.Float, default=None)
+  radius = db.Column(db.Float, default=None)
+
 
 class ScreenCampaign(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -60,7 +77,7 @@ class LocationHistory(db.Model):
 #SC = ScreenCampaign(screen_id=2, campaign_id=3)
 #db.session.add(SC)
 #db.session.commit()
-found = ScreenCampaign.query.filter_by(id=1).all()
+found = Place.query.filter_by(id=1).all()
 
 for each in found:
   print(each.__dict__)
