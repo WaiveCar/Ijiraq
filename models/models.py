@@ -154,6 +154,70 @@ class Widget(db.Model):
   def __repr__(self):
       return '<Widget %r>' % self.id
 
+class Campaign(db.Model):
+  '''
+  consider: potentially create a second table for "staging" campaigns
+  that aren't active as opposed to relying on a boolean
+  in this table below
+  
+  The start_minute and end_minute are for campaigns that 
+  don't run 24 hours a day.
+  
+  The start_time and end_time are the bounds to do the 
+  campaign. It doesn't need to be exactly timebound by
+  these and can bleed over in either direction if it 
+  gets to that.
+  
+  If they are empty, then it means that it's 24 hours a day
+  '''
+  id = db.Column(db.Integer, primary_key=True)
+  title = db.Column(db.Text)
+  ref_id = db.Column(db.Text)
+  contact_id = db.Column(db.Integer)
+  brand_id = db.Column(db.Integer)
+  organization_id = db.Column(db.Integer)
+  order_id = db.Column(db.Integer)
+  asset = db.Column(db.Text)
+  duration_seconds = db.Column(db.Integer)
+  completed_seconds = db.Column(db.Integer, default=0)
+  project = db.Column(db.Text, default='dev')
+  '''
+  This is a cheap classification system
+  for the Oliver project. It'll probably
+  change.
+  '''
+  topic = db.Column(db.Text)
+  '''
+  For now, until we get a geo db system
+  this makes things easily queriable
+  
+  Stuff will be duplicated into shapelists
+  '''
+  lat = db.Column(db.Float, default=None)
+  lng = db.Column(db.Float, default=None)
+  radius = db.Column(db.Float, default=None)
+
+  '''
+  shape_list := [ polygon | circle ]* 
+  polygon   := [ "Polygon", [ coord, ... ] ]
+  circle    := [ "Circle", coord, radius ]
+  coord     := [ lon, lat ]
+  radius    := integer (meters)
+  '''
+  shape_list = db.Column(db.Text)
+  start_minute = db.Column(db.Integer, default=None)
+  end_minute = db.Column(db.Integer, default=None)
+  is_active = db.Column(db.Boolean, default=False)
+  is_approved = db.Column(db.Boolean, default=False)
+  is_default = db.Column(db.Boolean, default=False)
+  priority = db.Column(db.Integer, default=0)
+  impression_count = db.Column(db.Integer)
+  start_time = db.Column(db.DateTime, default=datetime.utcnow)
+  end_time = db.Column(db.DateTime)
+  def __repr__(self):
+      return '<Campaign %r>' % self.id
+
+
 class ScreenCampaign(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   screen_id = db.Column(db.Integer)
