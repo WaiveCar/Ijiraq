@@ -84,6 +84,20 @@ class Attribution(db.Model):
   def __repr__(self):
       return '<Attribution %r>' % self.id
 
+class Example(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  created_at = db.Column(db.DateTime, default=datetime.utcnow)
+  def __repr__(self):
+      return '<Example %r>' % self.id
+
+class Organization(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.Text)
+  image = db.Column(db.Text)
+  def __repr__(self):
+      return '<Organization %r>' % self.id
+
+
 class ScreenCampaign(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   screen_id = db.Column(db.Integer)
@@ -106,7 +120,7 @@ class LocationHistory(db.Model):
 #SC = ScreenCampaign(screen_id=2, campaign_id=3)
 #db.session.add(SC)
 #db.session.commit()
-found = RevenueHistory.query.filter_by(id=1).all()
+found = Organization.query.filter_by(id=1).all()
 
 for each in found:
   print(each.__dict__)
