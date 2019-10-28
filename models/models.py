@@ -111,6 +111,23 @@ class Social(db.Model):
   def __repr__(self):
       return '<Social %r>' % self.id
 
+class Contact(db.Model):
+  # there's a more generic way to do this that
+  #  we should totally implement when the time comes.
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.Text)
+  twitter = db.Column(db.Text)
+  instagram = db.Column(db.Text)
+  facebook = db.Column(db.Text)
+  email = db.Column(db.Text)
+  website = db.Column(db.Text)
+  phone = db.Column(db.Text)
+  location = db.Column(db.Text)
+  lat = db.Column(db.Float, default=None)
+  lng = db.Column(db.Float, default=None)
+  def __repr__(self):
+      return '<Contact %r>' % self.id
+
 class ScreenCampaign(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   screen_id = db.Column(db.Integer)
@@ -126,14 +143,13 @@ class LocationHistory(db.Model):
   lat = db.Column(db.Float, default=None)
   lng = db.Column(db.Float, default=None)
   created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
   def __repr__(self):
       return '<LocationHistory %r>' % self.id
 
 #SC = ScreenCampaign(screen_id=2, campaign_id=3)
 #db.session.add(SC)
 #db.session.commit()
-found = Social.query.filter_by(id=1).all()
+found = Contact.query.filter_by(id=1).all()
 
 for each in found:
   print(each.__dict__)
