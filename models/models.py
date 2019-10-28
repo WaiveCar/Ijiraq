@@ -128,6 +128,21 @@ class Contact(db.Model):
   def __repr__(self):
       return '<Contact %r>' % self.id
 
+class User(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.Text)
+  password = db.Column(db.Text)
+  image = db.Column(db.Text)
+  contact_id = db.Column(db.Integer)
+  auto_approve = db.Column(db.Boolean, default=False)
+  title = db.Column(db.Text)
+  organization_id = db.Column(db.Integer)
+  brand_id = db.Column(db.Integer)
+  role = db.Column(db.Text) #either admin/manager/viewer
+  created_at = db.Column(db.DateTime, default=datetime.utcnow)
+  def __repr__(self):
+      return '<User %r>' % self.id
+
 class ScreenCampaign(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   screen_id = db.Column(db.Integer)
@@ -149,7 +164,7 @@ class LocationHistory(db.Model):
 #SC = ScreenCampaign(screen_id=2, campaign_id=3)
 #db.session.add(SC)
 #db.session.commit()
-found = Contact.query.filter_by(id=1).all()
+found = User.query.filter_by(id=1).all()
 
 for each in found:
   print(each.__dict__)
