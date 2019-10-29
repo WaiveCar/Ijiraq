@@ -280,6 +280,14 @@ class Task(db.Model):
   def __repr__(self):
       return '<Task %r>' % self.id
 
+class TaskScreen(db.Model):
+  # #39
+  id = db.Column(db.Integer, primary_key=True)
+  task_id = db.Column(db.Integer)
+  screen_id = db.Column(db.Integer)
+  def __repr__(self):
+      return '<TaskScreen %r>' % self.id
+
 class ScreenCampaign(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   screen_id = db.Column(db.Integer)
@@ -301,7 +309,7 @@ class LocationHistory(db.Model):
 #SC = ScreenCampaign(screen_id=2, campaign_id=3)
 #db.session.add(SC)
 #db.session.commit()
-found = Task.query.filter_by(id=1).all()
+found = TaskScreen.query.filter_by(id=1).all()
 
 for each in found:
   print(each.__dict__)
