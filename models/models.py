@@ -248,6 +248,37 @@ class ScreenTag(db.Model):
   def __repr__(self):
       return '<ScreenTag %r>' % self.id
 
+class TagInfo(db.Model):
+  '''
+  #95 If different tags need different default campaign ids 
+  or split kingdoms we do that here. It's basically a
+  key/value with a name-space. Right now we don't have 
+  a list of tags, probably should so that the screen_tag
+  and tag_info table references a tag_list but this is
+  fine for now.
+  '''
+  id = db.Column(db.Integer, primary_key=True)
+  tag = db.Column(db.Text, nullable=False)
+  key = db.Column(db.Text)
+  value = db.Column(db.Text)
+  created_at = db.Column(db.DateTime, default=datetime.utcnow)
+  def __repr__(self):
+      return '<TagInfo %r>' % self.id
+
+class Task(db.Model):
+  '''
+  #107 - scoped tasks
+  The id here is the referential id so that we 
+  can group the responses
+  '''
+  id = db.Column(db.Integer, primary_key=True)
+  created_at = db.Column(db.DateTime, default=datetime.utcnow)
+  expiry_sec = db.Column(db.Integer, default=172800)
+  scope = db.Column(db.Text)
+  command = db.Column(db.Text)
+  args = db.Column(db.Text)
+  def __repr__(self):
+      return '<Task %r>' % self.id
 
 class ScreenCampaign(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -270,7 +301,7 @@ class LocationHistory(db.Model):
 #SC = ScreenCampaign(screen_id=2, campaign_id=3)
 #db.session.add(SC)
 #db.session.commit()
-found = ScreenTag.query.filter_by(id=1).all()
+found = Task.query.filter_by(id=1).all()
 
 for each in found:
   print(each.__dict__)
