@@ -317,6 +317,13 @@ class JobHistory(db.Model):
   def __repr__(self):
       return '<JobHistory %r>' % self.id
 
+class PingHistory(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  screen_id = db.Column(db.Integer)
+  created_at = db.Column(db.DateTime, default=datetime.utcnow)
+  def __repr__(self):
+      return '<PingHistory %r>' % self.id
+
 class ScreenCampaign(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   screen_id = db.Column(db.Integer)
@@ -338,7 +345,7 @@ class LocationHistory(db.Model):
 #SC = ScreenCampaign(screen_id=2, campaign_id=3)
 #db.session.add(SC)
 #db.session.commit()
-found = JobHistory.query.filter_by(id=1).all()
+found = PingHistory.query.filter_by(id=1).all()
 
 for each in found:
   print(each.__dict__)
