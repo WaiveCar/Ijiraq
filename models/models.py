@@ -325,6 +325,16 @@ class PingHistory(db.Model):
       return '<PingHistory %r>' % self.id
 
 class ScreenCampaign(db.Model):
+  '''
+  This is a normalized system. Dunno if it's a good idea
+  becaue most of thetime this will return no results. Maybe
+  keeping a counter in a screen definition of "has_campaigns"
+  and then when they are purged from this list that gets updated.
+  
+  This "optimization" which shouldn't be done because of
+  that word I just used, would avoid the extra query for no 
+  results problem
+  '''
   id = db.Column(db.Integer, primary_key=True)
   screen_id = db.Column(db.Integer)
   campaign_id = db.Column(db.Integer)
