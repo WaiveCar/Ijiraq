@@ -217,6 +217,37 @@ class Campaign(db.Model):
   def __repr__(self):
       return '<Campaign %r>' % self.id
 
+class Tag(db.Model):
+  '''
+  In the future we can have different tag classes or namespaces
+  But for the time being we just need 1 separation: LA and NY
+  and that's literally it. Generalizability can come later.
+  
+  This is a list of tags, it's notable that we aren't really
+  doing some kind of "normalization" like all the proper kids
+  do because we don't want to be doing stupid table joins 
+  everywhere to save a couple bytes.
+  '''
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.Text, nullable=False)
+  created_at = db.Column(db.DateTime, default=datetime.utcnow)
+  def __repr__(self):
+      return '<Tag %r>' % self.id
+
+class ScreenTag(db.Model):
+  '''
+  #47 - the screen_id/tag is the unique constraint. There's
+  probably a nice way to do it. Also if you really are doing
+  things well then you use the whitelist from the tag table
+  before inserting since we are keeping it daringly free-form
+  '''
+  id = db.Column(db.Integer, primary_key=True)
+  screen_id = db.Column(db.Integer)
+  tag = db.Column(db.Text)
+  created_at = db.Column(db.DateTime, default=datetime.utcnow)
+  def __repr__(self):
+      return '<ScreenTag %r>' % self.id
+
 
 class ScreenCampaign(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -239,7 +270,7 @@ class LocationHistory(db.Model):
 #SC = ScreenCampaign(screen_id=2, campaign_id=3)
 #db.session.add(SC)
 #db.session.commit()
-found = Widget.query.filter_by(id=1).all()
+found = ScreenTag.query.filter_by(id=1).all()
 
 for each in found:
   print(each.__dict__)
