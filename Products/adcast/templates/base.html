@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="google-signin-client_id" content="237832253799-vrn0c73js364ub4pqob679obhp2m14dm.apps.googleusercontent.com">
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
     <link href=https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css rel="stylesheet">
     <link href="/css/dataTables.bootstrap4.min.css" rel="stylesheet">
@@ -12,9 +13,13 @@
     <link href="/css/common.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
     <link href="http://adcast/api/me.css" rel="stylesheet">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <title>Screen Admin</title>
   </head>
   <body id="page-top">
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v4.0&appId=536536940468408&autoLogAppEvents=1"></script>
+    <div id="fb-root"></div>
     {% if not exclude_top_bar %}
     <div class="menu-btn mt-1 top-bar">
       <div class="top-bar-left" onclick="toggleMenu()">
