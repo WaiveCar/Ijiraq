@@ -1,0 +1,266 @@
+<div class="editor-holder">
+  <input type="color" name="background-color-picker"><label for="background-color-picker">Background Color</label>
+  <div class="category-selector">
+    <input type="radio" name="post-category" value="announcement" checked>
+    <label for="post-category">Announcement</label>
+    <input type="radio" name="post-category" value="promo">
+    <label for="post-category">Promo</label>
+    <input type="radio" name="post-category" value="notice">
+    <label for="post-category">Notice</label>
+  </div>
+  <div class="layout-options">
+  </div>
+  <div class="triptych-images">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
+  </div>
+  <div class="input-options">
+    <input type="color" name="text-color-picker"><label for="text-color-picker">Text Color</label>
+    <textarea type="text" class="triptych-text" placeholder="enter text"></textarea>
+  </div>
+  <div>
+    <div style="width: 100px; height 200px;">
+      <canvas id="triptych-edit" width="640" height="225">
+    </div>
+    </canvas>
+  </div>
+  <button class="choose-image">Choose This</button>
+</div>
+<style>
+  .triptych-images {
+    display: none;
+  }
+  .triptych-text {
+    width: 500px;
+    height: 60px;
+  }
+  #triptych-edit {
+    border: 1px solid black;
+  }
+</style>
+<script>
+  let postTypes = {
+    announcement: {
+      layouts: [
+        {
+          hasImage: true,
+          imagePosition: [360, 12, 268, 201],
+          textPosition: [12, 80],
+          textMaxWidth: 340,
+          textSize: 36,
+          maxLines: 3,
+        },
+        {
+          hasImage: false,
+          textPosition: [12, 72],
+          textMaxWidth: 616,
+          textSize: 48,
+          maxLines: 3,
+        },
+      ]
+    },
+    promo: {
+      layouts: [
+        {
+          hasImage: true,
+          imagePosition: [360, 12, 268, 201],
+          textPosition: [12, 80],
+          textMaxWidth: 340,
+          textSize: 36,
+          maxLines: 3,
+        },
+        {
+          hasImage: false,
+          textPosition: [12, 72],
+          textMaxWidth: 616,
+          textSize: 48,
+          maxLines: 3,
+        },
+      ]
+    },
+    notice: {
+      layouts: [
+        {
+          hasImage: true,
+          imagePosition: [360, 12, 268, 201],
+          textPosition: [12, 80],
+          textMaxWidth: 340,
+          textSize: 36,
+          maxLines: 3,
+        },
+        {
+          hasImage: false,
+          textPosition: [12, 72],
+          textMaxWidth: 616,
+          textSize: 48,
+          maxLines: 3,
+        },
+      ]
+    },
+  };
+
+  let backgroundColor = 'white';
+  let selectedCategory = 'announcement';
+  let selectedLayout = 0;
+  let addingText = false;
+  let triptych = document.querySelector('#triptych-edit');
+  let ctx = triptych.getContext('2d');
+  let image = document.querySelector('.triptych-images img');
+  let scale = 1;
+
+  function drawImage(e) {
+    let layout = postTypes[selectedCategory].layouts[selectedLayout];
+    ctx.clearRect(0, 0, triptych.width, triptych.height);
+    ctx.fillStyle = e ? e.target.value : backgroundColor;
+    backgroundColor = ctx.fillStyle;
+    ctx.fillRect(0, 0, triptych.width, triptych.height);
+    if (layout.hasImage) {
+      ctx.drawImage(image, 0, 0, image.width, image.height, ...layout.imagePosition.map(num => num * scale));
+    }
+  }
+  
+  function renderOptions(category) {
+    document.querySelector('.layout-options').innerHTML = postTypes[
+      category
+    ].layouts
+      .map(
+        (layout, i) =>
+          `
+        <input type="radio" name="triptych-options" value="${i}" ${
+            i === 0 ? 'checked' : ''
+          }>
+        <label for="option${i}">${i}</label>
+        `,
+      )
+      .join('');
+  }
+  
+  function getImageFromCanvas() {
+    let oldCanvas = triptych;
+    let newCanvas = document.createElement('canvas');
+    newCanvas.width = 1920;
+    newCanvas.height = 675;
+    triptych = newCanvas;
+    scale = 3;
+    let oldCtx = ctx;
+    let newCtx = newCanvas.getContext('2d');
+    ctx = newCtx;
+    drawImage();
+    reRenderText();
+
+    triptych = oldCanvas;
+    ctx = oldCtx;
+    // Change scale back here so that the further editing can be done if necessary
+    scale = 1;
+    let src = newCanvas.toDataURL('img/jpeg');
+    let newImg = document.createElement('img');
+    newImg.src = src;
+    newImg.style.border = '1px solid black';
+    document.querySelector('.editor-holder').appendChild(newImg);
+  }
+  
+  function changeCategory(e) {
+    let triptych = document.querySelector('#triptych-edit');
+    let vals = postTypes[e.target.value];
+    selectedCategory = e.target.value;
+    ctx.clearRect(0, 0, triptych.width, triptych.height);
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0, 0, triptych.width, triptych.height);
+    renderOptions(selectedCategory);
+    selectedLayout = 0;
+    drawImage();
+    reRenderText();
+    handleFileInput(postTypes[selectedCategory].layouts[selectedLayout]);
+  }
+
+  function reRenderText() {
+    let event = new Event('input');
+    let textInput = document.querySelector('.triptych-text');
+    textInput.dispatchEvent(event);
+  }
+  
+  function handleFileInput(layout) {
+    if (layout.hasImage) {
+      let hasInput = document.querySelector('#fileUpload');
+      if (!hasInput) {
+        let fileUpload = document.createElement('input');
+        fileUpload.type = 'file';
+        fileUpload.id = 'fileUpload';
+        fileUpload.accept = "image/png, image/jpeg";
+        fileUpload.oninput = function() {
+          image = new Image();
+          image.onload = function() {
+            drawImage();
+            reRenderText();
+          }
+          image.src = URL.createObjectURL(this.files[0]);
+        }
+        document.querySelector('.input-options').appendChild(fileUpload);
+      }
+    } else {
+      let input = document.querySelector('#fileUpload');
+      if (input) {
+        document.querySelector('.input-options').removeChild(input);
+      }
+    }
+  }
+
+  function chooseTriptych(e) {
+    selectedLayout = Number(e.target.value);
+    let layout = postTypes[selectedCategory].layouts[selectedLayout];
+    handleFileInput(layout);
+    drawImage();
+    reRenderText();
+  }
+  
+  function handleCanvasText(e) {
+    let layout = postTypes[selectedCategory].layouts[selectedLayout];
+    ctx.font = `${layout.textSize * scale}px Arial`;
+    let words = e.target.value.split(' ');
+    let lines = [];
+    let currentLine = '';
+    for (let i = 0; i < words.length; i++) {
+      let word = words[i];
+      if (ctx.measureText(word).width > layout.textMaxWidth * scale) {
+        let firstPart = '';
+        let idx = 0;
+        while (ctx.measureText(firstPart + word[idx]).width < layout.textMaxWidth * scale) {
+          firstPart += word[idx];
+          idx++;
+        }
+        let secondPart = word.slice(firstPart.length);
+        word = firstPart;
+        words.splice(i + 1, 0, secondPart);
+      }
+      if (ctx.measureText(currentLine + word).width < layout.textMaxWidth * scale) {
+        currentLine += word + ' ';
+      } else {
+        lines.push(currentLine);
+        currentLine = word + ' ';
+      }
+    }
+    lines.push(currentLine);
+    if (lines.length > layout.maxLines) {
+      let text = e.target.value;
+      document.querySelector('.triptych-text').value = text.slice(0, text.length - 1);
+      return;
+    }
+    drawImage();
+    let textColor = document.querySelector('[name=text-color-picker]').value;
+    ctx.fillStyle = textColor;
+    for (let i = 0; i < lines.length && i < layout.maxLines; i++) {
+      ctx.fillText(lines[i], layout.textPosition[0] * scale, ((layout.textPosition[1] * scale) + 2 + (layout.textSize * scale * i)));
+    }
+    ctx.fillStyle = backgroundColor;
+  }
+  
+  renderOptions(selectedCategory);
+  drawImage();
+  handleFileInput(postTypes[selectedCategory].layouts[selectedLayout]);
+  
+  document.querySelector('.choose-image').onclick = getImageFromCanvas;
+  document.querySelector('[name=background-color-picker]').oninput = drawImage;
+  document.querySelector('.category-selector').onchange = changeCategory;
+  document.querySelector('.layout-options').onchange = chooseTriptych;
+  document.querySelector('.triptych-text').oninput = handleCanvasText;
+  document.querySelector('[name=text-color-picker]').oninput = reRenderText;
+</script>

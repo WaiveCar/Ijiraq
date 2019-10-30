@@ -1,5 +1,6 @@
 let form = document.querySelector('form');
 
+
 function signup() {
   let data = new FormData(form);
   let object = {};
@@ -7,7 +8,6 @@ function signup() {
     object[key] = value;
   });
   let json = JSON.stringify(object);
-  console.log(json);
 }
 
 (() => {
