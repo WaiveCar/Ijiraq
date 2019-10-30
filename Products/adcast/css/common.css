@@ -112,6 +112,10 @@ body {
   }
 }
 
+.in-wizard {
+  display: none;
+}
+
 .menu-shown {
   display: block;
 }
@@ -592,7 +596,7 @@ select.form-control:focus,
 
 .wizard-nav {
   position: fixed;
-  width: 80%;
+  width: 100%;
 }
 
 .wizard-nav-btns {
@@ -601,5 +605,5 @@ select.form-control:focus,
 }
 
 .inner-wizard {
-  height: 90%;
+  width: 90%;
 }

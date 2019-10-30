@@ -1,4 +1,5 @@
 (() => {
+  document.querySelector('.navbar-nav').classList.add('in-wizard');
   let categories = ['announcement', 'promo', 'notice'];
   let initialState = {
     category: categories[0],
