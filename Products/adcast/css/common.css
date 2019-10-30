@@ -86,6 +86,10 @@ body {
   padding: 0.2rem 0 0.2rem 0.5rem;
 }
 
+.sidebar {
+  min-height: 80vh;
+}
+
 .current-link-text {
   color: black;
 }
@@ -583,4 +587,19 @@ select.form-control:focus,
 
 .wizard-page {
   width: 100%;
+  height: 100%;
+}
+
+.wizard-nav {
+  position: fixed;
+  width: 80%;
+}
+
+.wizard-nav-btns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.inner-wizard {
+  height: 90%;
 }

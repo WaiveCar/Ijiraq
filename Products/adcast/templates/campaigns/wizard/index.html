@@ -5,11 +5,15 @@
 {% endblock %}
 {% block content %}
 <div class="container-fluid model-list">
-  <div id="anchor" class="wizard-page">
-  </div>
-  <div class="wizard-nav">
-    <button id="back-btn" class="btn btn-primary">Back</button>
-    <button id="next-btn" class="btn btn-primary">Next</button>
+  <div class="wizard-page">
+    <div class="wizard-nav">
+      <div class="wizard-nav-btns">
+        <button id="back-btn" class="btn btn-primary">Back</button>
+        <button id="next-btn" class="btn btn-primary">Next</button>
+      </div>
+    </div>
+    <div id="anchor" class="inner-wizard">
+    </div>
   </div>
 </div>
 {% endblock %}
