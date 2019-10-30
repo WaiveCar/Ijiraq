@@ -595,15 +595,8 @@ select.form-control:focus,
 }
 
 .wizard-nav {
-  position: fixed;
   width: 100%;
 }
 
-.wizard-nav-btns {
-  display: flex;
-  justify-content: space-between;
-}
-
 .inner-wizard {
-  width: 90%;
 }
