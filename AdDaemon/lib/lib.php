@@ -987,6 +987,7 @@ function campaign_update($data, $fileList, $user = false) {
 
 function ignition_status($payload) {
   $car = aget($payload, 'name');
+  $state = db_string($state ? 'on' : 'off');
 
   if(isset($payload['ignitionOn'])) {
     $state = $payload['ignitionOn'];
@@ -1000,6 +1001,12 @@ function ignition_status($payload) {
   } else {
     return error_log("Unable to find 'name' in payload: " . json_encode($payload));
   }
+
+  db_insert('uptime_history', [
+    'name' => db_string($car),
+    'type' => db_string('car'),
+    'action' => $state
+  ]);
 
   if($res) {
     $uid = aget($res, 'uid');

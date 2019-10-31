@@ -356,6 +356,17 @@ $SCHEMA = [
     'created_at'  => 'datetime default current_timestamp',
   ],
     
+  'uptime_history' => [
+    'id'          => 'integer primary key autoincrement',
+    // either the carname (eg waive43) or uid
+    'name'      => 'text',
+    // either car or screen
+    'type'      => 'text',
+    // either on or off
+    'action'      => 'text',
+    'created_at'  => 'datetime default current_timestamp'
+  ],
+
   # 143
   'screen_history' => [
     'id'          => 'integer primary key autoincrement',
