@@ -346,7 +346,7 @@ function ping($payload) {
   }
 
   if(isset($payload['uid'])) {
-    $uid = db_string($payload['uid']);
+    $uid = $payload['uid'];
     $screen = Get::screen(['uid' => $payload['uid']]);
 
     if($screen && isset($payload['uptime']) && intval($screen['uptime']) > intval($payload['uptime'])) {
