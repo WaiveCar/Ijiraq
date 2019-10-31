@@ -359,7 +359,12 @@ function ping($payload) {
       $list = db_all("select * from uptime_history where action='on' and name=$uid order by id desc limit 1");
       if(count($list) > 0) {
         error_log(json_encode($list[0]));
-        error_log(date('Y-m-d H:i:s', strtotime(aget($list, '0.created_at') . " + " . $screen['uptime'] . " second")));
+        db_insert('uptime_history', [
+          'name' => $uid,
+          'type' => db_string('screen'),
+          'action' => db_string('off'),
+          'created_at' => 'datetime("' . date('Y-m-d H:i:s', strtotime(aget($list, '0.created_at') . " + " . $screen['uptime'] . " second") . '")'
+        ]);
       } else {
         error_log("No records found for action on and name $uid");
       }
