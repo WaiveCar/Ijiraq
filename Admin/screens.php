@@ -43,6 +43,8 @@ for($ix = 0; $ix < count($screenList); $ix++){
   if(isset($screenList[$ix]['ignition_time'])) {
     $screenList[$ix]['expected_hour'] = (strtotime($screenList[$ix]['ignition_time']) - strtotime($screenList[$ix]['last_seen'])) / 60 / 60;
     $screenList[$ix]['expected'] = round( abs($screenList[$ix]['expected_hour']) );
+  } else {
+    $screenList[$ix]['expected'] = '&mdash';
   }
   
   $id = $screenList[$ix]['uid'];
