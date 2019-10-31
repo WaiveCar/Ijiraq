@@ -346,7 +346,7 @@ function ping($payload) {
   }
 
   if(isset($payload['uid'])) {
-    $uid = $payload['uid'];
+    $uid = db_string($payload['uid']);
     $screen = Get::screen(['uid' => $payload['uid']]);
 
     if($screen && isset($payload['uptime']) && intval($screen['uptime']) > intval($payload['uptime'])) {
@@ -356,7 +356,7 @@ function ping($payload) {
       // $screen["uptime"] is the approximate uptime in seconds of the last runtime
       // Sooo here's what we do. We look for the most recent record of that car in 
       // the uptime_history like so:
-      $list = db_all("select * from uptime_history where action='on' and name='$uid' order by id desc limit 1");
+      $list = db_all("select * from uptime_history where action='on' and name=$uid order by id desc limit 1");
       if(count($list) > 0) {
         error_log(json_encode($list[0]));
         error_log(date('Y-m-d H:i:s', strtotime(aget($list, '0.created_at') . " + " . $screen['uptime'] . " second")));
