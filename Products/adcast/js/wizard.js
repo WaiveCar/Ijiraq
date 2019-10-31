@@ -190,7 +190,7 @@
       return;
     }
     backBtn.style.visibility = pageNum === 0 ? 'hidden' : 'visible';
-    nextBtn.textContent = pageNum !== pages.length - 1 ? 'Next' : 'Submit';
+    nextBtn.textContent = pageNum !== pages.length - 1 ? 'next' : 'buy';
     nextBtn.onclick =
       pageNum !== pages.length - 1
         ? () => showPage(currentPage + 1)

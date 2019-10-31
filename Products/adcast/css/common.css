@@ -146,7 +146,8 @@ body {
 }
 
 .top-bar-left {
-  max-width: 10rem;
+  width: 11rem;
+  margin: 1.3rem 0 0 3.5rem;
 }
 
 .top-bar-left img {
@@ -287,13 +288,13 @@ body {
 .navbar-nav {
   position: sticky;
   position: -webkit-sticky;
-  top: 60px;
+  top: 90px;
   z-index: 1100;
   background-color: white;
 }
 
 .offset-top {
-  margin-top: 80px;
+  margin-top: 130px;
 }
 
 .campaign-show {
@@ -598,5 +599,14 @@ select.form-control:focus,
   width: 100%;
 }
 
-.inner-wizard {
+.wizard-btn {
+  color: black;
+}
+
+.width-90 {
+  width: 90%;
+}
+
+#back-btn {
+  visibility: hidden;
 }
