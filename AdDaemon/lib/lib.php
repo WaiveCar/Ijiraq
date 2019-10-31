@@ -349,7 +349,8 @@ function ping($payload) {
     $uid = db_string($payload['uid']);
     $screen = Get::screen(['uid' => $payload['uid']]);
 
-    if($screen && isset($payload['uptime']) && $screen['uptime'] > $payload['uptime']) {
+    if($screen && isset($payload['uptime']) && intval($screen['uptime']) > intval($payload['uptime'])) {
+      error_log(json_encode([$screen['uptime'], $payload['uptime'], $payload['uid']]));
       // this means this screen just turned on. 
       // "but wait, there's more!"
       // this also means the last time we heard from the screen, that is to say
