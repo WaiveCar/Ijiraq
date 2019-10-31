@@ -1030,7 +1030,7 @@ function infer() {
     // this means we move our window forward.  The item we are
     // about to purge will be cross referenced with everything 
     // else.
-    while($window[$ix]['unix'] - 60 * 10 > $window[0]['unix']) {
+    while($all[$ix]['unix'] - 60 * 10 > $window[0]['unix']) {
       $toRef = array_shift($window);
       $name = $toRef['name'];
       if(!array_key_exists($name, $xref)) {
@@ -1051,6 +1051,7 @@ function infer() {
     if($ix > count($all)) {
       break;
     }
+    $window[] = $all[$ix];
   }
   return $xref;
 }
