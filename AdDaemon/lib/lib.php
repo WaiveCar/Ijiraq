@@ -987,13 +987,13 @@ function campaign_update($data, $fileList, $user = false) {
 
 function ignition_status($payload) {
   $car = aget($payload, 'name');
-  $state = db_string($state ? 'on' : 'off');
 
   if(isset($payload['ignitionOn'])) {
     $state = $payload['ignitionOn'];
   } else {
     return error_log("Unable to find 'ignitionOn' in payload: " . json_encode($payload));
   }
+  $state = db_string($state ? 'on' : 'off');
 
   if($car) {
     $qstr = "select * from screen where car like '$car'";
@@ -1016,7 +1016,7 @@ function ignition_status($payload) {
 
   if($uid) {
     return db_update('screen', ['uid' => db_string($uid)], [
-      'ignition_state' => db_string($state ? 'on' : 'off'),
+      'ignition_state' => $state,
       'ignition_time' => 'current_timestamp'
     ]);
   } else {
