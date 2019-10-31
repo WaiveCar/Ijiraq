@@ -1039,6 +1039,8 @@ function ignition_status($payload) {
   db_insert('uptime_history', [
     'name' => db_string($car),
     'type' => db_string('car'),
+    'lng' => floatval($payload['lng']),
+    'lat' => floatval($payload['lat']),
     'action' => $state
   ]);
 
