@@ -1024,7 +1024,7 @@ function infer() {
   $ix = 0;
   $lower = $all[$ix]['unix'];
   $window = [$all[$ix]];
-  $xref = {};
+  $xref = [];
   while(true) {
     $ix ++;
     // this means we move our window forward.  The item we are
