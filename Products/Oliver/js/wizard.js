@@ -186,9 +186,8 @@
   let backBtn = document.querySelector('#back-btn');
   let nextBtn = document.querySelector('#next-btn');
 
-  
   function showPage(pageNum) {
-    topRightEls[currentPage].classList.remove('selected');
+    topRightEls[currentPage].classList.remove('top-bar-selected');
     if (pageNum < 0 || pageNum > pages.length - 1) {
       return;
     }
@@ -213,7 +212,7 @@
       );
     }
     currentPage = pageNum;
-    topRightEls[currentPage].classList.add('selected');
+    topRightEls[currentPage].classList.add('top-bar-selected');
   }
 
   window.showPage = showPage;
@@ -222,7 +221,7 @@
     <div class="top-bar-link" onclick="showPage(${idx})">${page.title}</div>
   `).join('');
   let topRightEls = document.querySelectorAll('.top-bar-right .top-bar-link');
-  topRightEls[currentPage].classList.add('selected');
+  topRightEls[currentPage].classList.add('top-bar-selected');
 
   function submit(data) {
     console.log('Submitting: ', data);

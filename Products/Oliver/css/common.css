@@ -73,9 +73,11 @@ body {
 .choice input[type='radio'] {
   display: none;
 }
+
 .selected {
   color: black;
 }
+
 .selected,
 .current-link {
   border-radius: 25px;
@@ -267,23 +269,27 @@ body {
 }
 
 .top-bar-selected {
-  background-color: #cfcdce;
-}
-
-.update-campaign-btn,
-.top-bar-selected {
-  border-radius: 40px;
-}
-
-.update-campaign-btn {
-  color: white;
-  background-color: black;
+  color: #86e37a;
+  background-color: #f2fcf1;
 }
 
 .top-bar-link {
   margin-top: 2rem;
   margin-right: 3rem;
   font-size: 16px;
+  font-weight: bold;
+  padding: 0.4rem 1.3rem;
+  border-radius: 12px;
+  height: 2.4rem;
+}
+
+.update-campaign-btn {
+  border-radius: 40px;
+}
+
+.update-campaign-btn {
+  color: white;
+  background-color: black;
 }
 
 .navbar-nav {
