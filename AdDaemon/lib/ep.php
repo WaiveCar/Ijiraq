@@ -99,6 +99,7 @@ try {
     'command', 
     'ignition_status',
     'login',
+    'infer',
     'logout',
     'ping', 
     'response',

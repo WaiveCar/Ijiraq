@@ -1019,6 +1019,42 @@ function campaign_update($data, $fileList, $user = false) {
   return $campaign_id;
 }
 
+function infer() {
+  $all = db_all("SELECT name,type,action,lat,lng,strftime('%s', created_at) as unix from uptime_history order by id asc");
+  $ix = 0;
+  $lower = $all[$ix]['unix'];
+  $window = [$all[$ix]];
+  $xref = {};
+  while(true) {
+    $ix ++;
+    // this means we move our window forward.  The item we are
+    // about to purge will be cross referenced with everything 
+    // else.
+    while($window[$ix]['unix'] - 60 * 10 > $window[0]['unix']) {
+      $toRef = array_shift($window);
+      $name = $toRef['name'];
+      if(!array_key_exists($name, $xref)) {
+        $xref[$name] = {};
+      }
+      $type = $toRef['type'];
+      for($ix = 0; $ix < count($window); $ix++) {
+        $comp = $window[$ix];
+        if($type !== $comp['type']) {
+          if(!array_key_exists($comp['name'], $xref['name'])) {
+            $xref['name'][$comp['name']] = 0;
+          }
+          $xref['name'][$comp['name']]++;
+        }
+      }
+    }
+
+    if($ix > count($all)) {
+      break;
+    }
+  }
+  return $xref;
+}
+
 function ignition_status($payload) {
   $car = aget($payload, 'name');
 
