@@ -1037,8 +1037,8 @@ function infer() {
         $xref[$name] = [];
       }
       $type = $toRef['type'];
-      for($ix = 0; $ix < count($window); $ix++) {
-        $comp = $window[$ix];
+      for($iy = 0; $iy < count($window); $iy++) {
+        $comp = $window[$iy];
         if($type !== $comp['type']) {
           if(!array_key_exists($comp['name'], $xref['name'])) {
             $xref['name'][$comp['name']] = 0;
