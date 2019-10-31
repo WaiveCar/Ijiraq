@@ -364,6 +364,8 @@ function ping($payload) {
           'name' => $uid,
           'type' => db_string('screen'),
           'action' => db_string('off'),
+          'lat' => $screen['lat'],
+          'lng' => $screen['lng'],
           'created_at' => "datetime('$last')"
         ]);
       } else {
@@ -373,7 +375,9 @@ function ping($payload) {
       db_insert('uptime_history', [
         'name' => $uid,
         'type' => db_string('screen'),
-        'action' => db_string('on')
+        'action' => db_string('on'),
+        'lat' => $obj['lat'],
+        'lng' => $obj['lng']
       ]);
     }
     $screen = upsert_screen($payload['uid'], $obj);

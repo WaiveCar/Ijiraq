@@ -364,6 +364,10 @@ $SCHEMA = [
     'type'      => 'text',
     // either on or off
     'action'      => 'text',
+    
+    'lat'         => 'float default null',
+    'lng'         => 'float default null',
+
     'created_at'  => 'datetime default current_timestamp'
   ],
 
