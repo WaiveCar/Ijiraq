@@ -281,8 +281,9 @@ body {
 }
 
 .top-bar-link {
+  margin-top: 2rem;
+  margin-right: 3rem;
   font-size: 16px;
-  padding: 0.3rem 1rem;
 }
 
 .navbar-nav {

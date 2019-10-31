@@ -173,19 +173,22 @@
   }
 
   let pages = [
-    {html: categoryPage},
-    {html: targetingPage, loadFunc: attachScript.bind(this, '/js/map.js')},
-    {html: layoutPage},
-    {html: adCreatePage, loadFunc: adCreateLoad},
-    {html: summaryPage},
-    {html: paymentPage},
+    {html: categoryPage, title: 'Ad Type'},
+    {html: targetingPage, title: 'Locations', loadFunc: attachScript.bind(this, '/js/map.js')},
+    {html: layoutPage, title: 'Layout'},
+    {html: adCreatePage, title: 'Edit', loadFunc: adCreateLoad},
+    {html: summaryPage, title: 'Summary'},
+    {html: paymentPage, title: 'Payment'},
   ];
+
 
   let currentPage = Number(window.location.pathname.split('/').pop());
   let backBtn = document.querySelector('#back-btn');
   let nextBtn = document.querySelector('#next-btn');
 
+  
   function showPage(pageNum) {
+    topRightEls[currentPage].classList.remove('selected');
     if (pageNum < 0 || pageNum > pages.length - 1) {
       return;
     }
@@ -210,7 +213,16 @@
       );
     }
     currentPage = pageNum;
+    topRightEls[currentPage].classList.add('selected');
   }
+
+  window.showPage = showPage;
+  let topRight = document.querySelector('.top-bar-right');
+  topRight.innerHTML = pages.map((page, idx) => `
+    <div class="top-bar-link" onclick="showPage(${idx})">${page.title}</div>
+  `).join('');
+  let topRightEls = document.querySelectorAll('.top-bar-right .top-bar-link');
+  topRightEls[currentPage].classList.add('selected');
 
   function submit(data) {
     console.log('Submitting: ', data);
