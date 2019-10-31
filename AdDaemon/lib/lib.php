@@ -357,11 +357,10 @@ function ping($payload) {
       // $screen["uptime"] is the approximate uptime in seconds of the last runtime
       // Sooo here's what we do. We look for the most recent record of that car in 
       // the uptime_history like so:
-      /*
       $list = db_all("select * from uptime_history where action='on' and name='$uid' order by id desc limit 1");
-      if(count($list)) {
-        $list[0]
-      */
+      if(count($list) > 0) {
+        error_log(json_encode($list[0]));
+      }
 
       db_insert('uptime_history', [
         'name' => $uid,
