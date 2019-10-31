@@ -1,5 +1,4 @@
 (() => {
-  document.querySelector('.navbar-nav').classList.add('in-wizard');
   let categories = ['announcement', 'promo', 'notice'];
   let initialState = {
     category: categories[0],
@@ -190,7 +189,7 @@
       return;
     }
     backBtn.style.visibility = pageNum === 0 ? 'hidden' : 'visible';
-    nextBtn.textContent = pageNum !== pages.length - 1 ? 'next' : 'buy';
+    nextBtn.textContent = pageNum !== pages.length - 1 ? 'Next' : 'Submit';
     nextBtn.onclick =
       pageNum !== pages.length - 1
         ? () => showPage(currentPage + 1)
