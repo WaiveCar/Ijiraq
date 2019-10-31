@@ -1034,7 +1034,7 @@ function infer() {
       $toRef = array_shift($window);
       $name = $toRef['name'];
       if(!array_key_exists($name, $xref)) {
-        $xref[$name] = {};
+        $xref[$name] = [];
       }
       $type = $toRef['type'];
       for($ix = 0; $ix < count($window); $ix++) {
