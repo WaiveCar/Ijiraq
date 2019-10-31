@@ -44,7 +44,7 @@ for($ix = 0; $ix < count($screenList); $ix++){
     $screenList[$ix]['expected_hour'] = (strtotime($screenList[$ix]['ignition_time']) - strtotime($screenList[$ix]['last_seen'])) / 60 / 60;
     $screenList[$ix]['expected'] = round( abs($screenList[$ix]['expected_hour']) );
   } else {
-    $screenList[$ix]['expected'] = '&mdash';
+    $screenList[$ix]['expected'] = '';
   }
   
   $id = $screenList[$ix]['uid'];
@@ -207,7 +207,7 @@ function split($str) {
                  $canedit = array_search($key, $editable) !== false ? 'edit' : '';
             ?>
               <td class="<?= $name?> <?=$canedit?>" <?=$dataVals?>>
-                <span><?= $screen[$key] ?></span>
+                <span><?= aget($screen, $key) ?></span>
                 <? if ($canedit) { ?>
                   <a onclick="promptchange(<?=$screen['id']?>,'<?=$key?>',this)"><i class="edit fa fa-pencil"></i></a>
                 <? } ?>
