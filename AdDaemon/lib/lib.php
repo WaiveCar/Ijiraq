@@ -350,7 +350,6 @@ function ping($payload) {
     $screen = Get::screen(['uid' => $payload['uid']]);
 
     if($screen && isset($payload['uptime']) && intval($screen['uptime']) > intval($payload['uptime'])) {
-      error_log(json_encode([$screen['uptime'], $payload['uptime'], $payload['uid']]));
       // this means this screen just turned on. 
       // "but wait, there's more!"
       // this also means the last time we heard from the screen, that is to say
@@ -360,6 +359,9 @@ function ping($payload) {
       $list = db_all("select * from uptime_history where action='on' and name='$uid' order by id desc limit 1");
       if(count($list) > 0) {
         error_log(json_encode($list[0]));
+        error_log(date('Y-m-d H:i:s', strtotime(aget($list, '0.created_at') . " + " . $screen['uptime'] . " second"));
+      } else {
+        error_log("No records found for action on and name $uid");
       }
 
       db_insert('uptime_history', [
