@@ -294,7 +294,7 @@ body {
 }
 
 .offset-top {
-  margin-top: 130px;
+  margin-top: 120px;
 }
 
 .campaign-show {
@@ -601,6 +601,11 @@ select.form-control:focus,
 
 .wizard-btn {
   color: black;
+}
+
+.wizard-btn i {
+  vertical-align: middle;
+  margin: 0 0.2rem;
 }
 
 .width-90 {
