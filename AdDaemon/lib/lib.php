@@ -346,6 +346,28 @@ function ping($payload) {
   }
 
   if(isset($payload['uid'])) {
+    $uid = db_string($payload['uid']);
+    $screen = Get::screen(['uid' => $payload['uid']]);
+
+    if($screen && isset($payload['uptime']) && $screen['uptime'] > $payload['uptime']) {
+      // this means this screen just turned on. 
+      // "but wait, there's more!"
+      // this also means the last time we heard from the screen, that is to say
+      // $screen["uptime"] is the approximate uptime in seconds of the last runtime
+      // Sooo here's what we do. We look for the most recent record of that car in 
+      // the uptime_history like so:
+      /*
+      $list = db_all("select * from uptime_history where action='on' and name='$uid' order by id desc limit 1");
+      if(count($list)) {
+        $list[0]
+      */
+
+      db_insert('uptime_history', [
+        'name' => $uid,
+        'type' => db_string('screen'),
+        'action' => db_string('on')
+      ]);
+    }
     $screen = upsert_screen($payload['uid'], $obj);
   } else {
     return doError("UID needs to be set before continuing");
