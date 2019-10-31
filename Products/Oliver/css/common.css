@@ -1,5 +1,26 @@
+@font-face {
+  font-family: 'Canela';
+  src: url('/assets/fonts/Canela-Regular.otf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Object Sans';
+  src: url('/assets/fonts/ObjectSans-Regular.otf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Object Sans Heavy';
+  src: url('/assets/fonts/ObjectSans-Heavy.otf');
+  font-weight: 400;
+  font-style: normal;
+}
+    
 body {
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: 'Object Sans', sans-serif;
 }
 
 .nav-item span {
@@ -268,19 +289,21 @@ body {
   text-decoration: none !important;
 }
 
-.top-bar-selected {
-  color: #86e37a;
-  background-color: #f2fcf1;
-}
-
 .top-bar-link {
   margin-top: 2rem;
   margin-right: 3rem;
   font-size: 16px;
   font-weight: bold;
   padding: 0.4rem 1.3rem;
-  border-radius: 12px;
+  border-radius: 10px;
   height: 2.4rem;
+  font-family: 'Object Sans Heavy';
+  color: #cccccc;
+}
+
+.top-bar-selected {
+  color: #86e37a;
+  background-color: #f2fcf1;
 }
 
 .update-campaign-btn {

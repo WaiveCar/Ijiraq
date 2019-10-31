@@ -150,7 +150,7 @@
     nextBtn.onclick = function(e) {
       getImageFromCanvas(e, state);
       nextOnClick();
-    }
+    };
   }
 
   function summaryPage(state) {
@@ -174,13 +174,16 @@
 
   let pages = [
     {html: categoryPage, title: 'Ad Type'},
-    {html: targetingPage, title: 'Locations', loadFunc: attachScript.bind(this, '/js/map.js')},
+    {
+      html: targetingPage,
+      title: 'Locations',
+      loadFunc: attachScript.bind(this, '/js/map.js'),
+    },
     {html: layoutPage, title: 'Layout'},
     {html: adCreatePage, title: 'Edit', loadFunc: adCreateLoad},
     {html: summaryPage, title: 'Summary'},
     {html: paymentPage, title: 'Payment'},
   ];
-
 
   let currentPage = Number(window.location.pathname.split('/').pop());
   let backBtn = document.querySelector('#back-btn');
@@ -192,7 +195,10 @@
       return;
     }
     backBtn.style.visibility = pageNum === 0 ? 'hidden' : 'visible';
-    nextBtn.innerHTML = pageNum !== pages.length - 1 ? 'next<i class="fas fa-chevron-right">' : 'buy';
+    nextBtn.innerHTML =
+      pageNum !== pages.length - 1
+        ? 'next<i class="fas fa-chevron-right">'
+        : 'buy';
     nextBtn.onclick =
       pageNum !== pages.length - 1
         ? () => showPage(currentPage + 1)
@@ -217,9 +223,13 @@
 
   window.showPage = showPage;
   let topRight = document.querySelector('.top-bar-right');
-  topRight.innerHTML = pages.map((page, idx) => `
+  topRight.innerHTML = pages
+    .map(
+      (page, idx) => `
     <div class="top-bar-link" onclick="showPage(${idx})">${page.title}</div>
-  `).join('');
+  `,
+    )
+    .join('');
   let topRightEls = document.querySelectorAll('.top-bar-right .top-bar-link');
   topRightEls[currentPage].classList.add('top-bar-selected');
 
