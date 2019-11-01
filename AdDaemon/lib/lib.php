@@ -1020,38 +1020,78 @@ function campaign_update($data, $fileList, $user = false) {
 }
 
 function infer() {
-  $all = db_all("SELECT name,type,action,lat,lng,strftime('%s', created_at) as unix from uptime_history order by id asc");
+  $all = db_all("SELECT id,name,type,action,lat,lng,strftime('%s', created_at) as unix from uptime_history where action='on' order by id asc");
   $ix = 0;
-  $lower = $all[$ix]['unix'];
   $window = [$all[$ix]];
+  $wtf = [];
+  $delta = 60 * 20;
   $xref = [];
   while(true) {
     $ix ++;
+    if($ix >= count($all)) {
+      break;
+    }
     // this means we move our window forward.  The item we are
     // about to purge will be cross referenced with everything 
     // else.
-    while($all[$ix]['unix'] - 60 * 10 > $window[0]['unix']) {
-      $toRef = array_shift($window);
-      $name = $toRef['name'];
-      if(!array_key_exists($name, $xref)) {
-        $xref[$name] = [];
+    while(count($window) > 0 && $all[$ix]['unix'] - $delta > $window[0]['unix']) {
+      for($iz = 0; $iz < count($window); $iz++) {
+        if($window[$iz]['unix'] - $delta / 2 > $window[0]['unix']) {
+          $toTry = $iz;
+          break;
+        }
       }
+      $toRef = $window[$toTry];
+      array_shift($window);
+      if(isset($wtf[$toRef['id']])) {
+        break;
+      }
+      $wtf[$toRef['id']] = true;
+      $name = $toRef['name'];
+      $action = $toRef['action'];
       $type = $toRef['type'];
-      for($iy = 0; $iy < count($window); $iy++) {
-        $comp = $window[$iy];
-        if($type !== $comp['type']) {
-          if(!array_key_exists($comp['name'], $xref['name'])) {
-            $xref['name'][$comp['name']] = 0;
+      if(!array_key_exists($name, $xref)) {
+        $xref[$name] = ['ttl' => 0];
+      }
+      $xref[$name]['ttl']++;
+      $cnodupes = [];
+      foreach($window as $comp) {
+        if($type !== $comp['type'] && $action === $comp['action']) {
+          $cname = $comp['name'];
+          if(isset($cnodupes[$cname])) {
+            continue;
           }
-          $xref['name'][$comp['name']]++;
+          $cnodupes[$cname] = true;
+          if(!array_key_exists($cname, $xref[$name])) {
+            $xref[$name][$cname] = [0, 0, 0];
+          }
+          $xref[$name][$cname][0]++;
+          $xref[$name][$cname][1] += distance(
+            [$toRef['lat'], $toRef['lng']],
+            [$comp['lat'], $comp['lng']]
+          );
         }
       }
     }
 
-    if($ix > count($all)) {
-      break;
-    }
     $window[] = $all[$ix];
+  }
+  foreach($xref as $key => $val) {
+    $ttl = $val['ttl'];
+    foreach($val as $k1 => $v1) {
+      if($k1 == 'ttl') {
+        continue;
+      }
+      $avg = $v1[1]/$v1[0];
+      if(
+        $v1[0] / $ttl < 0.3 ||
+        $avg > 5000
+      ) {
+        unset($xref[$key][$k1]);
+      } else {
+        $xref[$key][$k1] = [ $v1[0] / $ttl, $avg ];
+      }
+    }
   }
   return $xref;
 }
