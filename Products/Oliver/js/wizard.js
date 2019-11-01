@@ -151,6 +151,17 @@
       getImageFromCanvas(e, state);
       nextOnClick();
     };
+    let topBtns = document.querySelectorAll('.top-bar-link');
+    topBtns.forEach(function(btn) {
+      let nextClick = btn.onclick;
+      btn.onclick = function(e) {
+        if (currentPage === 3) {
+          getImageFromCanvas(e, state);
+        }
+        nextClick();
+        btn.onclick = nextClick;
+      }
+    });
   }
 
   function summaryPage(state) {
