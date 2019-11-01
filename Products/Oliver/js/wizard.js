@@ -245,6 +245,7 @@
   }
 
   window.onpopstate = function() {
+    topRightEls[currentPage].classList.remove('top-bar-selected');
     currentPage = Number(window.location.pathname.split('/').pop());
     showPage(currentPage);
   };
