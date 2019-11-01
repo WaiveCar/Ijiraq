@@ -512,10 +512,14 @@ class Get {
       if(is_integer($key)) {
         $kvargs[] = $value;
       } else {
-        if(is_string($value)) {
-          $value = db_string($value);
+        if(is_array($value)) {
+          $kvargs[] = "$key like " . db_string('%' . $value['like'] . '%');
+        } else {
+          if(is_string($value)) {
+            $value = db_string($value);
+          }
+          $kvargs[] = "$key=$value";
         }
-        $kvargs[] = "$key=$value";
       }
     }
     $kvstr = implode(' and ', $kvargs);
