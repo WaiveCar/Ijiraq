@@ -1083,16 +1083,16 @@ function infer() {
   }
   foreach($xref as $key => $val) {
     $ttl = $val['ttl'];
-    $xref[$key]['guess'] = 'none';
+    $xref[$key]['current'] = 'none';
     if (strlen($key) < 10) {
-      $guess = Get::screen(['car' => $key]);
-      if($guess) {
-        $xref[$key]['guess'] = $guess['uid'];
+      $current = Get::screen(['car' => $key]);
+      if($current) {
+        $xref[$key]['current'] = $current['uid'];
       } 
     } else {
-      $guess = Get::screen(['uid' => $key]);
-      if($guess) {
-        $xref[$key]['guess'] = $guess['car'];
+      $current = Get::screen(['uid' => $key]);
+      if($current) {
+        $xref[$key]['current'] = $current['car'];
       } 
     }
     foreach($val as $k1 => $v1) {
