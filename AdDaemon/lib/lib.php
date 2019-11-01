@@ -1040,6 +1040,7 @@ function infer() {
     // about to purge will be cross referenced with everything 
     // else.
     while(count($window) > 0 && $all[$ix]['unix'] - $delta > $window[0]['unix']) {
+      $toTry = 0;
       for($iz = 0; $iz < count($window); $iz++) {
         if($window[$iz]['unix'] - $delta / 2 > $window[0]['unix']) {
           $toTry = $iz;
