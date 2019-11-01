@@ -1083,13 +1083,25 @@ function infer() {
   }
   foreach($xref as $key => $val) {
     $ttl = $val['ttl'];
+    $xref[$key]['guess'] = 'none';
+    if (strlen($key) < 10) {
+      $guess = Get::screen(['car' => $key]);
+      if($guess) {
+        $xref[$key]['guess'] = $guess['uid'];
+      } 
+    } else {
+      $guess = Get::screen(['uid' => $key]);
+      if($guess) {
+        $xref[$key]['guess'] = $guess['car'];
+      } 
+    }
     foreach($val as $k1 => $v1) {
       if($k1 == 'ttl') {
         continue;
       }
       $avg = $v1[1]/$v1[0];
       if(
-        $v1[0] / $ttl < 0.3 ||
+        $v1[0] / $ttl < 0.45 ||
         $avg > 5000
       ) {
         unset($xref[$key][$k1]);
