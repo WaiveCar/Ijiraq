@@ -290,13 +290,14 @@ body {
 }
 
 .top-bar-link {
-  margin-top: 2rem;
+  margin-top: 3rem;
   margin-right: 3rem;
   font-size: 16px;
   font-weight: bold;
   padding: 0.4rem 1.3rem;
   border-radius: 10px;
-  height: 2.4rem;
+  text-align: center;
+  width: 8rem;
   font-family: 'Object Sans Heavy';
   color: #cccccc;
 }
