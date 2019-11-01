@@ -62,12 +62,12 @@ let triptych = null;
 let ctx = null;
 let image = null;
 
-function drawImage(e, state) {
+function drawImage(e, state, isInit) {
   let layout = adTypes[state.category].layouts[state.selectedLayout];
   ctx.clearRect(0, 0, triptych.width, triptych.height);
   ctx.fillStyle = e ? e.target.value : state.backgroundColor;
   ctx.fillRect(0, 0, triptych.width, triptych.height);
-  if (layout.hasImage) {
+  if (layout.hasImage && !isInit) {
     ctx.drawImage(
       image,
       0,
@@ -76,6 +76,24 @@ function drawImage(e, state) {
       image.height,
       ...layout.imagePosition.map(num => num * state.scale),
     );
+  } else {
+    image = new Image();
+    image.onload = function() {
+      console.log('image load success');
+      ctx.drawImage(
+        image,
+        0,
+        0,
+        image.width,
+        image.height,
+        ...layout.imagePosition.map(num => num * state.scale),
+      );
+    };
+    image.onerror = function() {
+      image.src = '/assets/sample-image.svg';
+      setState({imageSrc: image.src});
+    };
+    image.src = state.imageSrc;
   }
 }
 
@@ -84,7 +102,6 @@ function reRenderText() {
   let textInput = document.querySelector('.triptych-text');
   textInput.dispatchEvent(event);
 }
-
 
 function handleCanvasText(e, state) {
   let layout = adTypes[state.category].layouts[state.selectedLayout];

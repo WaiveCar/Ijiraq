@@ -93,7 +93,7 @@
       <div>
         Ad Info
         <div class="triptych-images">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Aspect-ratio-4x3.svg" crossorigin="anonymous"> 
+          <img src="/assets/sample-image.svg" crossorigin="anonymous"> 
         </div>
         <div class="input-options">
           <input type="color" name="background-color-picker"><label for="background-color-picker">Background Color</label>
@@ -139,7 +139,7 @@
       reRenderText();
       setState({textColor: e.target.value});
     };
-    drawImage(null, state);
+    drawImage(null, state, true);
     reRenderText();
     handleFileInput(
       adTypes[state.category].layouts[state.selectedLayout],
@@ -159,7 +159,6 @@
           getImageFromCanvas(e, state);
         }
         nextClick();
-        btn.onclick = nextClick;
       }
     });
   }
