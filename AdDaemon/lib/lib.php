@@ -358,7 +358,6 @@ function ping($payload) {
       // the uptime_history like so:
       $list = db_all("select * from uptime_history where action='on' and name=$uid order by id desc limit 1");
       if(count($list) > 0) {
-        error_log(json_encode($list[0]));
         $last = date('Y-m-d H:i:s', strtotime(aget($list, '0.created_at') . " + " . $screen['uptime'] . " second"));
         db_insert('uptime_history', [
           'name' => $uid,
@@ -372,12 +371,15 @@ function ping($payload) {
         error_log("No records found for action on and name $uid");
       }
 
+      $first = date('Y-m-d H:i:s', strtotime('now - ' . intval($payload['uptime']) . ' seconds'));
+
       db_insert('uptime_history', [
         'name' => $uid,
         'type' => db_string('screen'),
         'action' => db_string('on'),
         'lat' => $obj['lat'],
-        'lng' => $obj['lng']
+        'lng' => $obj['lng'],
+        'created_at' => "datetime('$first')"
       ]);
     }
     $screen = upsert_screen($payload['uid'], $obj);
