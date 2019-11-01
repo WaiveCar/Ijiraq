@@ -1104,7 +1104,7 @@ function infer() {
       if(
         $v1[0] / $ttl < 0.45 ||
         // this tries to fix stuck gps
-        ($avg > 5000 && $v1[0] / $ttl < 0.85)
+        ($avg > 5000 && $ttl > 2 && $v1[0] / $ttl < 0.85)
       ) {
         unset($xref[$key][$k1]);
       } else {
