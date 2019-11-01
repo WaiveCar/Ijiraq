@@ -79,7 +79,6 @@ function drawImage(e, state, isInit) {
   } else {
     image = new Image();
     image.onload = function() {
-      console.log('image load success');
       ctx.drawImage(
         image,
         0,
