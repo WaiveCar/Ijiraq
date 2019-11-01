@@ -1117,6 +1117,9 @@ function infer() {
 function ignition_status($payload) {
   $car = aget($payload, 'name');
 
+  if(strpos(strtolower($car), 'csul') == false)) {
+    return [];
+  }
   if(isset($payload['ignitionOn'])) {
     $state = $payload['ignitionOn'];
   } else {
