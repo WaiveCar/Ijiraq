@@ -349,6 +349,9 @@ function ping($payload) {
     $uid = db_string($payload['uid']);
     $screen = Get::screen(['uid' => $payload['uid']]);
 
+    if(!isset($payload['uptime'])) {
+      error_log("Uptime not known for " . $payload['uid']);
+    }
     if($screen && isset($payload['uptime']) && intval($screen['uptime']) > intval($payload['uptime'])) {
       // this means this screen just turned on. 
       // "but wait, there's more!"
