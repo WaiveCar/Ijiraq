@@ -23,8 +23,8 @@ RewriteRule "^engine.css$" "ScreenDisplay/engine.css" [L]
 RewriteRule "install" "https://youtu.be/Yc7FoILU5vY" [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_URI} !reef-demo*
-RewriteRule ^(.*)$ reef-demo/$1 [L]
+RewriteCond %{REQUEST_URI} !Products*
+RewriteRule ^(.*)$ Products/MadisonAve/static/$1 [L]
 
 #RewriteCond %{REQUEST_FILENAME} !-f
 #RewriteCond %{REQUEST_URI} !Madison*
