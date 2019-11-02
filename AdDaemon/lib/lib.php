@@ -225,6 +225,8 @@ function upsert_screen($screen_uid, $payload) {
     'removed' => 0,
     'last_seen' => 'current_timestamp'
   ];
+  $last = date('%s', strtotime($screen['last_seen']));
+  error_log($screen['uid'] . " " . time() - $last);
   if(!empty($payload['lat']) && floatval($payload['lat'])) {
     $data['lat'] = floatval($payload['lat']);
     $data['lng'] = floatval($payload['lng']);
@@ -362,6 +364,9 @@ function ping($payload) {
       $list = db_all("select * from uptime_history where action='on' and name=$uid order by id desc limit 1");
       if(count($list) > 0) {
         $last = date('Y-m-d H:i:s', strtotime(aget($list, '0.created_at') . " + " . $screen['uptime'] . " second"));
+        if(!isset($screen['lat'])) {
+          error_log(json_encode($screen));
+        }
         db_insert('uptime_history', [
           'name' => $uid,
           'type' => db_string('screen'),
