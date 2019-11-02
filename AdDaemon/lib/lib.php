@@ -226,7 +226,7 @@ function upsert_screen($screen_uid, $payload) {
     'last_seen' => 'current_timestamp'
   ];
   $last = strtotime($screen['last_seen']);
-  error_log($screen['uid'] . " " . time() - $last);
+  error_log($screen['uid'] . " " . time() . ' ' . $last);
   if(!empty($payload['lat']) && floatval($payload['lat'])) {
     $data['lat'] = floatval($payload['lat']);
     $data['lng'] = floatval($payload['lng']);
