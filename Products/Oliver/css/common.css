@@ -652,3 +652,17 @@ select.form-control:focus,
 #back-btn {
   visibility: hidden;
 }
+
+.select-category-title {
+  text-align: center;
+}
+
+.select-category-title h2 {
+  font-family: 'Object Sans Heavy';
+  margin-bottom: 2.6rem;
+  color: black;
+}
+
+.select-category-title .subtitle {
+  width: 30rem;
+}

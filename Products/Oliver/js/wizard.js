@@ -29,6 +29,10 @@
   function categoryPage(state) {
     return `
       <div>
+        <div class="select-category-title">
+          <h2>Ad Type</h2>
+          <div class="subtitle">A couple of sentances to provide further detail and instruction</div>
+        </div>
         Select Category
         ${categories
           .map(
