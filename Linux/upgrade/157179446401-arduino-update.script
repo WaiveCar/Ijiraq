@@ -1,7 +1,0 @@
-#!/bin/bash
-
-upgradepost() {
-  su - adorno dcall update_arduino
-}
-
-eval $1
