@@ -43,6 +43,12 @@
     return word[0].toUpperCase() + word.slice(1);
   }
 
+  let categoryTips = {
+    announcement: 'Description for the announcement',
+    promo: 'Description from the promo option',
+    notice: 'description for the notice option',
+  };
+
   function categoryPage(state) {
     return `
       <div>
@@ -64,7 +70,11 @@
             <input id="radio-${cat}"type="radio" name="category" value="${cat}" ${
                 state.category === cat ? 'checked' : ''
               }>
-            <label for="radio-${cat}"><h1>${capitalize(cat)}</h1></label>
+            <label for="radio-${cat}">
+              <h1 data-toggle="popover" data-placement="bottom" data-content="${categoryTips[cat]}">
+                ${capitalize(cat)}
+              </h1>
+            </label>
           </div>
         `,
             )
@@ -72,6 +82,20 @@
         </div>
       </div>
     `;
+  }
+
+  function handlePopover() {
+    let template = `
+      <div class="popover" role="tooltip" width="1000px">
+        <div class="arrow"></div>
+        <div class="popover-body"></div>
+      </div>
+    `;
+    $('[data-toggle="popover"]').popover({
+      template,
+      container: 'body',
+      html: true,
+    })
   }
 
   function targetingPage(state) {
@@ -123,7 +147,7 @@
         <div class="triptych-images">
           <img src="/assets/sample-image.svg" crossorigin="anonymous"> 
         </div>
-        <div class="input-options" data-toggle="tooltip">
+        <div class="input-options">
           <input type="color" name="background-color-picker"><label for="background-color-picker">Background Color</label>
           <input type="color" name="text-color-picker"><label for="text-color-picker">Text Color</label>
           <textarea type="text" class="triptych-text" placeholder="enter text"></textarea>
@@ -211,7 +235,11 @@
   }
 
   let pages = [
-    {html: categoryPage, title: 'Ad Type'},
+    {
+      html: categoryPage,
+      title: 'Ad Type',
+      loadFunc: handlePopover,
+    },
     {
       html: targetingPage,
       title: 'Locations',
@@ -288,6 +316,5 @@
     showPage(currentPage);
   };
   showPage(currentPage);
-   $('[data-toggle="tooltip"]').tooltip()
   document.querySelector('#back-btn').onclick = () => showPage(currentPage - 1);
 })();
