@@ -344,6 +344,9 @@ body {
   .campaign-show {
     margin-top: 120px;
   }
+  .offset-top {
+    margin-top: 20px;
+  }
 }
 
 #campaign-preview {
@@ -679,10 +682,28 @@ select.form-control:focus,
   font-size: 3.3rem!important;
 }
 
+.category-holder h1:hover {
+  cursor: pointer;
+}
+
 .category-option input {
   display: none;
 }
 
 .current-cat {
   color: #86e37a;
+}
+
+@media (max-width: 768px) {
+  .category-holder {
+    display: block!important;
+  }
+  .subtitle {
+    width: 80vw;
+  }
+  .category-option {
+    width: inherit;
+    font-size: 24px!important;
+    text-align: center;
+  }
 }

@@ -27,9 +27,15 @@
   }
 
   function selectCategory(category) {
-    document.querySelector(`#radio-${state.category}`).closest('.category-option').classList.remove('current-cat');
+    document
+      .querySelector(`#radio-${state.category}`)
+      .closest('.category-option')
+      .classList.remove('current-cat');
     setState({category});
-    document.querySelector(`#radio-${state.category}`).closest('.category-option').classList.add('current-cat');
+    document
+      .querySelector(`#radio-${state.category}`)
+      .closest('.category-option')
+      .classList.add('current-cat');
   }
   window.selectCategory = selectCategory;
 
@@ -117,7 +123,7 @@
         <div class="triptych-images">
           <img src="/assets/sample-image.svg" crossorigin="anonymous"> 
         </div>
-        <div class="input-options">
+        <div class="input-options" data-toggle="tooltip">
           <input type="color" name="background-color-picker"><label for="background-color-picker">Background Color</label>
           <input type="color" name="text-color-picker"><label for="text-color-picker">Text Color</label>
           <textarea type="text" class="triptych-text" placeholder="enter text"></textarea>
@@ -282,6 +288,6 @@
     showPage(currentPage);
   };
   showPage(currentPage);
-
+   $('[data-toggle="tooltip"]').tooltip()
   document.querySelector('#back-btn').onclick = () => showPage(currentPage - 1);
 })();
