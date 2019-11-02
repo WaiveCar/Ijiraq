@@ -26,26 +26,44 @@
     document.body.appendChild(script);
   }
 
+  function selectCategory(category) {
+    document.querySelector(`#radio-${state.category}`).closest('.category-option').classList.remove('current-cat');
+    setState({category});
+    document.querySelector(`#radio-${state.category}`).closest('.category-option').classList.add('current-cat');
+  }
+  window.selectCategory = selectCategory;
+
+  function capitalize(word) {
+    return word[0].toUpperCase() + word.slice(1);
+  }
+
   function categoryPage(state) {
     return `
       <div>
         <div class="select-category-title">
           <h2>Ad Type</h2>
-          <div class="subtitle">A couple of sentances to provide further detail and instruction</div>
         </div>
-        Select Category
-        ${categories
-          .map(
-            cat => `
-          <div oninput="setState({category : '${cat}'})">
-            <input type="radio" name="category" value="${cat}" ${
-              state.category === cat ? 'checked' : ''
-            }>
-            <label for="${cat}">${cat}</label>
+        <div class="d-flex justify-content-center">
+          <div class="subtitle">
+            A couple of sentances to provide further detail and instruction
+          </div>
+        </div>
+        <div class="category-holder d-flex justify-content-between">
+          ${categories
+            .map(
+              cat => `
+          <div class="category-option ${
+            state.category === cat ? 'current-cat' : ''
+          }" oninput="selectCategory('${cat}')">
+            <input id="radio-${cat}"type="radio" name="category" value="${cat}" ${
+                state.category === cat ? 'checked' : ''
+              }>
+            <label for="radio-${cat}"><h1>${capitalize(cat)}</h1></label>
           </div>
         `,
-          )
-          .join('')}
+            )
+            .join('')}
+        </div>
       </div>
     `;
   }
@@ -163,7 +181,7 @@
           getImageFromCanvas(e, state);
         }
         nextClick();
-      }
+      };
     });
   }
 

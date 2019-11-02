@@ -653,16 +653,36 @@ select.form-control:focus,
   visibility: hidden;
 }
 
-.select-category-title {
+.select-category-title, .subtitle {
   text-align: center;
 }
 
 .select-category-title h2 {
   font-family: 'Object Sans Heavy';
-  margin-bottom: 2.6rem;
   color: black;
 }
 
-.select-category-title .subtitle {
+.subtitle {
   width: 30rem;
+  margin: 2.6rem 0;
+}
+
+.category-holder {
+  width: 80vw;
+}
+
+.category-option {
+  font-family: 'Object Sans Heavy';
+  color: #cccccc;
+  width: 33%;
+  text-align: center;
+  font-size: 3.3rem!important;
+}
+
+.category-option input {
+  display: none;
+}
+
+.current-cat {
+  color: #86e37a;
 }
