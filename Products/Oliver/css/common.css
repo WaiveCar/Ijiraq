@@ -707,3 +707,14 @@ select.form-control:focus,
     text-align: center;
   }
 }
+
+.popover {
+  border: 0;
+  border-radius: 70px;
+}
+
+.popover-body {
+  padding: 1rem 2rem;
+  background-color: #f5f5f5;
+  color: black;
+}

@@ -46,7 +46,7 @@
   let categoryTips = {
     announcement: 'Description for the announcement',
     promo: 'Description from the promo option',
-    notice: 'description for the notice option',
+    notice: 'Description for the notice option',
   };
 
   function categoryPage(state) {
@@ -86,7 +86,7 @@
 
   function handlePopover() {
     let template = `
-      <div class="popover" role="tooltip" width="1000px">
+      <div class="popover" role="tooltip">
         <div class="arrow"></div>
         <div class="popover-body"></div>
       </div>
@@ -95,6 +95,7 @@
       template,
       container: 'body',
       html: true,
+      trigger: 'hover',
     })
   }
 
