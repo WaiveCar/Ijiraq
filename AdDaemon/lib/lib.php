@@ -330,7 +330,7 @@ function record_screen_on($screen, $payload) {
     // $screen["uptime"] is the approximate uptime in seconds of the last runtime
     // Sooo here's what we do. We look for the most recent record of that car in 
     // the uptime_history like so:
-    $uid = $screen['uid'];
+    $uid = db_string($screen['uid']);
     $list = db_all("select * from uptime_history where action='on' and name=$uid order by id desc limit 1");
     /*
     if(count($list) > 0) {
@@ -364,9 +364,9 @@ function record_screen_on($screen, $payload) {
       $opt['created_at'] = "datetime('$first')";
     }
 
-    if(isset($obj['lat'])) {
-      $opt['lat'] = $obj['lat'];
-      $opt['lng'] = $obj['lng'];
+    if(isset($screen['lat'])) {
+      $opt['lat'] = $screen['lat'];
+      $opt['lng'] = $screen['lng'];
     }
     db_insert('uptime_history', $opt);
 }
