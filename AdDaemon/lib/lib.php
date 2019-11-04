@@ -226,7 +226,10 @@ function upsert_screen($screen_uid, $payload) {
     'last_seen' => 'current_timestamp'
   ];
   $last = strtotime($screen['last_seen']);
-  error_log($screen['uid'] . " " . time() - intval($last));
+  if(time() - $last > 150) {
+    error_log($screen['uid'] . " " . time() . ' (' . (time() - $last) . ') ' );
+    record_screen_on($screen, $payload);
+  }
   if(!empty($payload['lat']) && floatval($payload['lat'])) {
     $data['lat'] = floatval($payload['lat']);
     $data['lng'] = floatval($payload['lng']);
@@ -320,6 +323,54 @@ function default_campaign($screen) {
   return Get::campaign($id);
 }
 
+function record_screen_on($screen, $payload) {
+    // this means this screen just turned on. 
+    // "but wait, there's more!"
+    // this also means the last time we heard from the screen, that is to say
+    // $screen["uptime"] is the approximate uptime in seconds of the last runtime
+    // Sooo here's what we do. We look for the most recent record of that car in 
+    // the uptime_history like so:
+    $uid = $screen['uid'];
+    $list = db_all("select * from uptime_history where action='on' and name=$uid order by id desc limit 1");
+    /*
+    if(count($list) > 0) {
+      $opt = [
+        'name' => $uid,
+        'type' => db_string('screen'),
+        'action' => db_string('off'),
+        'created_at' => "datetime('$last')"
+      ];
+      if(isset($screen['uptime'])) {
+        $last = date('Y-m-d H:i:s', strtotime(aget($list, '0.created_at') . " + " . $screen['uptime'] . " second"));
+      }
+      if(isset($screen['lat'])) {
+        $opt['lat'] = $screen['lat'];
+        $opt['lng'] = $screen['lng'];
+      }
+      db_insert('uptime_history', $opt);
+    } else {
+      error_log("No records found for action on and name $uid");
+    }
+     */
+
+    $opt = [
+      'name' => $uid,
+      'type' => db_string('screen'),
+      'action' => db_string('on')
+    ];
+
+    if(isset($payload['uptime'])) {
+      $first = date('Y-m-d H:i:s', strtotime('now - ' . intval($payload['uptime']) . ' seconds'));
+      $opt['created_at'] = "datetime('$first')";
+    }
+
+    if(isset($obj['lat'])) {
+      $opt['lat'] = $obj['lat'];
+      $opt['lng'] = $obj['lng'];
+    }
+    db_insert('uptime_history', $opt);
+}
+
 function ping($payload) {
   global $VERSION, $LASTCOMMIT;
   //error_log(json_encode($payload));
@@ -355,40 +406,6 @@ function ping($payload) {
       error_log("Uptime not known for " . $payload['uid']);
     }
     if($screen && isset($payload['uptime']) && intval($screen['uptime']) > intval($payload['uptime'])) {
-      // this means this screen just turned on. 
-      // "but wait, there's more!"
-      // this also means the last time we heard from the screen, that is to say
-      // $screen["uptime"] is the approximate uptime in seconds of the last runtime
-      // Sooo here's what we do. We look for the most recent record of that car in 
-      // the uptime_history like so:
-      $list = db_all("select * from uptime_history where action='on' and name=$uid order by id desc limit 1");
-      if(count($list) > 0) {
-        $last = date('Y-m-d H:i:s', strtotime(aget($list, '0.created_at') . " + " . $screen['uptime'] . " second"));
-        if(!isset($screen['lat'])) {
-          error_log(json_encode($screen));
-        }
-        db_insert('uptime_history', [
-          'name' => $uid,
-          'type' => db_string('screen'),
-          'action' => db_string('off'),
-          'lat' => $screen['lat'],
-          'lng' => $screen['lng'],
-          'created_at' => "datetime('$last')"
-        ]);
-      } else {
-        error_log("No records found for action on and name $uid");
-      }
-
-      $first = date('Y-m-d H:i:s', strtotime('now - ' . intval($payload['uptime']) . ' seconds'));
-
-      db_insert('uptime_history', [
-        'name' => $uid,
-        'type' => db_string('screen'),
-        'action' => db_string('on'),
-        'lat' => $obj['lat'],
-        'lng' => $obj['lng'],
-        'created_at' => "datetime('$first')"
-      ]);
     }
     $screen = upsert_screen($payload['uid'], $obj);
   } else {
@@ -1077,10 +1094,12 @@ function infer() {
             $xref[$name][$cname] = [0, 0, 0];
           }
           $xref[$name][$cname][0]++;
-          $xref[$name][$cname][1] += distance(
-            [$toRef['lat'], $toRef['lng']],
-            [$comp['lat'], $comp['lng']]
-          );
+          if(!empty($toRef['lat']) && !empty($comp['lat'])) {
+            $xref[$name][$cname][1] += distance(
+              [$toRef['lat'], $toRef['lng']],
+              [$comp['lat'], $comp['lng']]
+            );
+          }
         }
       }
     }
@@ -1123,7 +1142,7 @@ function infer() {
 function ignition_status($payload) {
   $car = aget($payload, 'name');
 
-  if(strpos(strtolower($car), 'csul') == false) {
+  if(strpos(strtolower($car), 'csul') !== false) {
     return [];
   }
   if(isset($payload['ignitionOn'])) {
