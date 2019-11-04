@@ -723,3 +723,13 @@ select.form-control:focus,
   background-color: #f5f5f5;
   color: black;
 }
+
+.location-input input {
+  width: 80%;
+  padding: 0.4rem 0.4rem;
+  color: #858796;
+  border-radius: 50px;
+  text-align: center;
+  border: 0;
+  background-color: #f5f5f5;
+}

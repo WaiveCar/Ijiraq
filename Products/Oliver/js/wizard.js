@@ -102,8 +102,17 @@
   function targetingPage(state) {
     return `
       <div>
-        Select Targeting
-        <div id="map" style="width: 100%; height: 30vw"></div>
+        <div class="select-category-title">
+          <h2>Locations</h2>
+        </div>
+        <div class="d-flex justify-content-center">
+          <div class="subtitle">
+            A couple of sentances to provide further detail and instruction
+          </div>
+        </div>
+        <div class="location-input d-flex justify-content-center">
+          <input type="text" placeholder="specify a city, town or zip code">
+        </div>
       </div>
     `;
   }
