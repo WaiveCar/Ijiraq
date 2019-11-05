@@ -729,8 +729,18 @@ select.form-control:focus,
   justify-content: space-between;
 }
 
+.layout-preview {
+  border: 5px solid white;
+  margin: 1rem 0.5rem;
+}
+
 .layout-preview img {
   width: 100%;
+}
+
+.selected-layout {
+  border-radius: 7px;
+  border: 5px solid #98e78d;
 }
 
 @media (max-width: 768px) {

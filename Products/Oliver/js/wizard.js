@@ -118,6 +118,17 @@
     `;
   }
 
+  function selectLayout(idx) {
+    document
+      .querySelector('.selected-layout')
+      .classList.remove('selected-layout');
+    setState({selectedLayout: idx});
+    document
+      .querySelector(`label[for=layout-${idx}]`)
+      .classList.add('selected-layout');
+  }
+  window.selectLayout = selectLayout;
+
   function layoutPage(state) {
     return `
       <div class="layout-selection">
@@ -135,10 +146,12 @@
               (layout, i) =>
                 `
         <div class="layout-option">
-          <input oninput="setState({selectedLayout: ${i}})" type="radio" name="triptych-options" value="${i}" ${
-                    i === state.selectedLayout ? 'checked' : ''
-                  }>
-          <label class="layout-preview" for="option${i}">
+          <input id="layout-${i}" oninput="selectLayout(${i})" type="radio" name="triptych-options" value="${i}" ${
+                  i === state.selectedLayout ? 'checked' : ''
+                }>
+          <label class="layout-preview ${
+            i === state.selectedLayout ? 'selected-layout' : ''
+          }" for="layout-${i}">
             <img src="${layout.preview}">
           </label>
         </div>
