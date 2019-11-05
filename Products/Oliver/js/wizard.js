@@ -120,7 +120,7 @@
 
   function layoutPage(state) {
     return `
-      <div>
+      <div class="layout-selection">
         <div class="wizard-title">
           <h2>Select a Layout for your Ad</h2>
         </div>
@@ -134,11 +134,13 @@
             .map(
               (layout, i) =>
                 `
-        <div>
+        <div class="layout-option">
           <input oninput="setState({selectedLayout: ${i}})" type="radio" name="triptych-options" value="${i}" ${
                     i === state.selectedLayout ? 'checked' : ''
                   }>
-          <label for="option${i}">${i}</label>
+          <label class="layout-preview" for="option${i}">
+            <img src="${layout.preview}">
+          </label>
         </div>
         `,
             )
@@ -284,7 +286,7 @@
     nextBtn.innerHTML =
       pageNum !== pages.length - 1
         ? 'next<i class="fas fa-chevron-right">'
-        : 'buy';
+        : 'buy<i class="fas fa-chevron-right">';
     nextBtn.onclick =
       pageNum !== pages.length - 1
         ? () => showPage(currentPage + 1)
