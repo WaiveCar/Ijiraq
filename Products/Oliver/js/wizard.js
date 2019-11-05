@@ -298,8 +298,8 @@
     backBtn.style.visibility = pageNum === 0 ? 'hidden' : 'visible';
     nextBtn.innerHTML =
       pageNum !== pages.length - 1
-        ? 'next<i class="fas fa-chevron-right">'
-        : 'buy<i class="fas fa-chevron-right">';
+        ? 'next<img src="/assets/chevron-right.svg">'
+        : 'buy<img src="/assets/chevron-right.svg">';
     nextBtn.onclick =
       pageNum !== pages.length - 1
         ? () => showPage(currentPage + 1)

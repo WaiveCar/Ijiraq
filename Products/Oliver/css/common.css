@@ -251,14 +251,6 @@ body {
   text-decoration: none;
 }
 
-.arrow {
-  position: relative;
-  bottom: 1.45px;
-  vertical-align: middle;
-  fill: black;
-  font-size: 7px;
-}
-
 .user-icon-holder {
   margin-top: 0.4rem;
   width: 100%;
@@ -643,6 +635,11 @@ select.form-control:focus,
   color: black;
 }
 
+.wizard-btn img {
+  margin: 0 4px;
+  width: 12px;
+}
+
 .wizard-btn i {
   vertical-align: middle;
   margin: 0 0.2rem;
@@ -744,6 +741,9 @@ select.form-control:focus,
 }
 
 @media (max-width: 768px) {
+  .wizard-title {
+    margin-top: 3rem;
+  }
   .category-holder {
     display: block!important;
   }
