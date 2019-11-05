@@ -61,6 +61,7 @@ let adTypes = {
 let triptych = null;
 let ctx = null;
 let image = null;
+let scale = 1;
 
 function drawImage(e, state, isInit) {
   let layout = adTypes[state.category].layouts[state.selectedLayout];
@@ -74,9 +75,9 @@ function drawImage(e, state, isInit) {
       0,
       image.width,
       image.height,
-      ...layout.imagePosition.map(num => num * state.scale),
+      ...layout.imagePosition.map(num => num * scale),
     );
-  } else {
+  } else if (layout.hasImage) {
     image = new Image();
     image.onload = function() {
       ctx.drawImage(
@@ -85,7 +86,7 @@ function drawImage(e, state, isInit) {
         0,
         image.width,
         image.height,
-        ...layout.imagePosition.map(num => num * state.scale),
+        ...layout.imagePosition.map(num => num * scale),
       );
     };
     image.onerror = function() {
@@ -104,18 +105,18 @@ function reRenderText() {
 
 function handleCanvasText(e, state) {
   let layout = adTypes[state.category].layouts[state.selectedLayout];
-  ctx.font = `${layout.textSize * state.scale}px Arial`;
+  ctx.font = `${layout.textSize * scale}px Arial`;
   let words = e.target.value.split(' ');
   let lines = [];
   let currentLine = '';
   for (let i = 0; i < words.length; i++) {
     let word = words[i];
-    if (ctx.measureText(word).width > layout.textMaxWidth * state.scale) {
+    if (ctx.measureText(word).width > layout.textMaxWidth * scale) {
       let firstPart = '';
       let idx = 0;
       while (
         ctx.measureText(firstPart + word[idx]).width <
-        layout.textMaxWidth * state.scale
+        layout.textMaxWidth * scale
       ) {
         firstPart += word[idx];
         idx++;
@@ -126,7 +127,7 @@ function handleCanvasText(e, state) {
     }
     if (
       ctx.measureText(currentLine + word).width <
-      layout.textMaxWidth * state.scale
+      layout.textMaxWidth * scale
     ) {
       currentLine += word + ' ';
     } else {
@@ -149,10 +150,8 @@ function handleCanvasText(e, state) {
   for (let i = 0; i < lines.length && i < layout.maxLines; i++) {
     ctx.fillText(
       lines[i],
-      layout.textPosition[0] * state.scale,
-      layout.textPosition[1] * state.scale +
-        2 +
-        layout.textSize * state.scale * i,
+      layout.textPosition[0] * scale,
+      layout.textPosition[1] * scale + 2 + layout.textSize * scale * i,
     );
   }
   ctx.fillStyle = state.backgroundColor;
@@ -191,7 +190,7 @@ function getImageFromCanvas(e, state) {
   newCanvas.width = 1920;
   newCanvas.height = 675;
   triptych = newCanvas;
-  setState({scale: 3});
+  scale = 3;
   let oldCtx = ctx;
   let newCtx = newCanvas.getContext('2d');
   ctx = newCtx;
@@ -200,7 +199,7 @@ function getImageFromCanvas(e, state) {
   triptych = oldCanvas;
   ctx = oldCtx;
   // Change scale back here so that the further editing can be done if necessary
-  setState({scale: 1});
+  scale = 1;
   let src = newCanvas.toDataURL('img/jpeg');
   setState({finalImageSrc: src});
 }

@@ -7,7 +7,6 @@
     backgroundColor: 'white',
     textColor: 'black',
     canvasText: '',
-    scale: 1,
     imageSrc: null,
     finalImageSrc: null,
   };
@@ -52,7 +51,7 @@
   function categoryPage(state) {
     return `
       <div>
-        <div class="select-category-title">
+        <div class="wizard-title">
           <h2>Ad Type</h2>
         </div>
         <div class="d-flex justify-content-center">
@@ -71,7 +70,9 @@
                 state.category === cat ? 'checked' : ''
               }>
             <label for="radio-${cat}">
-              <h1 data-toggle="popover" data-placement="bottom" data-content="${categoryTips[cat]}">
+              <h1 data-toggle="popover" data-placement="bottom" data-content="${
+                categoryTips[cat]
+              }">
                 ${capitalize(cat)}
               </h1>
             </label>
@@ -96,13 +97,13 @@
       container: 'body',
       html: true,
       trigger: 'hover',
-    })
+    });
   }
 
   function targetingPage(state) {
     return `
       <div>
-        <div class="select-category-title">
+        <div class="wizard-title">
           <h2>Locations</h2>
         </div>
         <div class="d-flex justify-content-center">
@@ -120,16 +121,25 @@
   function layoutPage(state) {
     return `
       <div>
-        Select Layout
+        <div class="wizard-title">
+          <h2>Select a Layout for your Ad</h2>
+        </div>
+        <div class="d-flex justify-content-center">
+          <div class="subtitle">
+            A couple of sentances to provide further detail and instruction
+          </div>
+        </div>
         <div class="layout-options">
           ${adTypes[state.category].layouts
             .map(
               (layout, i) =>
                 `
-        <input oninput="setState({selectedLayout: ${i}})" type="radio" name="triptych-options" value="${i}" ${
-                  i === state.selectedLayout ? 'checked' : ''
-                }>
-        <label for="option${i}">${i}</label>
+        <div>
+          <input oninput="setState({selectedLayout: ${i}})" type="radio" name="triptych-options" value="${i}" ${
+                    i === state.selectedLayout ? 'checked' : ''
+                  }>
+          <label for="option${i}">${i}</label>
+        </div>
         `,
             )
             .join('')}
