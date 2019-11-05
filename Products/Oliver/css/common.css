@@ -755,4 +755,7 @@ select.form-control:focus,
     font-size: 24px!important;
     text-align: center;
   }
+  .layout-options {
+    display: block;
+  }
 }
