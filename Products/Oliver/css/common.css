@@ -759,3 +759,7 @@ select.form-control:focus,
     display: block;
   }
 }
+
+input[type=file] {
+  width: 100%;
+}

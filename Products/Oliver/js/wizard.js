@@ -162,35 +162,24 @@
       </div>
     `;
   }
-
+  let windowWidth = window.innerWidth - 20;
+  scaleShrink = windowWidth < 640 ? (windowWidth - 20) / 640 : 1;
+  scale *= scaleShrink;
   function adCreatePage(state) {
     return `
-      <style>
-        .triptych-images {
-          display: none;
-        }
-        .triptych-text {
-          width: 500px;
-          height: 60px;
-        }
-        #triptych-edit {
-          border: 1px solid black;
-        }
-      </style>
       <div>
-        Ad Info
-        <div class="triptych-images">
-          <img src="/assets/sample-image.svg" crossorigin="anonymous"> 
+        <div class="wizard-title">
+          <h2>Create your Ad</h2>
         </div>
-        <div class="input-options">
-          <input type="color" name="background-color-picker"><label for="background-color-picker">Background Color</label>
-          <input type="color" name="text-color-picker"><label for="text-color-picker">Text Color</label>
-          <textarea type="text" class="triptych-text" placeholder="enter text"></textarea>
-        </div>
-        <div>
-          <div style="width: 100px; height 200px;">
-            <canvas id="triptych-edit" width="640" height="225">
+        <div class="d-flex justify-content-center">
+          <div class="subtitle input-options">
+            <input type="color" name="background-color-picker"><label for="background-color-picker">Background Color</label>
+            <input type="color" name="text-color-picker"><label for="text-color-picker">Text Color</label>
+            <input type="text" class="triptych-text" placeholder="enter text">
           </div>
+        </div>
+        <div class="d-flex justify-content-center">
+          <canvas id="triptych-edit" width="${640 * scaleShrink}" height="${225 * scaleShrink}">
         </div>
       </div>
     `;
