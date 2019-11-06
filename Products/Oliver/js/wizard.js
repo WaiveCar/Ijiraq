@@ -11,13 +11,16 @@
     finalImageSrc: null,
   };
   let state = {};
+  let categoryTips = {
+    announcement: 'Description for the announcement',
+    promo: 'Description from the promo option',
+    notice: 'Description for the notice option',
+  };
 
-  function setState(updateObj) {
+  window.setState = function (updateObj) {
     Object.assign(state, updateObj);
     localStorage.setItem('savedState', JSON.stringify(state));
   }
-
-  window.setState = setState;
 
   function attachScript(src) {
     let script = document.createElement('script');
@@ -25,7 +28,7 @@
     document.body.appendChild(script);
   }
 
-  function selectCategory(category) {
+  window.selectCategory = function(category) {
     document
       .querySelector(`#radio-${state.category}`)
       .closest('.category-option')
@@ -36,17 +39,21 @@
       .closest('.category-option')
       .classList.add('current-cat');
   }
-  window.selectCategory = selectCategory;
 
   function capitalize(word) {
     return word[0].toUpperCase() + word.slice(1);
   }
 
-  let categoryTips = {
-    announcement: 'Description for the announcement',
-    promo: 'Description from the promo option',
-    notice: 'Description for the notice option',
-  };
+  function post(ep, body, cb) {
+    fetch(new Request(`http://adcast/api/${ep}`, {
+      method: 'POST', 
+      body: JSON.stringify(body)
+    })).then(res => {
+      if (res.status === 200) {
+        return res.json();
+      }
+    }).then(cb);
+  }
 
   function categoryPage(state) {
     return `
@@ -101,6 +108,7 @@
   }
 
   function targetingPage(state) {
+    doMap();
     return `
       <div>
         <div class="wizard-title">
@@ -111,6 +119,22 @@
             A couple of sentances to provide further detail and instruction
           </div>
         </div>
+
+        <div class="row mb-4">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+
+                <select id="type" class="custom-select custom-select-lg">
+                  <option value="Circle">Circle</option>
+                  <option value="Polygon">Geofence</option>
+                </select>
+                <div style='width:100%;height:40vw' id='map'></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="location-input d-flex justify-content-center">
           <input type="text" placeholder="specify a city, town or zip code">
         </div>
@@ -118,7 +142,7 @@
     `;
   }
 
-  function selectLayout(idx) {
+  window.selectLayout = function(idx) {
     document
       .querySelector('.selected-layout')
       .classList.remove('selected-layout');
@@ -127,7 +151,6 @@
       .querySelector(`label[for=layout-${idx}]`)
       .classList.add('selected-layout');
   }
-  window.selectLayout = selectLayout;
 
   function layoutPage(state) {
     return `
@@ -292,7 +315,32 @@
   let backBtn = document.querySelector('#back-btn');
   let nextBtn = document.querySelector('#next-btn');
 
-  function showPage(pageNum) {
+  function doMap() {
+    $.getJSON("http://adcast/api/screens?active=1&removed=0", function(Screens) {
+      self._map = map({points:Screens});
+      let success = false;
+
+      if(success) {
+        _map.load(_campaign.shape_list);
+      } else {
+        _map.center([-118.34,34.06], 11);
+      }
+    });
+  }
+
+  self.clearmap = () => _map.clear();
+  self.removeShape = () => _map.removeShape();
+
+  function geosave() {
+    var coords = _map.save();
+    // If we click on the map again we should show the updated coords
+    _campaign.shape_list = coords;
+    post('campaign_update', {id: _id, geofence: coords}, res => {
+      show({data: 'Updated Campaign'}, 1000);
+    });
+  }
+
+  window.showPage = function(pageNum) {
     topRightEls[currentPage].classList.remove('top-bar-selected');
     if (pageNum < 0 || pageNum > pages.length - 1) {
       return;
@@ -324,7 +372,6 @@
     topRightEls[currentPage].classList.add('top-bar-selected');
   }
 
-  window.showPage = showPage;
   let topRight = document.querySelector('.top-bar-right');
   topRight.innerHTML = pages
     .map(
@@ -343,6 +390,10 @@
     setState(initialState);
   }
 
+  function submit(data) {
+    console.log('Submitting: ', data);
+  }
+
   window.onpopstate = function() {
     topRightEls[currentPage].classList.remove('top-bar-selected');
     currentPage = Number(window.location.pathname.split('/').pop());
@@ -350,10 +401,5 @@
   };
 
   showPage(currentPage);
-  backBtn.onclick = () => showPage(currentPage - 1);
-
-  function submit(data) {
-    console.log('Submitting: ', data);
-  }
-
+  document.querySelector('#back-btn').onclick = () => showPage(currentPage - 1);
 })();
