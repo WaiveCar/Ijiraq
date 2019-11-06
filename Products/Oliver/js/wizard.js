@@ -182,14 +182,18 @@
           <h2>Create your Ad</h2>
         </div>
         <div class="d-flex justify-content-center">
-          <div class="subtitle input-options">
-            <input type="color" name="background-color-picker"><label for="background-color-picker">Background Color</label>
-            <input type="color" name="text-color-picker"><label for="text-color-picker">Text Color</label>
-            <input type="text" class="triptych-text" placeholder="enter text">
-          </div>
+          <canvas id="triptych-edit" width="${640 * scale}" height="${225 * scale}">
         </div>
         <div class="d-flex justify-content-center">
-          <canvas id="triptych-edit" width="${640 * scale}" height="${225 * scale}">
+          <textarea type="text" class="triptych-text" placeholder="enter text"></textarea>
+          <div>
+            <div>
+              <input type="color" name="background-color-picker"><label for="background-color-picker">Background Color</label>
+              <input type="color" name="text-color-picker"><label for="text-color-picker">Text Color</label>
+            </div>
+            <div class="input-options">
+            </div>
+          </div>
         </div>
       </div>
     `;
@@ -204,7 +208,6 @@
     } else {
       image = document.querySelector('.triptych-images img');
     }
-
     let backgroundColorPicker = document.querySelector(
       '[name=background-color-picker]',
     );
@@ -333,10 +336,6 @@
   let topRightEls = document.querySelectorAll('.top-bar-right .top-bar-link');
   topRightEls[currentPage].classList.add('top-bar-selected');
 
-  function submit(data) {
-    console.log('Submitting: ', data);
-  }
-
   let savedState = localStorage.getItem('savedState');
   if (savedState) {
     setState(JSON.parse(savedState));
@@ -349,6 +348,12 @@
     currentPage = Number(window.location.pathname.split('/').pop());
     showPage(currentPage);
   };
+
   showPage(currentPage);
-  document.querySelector('#back-btn').onclick = () => showPage(currentPage - 1);
+  backBtn.onclick = () => showPage(currentPage - 1);
+
+  function submit(data) {
+    console.log('Submitting: ', data);
+  }
+
 })();

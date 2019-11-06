@@ -760,6 +760,15 @@ select.form-control:focus,
   }
 }
 
+#triptych-edit {
+  margin-top: 3rem;
+}
+
 #file-upload {
   width: 100%;
+}
+
+.triptych-text {
+  width: 60%;
+  height: 4rem;
 }
