@@ -760,6 +760,6 @@ select.form-control:focus,
   }
 }
 
-input[type=file] {
+#file-upload {
   width: 100%;
 }
