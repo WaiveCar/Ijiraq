@@ -92,7 +92,6 @@ let triptych = null;
 let ctx = null;
 let image = null;
 let scale = 1;
-let scaleShrink = 1;
 
 function drawImage(e, state, isInit) {
   let layout = adTypes[state.category].layouts[state.selectedLayout];
@@ -221,6 +220,7 @@ function getImageFromCanvas(e, state) {
   newCanvas.width = 1920;
   newCanvas.height = 675;
   triptych = newCanvas;
+  let oldScale = scale;
   scale = 3;
   let oldCtx = ctx;
   let newCtx = newCanvas.getContext('2d');
@@ -230,7 +230,7 @@ function getImageFromCanvas(e, state) {
   triptych = oldCanvas;
   ctx = oldCtx;
   // Change scale back here so that the further editing can be done if necessary
-  scale = 1 * scaleShrink;
+  scale = oldScale;
   let src = newCanvas.toDataURL('img/jpeg');
   setState({finalImageSrc: src});
 }

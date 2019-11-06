@@ -162,9 +162,19 @@
       </div>
     `;
   }
+
   let windowWidth = window.innerWidth - 20;
-  scaleShrink = windowWidth < 640 ? (windowWidth - 20) / 640 : 1;
-  scale *= scaleShrink;
+  scale = windowWidth < 640 ? (windowWidth - 20) / 640 : 1;
+
+  window.onresize = function(e) {
+    let windowWidth = window.innerWidth - 20;
+    scale = windowWidth < 640 ? (windowWidth - 20) / 640 : 1;
+    document.querySelector('#triptych-edit').width = 640 * scale;
+    document.querySelector('#triptych-edit').height = 225 * scale;
+    drawImage(e, state);
+    reRenderText();
+  }
+
   function adCreatePage(state) {
     return `
       <div>
@@ -179,7 +189,7 @@
           </div>
         </div>
         <div class="d-flex justify-content-center">
-          <canvas id="triptych-edit" width="${640 * scaleShrink}" height="${225 * scaleShrink}">
+          <canvas id="triptych-edit" width="${640 * scale}" height="${225 * scale}">
         </div>
       </div>
     `;
