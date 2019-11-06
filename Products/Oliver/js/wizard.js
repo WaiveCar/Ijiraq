@@ -11,10 +11,37 @@
     finalImageSrc: null,
   };
   let state = {};
+  let categoryTips = {
+    announcement: 'Description for the announcement',
+    promo: 'Description from the promo option',
+    notice: 'Description for the notice option',
+  };
 
   window.setState = function (updateObj) {
     Object.assign(state, updateObj);
     localStorage.setItem('savedState', JSON.stringify(state));
+  }
+
+  function attachScript(src) {
+    let script = document.createElement('script');
+    script.src = src;
+    document.body.appendChild(script);
+  }
+
+  window.selectCategory = function(category) {
+    document
+      .querySelector(`#radio-${state.category}`)
+      .closest('.category-option')
+      .classList.remove('current-cat');
+    setState({category});
+    document
+      .querySelector(`#radio-${state.category}`)
+      .closest('.category-option')
+      .classList.add('current-cat');
+  }
+
+  function capitalize(word) {
+    return word[0].toUpperCase() + word.slice(1);
   }
 
   function post(ep, body, cb) {
@@ -27,35 +54,6 @@
       }
     }).then(cb);
   }
-
-  function attachScript(src) {
-    let script = document.createElement('script');
-    script.src = src;
-    document.body.appendChild(script);
-  }
-
-  function selectCategory(category) {
-    document
-      .querySelector(`#radio-${state.category}`)
-      .closest('.category-option')
-      .classList.remove('current-cat');
-    setState({category});
-    document
-      .querySelector(`#radio-${state.category}`)
-      .closest('.category-option')
-      .classList.add('current-cat');
-  }
-  window.selectCategory = selectCategory;
-
-  function capitalize(word) {
-    return word[0].toUpperCase() + word.slice(1);
-  }
-
-  let categoryTips = {
-    announcement: 'Description for the announcement',
-    promo: 'Description from the promo option',
-    notice: 'Description for the notice option',
-  };
 
   function categoryPage(state) {
     return `
@@ -315,7 +313,32 @@
   let backBtn = document.querySelector('#back-btn');
   let nextBtn = document.querySelector('#next-btn');
 
-  function showPage(pageNum) {
+  function doMap() {
+    $.getJSON("http://adcast/api/screens?active=1&removed=0", function(Screens) {
+      self._map = map({points:Screens});
+      let success = false;
+
+      if(success) {
+        _map.load(_campaign.shape_list);
+      } else {
+        _map.center([-118.34,34.06], 11);
+      }
+    });
+  }
+
+  self.clearmap = () => _map.clear();
+  self.removeShape = () => _map.removeShape();
+
+  function geosave() {
+    var coords = _map.save();
+    // If we click on the map again we should show the updated coords
+    _campaign.shape_list = coords;
+    post('campaign_update', {id: _id, geofence: coords}, res => {
+      show({data: 'Updated Campaign'}, 1000);
+    });
+  }
+
+  window.showPage = function(pageNum) {
     topRightEls[currentPage].classList.remove('top-bar-selected');
     if (pageNum < 0 || pageNum > pages.length - 1) {
       return;
@@ -347,7 +370,6 @@
     topRightEls[currentPage].classList.add('top-bar-selected');
   }
 
-  window.showPage = showPage;
   let topRight = document.querySelector('.top-bar-right');
   topRight.innerHTML = pages
     .map(
@@ -359,15 +381,15 @@
   let topRightEls = document.querySelectorAll('.top-bar-right .top-bar-link');
   topRightEls[currentPage].classList.add('top-bar-selected');
 
-  function submit(data) {
-    console.log('Submitting: ', data);
-  }
-
   let savedState = localStorage.getItem('savedState');
   if (savedState) {
     setState(JSON.parse(savedState));
   } else {
     setState(initialState);
+  }
+
+  function submit(data) {
+    console.log('Submitting: ', data);
   }
 
   window.onpopstate = function() {
@@ -377,31 +399,5 @@
   };
   showPage(currentPage);
   document.querySelector('#back-btn').onclick = () => showPage(currentPage - 1);
-
-
-  function doMap() {
-    $.getJSON("http://adcast/api/screens?active=1&removed=0", function(Screens) {
-      self._map = map({points:Screens});
-      let success = false;
-
-      if(success) {
-        _map.load(_campaign.shape_list);
-      } else {
-        _map.center([-118.34,34.06], 11);
-      }
-    });
-  }
-
-  self.clearmap = () => _map.clear();
-  self.removeShape = () => _map.removeShape();
-
-  function geosave() {
-    var coords = _map.save();
-    // If we click on the map again we should show the updated coords
-    _campaign.shape_list = coords;
-    post('campaign_update', {id: _id, geofence: coords}, res => {
-      show({data: 'Updated Campaign'}, 1000);
-    });
-  }
 
 })();
