@@ -213,7 +213,7 @@
           <canvas id="triptych-edit" width="${640 * scale}" height="${225 *
       scale}">
         </div>
-        <div class="d-flex justify-content-center mt-4">
+        <div class="d-flex justify-content-center mt-4 ad-input-holder">
           <textarea type="text" class="triptych-text" placeholder="enter text"></textarea>
           <div class="ml-3">
             <div class="color-input">
@@ -308,7 +308,7 @@
   let pages = [
     {
       html: categoryPage,
-      title: 'Ad Type',
+      title: 'Type',
       loadFunc: handlePopover,
     },
     {
