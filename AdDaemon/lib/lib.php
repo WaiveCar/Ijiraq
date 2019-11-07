@@ -1113,11 +1113,13 @@ function infer() {
       $current = Get::screen(['car' => ['like' => $key ]]);
       if($current) {
         $xref[$key]['current'] = $current['uid'];
+        $xref[$key]['version'] = $current['version'];
       } 
     } else {
       $current = Get::screen(['uid' => $key]);
       if($current) {
         $xref[$key]['current'] = $current['car'];
+        $xref[$key]['version'] = $current['version'];
       } 
     }
     foreach($val as $k1 => $v1) {
