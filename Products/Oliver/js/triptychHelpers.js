@@ -205,14 +205,16 @@ function handleFileInput(layout, state) {
         setState({imageSrc: image.src});
       };
       let label = document.querySelector('.input-options');
+      label.style.visibility = 'visible';
       label.innerHTML = 'Choose Image';
       label.appendChild(fileUpload);
     }
   } else {
     let input = document.querySelector('.file-upload');
+    let label = document.querySelector('.input-options');
+    label.style.visibility = 'hidden';
     if (input) {
-      let label = (document.querySelector('.input-options').innerHTML = '');
-      document.querySelector('.input-options').removeChild(input);
+      label.removeChild(input);
     }
   }
 }

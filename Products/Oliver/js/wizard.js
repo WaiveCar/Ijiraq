@@ -23,7 +23,6 @@
   window.setState = function(updateObj) {
     Object.assign(state, updateObj);
     localStorage.setItem('savedState', JSON.stringify(state));
-    console.log(state);
   };
 
   window.selectCategory = function(category) {
@@ -235,7 +234,7 @@
                 <input type="color" name="text-color-picker"><label for="text-color-picker">Text</label>
               </span>
             </div>
-            <div class="mobile-flex-center">
+            <div class="mobile-flex-center file-holder">
               <label class="input-options">
               </label>
             </div>
@@ -268,17 +267,17 @@
     titleInput.value = state.title;
     titleInput.oninput = function(e) {
       setState({title: e.target.value});
-    }
+    };
     let startDate = document.querySelector('.start-date');
     startDate.value = state.startDate;
     startDate.oninput = function(e) {
       setState({startDate: e.target.value});
-    }
+    };
     let endDate = document.querySelector('.end-date');
     endDate.value = state.endDate;
     endDate.oninput = function(e) {
       setState({endDate: e.target.value});
-    }
+    };
     let triptychText = document.querySelector('.triptych-text');
     triptychText.value = state.canvasText;
     triptychText.oninput = function(e) {
@@ -418,8 +417,8 @@
   topRight.innerHTML = pages
     .map(
       (page, idx) => `
-    <div class="top-bar-link" onclick="showPage(${idx})">${page.title}</div>
-  `,
+        <div class="top-bar-link" onclick="showPage(${idx})">${page.title}</div>
+      `,
     )
     .join('');
   let topRightEls = document.querySelectorAll('.top-bar-right .top-bar-link');
