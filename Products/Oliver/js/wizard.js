@@ -7,6 +7,8 @@
     backgroundColor: 'white',
     textColor: 'black',
     title: '',
+    startDate: '',
+    endDate: '',
     canvasText: '',
     imageSrc: null,
     finalImageSrc: null,
@@ -266,6 +268,16 @@
     titleInput.value = state.title;
     titleInput.oninput = function(e) {
       setState({title: e.target.value});
+    }
+    let startDate = document.querySelector('.start-date');
+    startDate.value = state.startDate;
+    startDate.oninput = function(e) {
+      setState({startDate: e.target.value});
+    }
+    let endDate = document.querySelector('.end-date');
+    endDate.value = state.endDate;
+    endDate.oninput = function(e) {
+      setState({endDate: e.target.value});
     }
     let triptychText = document.querySelector('.triptych-text');
     triptychText.value = state.canvasText;
