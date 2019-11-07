@@ -224,8 +224,8 @@
                 <input type="color" name="text-color-picker"><label for="text-color-picker">Text</label>
               </span>
             </div>
-            <div class="input-options d-flex justify-content-center">
-            </div>
+            <label class="input-options d-flex justify-content-center">
+            </label>
           </div>
         </div>
       </div>

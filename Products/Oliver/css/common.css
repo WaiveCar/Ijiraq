@@ -847,3 +847,7 @@ input:focus, textarea:focus {
     display: block!important;
   }
 }
+
+.input-options input[type=file] {
+  display: none;
+}

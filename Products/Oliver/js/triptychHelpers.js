@@ -8,7 +8,7 @@ let adTypes = {
         textMaxWidth: 340,
         textSize: 36,
         maxLines: 3,
-        preview: '/assets/ad_preview.svg'
+        preview: '/assets/ad_preview.svg',
       },
       {
         hasImage: false,
@@ -16,7 +16,7 @@ let adTypes = {
         textMaxWidth: 616,
         textSize: 48,
         maxLines: 3,
-        preview: '/assets/ad_preview.svg'
+        preview: '/assets/ad_preview.svg',
       },
       {
         hasImage: false,
@@ -24,7 +24,7 @@ let adTypes = {
         textMaxWidth: 616,
         textSize: 48,
         maxLines: 3,
-        preview: '/assets/ad_preview.svg'
+        preview: '/assets/ad_preview.svg',
       },
     ],
   },
@@ -37,7 +37,7 @@ let adTypes = {
         textMaxWidth: 340,
         textSize: 36,
         maxLines: 3,
-        preview: '/assets/ad_preview.svg'
+        preview: '/assets/ad_preview.svg',
       },
       {
         hasImage: false,
@@ -45,7 +45,7 @@ let adTypes = {
         textMaxWidth: 616,
         textSize: 48,
         maxLines: 3,
-        preview: '/assets/ad_preview.svg'
+        preview: '/assets/ad_preview.svg',
       },
       {
         hasImage: false,
@@ -53,7 +53,7 @@ let adTypes = {
         textMaxWidth: 616,
         textSize: 48,
         maxLines: 3,
-        preview: '/assets/ad_preview.svg'
+        preview: '/assets/ad_preview.svg',
       },
     ],
   },
@@ -66,7 +66,7 @@ let adTypes = {
         textMaxWidth: 340,
         textSize: 36,
         maxLines: 3,
-        preview: '/assets/ad_preview.svg'
+        preview: '/assets/ad_preview.svg',
       },
       {
         hasImage: false,
@@ -74,7 +74,7 @@ let adTypes = {
         textMaxWidth: 616,
         textSize: 48,
         maxLines: 3,
-        preview: '/assets/ad_preview.svg'
+        preview: '/assets/ad_preview.svg',
       },
       {
         hasImage: false,
@@ -82,7 +82,7 @@ let adTypes = {
         textMaxWidth: 616,
         textSize: 48,
         maxLines: 3,
-        preview: '/assets/ad_preview.svg'
+        preview: '/assets/ad_preview.svg',
       },
     ],
   },
@@ -204,11 +204,14 @@ function handleFileInput(layout, state) {
         image.src = URL.createObjectURL(this.files[0]);
         setState({imageSrc: image.src});
       };
-      document.querySelector('.input-options').appendChild(fileUpload);
+      let label = document.querySelector('.input-options');
+      label.innerHTML = 'Choose File';
+      label.appendChild(fileUpload);
     }
   } else {
     let input = document.querySelector('.file-upload');
     if (input) {
+      let label = (document.querySelector('.input-options').innerHTML = '');
       document.querySelector('.input-options').removeChild(input);
     }
   }
