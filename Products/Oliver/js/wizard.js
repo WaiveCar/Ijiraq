@@ -10,6 +10,7 @@
     startDate: '',
     endDate: '',
     canvasText: '',
+    keywords: [],
     imageSrc: null,
     finalImageSrc: null,
   };
@@ -191,8 +192,45 @@
             )
             .join('')}
         </div>
+        <div class="keyword-input d-flex justify-content-center mt-2">
+          <input type="text" placeholder="Add Keywords">
+          <button class="add-keyword">Add</button>
+        </div>
+        <div class="keywords d-flex justify-content-center">
+          ${renderKeywords()}
+        </div>
       </div>
     `;
+  }
+
+  function renderKeywords() {
+    return state.keywords
+      .map(
+        (word, i) =>
+          `
+            <div>
+              ${word}<button onclick="deleteKeyword(${i})">X</button>
+            </div>
+          `,
+      )
+      .join('')
+  }
+
+  window.deleteKeyword = function(i) {
+    state.keywords.splice(i, 1);
+    setState({keywords: state.keywords});
+    document.querySelector('.keywords').innerHTML = renderKeywords();
+  }
+
+  function layoutLoad() {
+    let addKeyword = document.querySelector('.add-keyword');
+    let keywordInput = document.querySelector('.keyword-input input');
+    let keywords = document.querySelector('.keywords');
+    addKeyword.onclick = function() {
+      setState({keywords: [...state.keywords, keywordInput.value]});
+      renderKeywords();
+      document.querySelector('.keywords').innerHTML = renderKeywords();
+    };
   }
 
   let windowWidth = window.innerWidth - 20;
@@ -273,23 +311,27 @@
     startDate.oninput = function(e) {
       setState({startDate: e.target.value});
     };
+
     let endDate = document.querySelector('.end-date');
     endDate.value = state.endDate;
     endDate.oninput = function(e) {
       setState({endDate: e.target.value});
     };
+
     let triptychText = document.querySelector('.triptych-text');
     triptychText.value = state.canvasText;
     triptychText.oninput = function(e) {
       setState({canvasText: e.target.value});
       handleCanvasText(e, state);
     };
+
     let textColorPicker = document.querySelector('[name=text-color-picker]');
     textColorPicker.value = state.textColor;
     textColorPicker.oninput = function(e) {
       reRenderText();
       setState({textColor: e.target.value});
     };
+
     drawImage(null, state, true);
     reRenderText();
     handleFileInput(
@@ -344,7 +386,7 @@
       html: targetingPage,
       title: 'Locations',
     },
-    {html: layoutPage, title: 'Layout'},
+    {html: layoutPage, title: 'Layout', loadFunc: layoutLoad},
     {html: adCreatePage, title: 'Edit', loadFunc: adCreateLoad},
     {html: summaryPage, title: 'Summary'},
     {html: paymentPage, title: 'Payment'},

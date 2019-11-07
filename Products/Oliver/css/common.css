@@ -744,11 +744,11 @@ select.form-control:focus,
   padding: 0.4rem 0.4rem;
 }
 
-.title-input input {
+.title-input input, .keyword-input input {
   padding: 0.4rem 1rem;
 }
 
-.location-input input, .title-input input  {
+.location-input input, .title-input input, .keyword-input input {
   width: 80%;
   color: #858796;
   border-radius: 50px;
