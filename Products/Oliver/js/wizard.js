@@ -204,17 +204,21 @@
         <div class="wizard-title">
           <h2>Create your Ad</h2>
         </div>
-        <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center mt-4">
           <canvas id="triptych-edit" width="${640 * scale}" height="${225 * scale}">
         </div>
-        <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center mt-2">
           <textarea type="text" class="triptych-text" placeholder="enter text"></textarea>
-          <div>
-            <div>
-              <input type="color" name="background-color-picker"><label for="background-color-picker">Background Color</label>
-              <input type="color" name="text-color-picker"><label for="text-color-picker">Text Color</label>
+          <div class="ml-3">
+            <div class="mt-1 color-input">
+              <span>
+                <input type="color" name="background-color-picker"><label for="background-color-picker">Background</label>
+              </span>
+              <span class="ml-2">
+                <input type="color" name="text-color-picker"><label for="text-color-picker">Text</label>
+              </span>
             </div>
-            <div class="input-options">
+            <div class="input-options d-flex justify-content-center">
             </div>
           </div>
         </div>

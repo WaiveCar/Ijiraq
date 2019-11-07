@@ -760,10 +760,6 @@ select.form-control:focus,
   }
 }
 
-#triptych-edit {
-  margin-top: 3rem;
-}
-
 #file-upload {
   width: 100%;
 }
@@ -771,4 +767,45 @@ select.form-control:focus,
 .triptych-text {
   width: 60%;
   height: 4rem;
+  background-color: #f3f3f3;
+  border-radius: 10px;
+  padding: 0.3rem 0.6rem;
+  border: 0;
+  resize: none;
 }
+
+.color-input input[type=color] {
+  -webkit-appearance: none;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+.color-input input[type=color]::-webkit-color-swatch {
+  border: none;
+  border-radius: 10px;
+  padding: 0;
+}
+
+.color-input input[type=color]::-webkit-color-swatch-wrapper {
+  border: none;
+  border-radius: 10px;
+  padding: 0;
+} 
+
+.color-input label {
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+input:focus, textarea:focus {
+  outline: none!important;
+}
+.btn:focus, .btn:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
