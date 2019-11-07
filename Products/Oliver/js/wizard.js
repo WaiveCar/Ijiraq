@@ -66,10 +66,6 @@
             A couple of sentances to provide further detail and instruction
           </div>
         </div>
-        <div class="d-flex justify-content-center">
-          <input class="ad-date start-date" type="date">
-          <input class="ad-date end-date" type="date">
-        </div>
         <div class="category-holder d-flex justify-content-between">
           ${categories
             .map(
@@ -215,8 +211,12 @@
         <div class="wizard-title">
           <h2>Create your Ad</h2>
         </div>
-        <div class="title-input d-flex justify-content-center">
+        <div class="title-input d-flex justify-content-center mt-4">
           <input type="text" placeholder="Promotion Title">
+        </div>
+        <div class="d-flex justify-content-center mt-4">
+          <input class="ad-date start-date" placeholder="Start Date" onfocus="(this.type='date')" onblur="(this.type='text')">
+          <input class="ad-date end-date" placeholder="End Date" onfocus="(this.type='date')" onblur="(this.type='text')">
         </div>
         <div class="d-flex justify-content-center mt-4">
           <canvas id="triptych-edit" width="${640 * scale}" height="${225 *
