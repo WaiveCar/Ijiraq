@@ -205,7 +205,7 @@ function handleFileInput(layout, state) {
         setState({imageSrc: image.src});
       };
       let label = document.querySelector('.input-options');
-      label.innerHTML = 'Choose File';
+      label.innerHTML = 'Choose Image';
       label.appendChild(fileUpload);
     }
   } else {

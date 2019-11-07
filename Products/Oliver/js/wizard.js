@@ -6,6 +6,7 @@
     selectedLayout: 0,
     backgroundColor: 'white',
     textColor: 'black',
+    title: '',
     canvasText: '',
     imageSrc: null,
     finalImageSrc: null,
@@ -20,6 +21,7 @@
   window.setState = function(updateObj) {
     Object.assign(state, updateObj);
     localStorage.setItem('savedState', JSON.stringify(state));
+    console.log(state);
   };
 
   window.selectCategory = function(category) {
@@ -63,6 +65,10 @@
           <div class="subtitle">
             A couple of sentances to provide further detail and instruction
           </div>
+        </div>
+        <div class="d-flex justify-content-center">
+          <input class="ad-date start-date" type="date">
+          <input class="ad-date end-date" type="date">
         </div>
         <div class="category-holder d-flex justify-content-between">
           ${categories
@@ -209,13 +215,16 @@
         <div class="wizard-title">
           <h2>Create your Ad</h2>
         </div>
+        <div class="title-input d-flex justify-content-center">
+          <input type="text" placeholder="Promotion Title">
+        </div>
         <div class="d-flex justify-content-center mt-4">
           <canvas id="triptych-edit" width="${640 * scale}" height="${225 *
       scale}">
         </div>
-        <div class="d-flex justify-content-center mt-4 ad-input-holder">
+        <div class="d-flex justify-content-between mt-4 ad-input-holder">
           <textarea type="text" class="triptych-text" placeholder="enter text"></textarea>
-          <div class="ml-3">
+          <div class="ml-3 right-inputs">
             <div class="color-input">
               <span>
                 <input type="color" name="background-color-picker"><label for="background-color-picker">Background</label>
@@ -224,8 +233,10 @@
                 <input type="color" name="text-color-picker"><label for="text-color-picker">Text</label>
               </span>
             </div>
-            <label class="input-options d-flex justify-content-center">
-            </label>
+            <div class="mobile-flex-center">
+              <label class="input-options">
+              </label>
+            </div>
           </div>
         </div>
       </div>
@@ -250,8 +261,15 @@
       setState({backgroundColor: e.target.value});
       reRenderText();
     };
-    document.querySelector('.triptych-text').value = state.canvasText;
-    document.querySelector('.triptych-text').oninput = function(e) {
+
+    let titleInput = document.querySelector('.title-input input');
+    titleInput.value = state.title;
+    titleInput.oninput = function(e) {
+      setState({title: e.target.value});
+    }
+    let triptychText = document.querySelector('.triptych-text');
+    triptychText.value = state.canvasText;
+    triptychText.oninput = function(e) {
       setState({canvasText: e.target.value});
       handleCanvasText(e, state);
     };

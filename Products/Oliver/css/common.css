@@ -740,11 +740,18 @@ select.form-control:focus,
 }
 
 .location-input input {
-  width: 80%;
+  text-align: center;
   padding: 0.4rem 0.4rem;
+}
+
+.title-input input {
+  padding: 0.4rem 1rem;
+}
+
+.location-input input, .title-input input  {
+  width: 80%;
   color: #858796;
   border-radius: 50px;
-  text-align: center;
   border: 0;
   background-color: #f5f5f5;
 }
@@ -829,7 +836,38 @@ input:focus, textarea:focus {
   box-shadow: 3.5px 3.5px 4px 1px rgba(143,143,143,1);
 }
 
+.input-options {
+  padding: 0.2rem 0.4rem;
+  text-align: center;
+  border-radius: 50px;
+  color: white;
+  background-color: #86e37a;
+}
+
+.input-options input[type=file] {
+  display: none;
+}
+
+.right-inputs {
+  width: 35%;
+}
+
 @media (max-width: 768px) {
+  .right-inputs {
+    width: inherit;
+  }
+  .color-input span {
+    display: block;
+    margin-left: 0!important;
+  }
+  .mobile-flex-center {
+    display: flex;
+    justify-content: center;
+  }
+  .input-options {
+    margin-top: 1rem;
+    width: 50%;
+  }
   .wizard-title {
     margin-top: 3rem;
   }
@@ -848,6 +886,3 @@ input:focus, textarea:focus {
   }
 }
 
-.input-options input[type=file] {
-  display: none;
-}
