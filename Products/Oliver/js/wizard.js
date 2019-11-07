@@ -17,16 +17,10 @@
     notice: 'Description for the notice option',
   };
 
-  window.setState = function (updateObj) {
+  window.setState = function(updateObj) {
     Object.assign(state, updateObj);
     localStorage.setItem('savedState', JSON.stringify(state));
-  }
-
-  function attachScript(src) {
-    let script = document.createElement('script');
-    script.src = src;
-    document.body.appendChild(script);
-  }
+  };
 
   window.selectCategory = function(category) {
     document
@@ -38,21 +32,25 @@
       .querySelector(`#radio-${state.category}`)
       .closest('.category-option')
       .classList.add('current-cat');
-  }
+  };
 
   function capitalize(word) {
     return word[0].toUpperCase() + word.slice(1);
   }
 
   function post(ep, body, cb) {
-    fetch(new Request(`http://adcast/api/${ep}`, {
-      method: 'POST', 
-      body: JSON.stringify(body)
-    })).then(res => {
-      if (res.status === 200) {
-        return res.json();
-      }
-    }).then(cb);
+    fetch(
+      new Request(`http://adcast/api/${ep}`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+      }),
+    )
+      .then(res => {
+        if (res.status === 200) {
+          return res.json();
+        }
+      })
+      .then(cb);
   }
 
   function categoryPage(state) {
@@ -150,7 +148,7 @@
     document
       .querySelector(`label[for=layout-${idx}]`)
       .classList.add('selected-layout');
-  }
+  };
 
   function layoutPage(state) {
     return `
@@ -168,17 +166,25 @@
             .map(
               (layout, i) =>
                 `
-        <div class="layout-option">
-          <input id="layout-${i}" oninput="selectLayout(${i})" type="radio" name="triptych-options" value="${i}" ${
-                  i === state.selectedLayout ? 'checked' : ''
-                }>
-          <label class="layout-preview ${
-            i === state.selectedLayout ? 'selected-layout' : ''
-          }" for="layout-${i}">
-            <img src="${layout.preview}">
-          </label>
-        </div>
-        `,
+                  <div class="layout-option">
+                    <input
+                      id="layout-${i}"
+                      oninput="selectLayout(${i})"
+                      type="radio"
+                      name="triptych-options"
+                      value="${i}"
+                      ${i === state.selectedLayout ? 'checked' : ''}
+                    />
+                    <label
+                      class="layout-preview ${
+                        i === state.selectedLayout ? 'selected-layout' : ''
+                      }"
+                      for="layout-${i}"
+                    >
+                      <img src="${layout.preview}" />
+                    </label>
+                  </div>
+                `,
             )
             .join('')}
         </div>
@@ -189,23 +195,23 @@
   let windowWidth = window.innerWidth - 20;
   scale = windowWidth < 640 ? (windowWidth - 20) / 640 : 1;
 
-  window.onresize = function(e) {
-    let windowWidth = window.innerWidth - 20;
-    scale = windowWidth < 640 ? (windowWidth - 20) / 640 : 1;
-    document.querySelector('#triptych-edit').width = 640 * scale;
-    document.querySelector('#triptych-edit').height = 225 * scale;
-    drawImage(e, state);
-    reRenderText();
-  }
-
   function adCreatePage(state) {
+    window.onresize = function(e) {
+      let windowWidth = window.innerWidth - 20;
+      scale = windowWidth < 640 ? (windowWidth - 20) / 640 : 1;
+      document.querySelector('#triptych-edit').width = 640 * scale;
+      document.querySelector('#triptych-edit').height = 225 * scale;
+      drawImage(e, state);
+      reRenderText();
+    };
     return `
       <div>
         <div class="wizard-title">
           <h2>Create your Ad</h2>
         </div>
         <div class="d-flex justify-content-center mt-4">
-          <canvas id="triptych-edit" width="${640 * scale}" height="${225 * scale}">
+          <canvas id="triptych-edit" width="${640 * scale}" height="${225 *
+      scale}">
         </div>
         <div class="d-flex justify-content-center mt-4">
           <textarea type="text" class="triptych-text" placeholder="enter text"></textarea>
@@ -264,6 +270,7 @@
     let nextBtn = document.querySelector('#next-btn');
     let nextOnClick = nextBtn.onclick;
     nextBtn.onclick = function(e) {
+      window.onresize = null;
       getImageFromCanvas(e, state);
       nextOnClick();
     };
@@ -307,7 +314,6 @@
     {
       html: targetingPage,
       title: 'Locations',
-      loadFunc: attachScript.bind(this, '/js/map.js'),
     },
     {html: layoutPage, title: 'Layout'},
     {html: adCreatePage, title: 'Edit', loadFunc: adCreateLoad},
@@ -320,14 +326,16 @@
   let nextBtn = document.querySelector('#next-btn');
 
   function doMap() {
-    $.getJSON("http://adcast/api/screens?active=1&removed=0", function(Screens) {
-      self._map = map({points:Screens});
+    $.getJSON('http://adcast/api/screens?active=1&removed=0', function(
+      Screens,
+    ) {
+      self._map = map({points: Screens});
       let success = false;
 
-      if(success) {
+      if (success) {
         _map.load(_campaign.shape_list);
       } else {
-        _map.center([-118.34,34.06], 11);
+        _map.center([-118.34, 34.06], 11);
       }
     });
   }
@@ -374,7 +382,7 @@
     }
     currentPage = pageNum;
     topRightEls[currentPage].classList.add('top-bar-selected');
-  }
+  };
 
   let topRight = document.querySelector('.top-bar-right');
   topRight.innerHTML = pages

@@ -189,11 +189,11 @@ function handleCanvasText(e, state) {
 
 function handleFileInput(layout, state) {
   if (layout.hasImage) {
-    let hasInput = document.querySelector('#file-upload');
+    let hasInput = document.querySelector('.file-upload');
     if (!hasInput) {
       let fileUpload = document.createElement('input');
       fileUpload.type = 'file';
-      fileUpload.id = 'file-upload';
+      fileUpload.classList.add('file-upload');
       fileUpload.accept = 'image/png, image/jpeg';
       fileUpload.oninput = function() {
         image = new Image();
@@ -207,7 +207,7 @@ function handleFileInput(layout, state) {
       document.querySelector('.input-options').appendChild(fileUpload);
     }
   } else {
-    let input = document.querySelector('#file-upload');
+    let input = document.querySelector('.file-upload');
     if (input) {
       document.querySelector('.input-options').removeChild(input);
     }
