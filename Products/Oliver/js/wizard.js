@@ -207,10 +207,10 @@
         <div class="d-flex justify-content-center mt-4">
           <canvas id="triptych-edit" width="${640 * scale}" height="${225 * scale}">
         </div>
-        <div class="d-flex justify-content-center mt-2">
+        <div class="d-flex justify-content-center mt-4">
           <textarea type="text" class="triptych-text" placeholder="enter text"></textarea>
           <div class="ml-3">
-            <div class="mt-1 color-input">
+            <div class="color-input">
               <span>
                 <input type="color" name="background-color-picker"><label for="background-color-picker">Background</label>
               </span>
