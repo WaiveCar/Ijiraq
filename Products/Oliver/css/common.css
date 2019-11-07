@@ -696,9 +696,12 @@ select.form-control:focus,
   border-radius: 70px;
 }
 
+.popover .arrow:before {
+  border-color: transparent;
+}
+
 .arrow::after, .bs-popover-bottom .arrow::after {
-  border: 0;
-  border-bottom-color: #f5f5f5;
+  border-bottom-color: #f5f5f5 !important;
 }
 
 .popover-body {
