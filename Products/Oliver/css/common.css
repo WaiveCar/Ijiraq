@@ -171,7 +171,7 @@ body {
 
 .top-bar-left {
   min-width: 150px;
-  margin: 1.3rem 0 0 3.5rem;
+  margin: 2rem 0 0 3.5rem;
 }
 
 .top-bar-left img {
@@ -298,7 +298,14 @@ body {
   font-family: 'Object Sans Heavy';
   color: #cccccc;
 }
+
 @media(max-width: 1000px) {
+  .top-bar-left {
+    margin-right: 1rem;
+  }
+  .top-bar-right {
+    margin-left: 0!important;
+  }
   .top-bar-link {
     font-size: 14px;
     width: 6rem;
