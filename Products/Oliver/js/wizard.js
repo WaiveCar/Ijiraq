@@ -213,21 +213,25 @@
             </div>
           `,
       )
-      .join('')
+      .join('');
   }
 
   window.deleteKeyword = function(i) {
     state.keywords.splice(i, 1);
     setState({keywords: state.keywords});
     document.querySelector('.keywords').innerHTML = renderKeywords();
-  }
+  };
 
   function layoutLoad() {
     let addKeyword = document.querySelector('.add-keyword');
     let keywordInput = document.querySelector('.keyword-input input');
     let keywords = document.querySelector('.keywords');
     addKeyword.onclick = function() {
-      if (keywordInput.value && state.keywords.length < 3) {
+      if (
+        keywordInput.value &&
+        state.keywords.length < 3 &&
+        !state.keywords.includes(keywordInput.value)
+      ) {
         setState({keywords: [...state.keywords, keywordInput.value]});
         document.querySelector('.keywords').innerHTML = renderKeywords();
       }
@@ -255,8 +259,8 @@
           <input type="text" placeholder="Promotion Title">
         </div>
         <div class="d-flex justify-content-center mt-4">
-          <input class="ad-date start-date" placeholder="Start Date" onfocus="(this.type='date')" onblur="(this.type='text')">
-          <input class="ad-date end-date" placeholder="End Date" onfocus="(this.type='date')" onblur="(this.type='text')">
+          <input class="ad-date start-date" placeholder="Start Date" onfocus="(this.type='date')" onblur="(this.type='text', this.value=moment(this.value).format('MM/DD/YYYY'))">
+          <input class="ad-date end-date" placeholder="End Date" onfocus="(this.type='date')" onblur="(this.type='text', this.value=moment(this.value).format('MM/DD/YYYY'))">
         </div>
         <div class="d-flex justify-content-center mt-4">
           <canvas id="triptych-edit" width="${640 * scale}" height="${225 *
@@ -307,14 +311,19 @@
     titleInput.oninput = function(e) {
       setState({title: e.target.value});
     };
+
     let startDate = document.querySelector('.start-date');
-    startDate.value = state.startDate;
+    startDate.value = state.startDate.length
+      ? moment(state.startDate).format('MM/DD/YYYY')
+      : '';
     startDate.oninput = function(e) {
       setState({startDate: e.target.value});
     };
 
     let endDate = document.querySelector('.end-date');
-    endDate.value = state.endDate;
+    endDate.value = state.endDate.length
+      ? moment(state.endDate).format('MM/DD/YYYY')
+      : '';
     endDate.oninput = function(e) {
       setState({endDate: e.target.value});
     };
