@@ -1082,10 +1082,6 @@ function infer() {
         $xref[$name] = ['ttl' => 0];
       }
       $xref[$name]['ttl']++;
-      if(isset($toRef['lat'])) {
-        $xref[$name]['lat'] = $toRef['lat'];
-        $xref[$name]['lng'] = $toRef['lng'];
-      }
       $cnodupes = [];
       foreach($window as $comp) {
         if($type !== $comp['type'] && $action === $comp['action']) {
@@ -1123,8 +1119,10 @@ function infer() {
       $current = Get::screen(['uid' => $key]);
       if($current) {
         $xref[$key]['current'] = $current['car'];
-        $xref[$key]['version'] = $current['version'];
-      } 
+        foreach(['version', 'lat', 'lng'] as $k) {
+          $xref[$key][$k] = $current[$k];
+        } 
+      }
     }
     foreach($val as $k1 => $v1) {
       if($k1 == 'ttl') {
