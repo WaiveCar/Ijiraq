@@ -1108,7 +1108,7 @@ function infer() {
   }
   foreach($xref as $key => $val) {
     $ttl = $val['ttl'];
-    $xref[$key]['current'] = 'none';
+    $xref[$key]['current'] = null;
     if (strlen($key) < 10) {
       $current = Get::screen(['car' => ['like' => $key ]]);
       if($current) {
