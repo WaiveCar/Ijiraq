@@ -446,19 +446,25 @@
           <h2>Payment</h2>
         </div>
         <div class="payment-holder mt-4">
-          <div class="inner-summary">
-            <div class="d-flex justify-content-center">
+          <div class="inner-payment">
+            <h4>
+              Card
+            </h4>
+            <div>
               <input type="text" placeholder="some text">
             </div>
-            <div class="d-flex justify-content-center">
+            <div>
               <input type="text" placeholder="some text">
             </div>
           </div>
-          <div class="inner-summary">
-            <div class="d-flex justify-content-center">
+          <div class="inner-payment">
+            <h4>
+              Billing Address
+            </h4>
+            <div>
               <input type="text" placeholder="some text">
             </div>
-            <div class="d-flex justify-content-center">
+            <div>
               <input type="text" placeholder="some text">
             </div>
           </div>

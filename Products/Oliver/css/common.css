@@ -744,20 +744,33 @@ select.form-control:focus,
   padding: 0.4rem 0.4rem;
 }
 
-.title-input input, .keyword-input input, .inner-summary input {
+.title-input input, .keyword-input input, .payment-holder input {
   padding: 0.4rem 1rem;
 }
 
-.location-input input, .title-input input, .keyword-input input, .inner-summary input {
-  width: 80%;
+.location-input input, .title-input input, .keyword-input input, .payment-holder input {
   color: #858796;
   border-radius: 50px;
   border: 0;
   background-color: #f5f5f5;
 }
 
-.inner-summary input {
-  margin: 0.5rem 0;
+.location-input input, .title-input input, .keyword-input input {
+  width: 80%;
+}
+
+.payment-page {
+  width: 100%;
+}
+
+.inner-payment {
+  width: 30%;
+  margin: 0 1rem;
+}
+
+.payment-holder input {
+  margin: 0.4rem 0;
+  width: 100%;
 }
 
 .add-keyword, .keyword:hover {
@@ -928,10 +941,6 @@ h4 {
 .summary-title {
   color: #86e37a;
   font-family: 'Object Sans Heavy';
-}
-
-.payment-page {
-  width: 100%;
 }
 
 .payment-holder {
