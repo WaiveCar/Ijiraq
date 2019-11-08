@@ -1,5 +1,5 @@
 let adTypes = {
-  announcement: {
+  other: {
     layouts: [
       {
         hasImage: true,
