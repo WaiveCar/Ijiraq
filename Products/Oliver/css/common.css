@@ -920,7 +920,7 @@ h4 {
   font-size: 16px;
 }
 
-h1 {
+.summary-title {
   color: #86e37a;
   font-family: 'Object Sans Heavy';
 }
