@@ -361,19 +361,9 @@
   function summaryPage(state) {
     return `
       <div>
-        <div class="wizard-title">
-          <h2>Summary</h2>
-        </div>
-        <div class="summary-holder">
-          <div class="inner-summary">
-
-            <div>
-              <img src="${state.finalImageSrc}" width="100%" style="border: 1px solid black">
-            </div>
-          </div>
-          <div class="inner-summary">
-
-          </div>
+        Summary
+        <div>
+          <img src="${state.finalImageSrc}" width="50%">
         </div>
       </div>
     `;
@@ -382,9 +372,7 @@
   function paymentPage(state) {
     return `
       <div>
-        <div class="wizard-title">
-          <h2>Payment</h2>
-        </div>
+        Payment
       </div>
     `;
   }

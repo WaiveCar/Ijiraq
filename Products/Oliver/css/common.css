@@ -903,15 +903,6 @@ input:focus, textarea:focus {
   width: 35%;
 }
 
-.summary-holder {
-  display: flex;
-  justify-content: space-between;
-}
-
-.inner-summary {
-  width: 45%;
-}
-
 @media (max-width: 768px) {
   .right-inputs {
     width: inherit;
@@ -952,12 +943,6 @@ input:focus, textarea:focus {
   }
   .keyword {
     font-size: 14px;
-  }
-  .summary-holder {
-    display: block;
-  }
-  .inner-summary {
-    width: 100%;
   }
 }
 
