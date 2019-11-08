@@ -391,6 +391,10 @@
                 )
                 .join('')}
             </div>
+            <div>
+              <h4 class="mt-4">Price</h4>
+              <h2 class="summary-title">$**.**</h2>
+            </div>
           </div>
           <div class="inner-summary">
             <h4 class="mt-4">Active Dates</h4>
@@ -407,8 +411,8 @@
                 : '<h2 class="summary-title">For the next week.</h2>'
             }
             <div>
-              <h4 class="mt-4">Keywords</h4>
-              <div>
+              <h4 class="mt-2">Keywords</h4>
+              <div class="mb-2">
                 ${renderKeywords() ? renderKeywords() : 'No Keywords Entered'}
               </div>
             </div>
