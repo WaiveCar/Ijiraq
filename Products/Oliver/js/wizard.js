@@ -194,9 +194,9 @@
         </div>
         <div class="keyword-input d-flex justify-content-center mt-2">
           <input type="text" placeholder="Add Keywords">
-          <button class="add-keyword">Add</button>
+          <button class="btn add-keyword">Add</button>
         </div>
-        <div class="keywords d-flex justify-content-center">
+        <div class="keywords d-flex justify-content-center mt-2">
           ${renderKeywords()}
         </div>
       </div>
@@ -208,8 +208,8 @@
       .map(
         (word, i) =>
           `
-            <div>
-              ${word}<button onclick="deleteKeyword(${i})">X</button>
+            <div class="btn keyword" onclick="deleteKeyword(${i})">
+              ${word}
             </div>
           `,
       )
@@ -227,9 +227,10 @@
     let keywordInput = document.querySelector('.keyword-input input');
     let keywords = document.querySelector('.keywords');
     addKeyword.onclick = function() {
-      setState({keywords: [...state.keywords, keywordInput.value]});
-      renderKeywords();
-      document.querySelector('.keywords').innerHTML = renderKeywords();
+      if (keywordInput.value && state.keywords.length < 3) {
+        setState({keywords: [...state.keywords, keywordInput.value]});
+        document.querySelector('.keywords').innerHTML = renderKeywords();
+      }
     };
   }
 
