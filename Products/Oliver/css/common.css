@@ -912,6 +912,15 @@ input:focus, textarea:focus {
   width: 45%;
 }
 
+h4 {
+  font-size: 16px;
+}
+
+h1 {
+  color: #86e37a;
+  font-family: 'Object Sans Heavy';
+}
+
 @media (max-width: 768px) {
   .right-inputs {
     width: inherit;
