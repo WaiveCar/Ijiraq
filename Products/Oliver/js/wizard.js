@@ -234,6 +234,7 @@
       ) {
         setState({keywords: [...state.keywords, keywordInput.value]});
         document.querySelector('.keywords').innerHTML = renderKeywords();
+        keywordInput.value = '';
       }
     };
   }
@@ -396,19 +397,25 @@
             </div>
           </div>
           <div class="inner-summary">
-          <h4 class="mt-4">Active Dates</h4>
-          ${
-            state.startDate
-              ? `
-                  <h2 class="summary-title">
-                    ${moment(state.startDate).format('MM/DD/YYYY')} 
-                    ${state.endDate ? `
-                    to ${moment(state.endDate).format('MM/DD/YYYY')}
-                    ` : ''}
-                  </h2>
-                `
-              : '<h2 class="summary-title">For the next week.</h2>'
-          }
+            <h4 class="mt-4">Active Dates</h4>
+            ${
+              state.startDate
+                ? `
+                    <h2 class="summary-title">
+                      ${moment(state.startDate).format('MM/DD/YYYY')} 
+                      ${state.endDate ? `
+                      to ${moment(state.endDate).format('MM/DD/YYYY')}
+                      ` : ''}
+                    </h2>
+                  `
+                : '<h2 class="summary-title">For the next week.</h2>'
+            }
+            <div>
+              <h4 class="mt-4">Keywords</h4>
+              <div>
+                ${renderKeywords() ? renderKeywords() : 'No Keywords Entered'}
+              </div>
+            </div>
           </div>
         </div>
       </div>
