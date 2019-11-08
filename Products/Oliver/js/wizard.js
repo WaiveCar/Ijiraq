@@ -368,7 +368,7 @@
   }
 
   function summaryPage(state) {
-    return `
+    return state.finalImageSrc ? `
       <div>
         <div class="wizard-title">
           <h2>Summary</h2>
@@ -392,14 +392,32 @@
             </div>
             <h4 class="mt-4">Content</h4>
             <div>
-              <img src="${
-                state.finalImageSrc
-              }" class="summary-preview">
+              <img src="${state.finalImageSrc}" class="summary-preview">
             </div>
           </div>
           <div class="inner-summary">
+          <h4 class="mt-4">Active Dates</h4>
+          ${
+            state.startDate
+              ? `
+                  <h3>
+                    ${moment(state.startDate).format('MM/DD/YYYY')} 
+                    ${state.endDate ? `
+                    to ${moment(state.endDate).format('MM/DD/YYYY')}
+                    ` : ''}
+                  </h3>
+                `
+              : 'For the next week.'
+          }
           </div>
         </div>
+      </div>
+    ` : `
+      <div>
+        <div class="wizard-title">
+          <h2>Summary</h2>
+        </div>
+        <h4 class="mt-4">Please Go Back and Create a Message</h4>
       </div>
     `;
   }
