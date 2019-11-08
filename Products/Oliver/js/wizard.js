@@ -445,6 +445,11 @@
         <div class="wizard-title">
           <h2>Payment</h2>
         </div>
+        <div class="d-flex justify-content-center">
+          <div class="subtitle">
+            A couple of sentances to provide further detail and instruction
+          </div>
+        </div>
         <div class="payment-holder mt-4">
           <div class="inner-payment">
             <h4>
