@@ -122,6 +122,61 @@ window.map = function(opts) {
   // } points
 
   // drawlayer {
+  function addInteractions() {
+    _draw = new Draw({
+      source: source.draw,
+      type: typeSelect.value
+    });
+    _map.addInteraction(_draw);
+    _snap = new Snap({source: source.draw});
+    _map.addInteraction(_snap);
+  }
+  function getShapes() {
+    let shapes = draw.getSource().getFeatures().map(row => {
+      var kind = row.getGeometry();
+      if (kind instanceof Polygon) {
+        return ['Polygon', kind.getCoordinates()[0].map(coor => toLonLat(coor))];
+      } else {
+        return ['Circle', toLonLat(kind.getCenter()), kind.getRadius()];
+      }
+    });
+
+    return shapes;
+  }
+
+  function drawShapes(list) {
+    clear();
+    list.forEach(shape => {
+      var feature;
+      if(shape[0] === 'Circle') {
+        feature = new Feature({
+          geometry: new Circle(fromLonLat(shape[1]), shape[2])
+        });
+      }
+      else if(shape[0] === 'Polygon') {
+        feature = new Feature({
+          geometry: new Polygon([shape[1].map(coor => fromLonLat(coor))])
+        });
+      }
+      draw.getSource().addFeature(feature);
+    });
+  }
+
+  function clear() {
+    for(var feature of draw.getSource().getFeatures()) {
+      draw.getSource().removeFeature(feature);
+    }
+  }
+  function removeShape() {
+    let shapeList = draw.getSource().getFeatures();
+    if(shapeList) {
+      draw.getSource().removeFeature(shapeList.slice(-1)[0]);
+    }
+  }
+  function removePoint() {
+    _draw.removeLastPoint();
+  }
+
   if(opts.draw) {
     var typeSelect = document.getElementById(opts.typeSelect);
     source.draw = new VectorSource();
@@ -144,61 +199,6 @@ window.map = function(opts) {
         })
       })
     });
-    function addInteractions() {
-      _draw = new Draw({
-        source: source.draw,
-        type: typeSelect.value
-      });
-      _map.addInteraction(_draw);
-      _snap = new Snap({source: source.draw});
-      _map.addInteraction(_snap);
-    }
-    function getShapes() {
-      let shapes = draw.getSource().getFeatures().map(row => {
-        var kind = row.getGeometry();
-        if (kind instanceof Polygon) {
-          return ['Polygon', kind.getCoordinates()[0].map(coor => toLonLat(coor))];
-        } else {
-          return ['Circle', toLonLat(kind.getCenter()), kind.getRadius()];
-        }
-      });
-
-      return shapes;
-    }
-
-    function drawShapes(list) {
-      clear();
-      list.forEach(shape => {
-        var feature;
-        if(shape[0] === 'Circle') {
-          feature = new Feature({
-            geometry: new Circle(fromLonLat(shape[1]), shape[2])
-          });
-        }
-        else if(shape[0] === 'Polygon') {
-          feature = new Feature({
-            geometry: new Polygon([shape[1].map(coor => fromLonLat(coor))])
-          });
-        }
-        draw.getSource().addFeature(feature);
-      });
-    }
-
-    function clear() {
-      for(var feature of draw.getSource().getFeatures()) {
-        draw.getSource().removeFeature(feature);
-      }
-    }
-    function removeShape() {
-      let shapeList = draw.getSource().getFeatures();
-      if(shapeList) {
-        draw.getSource().removeFeature(shapeList.slice(-1)[0]);
-      }
-    }
-    function removePoint() {
-      _draw.removeLastPoint();
-    }
-
     dom.onkeyup = function(e) {
       if(e.key === 'Delete') { removePoint(); }
       if(e.key === 'Backspace') { removeShape(); }
@@ -210,7 +210,7 @@ window.map = function(opts) {
       addInteractions();
     };
 
-    addInteractions();
+    //addInteractions();
   }
   // } drawlayer
 
