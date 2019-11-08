@@ -376,7 +376,7 @@
         <div class="summary-holder mt-4">
           <div class="inner-summary">
             <h4 class="mt-4">Ad Type</h4>
-            <h1 class="summary-title">${capitalize(state.category)}</h1>
+            <h2 class="summary-title">${capitalize(state.category)}</h2>
             <h4 class="mt-2">Locations</h4>
             <div class="mb-2">
               ${['one', 'two', 'three']
@@ -400,14 +400,14 @@
           ${
             state.startDate
               ? `
-                  <h3>
+                  <h2 class="summary-title">
                     ${moment(state.startDate).format('MM/DD/YYYY')} 
                     ${state.endDate ? `
                     to ${moment(state.endDate).format('MM/DD/YYYY')}
                     ` : ''}
-                  </h3>
+                  </h2>
                 `
-              : 'For the next week.'
+              : '<h2 class="summary-title">For the next week.</h2>'
           }
           </div>
         </div>
