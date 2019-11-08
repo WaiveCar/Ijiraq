@@ -1082,6 +1082,10 @@ function infer() {
         $xref[$name] = ['ttl' => 0];
       }
       $xref[$name]['ttl']++;
+      if(isset($toRef['lat'])) {
+        $xref[$name]['lat'] = $toRef['lat'];
+        $xref[$name]['lng'] = $toRef['lng'];
+      }
       $cnodupes = [];
       foreach($window as $comp) {
         if($type !== $comp['type'] && $action === $comp['action']) {
