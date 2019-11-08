@@ -1,6 +1,6 @@
 (() => {
   document.querySelector('.navbar-nav').classList.add('in-wizard');
-  let categories = ['announcement', 'promo', 'notice'];
+  let categories = ['promo', 'notice', 'other'];
   let initialState = {
     category: categories[0],
     selectedLayout: 0,
@@ -16,9 +16,9 @@
   };
   let state = {};
   let categoryTips = {
-    announcement: 'Description for the announcement',
-    promo: 'Description from the promo option',
-    notice: 'Description for the notice option',
+    promo: 'Increase your business',
+    notice: 'Events and announcements, ie. lost pet',
+    other: 'Art, fun and leisure',
   };
 
   window.setState = function(updateObj) {
@@ -61,11 +61,11 @@
     return `
       <div>
         <div class="wizard-title">
-          <h2>Ad Type</h2>
+          <h2>Message Type</h2>
         </div>
         <div class="d-flex justify-content-center">
           <div class="subtitle">
-            A couple of sentances to provide further detail and instruction
+            What is the purpose of your message?
           </div>
         </div>
         <div class="category-holder d-flex justify-content-between">
