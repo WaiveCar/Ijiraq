@@ -375,28 +375,29 @@
         </div>
         <div class="summary-holder mt-4">
           <div class="inner-summary">
-            <h4>Ad Type</h4>
+            <h4 class="mt-4">Ad Type</h4>
             <h1>${capitalize(state.category)}</h1>
-            <h4>Locations</h4>
-            <div>
+            <h4 class="mt-2">Locations</h4>
+            <div class="mb-2">
               ${['one', 'two', 'three']
                 .map(
                   location =>
                     `
-                    <div class="btn keyword">
+                    <div class="btn add-keyword">
                       ${location}
                     </div>
                   `,
                 )
                 .join('')}
             </div>
-          </div>
-          <div class="inner-summary">
+            <h4 class="mt-4">Content</h4>
             <div>
               <img src="${
                 state.finalImageSrc
-              }" width="100%" style="border: 1px solid black">
+              }" class="summary-preview">
             </div>
+          </div>
+          <div class="inner-summary">
           </div>
         </div>
       </div>
