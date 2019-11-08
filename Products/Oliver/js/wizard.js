@@ -391,10 +391,6 @@
                 )
                 .join('')}
             </div>
-            <h4 class="mt-4">Content</h4>
-            <div>
-              <img src="${state.finalImageSrc}" class="summary-preview">
-            </div>
           </div>
           <div class="inner-summary">
             <h4 class="mt-4">Active Dates</h4>
@@ -415,6 +411,10 @@
               <div>
                 ${renderKeywords() ? renderKeywords() : 'No Keywords Entered'}
               </div>
+            </div>
+            <h4 class="mt-4">Content</h4>
+            <div>
+              <img src="${state.finalImageSrc}" class="summary-preview">
             </div>
           </div>
         </div>

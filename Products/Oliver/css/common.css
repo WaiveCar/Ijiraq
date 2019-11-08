@@ -972,5 +972,12 @@ h4 {
   .inner-summary {
     width: 100%;
   }
+  .keyword-input input {
+    min-width: 80%;
+  }
+  .keywords .keyword {
+    min-width: 47%;
+    margin-bottom: 1rem;
+  }
 }
 
