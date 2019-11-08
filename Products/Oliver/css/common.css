@@ -744,16 +744,20 @@ select.form-control:focus,
   padding: 0.4rem 0.4rem;
 }
 
-.title-input input, .keyword-input input {
+.title-input input, .keyword-input input, .inner-summary input {
   padding: 0.4rem 1rem;
 }
 
-.location-input input, .title-input input, .keyword-input input {
+.location-input input, .title-input input, .keyword-input input, .inner-summary input {
   width: 80%;
   color: #858796;
   border-radius: 50px;
   border: 0;
   background-color: #f5f5f5;
+}
+
+.inner-summary input {
+  margin: 0.5rem 0;
 }
 
 .add-keyword, .keyword:hover {
@@ -908,6 +912,7 @@ input:focus, textarea:focus {
 }
 
 .summary-holder {
+  width: 100%;
   display: flex;
   justify-content: space-between;
 }
@@ -923,6 +928,15 @@ h4 {
 .summary-title {
   color: #86e37a;
   font-family: 'Object Sans Heavy';
+}
+
+.payment-page {
+  width: 100%;
+}
+
+.payment-holder {
+  display: flex;
+  justify-content: center;
 }
 
 @media (max-width: 768px) {
@@ -966,6 +980,10 @@ h4 {
   .keyword {
     font-size: 14px;
   }
+  .payment-holder {
+    display: block;
+  }
+
   .summary-holder {
     display: block;
   }

@@ -369,7 +369,8 @@
   }
 
   function summaryPage(state) {
-    return state.finalImageSrc ? `
+    return state.finalImageSrc
+      ? `
       <div>
         <div class="wizard-title">
           <h2>Summary</h2>
@@ -403,9 +404,13 @@
                 ? `
                     <h2 class="summary-title">
                       ${moment(state.startDate).format('MM/DD/YYYY')} 
-                      ${state.endDate ? `
+                      ${
+                        state.endDate
+                          ? `
                       to ${moment(state.endDate).format('MM/DD/YYYY')}
-                      ` : ''}
+                      `
+                          : ''
+                      }
                     </h2>
                   `
                 : '<h2 class="summary-title">For the next week.</h2>'
@@ -423,7 +428,8 @@
           </div>
         </div>
       </div>
-    ` : `
+    `
+      : `
       <div>
         <div class="wizard-title">
           <h2>Summary</h2>
@@ -435,12 +441,29 @@
 
   function paymentPage(state) {
     return `
-      <div>
+      <div class="payment-page">
         <div class="wizard-title">
           <h2>Payment</h2>
         </div>
-      </div>
-    `;
+        <div class="payment-holder mt-4">
+          <div class="inner-summary">
+            <div class="d-flex justify-content-center">
+              <input type="text" placeholder="some text">
+            </div>
+            <div class="d-flex justify-content-center">
+              <input type="text" placeholder="some text">
+            </div>
+          </div>
+          <div class="inner-summary">
+            <div class="d-flex justify-content-center">
+              <input type="text" placeholder="some text">
+            </div>
+            <div class="d-flex justify-content-center">
+              <input type="text" placeholder="some text">
+            </div>
+          </div>
+        </div>
+      </div>`;
   }
 
   let pages = [
