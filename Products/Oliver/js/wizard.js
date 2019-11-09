@@ -483,10 +483,14 @@
               ])}
             </div>
           </div>
-          <input class="form-check-input" type="checkbox" name="saveMethod" id="saveMethod">
-          <label class="form-check-label" for="saveMethod">
-            Save this method
-          </label>
+          <div class="d-flex justify-content-center mt-3">
+            <div>
+              <input class="form-check-input" type="checkbox" name="saveMethod" id="saveMethod">
+              <label class="form-check-label" for="saveMethod">
+                Save this method
+              </label>
+            </div>
+          </div>
         </form>
         <div class="d-flex justify-content-center">
           <button class="btn add-keyword buy-btn">Complete</button>
