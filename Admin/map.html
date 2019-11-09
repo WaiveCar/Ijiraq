@@ -13,5 +13,14 @@
     </form>
     <div id="map" class="map"></div>
     <script src=map.js></script>
+  <script>
+    window.onload = function(){
+      self._map = map({
+        selectFirst: true,
+        draw: false,
+        resize: false});
+      _map.load([["Circle",[-118.35505485447356,34.034160196022626],3096.369074013084]]);
+    }
+  </script>
   </body>
 </html>
