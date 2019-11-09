@@ -937,6 +937,7 @@ input:focus, textarea:focus {
 
 .inner-summary {
   width: 45%;
+  margin-left: 7rem;
 }
 
 h4 {
@@ -1008,6 +1009,7 @@ h4 {
   }
   .inner-summary {
     width: 100%;
+    margin 0;
   }
   .keyword-input input {
     min-width: 80%;

@@ -456,31 +456,37 @@
         <div class="wizard-title">
           <h2>Payment</h2>
         </div>
-        <form class="payment-holder mt-4">
-          <div class="inner-payment">
-            <h4>
-              Card
-            </h4>
-            ${cardFormFields([
-              ['name', 'Name on Card'],
-              ['number', 'Card Number'],
-              ['expiration', 'Expiration'],
-              ['cvv', 'Security Code'],
-              ['company', 'Company'],
-            ])}
+        <form class="payment-form mt-4">
+          <div class="payment-holder">
+            <div class="inner-payment">
+              <h4>
+                Card
+              </h4>
+              ${cardFormFields([
+                ['name', 'Name on Card'],
+                ['number', 'Card Number'],
+                ['expiration', 'Expiration'],
+                ['cvv', 'Security Code'],
+                ['company', 'Company'],
+              ])}
+            </div>
+            <div class="inner-payment">
+              <h4>
+                Billing Address
+              </h4>
+              ${cardFormFields([
+                ['street', 'Street'],
+                ['city', 'City'],
+                ['state', 'State'],
+                ['zip', 'Zip Code'],
+                ['phone', 'Phone'],
+              ])}
+            </div>
           </div>
-          <div class="inner-payment">
-            <h4>
-              Billing Address
-            </h4>
-            ${cardFormFields([
-              ['street', 'Street'],
-              ['city', 'City'],
-              ['state', 'State'],
-              ['zip', 'Zip Code'],
-              ['phone', 'Phone'],
-            ])}
-          </div>
+          <input class="form-check-input" type="checkbox" name="saveMethod" id="saveMethod">
+          <label class="form-check-label" for="saveMethod">
+            Save this method
+          </label>
         </form>
         <div class="d-flex justify-content-center">
           <button class="btn add-keyword buy-btn">Complete</button>
@@ -590,7 +596,7 @@
   }
 
   function submit() {
-    let form = document.querySelector('.payment-holder').elements;
+    let form = document.querySelector('.payment-form').elements;
     let data = {};
     for (let i = 0; i < form.length; i++) {
       let item = form.item(i);
