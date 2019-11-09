@@ -1,7 +1,7 @@
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
 import {GeoJSON} from 'ol/format';
-import {Draw, Modify, Snap} from 'ol/interaction.js';
+import {defaults as defaultInteractions, Select, Translate, Draw, Modify, Snap} from 'ol/interaction.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {OSM, Cluster, Vector as VectorSource} from 'ol/source.js';
 import {Circle as CircleStyle, Icon, Fill, Stroke, Style, Text} from 'ol/style.js';
@@ -9,6 +9,7 @@ import {fromLonLat, toLonLat} from 'ol/proj';
 import Feature from 'ol/Feature';
 import Polygon from 'ol/geom/Polygon';
 import Circle from 'ol/geom/Circle';
+import {asColorLike} from 'ol/colorlike';
 import {bbox} from 'ol/loadingstrategy';
 
 window.map = function(opts) {
@@ -24,9 +25,12 @@ window.map = function(opts) {
   opts = Object.assign({}, {
     target: 'map',
     center: [-118.3, 34.02],
+    selectFirst: false,
     zoom: 13,
     typeSelect: 'type',
     draw: true,
+    resize: true,
+    move: true,
     select: false,
   }, opts || {});
 
@@ -35,6 +39,7 @@ window.map = function(opts) {
   });
 
   var _draw, _snap;
+  var select;
   var source = {};
   var dom = document.getElementById(opts.target);
 	var styleCache = {
@@ -146,19 +151,37 @@ window.map = function(opts) {
 
   function drawShapes(list) {
     clear();
+    var isFirst = true;
     list.forEach(shape => {
       var feature;
       if(shape[0] === 'Circle') {
         feature = new Feature({
-          geometry: new Circle(fromLonLat(shape[1]), shape[2])
+          geometry: new Circle(fromLonLat(shape[1]), shape[2]),
         });
+        feature.setStyle(
+          new Style({
+            fill: new Fill({
+              color: '#aaaaaa66', //getGradient()
+            }),
+            stroke: new Stroke({
+              color: "#779988ff",
+              width: 1 
+            })
+          })
+        );
       }
       else if(shape[0] === 'Polygon') {
         feature = new Feature({
-          geometry: new Polygon([shape[1].map(coor => fromLonLat(coor))])
+          geometry: new Polygon([shape[1].map(coor => fromLonLat(coor))]),
         });
       }
       draw.getSource().addFeature(feature);
+
+      if(opts.selectFirst && isFirst) {
+        select.getFeatures().push(feature);
+        select.dispatchEvent({type: 'select', selected: [feature], deselected: []});
+        isFirst = false;
+      }
     });
   }
 
@@ -177,28 +200,45 @@ window.map = function(opts) {
     _draw.removeLastPoint();
   }
 
-  if(opts.draw) {
-    var typeSelect = document.getElementById(opts.typeSelect);
-    source.draw = new VectorSource();
-    var modify = new Modify({source: source.draw});
-    var draw = new VectorLayer({
-      source: source.draw,
-      style: new Style({
+  function getGradient() {
+    var canvas = document.createElement('canvas');
+    var size = 512;
+    canvas.width = canvas.height = size;
+    var ctx = canvas.getContext('2d');
+    var gradient = ctx.createRadialGradient(
+      size/2,size/2,size/4,
+      size/2,size/2,size/2
+    );
+    gradient.addColorStop(0, 'red');
+    gradient.addColorStop(1, 'blue');//rgba(0,0,0,0)');
+    return gradient;
+  }
+
+  source.draw = new VectorSource();
+  var modify = new Modify({source: source.draw});
+  var draw = new VectorLayer({
+    source: source.draw,
+    style: new Style({
+      /*
+      fill: new Fill({
+        color: 'rgba(255, 255, 255, 0.4)'
+      }),
+      */
+      stroke: new Stroke({
+        color: '#000000',
+        width: 2
+      }),
+      image: new CircleStyle({
+        radius: 2,
         fill: new Fill({
-          color: 'rgba(255, 255, 255, 0.4)'
-        }),
-        stroke: new Stroke({
-          color: '#000000',
-          width: 2
-        }),
-        image: new CircleStyle({
-          radius: 7,
-          fill: new Fill({
-            color: '#ffcc33'
-          })
+          color: '#ffcc33'
         })
       })
-    });
+    })
+  });
+
+  if(opts.draw) {
+    var typeSelect = document.getElementById(opts.typeSelect);
     dom.onkeyup = function(e) {
       if(e.key === 'Delete') { removePoint(); }
       if(e.key === 'Backspace') { removeShape(); }
@@ -210,24 +250,38 @@ window.map = function(opts) {
       addInteractions();
     };
 
-    //addInteractions();
   }
   // } drawlayer
 
   _layers.push(draw);
 
   // eventually use geoip
-  var _map = new Map({
+  var map_params =  {
     layers: _layers,
     target: opts.target,
     view: new View({
       center: fromLonLat(opts.center),
       zoom: opts.zoom
     })
-  });
+  };
+
+  if(opts.move) {
+    select = new Select();
+
+    var translate = new Translate({
+      features: select.getFeatures()
+    });
+
+    map_params.interactions =  defaultInteractions().extend([select, translate]);
+  }
+
+  var _map = new Map(map_params);
 
   if(opts.draw) {
-    _map.addInteraction(modify);
+    addInteractions();
+    if(opts.resize) {
+      _map.addInteraction(modify);
+    }
   }
 
   return {
