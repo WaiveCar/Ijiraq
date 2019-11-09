@@ -483,7 +483,7 @@
               ])}
             </div>
           </div>
-          <div class="d-flex justify-content-center mt-3">
+          <div class="d-flex justify-content-center save-method">
             <div>
               <input class="form-check-input" type="checkbox" name="saveMethod" id="saveMethod">
               <label class="form-check-label" for="saveMethod">

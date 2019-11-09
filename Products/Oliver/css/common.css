@@ -959,6 +959,10 @@ h4 {
   width: 30%;
 }
 
+.save-method {
+  margin-top: 4rem;
+}
+
 @media (max-width: 768px) {
   .right-inputs {
     width: inherit;
@@ -1009,7 +1013,10 @@ h4 {
   }
   .inner-summary {
     width: 100%;
-    margin 0;
+    margin: 0;
+  }
+  .inner-summary h4 {
+    margin-top: 0.75rem!important;
   }
   .keyword-input input {
     min-width: 80%;
@@ -1027,8 +1034,14 @@ h4 {
     margin: 2rem 0;
   }
   .buy-btn, .buy-btn:hover {
-    margin: 0.5rem 0;
+    margin: 2rem 0;
     width: 80%;
+  }
+  .save-method {
+    margin-top: 1rem;
+  }
+  .summary-preview {
+    margin-bottom: 2rem;
   }
 }
 
