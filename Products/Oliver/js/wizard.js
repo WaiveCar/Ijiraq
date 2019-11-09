@@ -439,6 +439,17 @@
     `;
   }
 
+  function cardFormFields(fields) {
+    return fields.map(
+      field =>
+        `
+          <div>
+            <input type="text" placeholder="${field[1]}" name="${field[0]}">
+          </div>
+        `,
+    ).join('');
+  }
+
   function paymentPage(state) {
     return `
       <div class="payment-page">
@@ -450,30 +461,32 @@
             A couple of sentances to provide further detail and instruction
           </div>
         </div>
-        <div class="payment-holder mt-4">
+        <form class="payment-holder mt-4">
           <div class="inner-payment">
             <h4>
               Card
             </h4>
-            <div>
-              <input type="text" placeholder="some text">
-            </div>
-            <div>
-              <input type="text" placeholder="some text">
-            </div>
+            ${cardFormFields([
+              ['name', 'Name on Card'],
+              ['number', 'Card Number'],
+              ['expiration', 'Expiration'],
+              ['cvv', 'Security Code'],
+              ['company', 'Company'],
+            ])}
           </div>
           <div class="inner-payment">
             <h4>
               Billing Address
             </h4>
-            <div>
-              <input type="text" placeholder="some text">
-            </div>
-            <div>
-              <input type="text" placeholder="some text">
-            </div>
+            ${cardFormFields([
+              ['street', 'Street'],
+              ['city', 'City'],
+              ['state', 'State'],
+              ['zip', 'Zip Code'],
+              ['phone', 'Phone'],
+            ])}
           </div>
-        </div>
+        </form>
       </div>`;
   }
 
@@ -537,7 +550,7 @@
     nextBtn.onclick =
       pageNum !== pages.length - 1
         ? () => showPage(currentPage + 1)
-        : () => submit(state);
+        : () => submit();
     document.querySelector('#anchor').innerHTML = pages[pageNum].html(
       state,
       anchor,
@@ -574,7 +587,14 @@
     setState(initialState);
   }
 
-  function submit(data) {
+  function submit() {
+    let form = document.querySelector('.payment-holder').elements;
+    let data = {};
+    for (let i = 0; i < form.length; i++) {
+      let item = form.item(i);
+      data[item.name] = item.value;
+    }
+    Object.assign(data, state);
     console.log('Submitting: ', data);
   }
 
