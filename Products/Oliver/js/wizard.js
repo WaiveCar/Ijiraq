@@ -369,7 +369,8 @@
   }
 
   function summaryPage(state) {
-    return state.finalImageSrc ? `
+    return state.finalImageSrc
+      ? `
       <div>
         <div class="wizard-title">
           <h2>Summary</h2>
@@ -391,6 +392,10 @@
                 )
                 .join('')}
             </div>
+            <div>
+              <h4 class="mt-4">Price</h4>
+              <h2 class="summary-title">$**.**</h2>
+            </div>
           </div>
           <div class="inner-summary">
             <h4 class="mt-4">Active Dates</h4>
@@ -399,16 +404,20 @@
                 ? `
                     <h2 class="summary-title">
                       ${moment(state.startDate).format('MM/DD/YYYY')} 
-                      ${state.endDate ? `
+                      ${
+                        state.endDate
+                          ? `
                       to ${moment(state.endDate).format('MM/DD/YYYY')}
-                      ` : ''}
+                      `
+                          : ''
+                      }
                     </h2>
                   `
                 : '<h2 class="summary-title">For the next week.</h2>'
             }
             <div>
-              <h4 class="mt-4">Keywords</h4>
-              <div>
+              <h4 class="mt-2">Keywords</h4>
+              <div class="mb-2">
                 ${renderKeywords() ? renderKeywords() : 'No Keywords Entered'}
               </div>
             </div>
@@ -419,7 +428,8 @@
           </div>
         </div>
       </div>
-    ` : `
+    `
+      : `
       <div>
         <div class="wizard-title">
           <h2>Summary</h2>
@@ -429,14 +439,67 @@
     `;
   }
 
+  function cardFormFields(fields) {
+    return fields.map(
+      field =>
+        `
+          <div>
+            <input type="text" placeholder="${field[1]}" name="${field[0]}">
+          </div>
+        `,
+    ).join('');
+  }
+
   function paymentPage(state) {
     return `
-      <div>
+      <div class="payment-page">
         <div class="wizard-title">
           <h2>Payment</h2>
         </div>
-      </div>
-    `;
+        <form class="payment-form mt-4">
+          <div class="payment-holder">
+            <div class="inner-payment">
+              <h4>
+                Card
+              </h4>
+              ${cardFormFields([
+                ['name', 'Name on Card'],
+                ['number', 'Card Number'],
+                ['expiration', 'Expiration'],
+                ['cvv', 'Security Code'],
+                ['company', 'Company'],
+              ])}
+            </div>
+            <div class="inner-payment">
+              <h4>
+                Billing Address
+              </h4>
+              ${cardFormFields([
+                ['street', 'Street'],
+                ['city', 'City'],
+                ['state', 'State'],
+                ['zip', 'Zip Code'],
+                ['phone', 'Phone'],
+              ])}
+            </div>
+          </div>
+          <div class="d-flex justify-content-center save-method">
+            <div>
+              <input class="form-check-input" type="checkbox" name="saveMethod" id="saveMethod">
+              <label class="form-check-label" for="saveMethod">
+                Save this method
+              </label>
+            </div>
+          </div>
+        </form>
+        <div class="d-flex justify-content-center">
+          <button class="btn add-keyword buy-btn">Complete</button>
+        </div>
+      </div>`;
+  }
+
+  function attachSubmit() {
+    document.querySelector('.buy-btn').onclick = submit;
   }
 
   let pages = [
@@ -452,7 +515,7 @@
     {html: layoutPage, title: 'Layout', loadFunc: layoutLoad},
     {html: adCreatePage, title: 'Edit', loadFunc: adCreateLoad},
     {html: summaryPage, title: 'Summary'},
-    {html: paymentPage, title: 'Payment'},
+    {html: paymentPage, title: 'Payment', loadFunc: attachSubmit},
   ];
 
   let currentPage = Number(window.location.pathname.split('/').pop());
@@ -489,7 +552,7 @@
     nextBtn.onclick =
       pageNum !== pages.length - 1
         ? () => showPage(currentPage + 1)
-        : () => submit(state);
+        : () => submit();
     document.querySelector('#anchor').innerHTML = pages[pageNum].html(
       state,
       anchor,
@@ -526,7 +589,14 @@
     setState(initialState);
   }
 
-  function submit(data) {
+  function submit() {
+    let form = document.querySelector('.payment-form').elements;
+    let data = {};
+    for (let i = 0; i < form.length; i++) {
+      let item = form.item(i);
+      data[item.name] = item.value;
+    }
+    Object.assign(data, state);
     console.log('Submitting: ', data);
   }
 
