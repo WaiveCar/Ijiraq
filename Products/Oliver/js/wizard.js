@@ -188,28 +188,8 @@
             )
             .join('')}
         </div>
-        <div class="keyword-input d-flex justify-content-center mt-2">
-          <input type="text" placeholder="Add Keywords">
-          <button class="btn add-keyword">Add</button>
-        </div>
-        <div class="keywords d-flex justify-content-center mt-2">
-          ${renderKeywords()}
-        </div>
       </div>
     `;
-  }
-
-  function renderKeywords() {
-    return state.keywords
-      .map(
-        (word, i) =>
-          `
-            <div class="btn keyword" onclick="deleteKeyword(${i})">
-              ${word}
-            </div>
-          `,
-      )
-      .join('');
   }
 
   window.deleteKeyword = function(i) {
@@ -217,23 +197,6 @@
     setState({keywords: state.keywords});
     document.querySelector('.keywords').innerHTML = renderKeywords();
   };
-
-  function layoutLoad() {
-    let addKeyword = document.querySelector('.add-keyword');
-    let keywordInput = document.querySelector('.keyword-input input');
-    let keywords = document.querySelector('.keywords');
-    addKeyword.onclick = function() {
-      if (
-        keywordInput.value &&
-        state.keywords.length < 3 &&
-        !state.keywords.includes(keywordInput.value)
-      ) {
-        setState({keywords: [...state.keywords, keywordInput.value]});
-        document.querySelector('.keywords').innerHTML = renderKeywords();
-        keywordInput.value = '';
-      }
-    };
-  }
 
   let windowWidth = window.innerWidth - 20;
   scale = windowWidth < 640 ? (windowWidth - 20) / 640 : 1;
@@ -366,10 +329,50 @@
 
   function infoPage(state) {
     return `
-      <div>
-        Info
+      <div class="info-holder">
+        <div class="wizard-title">
+          <h2>Your Info</h2>
+        </div>
+        <div class="keyword-input d-flex justify-content-center mt-2">
+          <input type="text" placeholder="Add Keywords">
+          <button class="btn add-keyword">Add</button>
+        </div>
+        <div class="keywords d-flex justify-content-center mt-2">
+          ${renderKeywords()}
+        </div>
       </div>
-    `
+    `;
+  }
+
+  function infoLoad() {
+    let addKeyword = document.querySelector('.add-keyword');
+    let keywordInput = document.querySelector('.keyword-input input');
+    let keywords = document.querySelector('.keywords');
+    addKeyword.onclick = function() {
+      if (
+        keywordInput.value &&
+        state.keywords.length < 3 &&
+        !state.keywords.includes(keywordInput.value)
+      ) {
+        setState({keywords: [...state.keywords, keywordInput.value]});
+        document.querySelector('.keywords').innerHTML = renderKeywords();
+        keywordInput.value = '';
+      }
+    };
+  }
+
+
+  function renderKeywords() {
+    return state.keywords
+      .map(
+        (word, i) =>
+          `
+            <div class="btn keyword" onclick="deleteKeyword(${i})">
+              ${word}
+            </div>
+          `,
+      )
+      .join('');
   }
 
   function summaryPage(state) {
@@ -518,9 +521,9 @@
       html: targetingPage,
       title: 'Locations',
     },
-    {html: layoutPage, title: 'Layout', loadFunc: layoutLoad},
+    {html: layoutPage, title: 'Layout'},
     {html: adCreatePage, title: 'Edit', loadFunc: adCreateLoad},
-    {html: infoPage, title: 'Info'},
+    {html: infoPage, title: 'Info', loadFunc: infoLoad},
     {html: summaryPage, title: 'Summary'},
     {html: paymentPage, title: 'Payment', loadFunc: attachSubmit},
   ];
