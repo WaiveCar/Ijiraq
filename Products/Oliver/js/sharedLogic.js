@@ -137,16 +137,12 @@ function show(what) {
 }
 
 function doMap() {
-  $.getJSON("http://adcast/api/screens?active=1&removed=0", function(Screens) {
-    self._map = map({points:Screens});
-    let success = false;
-
-    if(success) {
-      _map.load(_campaign.shape_list);
-    } else {
-      _map.center([-118.34,34.06], 11);
-    }
+  self._map = map({
+    selectFirst: true,
+    draw: false,
+    resize: false
   });
+  _map.load([["Circle",[-118.35,34.03],2500]]);
 }
 
 function clearmap() {
