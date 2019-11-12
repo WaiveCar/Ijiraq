@@ -3,18 +3,10 @@ let adTypes = {
     layouts: [
       {
         hasImage: true,
-        imagePosition: [360, 12, 268, 201],
-        textPosition: [12, 80],
+        imagePosition: [12, 12, 268, 201],
+        textPosition: [300, 100],
         textMaxWidth: 340,
         textSize: 36,
-        maxLines: 3,
-        preview: '/assets/ad_preview.svg',
-      },
-      {
-        hasImage: false,
-        textPosition: [12, 72],
-        textMaxWidth: 616,
-        textSize: 48,
         maxLines: 3,
         preview: '/assets/ad_preview.svg',
       },
@@ -32,18 +24,10 @@ let adTypes = {
     layouts: [
       {
         hasImage: true,
-        imagePosition: [360, 12, 268, 201],
-        textPosition: [12, 80],
+        imagePosition: [12, 12, 268, 201],
+        textPosition: [300, 100],
         textMaxWidth: 340,
         textSize: 36,
-        maxLines: 3,
-        preview: '/assets/ad_preview.svg',
-      },
-      {
-        hasImage: false,
-        textPosition: [12, 72],
-        textMaxWidth: 616,
-        textSize: 48,
         maxLines: 3,
         preview: '/assets/ad_preview.svg',
       },
@@ -61,18 +45,10 @@ let adTypes = {
     layouts: [
       {
         hasImage: true,
-        imagePosition: [360, 12, 268, 201],
-        textPosition: [12, 80],
+        imagePosition: [12, 12, 268, 201],
+        textPosition: [300, 100],
         textMaxWidth: 340,
         textSize: 36,
-        maxLines: 3,
-        preview: '/assets/ad_preview.svg',
-      },
-      {
-        hasImage: false,
-        textPosition: [12, 72],
-        textMaxWidth: 616,
-        textSize: 48,
         maxLines: 3,
         preview: '/assets/ad_preview.svg',
       },
