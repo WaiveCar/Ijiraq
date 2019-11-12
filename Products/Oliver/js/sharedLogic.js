@@ -137,12 +137,14 @@ function show(what) {
 }
 
 function doMap() {
+  var center = [-118.31,34.03];
   self._map = map({
     selectFirst: true,
     draw: false,
-    resize: false
+    resize: false,
+    center: center
   });
-  _map.load([["Circle",[-118.35,34.03],2500]]);
+  _map.load([["Circle",center,2500]]);
 }
 
 function clearmap() {
@@ -237,7 +239,6 @@ function instaGet() {
 
 window.onload = function(){
   self._container =  document.getElementById('engine');
-  doMap();
   var isFirst = true;
   var ratio = 'car';
   if (self._container) {

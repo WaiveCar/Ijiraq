@@ -110,7 +110,7 @@
   }
 
   function targetingPage(state) {
-    doMap();
+    setTimeout(doMap, 100);
     return `
       <div>
         <div class="wizard-title">
@@ -127,10 +127,6 @@
             <div class="card">
               <div class="card-body">
 
-                <select id="type" class="custom-select custom-select-lg">
-                  <option value="Circle">Circle</option>
-                  <option value="Polygon">Geofence</option>
-                </select>
                 <div style='width:100%;height:40vw' id='map'></div>
               </div>
             </div>
@@ -522,9 +518,16 @@
   let backBtn = document.querySelector('#back-btn');
   let nextBtn = document.querySelector('#next-btn');
 
-  function doMap() {
-    self._map = map();
-    _map.center([-118.34, 34.06], 11);
+  self.doMap = function() {
+    var center = [-118.33,34.09];
+    self._map = map({
+      selectFirst: true,
+      draw: false,
+      resize: false,
+      zoom: 11,
+      center
+    });
+    _map.load([["Circle",center,2500]]);
   }
 
   self.clearmap = () => _map.clear();
