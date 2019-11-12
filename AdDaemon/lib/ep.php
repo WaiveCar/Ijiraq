@@ -91,7 +91,7 @@ try {
       $action = 'create';
     } else {
       if($func === 'screens') {
-        $all['removed'] = 0;
+        $all['removed'] = aget($all, 'removed', 0);
       }
     }
     post_return($action($table, $all));
