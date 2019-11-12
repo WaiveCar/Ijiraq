@@ -111,7 +111,7 @@ function reRenderText() {
 
 function handleCanvasText(e, state) {
   let layout = adTypes[state.category].layouts[state.selectedLayout];
-  ctx.font = `${layout.textSize * scale}px Arial`;
+  ctx.font = `bold ${layout.textSize * scale}px Object Sans`;
   let words = e.target.value.split(' ');
   let lines = [];
   let currentLine = '';
