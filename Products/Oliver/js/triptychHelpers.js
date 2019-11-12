@@ -6,14 +6,14 @@ let adTypes = {
         imagePosition: [12, 12, 268, 201],
         textPosition: [300, 100],
         textMaxWidth: 340,
-        textSize: 36,
+        textSize: 40,
         maxLines: 3,
         preview: '/assets/ad_preview.svg',
       },
       {
         hasImage: false,
-        textPosition: [12, 72],
-        textMaxWidth: 616,
+        textPosition: [20, 100],
+        textMaxWidth: 608,
         textSize: 48,
         maxLines: 3,
         preview: '/assets/ad_preview.svg',
@@ -27,14 +27,14 @@ let adTypes = {
         imagePosition: [12, 12, 268, 201],
         textPosition: [300, 100],
         textMaxWidth: 340,
-        textSize: 36,
+        textSize: 40,
         maxLines: 3,
         preview: '/assets/ad_preview.svg',
       },
       {
         hasImage: false,
-        textPosition: [12, 72],
-        textMaxWidth: 616,
+        textPosition: [20, 100],
+        textMaxWidth: 608,
         textSize: 48,
         maxLines: 3,
         preview: '/assets/ad_preview.svg',
@@ -48,14 +48,14 @@ let adTypes = {
         imagePosition: [12, 12, 268, 201],
         textPosition: [300, 100],
         textMaxWidth: 340,
-        textSize: 36,
+        textSize: 40,
         maxLines: 3,
         preview: '/assets/ad_preview.svg',
       },
       {
         hasImage: false,
-        textPosition: [12, 72],
-        textMaxWidth: 616,
+        textPosition: [20, 100],
+        textMaxWidth: 608,
         textSize: 48,
         maxLines: 3,
         preview: '/assets/ad_preview.svg',
@@ -148,6 +148,7 @@ function handleCanvasText(e, state) {
       0,
       text.length - 1,
     );
+    reRenderText();
     return;
   }
   drawImage(null, state);
