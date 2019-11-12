@@ -89,6 +89,10 @@ try {
 
     if($verb == 'POST' || $verb == 'PUT') {
       $action = 'create';
+    } else {
+      if($func === 'screens') {
+        $all['removed'] = 0;
+      }
     }
     post_return($action($table, $all));
   }
