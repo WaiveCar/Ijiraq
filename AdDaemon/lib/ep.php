@@ -89,11 +89,7 @@ try {
 
     if($verb == 'POST' || $verb == 'PUT') {
       $action = 'create';
-    } else {
-      if($func === 'screens') {
-        $all['removed'] = aget($all, 'removed', 0);
-      }
-    }
+    } 
     post_return($action($table, $all));
   }
   else if(array_search($func, [
