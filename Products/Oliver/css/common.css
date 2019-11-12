@@ -299,7 +299,7 @@ body {
   color: #cccccc;
 }
 
-@media(max-width: 1000px) {
+@media(max-width: 1100px) {
   .top-bar-left {
     margin-right: 1rem;
   }

@@ -364,6 +364,14 @@
     });
   }
 
+  function infoPage(state) {
+    return `
+      <div>
+        Info
+      </div>
+    `
+  }
+
   function summaryPage(state) {
     return state.finalImageSrc
       ? `
@@ -436,14 +444,16 @@
   }
 
   function cardFormFields(fields) {
-    return fields.map(
-      field =>
-        `
+    return fields
+      .map(
+        field =>
+          `
           <div>
             <input type="text" placeholder="${field[1]}" name="${field[0]}">
           </div>
         `,
-    ).join('');
+      )
+      .join('');
   }
 
   function paymentPage(state) {
@@ -510,6 +520,7 @@
     },
     {html: layoutPage, title: 'Layout', loadFunc: layoutLoad},
     {html: adCreatePage, title: 'Edit', loadFunc: adCreateLoad},
+    {html: infoPage, title: 'Info'},
     {html: summaryPage, title: 'Summary'},
     {html: paymentPage, title: 'Payment', loadFunc: attachSubmit},
   ];
@@ -519,16 +530,16 @@
   let nextBtn = document.querySelector('#next-btn');
 
   self.doMap = function() {
-    var center = [-118.33,34.09];
+    var center = [-118.33, 34.09];
     self._map = map({
       selectFirst: true,
       draw: false,
       resize: false,
       zoom: 11,
-      center
+      center,
     });
-    _map.load([["Circle",center,2500]]);
-  }
+    _map.load([['Circle', center, 2500]]);
+  };
 
   self.clearmap = () => _map.clear();
   self.removeShape = () => _map.removeShape();
