@@ -1135,7 +1135,7 @@ function infer() {
       }
       $avg = $v1[1]/$v1[0];
       if(
-        $v1[0] / $ttl < 0.45 ||
+        $v1[0] / $ttl < 0.40 ||
         // this tries to fix stuck gps
         ($avg > 5000 && $ttl > 3 && $v1[0] / $ttl < 0.80) || $ttl < 3
       ) {
