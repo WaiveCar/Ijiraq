@@ -1110,6 +1110,7 @@ function infer() {
     $ttl = $val['ttl'];
     $xref[$key]['current'] = null;
     if (strlen($key) < 10) {
+      $xref[$key]['type'] = 'car';
       $current = Get::screen([
         'removed' => 0,
         'car' => ['like' => $key ]
@@ -1119,6 +1120,7 @@ function infer() {
         $xref[$key]['version'] = $current['version'];
       } 
     } else {
+      $xref[$key]['type'] = 'screen';
       $current = Get::screen(['uid' => $key]);
       if($current) {
         $xref[$key]['current'] = $current['car'];
