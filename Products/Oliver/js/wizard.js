@@ -13,6 +13,7 @@
     keywords: [],
     imageSrc: null,
     finalImageSrc: null,
+    description: '',
   };
   let state = {};
   let categoryTips = {
@@ -340,6 +341,12 @@
         <div class="keywords d-flex justify-content-center mt-2">
           ${renderKeywords()}
         </div>
+        <div class="desciption mt-4 d-flex justify-content-center">
+          <textarea class="triptych-text" placeholder="${state.description ||
+            'Please enter a brief description of your notice'}"
+            oninput="setState.call(this, {'description': event.target.value})"  
+          ></textarea>
+        </div>
       </div>
     `;
   }
@@ -360,7 +367,6 @@
       }
     };
   }
-
 
   function renderKeywords() {
     return state.keywords
