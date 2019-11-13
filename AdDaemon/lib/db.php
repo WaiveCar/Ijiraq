@@ -539,7 +539,7 @@ class Get {
         $kvargs[] = $value;
       } else {
         if(is_array($value)) {
-          $kvargs[] = "$key like " . db_string('%' . $value['like'] . '%');
+          $kvargs[] = "$key like " . db_string('%' . $value['like']);
         } else {
           if(is_string($value)) {
             $value = db_string($value);
