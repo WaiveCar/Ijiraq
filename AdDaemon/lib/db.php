@@ -268,9 +268,35 @@ $SCHEMA = [
 
     'start_minute'=> 'integer default null',
     'end_minute'  => 'integer default null',
-    'is_active'   => 'boolean default false',
     'is_approved' => 'boolean default false',
     'is_default'  => 'boolean default false',
+    // essentially this one of 
+    //
+    //  active, approved, pending, completed, or rejected
+    //
+    //  We'll explain it in a set of valid "next states", as a DFA (https://en.wikipedia.org/wiki/Deterministic_finite_automaton)
+    //
+    //  Current      Next      | Fail case
+    //
+    //  START     -> Approved  | Pending 
+    //  Pending   -> Approved  | Rejected 
+    //  Approved  -> Active    | Pending 
+    //  Active    -> Completed | Pending 
+    //  Completed -> END
+    //  Rejected  -> END
+    //
+    // Only campaigns in an "active" state are shown on the screens and for now, Completed and Rejected are the two terminal outcomes.
+    // Campaigns can enter in either Approved or Pending. 
+    //
+    // The Approved -> Active transition happens as the user specifies through a start date.
+    // At any point an admin can "move" the state back to pending which then could be rejected.
+    // If it goes back into approved then there will be something that reactivates it accordingly,
+    // some thing like "make_active_if_applicable($id)"...
+    //
+    // These interim states and consequentially a model with fewer transition edges, should make 
+    // the code a little easier.
+    //
+    'state'       => 'text default null',
 
     'priority'    => 'integer default 0',
     'impression_count' => 'integer',
