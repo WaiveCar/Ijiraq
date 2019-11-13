@@ -338,17 +338,20 @@
           <input type="text" placeholder="Add Keywords">
           <button class="btn add-keyword">Add</button>
         </div>
-        <div class="keywords d-flex justify-content-center mt-2">
+        <div class="keywords d-flex justify-content-center mt-3">
           ${renderKeywords()}
         </div>
-        <div class="desciption mt-4 d-flex justify-content-center">
-          <textarea class="triptych-text" placeholder="${state.description ||
-            'Please enter a brief description of your notice'}"
+        <div class="mt-3 d-flex justify-content-center">
+          <textarea class="description triptych-text" value="${state.description || null}"
+            placeholder="Please enter a brief description of your notice"
             oninput="setState.call(this, {'description': event.target.value})"  
           ></textarea>
         </div>
       </div>
     `;
+    // Need to add in: Address, Phone, Email, for business, radio to select preferred contact
+    // Also need to add a place for a user to select if the notice is in one of the restricted categories
+    // Also need to make sure the layout looks better than it currently does
   }
 
   function infoLoad() {

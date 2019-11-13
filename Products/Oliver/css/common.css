@@ -796,7 +796,6 @@ select.form-control:focus,
 .keyword-input input {
   width: 60%;
 }
-
 .layout-selection {
   width: 80%;
 }
@@ -1048,5 +1047,12 @@ h4 {
   .summary-preview {
     margin-bottom: 2rem;
   }
+}
+
+.description {
+  height: 6rem;
+}
+.description {
+  height: 5rem;
 }
 
