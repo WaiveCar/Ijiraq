@@ -11,6 +11,13 @@ for($ix = 0; $ix < count($campaignList); $ix++){
   $campaignList[$ix]['addr'] = $addrList[$ix];
 }
 
+$campaigns = [
+  'active' => array_filter($campaignList, function($row) { return $row['is_active'] ; }),
+  'pending' => array_filter($campaignList, function($row) { return $row['is_active'] ; }),
+  'completed' => array_filter($campaignList, function($row) { return $row['is_active'] ; }),
+  'rejected' => array_filter($campaignList, function($row) { return $row['is_active'] ; })
+];
+
 $screenList = get('screens', ['removed' => 0, 'active' => 1]);
 $width = 450;
 $height = $width * 675 / 1920;
