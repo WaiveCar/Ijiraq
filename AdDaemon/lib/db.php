@@ -36,7 +36,9 @@ $RULES = [
   'screen' => [
     'features' => $JSON,
     'panels' => $JSON,
-    'location' => $JSON
+    'location' => $JSON,
+    'last_uptime' => $JSON,
+    'last_task_result' => $JSON
   ]
 ];
 
@@ -111,6 +113,8 @@ $SCHEMA = [
     'last_task'   => 'integer default 0',
     'last_loc'    => 'datetime',
     'last_seen'   => 'datetime',
+    'last_task_result'  => 'text',
+    'last_uptime'  => 'text',
 
     'ignition_state' => 'text',
     'ignition_time' => 'datetime'
