@@ -361,6 +361,19 @@
               ],
               true,
             )}
+            <div>
+              ${['email', 'phone', 'text'].map(
+                type =>
+                  `
+                  <input type="radio" 
+                    id="prefer-${type}" 
+                    name="preferredContact" 
+                    oninput="setState({preferredContact: '${type}'})"
+                  >
+                  <label for="prefer-${type}">${capitalize(type)}</label>
+                `,
+              ).join('')}
+            </div>
           </div>
           <div class="inner-payment">
             <h4>

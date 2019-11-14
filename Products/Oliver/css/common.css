@@ -768,7 +768,7 @@ select.form-control:focus,
   margin: 0 1rem;
 }
 
-.payment-holder input {
+.payment-holder input[type=text] {
   margin: 0.4rem 0;
   width: 100%;
 }
