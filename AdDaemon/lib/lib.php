@@ -416,7 +416,7 @@ function ping($payload) {
       if(!$last_uptime) {
         $opts['uptime'] = floatval(aget($obj,'last_uptime.0'));
         $opts['booted_at'] = "datetime(" . db_string(aget($obj,'last_uptime.1')) . ")";
-        db_insert('last_uptime', $opts);
+        db_insert('runtime_history', $opts);
       }
     }
 
