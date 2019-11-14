@@ -406,7 +406,7 @@ function ping($payload) {
     $screen = Get::screen(['uid' => $payload['uid']]);
 
     if(isset($obj['last_uptime'])) {
-      $bc = intval($obj['bootcount']) - 1;
+      $bc = intval($payload['bootcount']) - 1;
       $opts = [
         'screen_id' => $screen['id'],
         'bootcount' => $bc
