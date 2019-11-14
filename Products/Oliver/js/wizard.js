@@ -353,7 +353,7 @@
             <h4>
               Contact
             </h4>
-            ${cardFormFields(
+            ${formFields(
               [
                 ['businessName', 'Business Name'],
                 ['phone', 'Phone'],
@@ -361,16 +361,21 @@
               ],
               true,
             )}
-            <div>
+            <h4 class="mt-2">
+              Preferred Contact
+            </h4>
+            <div class="d-flex justify-content-around">
               ${['email', 'phone', 'text'].map(
                 type =>
                   `
-                  <input type="radio" 
-                    id="prefer-${type}" 
-                    name="preferredContact" 
-                    oninput="setState({preferredContact: '${type}'})"
-                  >
-                  <label for="prefer-${type}">${capitalize(type)}</label>
+                  <div>
+                    <input type="radio" 
+                      id="prefer-${type}" 
+                      name="preferredContact" 
+                      oninput="setState({preferredContact: '${type}'})"
+                    >
+                    <label for="prefer-${type}">${capitalize(type)}</label>
+                  </div>
                 `,
               ).join('')}
             </div>
@@ -379,7 +384,7 @@
             <h4>
               Business Address
             </h4>
-            ${cardFormFields(
+            ${formFields(
               [
                 ['businessStreet', 'Street'],
                 ['businessCity', 'City'],
@@ -412,6 +417,24 @@
         keywordInput.value = '';
       }
     };
+  }
+
+  function formFields(fields, addOnInput) {
+    return fields
+      .map(
+        field => `
+          <div>
+            <input type="text" placeholder="${field[1]}" name="${field[0]}" ${
+          addOnInput
+            ? `oninput="setState({${field[0]}: this.value})" value=${state[
+                field[0]
+              ] || ''}`
+            : ''
+        }>
+          </div>
+        `,
+      )
+      .join('');
   }
 
   function renderKeywords() {
@@ -498,23 +521,6 @@
     `;
   }
 
-  function cardFormFields(fields, addOnInput) {
-    return fields
-      .map(
-        field => `
-          <div>
-            <input type="text" placeholder="${field[1]}" name="${field[0]}" ${
-          addOnInput
-            ? `oninput="setState({${field[0]}: this.value})" value=${state[
-                field[0]
-              ] || ''}`
-            : ''
-        }>
-          </div>
-        `,
-      )
-      .join('');
-  }
 
   function paymentPage(state) {
     return `
@@ -528,7 +534,7 @@
               <h4>
                 Card
               </h4>
-              ${cardFormFields([
+              ${formFields([
                 ['name', 'Name on Card'],
                 ['number', 'Card Number'],
                 ['expiration', 'Expiration'],
@@ -539,7 +545,7 @@
               <h4>
                 Billing Address
               </h4>
-              ${cardFormFields([
+              ${formFields([
                 ['street', 'Street'],
                 ['city', 'City'],
                 ['state', 'State'],
