@@ -361,7 +361,7 @@ function record_screen_on($screen, $payload) {
 
     if(isset($payload['uptime'])) {
       $first = date('Y-m-d H:i:s', strtotime('now - ' . intval($payload['uptime']) . ' seconds'));
-      $opt['created_at'] = "datetime('$first')";
+      $opt['booted_at'] = "datetime('$first')";
     }
 
     if(isset($screen['lat'])) {
@@ -384,6 +384,7 @@ function ping($payload) {
     'uptime', 'features',                              // >v0.2-Bakeneko-384-g4e32e37
     'last_task',                                       // >v0.2-Bakeneko-623-g8989622
     'location', 'location.Lat', 'location.Lng',        // >v0.3-Chukwa-473-g725fa2c
+    'last_uptime', 'last_task_result'                  // >v0.3-Chukwa-1316-g3b791be5-master
   ] as $key) {
     $val = aget($payload, $key);
 
@@ -398,9 +399,40 @@ function ping($payload) {
     }
   }
 
+
   if(isset($payload['uid'])) {
     $uid = db_string($payload['uid']);
+
     $screen = Get::screen(['uid' => $payload['uid']]);
+
+    if(isset($obj['last_uptime'])) {
+      $bc = intval($obj['bootcount']) - 1;
+      $opts = [
+        'screen_id' => $screen['id'],
+        'bootcount' => $bc
+      ];
+
+      $last_uptime = Get::runtime_history($opts);
+      if(!$last_uptime) {
+        $opts['uptime'] = floatval(aget($obj,'last_uptime.0'));
+        // BUGBUG: sql injection hole.
+        $opts['booted_at'] = "datetime(" . aget($obj,'last_uptime.1') . ")";
+        db_insert('last_uptime', $opts);
+      }
+    }
+
+    if(isset($obj['last_task_result'])) {
+      $opts = [
+        'screen_id' => $screen['id'],
+        'task_id' => intval(aget($obj, 'last_task_result.0'))
+      ];
+      $last_task = Get::task_response($opts);
+      if(!$last_task) {
+        $opts['response'] = db_string(aget($obj,'last_task_result.1'));
+        $opts['ran_at'] = 'datetime(' . aget($obj,'last_task_result.2') . ")";
+        db_insert('task_response', $opts);
+      }
+    }
 
     if(!isset($payload['uptime'])) {
       error_log("Uptime not known for " . $payload['uid']);

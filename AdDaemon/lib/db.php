@@ -379,9 +379,19 @@ $SCHEMA = [
     'task_id'     => 'integer',
     'screen_id'   => 'integer',
     'response'    => 'text',
+    'ran_at'      => 'datetime default current_timestamp',
     'created_at'  => 'datetime default current_timestamp',
   ],
     
+  'runtime_history' => [
+    'id'          => 'integer primary key autoincrement',
+    'screen_id'   => 'integer',
+    'bootcount'   => 'integer',
+    'uptime'      => 'integer',
+    'booted_at'   => 'datetime default current_timestamp',
+    'created_at'  => 'datetime default current_timestamp'
+  ],
+
   'uptime_history' => [
     'id'          => 'integer primary key autoincrement',
     // either the carname (eg waive43) or uid
