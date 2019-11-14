@@ -361,7 +361,7 @@ function record_screen_on($screen, $payload) {
 
     if(isset($payload['uptime'])) {
       $first = date('Y-m-d H:i:s', strtotime('now - ' . intval($payload['uptime']) . ' seconds'));
-      $opt['booted_at'] = "datetime('$first')";
+      $opt['created_at'] = "datetime('$first')";
     }
 
     if(isset($screen['lat'])) {
