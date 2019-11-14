@@ -342,7 +342,8 @@
           ${renderKeywords()}
         </div>
         <div class="mt-3 d-flex justify-content-center">
-          <textarea class="description triptych-text" value="${state.description || null}"
+          <textarea class="description triptych-text" value="${state.description ||
+            null}"
             placeholder="Please enter a brief description of your notice"
             oninput="setState.call(this, {'description': event.target.value})"  
           ></textarea>
@@ -352,22 +353,28 @@
             <h4>
               Contact
             </h4>
-            ${cardFormFields([
-              ['businessName', 'Business Name'],
-              ['phone', 'Phone'],
-              ['email', 'E-mail'],
-            ])}
+            ${cardFormFields(
+              [
+                ['businessName', 'Business Name'],
+                ['phone', 'Phone'],
+                ['email', 'E-mail'],
+              ],
+              true,
+            )}
           </div>
           <div class="inner-payment">
             <h4>
               Business Address
             </h4>
-            ${cardFormFields([
-              ['businessStreet', 'Street'],
-              ['businessCity', 'City'],
-              ['businessState', 'State'],
-              ['businessZip', 'Zip Code'],
-            ])}
+            ${cardFormFields(
+              [
+                ['businessStreet', 'Street'],
+                ['businessCity', 'City'],
+                ['businessState', 'State'],
+                ['businessZip', 'Zip Code'],
+              ],
+              true,
+            )}
           </div>
         </form>
       </div>
@@ -478,13 +485,18 @@
     `;
   }
 
-  function cardFormFields(fields) {
+  function cardFormFields(fields, addOnInput) {
     return fields
       .map(
-        field =>
-          `
+        field => `
           <div>
-            <input type="text" placeholder="${field[1]}" name="${field[0]}">
+            <input type="text" placeholder="${field[1]}" name="${field[0]}" ${
+          addOnInput
+            ? `oninput="setState({${field[0]}: this.value})" value=${state[
+                field[0]
+              ] || ''}`
+            : ''
+        }>
           </div>
         `,
       )
