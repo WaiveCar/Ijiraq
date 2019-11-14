@@ -347,6 +347,29 @@
             oninput="setState.call(this, {'description': event.target.value})"  
           ></textarea>
         </div>
+        <form class="payment-holder">
+          <div class="inner-payment">
+            <h4>
+              Contact
+            </h4>
+            ${cardFormFields([
+              ['businessName', 'Business Name'],
+              ['phone', 'Phone'],
+              ['email', 'E-mail'],
+            ])}
+          </div>
+          <div class="inner-payment">
+            <h4>
+              Business Address
+            </h4>
+            ${cardFormFields([
+              ['businessStreet', 'Street'],
+              ['businessCity', 'City'],
+              ['businessState', 'State'],
+              ['businessZip', 'Zip Code'],
+            ])}
+          </div>
+        </form>
       </div>
     `;
     // Need to add in: Address, Phone, Email, for business, radio to select preferred contact
@@ -485,7 +508,6 @@
                 ['number', 'Card Number'],
                 ['expiration', 'Expiration'],
                 ['cvv', 'Security Code'],
-                ['company', 'Company'],
               ])}
             </div>
             <div class="inner-payment">
@@ -497,7 +519,6 @@
                 ['city', 'City'],
                 ['state', 'State'],
                 ['zip', 'Zip Code'],
-                ['phone', 'Phone'],
               ])}
             </div>
           </div>
