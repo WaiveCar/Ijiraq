@@ -415,8 +415,7 @@ function ping($payload) {
       $last_uptime = Get::runtime_history($opts);
       if(!$last_uptime) {
         $opts['uptime'] = floatval(aget($obj,'last_uptime.0'));
-        // BUGBUG: sql injection hole.
-        $opts['booted_at'] = "datetime(" . aget($obj,'last_uptime.1') . ")";
+        $opts['booted_at'] = "datetime(" . db_string(aget($obj,'last_uptime.1')) . ")";
         db_insert('last_uptime', $opts);
       }
     }
@@ -429,7 +428,7 @@ function ping($payload) {
       $last_task = Get::task_response($opts);
       if(!$last_task) {
         $opts['response'] = db_string(aget($obj,'last_task_result.1'));
-        $opts['ran_at'] = 'datetime(' . aget($obj,'last_task_result.2') . ")";
+        $opts['ran_at'] = 'datetime(' . db_string(aget($obj,'last_task_result.2')) . ")";
         db_insert('task_response', $opts);
       }
     }
