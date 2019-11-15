@@ -1047,6 +1047,9 @@ h4 {
   .summary-preview {
     margin-bottom: 2rem;
   }
+  .checkboxes {
+    width: 100%;
+  }
 }
 
 .description {
@@ -1056,3 +1059,6 @@ h4 {
   height: 5rem;
 }
 
+.checkboxes {
+  width: 60%;
+}

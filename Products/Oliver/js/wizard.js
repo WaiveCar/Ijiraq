@@ -24,6 +24,7 @@
 
   window.setState = function(updateObj) {
     Object.assign(state, updateObj);
+    console.log('state', state);
     localStorage.setItem('savedState', JSON.stringify(state));
   };
 
@@ -341,14 +342,7 @@
         <div class="keywords d-flex justify-content-center mt-3">
           ${renderKeywords()}
         </div>
-        <div class="mt-3 d-flex justify-content-center">
-          <textarea class="description triptych-text" value="${state.description ||
-            null}"
-            placeholder="Please enter a brief description of your notice"
-            oninput="setState.call(this, {'description': event.target.value})"  
-          ></textarea>
-        </div>
-        <form class="payment-holder">
+        <div class="payment-holder mt-4">
           <div class="inner-payment">
             <h4>
               Contact
@@ -365,19 +359,22 @@
               Preferred Contact
             </h4>
             <div class="d-flex justify-content-around">
-              ${['email', 'phone', 'text'].map(
-                type =>
-                  `
+              ${['email', 'phone', 'text']
+                .map(
+                  type =>
+                    `
                   <div>
                     <input type="radio" 
                       id="prefer-${type}" 
                       name="preferredContact" 
                       oninput="setState({preferredContact: '${type}'})"
+                      ${state.preferredContact === type ? 'checked' : ''}
                     >
                     <label for="prefer-${type}">${capitalize(type)}</label>
                   </div>
                 `,
-              ).join('')}
+                )
+                .join('')}
             </div>
           </div>
           <div class="inner-payment">
@@ -394,12 +391,45 @@
               true,
             )}
           </div>
-        </form>
+        </div>
+        <div>
+          <h4 class="text-center mt-4">
+            Does your notice contain any of the following restricted content types?
+          </h4>
+          <div class="d-flex justify-content-center mt-4">
+            <div class="d-flex justify-content-around checkboxes">
+              ${[
+                ['adultContent', 'Adult Content'],
+                ['marijuana', 'Marijuana'],
+                ['alcohol', 'Alcohol'],
+              ]
+                .map(
+                  ([propName, item]) => `
+                    <div>
+                      <input
+                        id="checkbox-${propName}"
+                        name="checkbox-${propName}"
+                        type="checkbox"
+                        ${state[propName] ? 'checked' : ''}
+                        oninput="setState({${propName}: this.checked})"
+                      />
+                      <label for="checkbox-${propName}">${item}</label>
+                    </div>
+                  `,
+                )
+                .join('')}
+            </div>
+          </div>
+        </div>
+        <div class="mt-3 d-flex justify-content-center">
+          <textarea class="description triptych-text" value="${state.description ||
+            null}"
+            placeholder="Please enter a brief description of your notice"
+            oninput="setState.call(this, {'description': event.target.value})"  
+          ></textarea>
+        </div>
       </div>
     `;
-    // Need to add in: Address, Phone, Email, for business, radio to select preferred contact
-    // Also need to add a place for a user to select if the notice is in one of the restricted categories
-    // Also need to make sure the layout looks better than it currently does
   }
 
   function infoLoad() {
@@ -520,7 +550,6 @@
       </div>
     `;
   }
-
 
   function paymentPage(state) {
     return `
