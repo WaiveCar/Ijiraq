@@ -584,7 +584,7 @@
           </div>
         </form>
         <div class="d-flex justify-content-center">
-          <button class="btn add-keyword buy-btn">Complete</button>
+          <button class="btn add-keyword buy-btn">Complete Purchase</button>
         </div>
       </div>`;
   }
@@ -696,7 +696,9 @@
       data[item.name] = item.value;
     }
     Object.assign(data, state);
-    console.log('Submitting: ', data);
+    axios.post('/buy', data)
+      .then(response => console.log('response', response))
+      .catch(e => console.log('error buying', e));
   }
 
   window.onpopstate = function() {
