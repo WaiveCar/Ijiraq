@@ -696,6 +696,7 @@
       data[item.name] = item.value;
     }
     Object.assign(data, state);
+    data.file1 = data.finalImageSrc
     axios.post('/buy', data)
       .then(response => console.log('response', response))
       .catch(e => console.log('error buying', e));

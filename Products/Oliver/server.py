@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import logging
 from flask import Flask, send_from_directory, render_template, request
+from requests import post
+import json
 import os
 import random
 
@@ -10,8 +12,16 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 @app.route('/buy', methods=['POST'])
 def buy():
-    print(request)
-    return "Buying notice"
+    json = request.get_json()
+    try:
+        response = post (
+            'http://staging.waivescreen.com/api/campaign',
+            data=json
+        )
+        print('post response', response.json())
+    except Exception as e:
+        print('error', e)
+    return 'Buying notice'
 
 
 @app.route('/<path:path>')
