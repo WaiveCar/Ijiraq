@@ -24,7 +24,6 @@
 
   window.setState = function(updateObj) {
     Object.assign(state, updateObj);
-    console.log('state', state);
     localStorage.setItem('savedState', JSON.stringify(state));
   };
 
@@ -124,19 +123,12 @@
           </div>
         </div>
 
-        <div class="row mb-4">
+        <div class="row">
           <div class="col-lg-12">
             <div class="card">
-              <div class="card-body">
-
-                <div style='width:100%;height:40vw' id='map'></div>
-              </div>
+              <div id="map"></div>
             </div>
           </div>
-        </div>
-
-        <div class="location-input d-flex justify-content-center">
-          <input type="text" placeholder="specify a city, town or zip code">
         </div>
       </div>
     `;

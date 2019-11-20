@@ -967,6 +967,11 @@ h4 {
   margin-top: 4rem;
 }
 
+#map {
+  width: 100%;
+  height: 42vh;
+}
+
 @media (max-width: 768px) {
   .right-inputs {
     width: inherit;
@@ -1050,6 +1055,9 @@ h4 {
   .checkboxes {
     width: 100%;
   }
+  #map {
+    height: 50vh;
+  } 
 }
 
 .description {
