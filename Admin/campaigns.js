@@ -1,4 +1,5 @@
 var _id, _campaign;
+
 $(function() {
   $("#editModal").on('shown.bs.modal', function() {
     if(!self._map){ 

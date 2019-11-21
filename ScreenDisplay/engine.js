@@ -128,9 +128,11 @@ var Engine = function(opts){
   }
 
   function event(what, data) {
+    console.log(">>> event", what, data);
     _res.data[what] = data;
     if(_res.listeners[what]) {
       _res.listeners[what].forEach(cb => cb(data))
+      _res.listeners[what] = _res.listeners[what].filter(cb => !cb.once);
     }
   }
   function on(what, cb) {
@@ -141,6 +143,7 @@ var Engine = function(opts){
       _res.listeners[what] = [];
     }
     _res.listeners[what].push(cb);
+    return cb;
   }
 
   function assetError(obj, e) {
@@ -841,7 +844,7 @@ var Engine = function(opts){
     Strategy.current = what;
     Strategy[what].enable();
     // Make sure we don't try anything until we get a default
-    on('system', _res.NextJob);
+    on('system', _res.NextJob).once = true;
   };
 
   Strategy.Oliver = (function( ) {
@@ -927,9 +930,11 @@ var Engine = function(opts){
         // This means we've really fucked up somehow
         doReplace = true;
         setNextJob(_.fallback);
+
         // Force the topics off for now.
         render(true);
-        nextTopic();
+
+        // nextAsset is at the bottom
       } else {
         console.log(topicMap, current, jobIx, topicList);
         
