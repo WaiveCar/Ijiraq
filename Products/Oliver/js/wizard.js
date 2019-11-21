@@ -710,9 +710,6 @@
         formData.append('file1', dataURLtoBlob(state[field]));
       }
     }
-    for (let field of formData.entries()) {
-      console.log(field[0], ': ', field[1]);
-    }
     axios({
       method: 'post',
       url: '/buy',
