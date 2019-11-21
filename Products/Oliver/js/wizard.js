@@ -688,6 +688,18 @@
     setState(initialState);
   }
 
+  function dataURLtoBlob(dataurl) {
+    let arr = dataurl.split(','),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type: mime});
+  }
+
   function submit() {
     let form = document.querySelector('.payment-form').elements;
     let data = {};
@@ -696,8 +708,20 @@
       data[item.name] = item.value;
     }
     Object.assign(data, state);
-    data.file1 = data.finalImageSrc
-    axios.post('/buy', data)
+    data.file1 = dataURLtoBlob(data.finalImageSrc);
+    delete data.finalImageSrc;
+    let formData = new FormData();
+    for (let field in data) {
+      formData.append(field, data[field]);
+    }
+    axios({
+      method: 'post',
+      url: 'http://staging.waivescreen.com/api/campaign',
+      data: formData,
+      config: {
+        headers: {'Content-Type': 'multipart/form-data'},
+      },
+    })
       .then(response => console.log('response', response))
       .catch(e => console.log('error buying', e));
   }
