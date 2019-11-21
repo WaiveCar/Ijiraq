@@ -569,7 +569,8 @@
                 Billing Address
               </h4>
               ${formFields([
-                ['street', 'Street'],
+                ['street1', 'Address Line 1'],
+                ['street2', 'Address Line 2'],
                 ['city', 'City'],
                 ['state', 'State'],
                 ['zip', 'Zip Code'],
