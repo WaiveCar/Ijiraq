@@ -104,13 +104,8 @@ $height = $width * 675 / 1920;
                     </div>
                   </div>
                   <? 
-                    if ($campaign['active']) {
-                      $word = 'active';
-                      $style = 'info'; 
-                    } else {
-                      $word = 'inactive';
-                      $style = 'light';
-                    }
+                    $word = $campaign['state'];
+                    $style = $word == 'active' ? 'info' : 'light'; 
                   ?>
                   <h3><span class="badge badge-<?=$style?>" style=margin-left:1rem><?= $word ?></span>
                   <? 
