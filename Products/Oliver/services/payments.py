@@ -13,11 +13,11 @@ stripe.api_key = config['secret']
 # The function below will be what is used to actually charge users for an ad. 
 # I am going to add an outline of additional logic that will need to be here once 
 # this code is incorporated into the server
-def charge_for_notice(user_id, email, card, amount, ad_id):
+def charge_for_notice(email, card, amount, ad_id):
   try:
     # First, a user will be checked for a stripe_id. If no stripe_id is present,
     # create_customer will need to be called
-    customer = create_customer(user_id, email)
+    customer = create_customer(email)
     # Then, we will need to check if a user has a card in stripe already or if they 
     # provided one with this request. If neither, we need to create a card in stripe 
     # as below
@@ -31,9 +31,9 @@ def charge_for_notice(user_id, email, card, amount, ad_id):
   except Exception as e:
     raise e
 
-def create_customer(user_id, email):
+def create_customer(email):
   try: 
-    return stripe.Customer.create(description='Stripe customer for Oliver with id {} and email {}'.format(user_id, email))
+    return stripe.Customer.create(description='Stripe customer for Oliver with email {}'.format(email))
   except Exception as e:
     raise e
 
@@ -103,5 +103,3 @@ def refund_charge(charge_id, amount=None):
     )
   except Exception as e:
     raise e
-  
-

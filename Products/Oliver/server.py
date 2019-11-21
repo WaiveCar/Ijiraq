@@ -20,7 +20,6 @@ def buy():
             data=data
         )
         charge = charge_for_notice(
-           None,
            data.get('email'),
            {
                 'card_number': data.get('number'),
