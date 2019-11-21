@@ -722,7 +722,7 @@
       },
     })
       .then(response => console.log('response', response))
-      .catch(e => console.log('error buying', e));
+      .catch(e => console.log('error buying', e.response));
   }
 
   window.onpopstate = function() {

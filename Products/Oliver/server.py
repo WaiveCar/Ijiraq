@@ -34,9 +34,8 @@ def buy():
         )
         return 'Notice Purchase Complete'
     except Exception as e:
-        print('error', e)
-        return 'Notice purchase failed: {}'.format(e)
-
+        print('Error', e.error.message)
+        return e.error.message, 400
 
 @app.route('/<path:path>')
 def serve(path):

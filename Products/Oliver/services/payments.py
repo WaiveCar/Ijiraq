@@ -29,22 +29,19 @@ def charge_for_notice(user_id, email, card, amount, ad_id):
         'Charge for Oliver ad #{} for user with email {}'.format(ad_id, email)
     )
   except Exception as e:
-    print('Error charging user', e)
-    raise Exception
+    raise e
 
 def create_customer(user_id, email):
   try: 
     return stripe.Customer.create(description='Stripe customer for Oliver with id {} and email {}'.format(user_id, email))
   except Exception as e:
-    print('Error creating user', e)
-    raise Exception
+    raise e
 
 def retrieve_cards_for_user(stripe_id):
   try: 
     return stripe.Customer.list_sources(stripe_id)
   except Exception as e:
-    print('Error retrieving cards', e)
-    raise Exception
+    raise e
 
 def create_card(stripe_id, card):
   try: 
@@ -60,8 +57,7 @@ def create_card(stripe_id, card):
       },  
     )
   except Exception as e:
-    print('Error adding new card', e)
-    raise Exception
+    raise e
 
 def update_card(stripe_id, card_id, update_obj):
   try: 
@@ -71,8 +67,7 @@ def update_card(stripe_id, card_id, update_obj):
       metadata=update_obj,
     )
   except Exception as e:
-    print('Error upadating card', e)
-    raise Exception
+    raise e
 
 def delete_card(stripe_id, card_id):
   try: 
@@ -81,8 +76,7 @@ def delete_card(stripe_id, card_id):
       card_id,
     )
   except Exception as e:
-    print('Error deleting card', e)
-    raise Exception
+    raise e
 
 def create_charge(customer_id, amount, description):
   try: 
@@ -93,15 +87,13 @@ def create_charge(customer_id, amount, description):
         description=description,
     )
   except Exception as e:
-    print('Error creating charge', e)
-    raise Exception
+    raise e
 
 def list_charges_by_user(stripe_id):
   try:
     return stripe.Charge.list(customer=stripe_id)
   except Exception as e:
-    print('Error retrieving charges', e)
-    raise Exception
+    raise e
 
 def refund_charge(charge_id, amount=None):
   try:
@@ -110,12 +102,6 @@ def refund_charge(charge_id, amount=None):
       amount=amount,
     )
   except Exception as e:
-    print('Error refunding charge', e)
-    raise Exception
+    raise e
   
 
-#print(charge_for_ad(1, 'daleighan@gmail.com', {'card_number': '4242424242424242', 'exp_month': 1, 'exp_year': 2021, 'cvc': 111}, 1000, 1))
-#print(retrieve_cards_for_user('cus_G0OgG30WYANHBs'))
-#print(update_card('cus_G0OgG30WYANHBs', 'card_1FUNsxHjZj603nmB4Cp2KNST', {'exp_month': 5}))
-#print(refund_charge('ch_1FUNsyHjZj603nmBHhEzZDOs'))
-#print(list_charges_by_user('cus_G0OgG30WYANHBs'))
