@@ -13,7 +13,7 @@ stripe.api_key = config['secret']
 # The function below will be what is used to actually charge users for an ad. 
 # I am going to add an outline of additional logic that will need to be here once 
 # this code is incorporated into the server
-def charge_for_ad(user_id, email, card, amount, ad_id):
+def charge_for_notice(user_id, email, card, amount, ad_id):
   try:
     # First, a user will be checked for a stripe_id. If no stripe_id is present,
     # create_customer will need to be called
@@ -26,8 +26,6 @@ def charge_for_ad(user_id, email, card, amount, ad_id):
     return create_charge(
         customer.id, 
         amount, 
-        ad_id, 
-        email, 
         'Charge for Oliver ad #{} for user with email {}'.format(ad_id, email)
     )
   except Exception as e:
@@ -86,7 +84,7 @@ def delete_card(stripe_id, card_id):
     print('Error deleting card', e)
     raise Exception
 
-def create_charge(customer_id, amount, descirption):
+def create_charge(customer_id, amount, description):
   try: 
     return stripe.Charge.create(
         amount=amount, 
@@ -120,4 +118,4 @@ def refund_charge(charge_id, amount=None):
 #print(retrieve_cards_for_user('cus_G0OgG30WYANHBs'))
 #print(update_card('cus_G0OgG30WYANHBs', 'card_1FUNsxHjZj603nmB4Cp2KNST', {'exp_month': 5}))
 #print(refund_charge('ch_1FUNsyHjZj603nmBHhEzZDOs'))
-print(list_charges_by_user('cus_G0OgG30WYANHBs'))
+#print(list_charges_by_user('cus_G0OgG30WYANHBs'))

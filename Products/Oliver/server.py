@@ -2,6 +2,7 @@
 import logging
 from flask import Flask, send_from_directory, render_template, request
 from requests import post
+from services.payments import charge_for_notice
 import json
 import os
 import random
@@ -12,16 +13,29 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 @app.route('/buy', methods=['POST'])
 def buy():
-    json = request.get_json()
+    data = request.form
     try:
-        response = post (
+        ad_id = post (
             'http://staging.waivescreen.com/api/campaign',
-            data=json
+            data=data
         )
-        print('post response', response.json())
+        charge = charge_for_notice(
+           None,
+           data.get('email'),
+           {
+                'card_number': data.get('number'),
+                'exp_month': data.get('expMonth'),
+                'exp_year': data.get('expYear'),
+                'cvc': data.get('cvc'),
+
+            },
+           data.get('amount'),
+           ad_id,
+        )
+        return 'Notice Purchase Complete'
     except Exception as e:
         print('error', e)
-    return 'Buying notice'
+        return 'Notice purchase failed: {}'.format(e)
 
 
 @app.route('/<path:path>')

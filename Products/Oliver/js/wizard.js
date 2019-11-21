@@ -14,6 +14,7 @@
     imageSrc: null,
     finalImageSrc: null,
     description: '',
+    amount: 1000,
   };
   let state = {};
   let categoryTips = {
@@ -558,7 +559,8 @@
               ${formFields([
                 ['name', 'Name on Card'],
                 ['number', 'Card Number'],
-                ['expiration', 'Expiration'],
+                ['expMonth', 'Expiration Month'],
+                ['expYear', 'Expiration Year'],
                 ['cvv', 'Security Code'],
               ])}
             </div>
@@ -692,7 +694,7 @@
     let byteString = atob(dataURI.split(',')[1]);
     let ab = new ArrayBuffer(byteString.length);
     let ia = new Uint8Array(ab);
-    for (var i = 0; i < byteString.length; i++) {
+    for (let i = 0; i < byteString.length; i++) {
       ia[i] = byteString.charCodeAt(i);
     }
     return new Blob([ab], {type: 'image/jpeg'});
@@ -707,9 +709,12 @@
         formData.append('file1', dataURLtoBlob(state[field]));
       }
     }
+    for (let field of formData.entries()) {
+      console.log(field[0], ': ', field[1]);
+    }
     axios({
       method: 'post',
-      url: 'http://staging.waivescreen.com/api/campaign',
+      url: '/buy',
       data: formData,
       config: {
         headers: {'Content-Type': 'multipart/form-data'},
