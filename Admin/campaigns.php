@@ -91,10 +91,10 @@ $height = $width * 675 / 1920;
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                       <a onclick="geofence(<?=$campaign['id']?>)" class="dropdown-item dark">Geofence</a>
-                    <? if ($campaign['active']) {?>
-                      <a onclick="update_campaign({id:<?=$campaign['id']?>,active:false})" class="dropdown-item dark">Disable</a>
+                    <? if ($campaign['state'] == 'active') {?>
+                      <a onclick="update_campaign({id:<?=$campaign['id']?>,state:'pending')" class="dropdown-item dark">Disable</a>
                     <? } else { ?>
-                      <a onclick="update_campaign({id:<?=$campaign['id']?>,active:true})" class="dropdown-item dark">Enable</a>
+                      <a onclick="update_campaign({id:<?=$campaign['id']?>,state:'active'})" class="dropdown-item dark">Enable</a>
                     <? } ?>
                       <div class="dropdown-divider"></div>
                       <label class="dropdown-item upload-button" for="image-upload-<?=$campaign['id']?>">Replace</label>
