@@ -688,31 +688,24 @@
     setState(initialState);
   }
 
-  function dataURLtoBlob(dataurl) {
-    let arr = dataurl.split(','),
-      mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[1]),
-      n = bstr.length,
-      u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
+  function dataURLtoBlob(dataURI) {
+    let byteString = atob(dataURI.split(',')[1]);
+    let ab = new ArrayBuffer(byteString.length);
+    let ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
     }
-    return new Blob([u8arr], {type: mime});
+    return new Blob([ab], {type: 'image/jpeg'});
   }
 
   function submit() {
-    let form = document.querySelector('.payment-form').elements;
-    let data = {};
-    for (let i = 0; i < form.length; i++) {
-      let item = form.item(i);
-      data[item.name] = item.value;
-    }
-    Object.assign(data, state);
-    data.file1 = dataURLtoBlob(data.finalImageSrc);
-    delete data.finalImageSrc;
-    let formData = new FormData();
-    for (let field in data) {
-      formData.append(field, data[field]);
+    let formData = new FormData(document.querySelector('.payment-form'));
+    for (let field in state) {
+      if (field !== 'finalImageSrc') {
+        formData.append(field, state[field]);
+      } else {
+        formData.append('file1', dataURLtoBlob(state[field]));
+      }
     }
     axios({
       method: 'post',
