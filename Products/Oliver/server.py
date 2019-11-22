@@ -16,11 +16,10 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 def buy():
     data = request.form
     try:
-        ad_id = 1
-        '''post (
+        ad_id = post (
             'http://staging.waivescreen.com/api/campaign',
             data=data
-        )'''
+        )
         charge = charge_for_notice(
            data.get('email'),
            {
