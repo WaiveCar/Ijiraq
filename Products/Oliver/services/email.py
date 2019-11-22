@@ -16,7 +16,7 @@ config = {
 
 def send_message(recipient, subject, body):
   try:
-    return requests.post(
+    email = requests.post(
       'https://api.mailgun.net/v3/{}/messages'.format(config['domain']),
       auth=("api", config['api_key']),
       data={
@@ -26,7 +26,10 @@ def send_message(recipient, subject, body):
         'html': body
       }
     )
+    email.raise_for_status()
+    return email
   except Exception as e:
+      print('error', e)
       raise e
 
 def send_receipt(recipient, ad_id):
