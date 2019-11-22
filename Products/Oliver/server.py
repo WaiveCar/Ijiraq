@@ -37,9 +37,9 @@ def buy():
         return 'Notice Purchase Complete', 200
     except Exception as e:
         if type(e).__name__ == 'CardError':
-            return e.error, 400
+            return e.error, e.http_status
         else:
-            return e, 400
+            return e.response.reason, e.response.status_code
 
 @app.route('/<path:path>')
 def serve(path):
