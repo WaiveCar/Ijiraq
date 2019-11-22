@@ -3,6 +3,7 @@ import logging
 from flask import Flask, send_from_directory, render_template, request
 from requests import post
 from services.payments import charge_for_notice
+from services.email import send_receipt
 import json
 import os
 import random
@@ -31,7 +32,8 @@ def buy():
            data.get('amount'),
            ad_id,
         )
-        return 'Notice Purchase Complete'
+        receipt = send_receipt(data.get('email'), ad_id)
+        return 'Notice Purchase Complete', 200
     except Exception as e:
         print('Error', e.error.message)
         return e.error.message, 400

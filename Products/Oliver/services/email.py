@@ -27,8 +27,7 @@ def send_message(recipient, subject, body):
       }
     )
   except Exception as e:
-    print('Error sending email', e);
-    return Exception
+      raise e
 
 def send_receipt(recipient, ad_id):
   return send_message(
