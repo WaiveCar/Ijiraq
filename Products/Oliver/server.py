@@ -34,7 +34,7 @@ def buy():
            ad_id,
         )
         receipt = send_receipt(data.get('email'), ad_id)
-        return 'Notice Purchase Complete', 200
+        return {'ad_id': ad_id, 'charge': dict(charge), 'email': dict(receipt.json())}, 200
     except Exception as e:
         if type(e).__name__ == 'CardError':
             return e.error, e.http_status

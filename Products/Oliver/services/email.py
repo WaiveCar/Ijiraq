@@ -19,9 +19,6 @@ def send_message(recipient, subject, body):
   response = requests.post(
     'https://api.mailgun.net/v3/{}/messages'.format(config['domain']),
     auth=("api", config['api_key']),
-    headers={
-        'Accept': 'application/json'
-    },
     data={
       'from': config['sender'],
       'to': [config['recipient'] if 'recipient' in config else recipient],
