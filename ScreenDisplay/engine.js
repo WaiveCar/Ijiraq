@@ -459,7 +459,7 @@ var Engine = function(opts){
   // conditions.
   function remote(verb, url, what, onsuccess, onfail = _log) {
     if(!_res.server) {
-      onfail();
+      return onfail();
     }
     remote.ix++;
 
@@ -770,6 +770,7 @@ var Engine = function(opts){
       return _res.NextJob();
     } 
 
+    console.log(_.current);
     _.current.shown = _.current.assetList[_.current.position];
     _.current.shown.run( function() {
       if(_res.slowCPU && prev) {
@@ -890,7 +891,7 @@ var Engine = function(opts){
       // can choose from.  
       //
 
-      activeList = Object.values(_res.db).filter(row => row.active && row.duration);
+      activeList = Object.values(_res.db).filter(row => row.duration);
 
       //
       // We need to clear out our local copy of the ads
@@ -899,6 +900,7 @@ var Engine = function(opts){
       topicMap = {};
 
       activeList.forEach(row => {
+        // The null case is actually ok here.
         if (!topicMap[row.topic]) {
           topicMap[row.topic] = [];
         }
@@ -921,6 +923,12 @@ var Engine = function(opts){
       // of these.
       current = topicMap[topicList[topicIx].internal];
 
+      if(!current) {
+        current = topicMap[null];
+      }
+
+      console.log(current, activeList, topicMap, _res.db);
+
       render();
       nextJob();
     }
@@ -929,6 +937,10 @@ var Engine = function(opts){
       if(!current) {
         // This means we've really fucked up somehow
         doReplace = true;
+        if(!_.fallback) {
+          console.warn("I'm at a nextJob but have no assets or fallbacks");
+          return;
+        }
         setNextJob(_.fallback);
 
         // Force the topics off for now.
@@ -979,7 +991,7 @@ var Engine = function(opts){
 
     function enable() {
       // This enables the top category and swaps out the nextJob with us
-      _res.NextJob = nextJob;
+      _res.NextJob = nextTopic;
       _box.topicList = [];
       setTopicList([
         {internal: 'event', display: 'Events'},
@@ -1096,6 +1108,10 @@ var Engine = function(opts){
 
   function SetFallback (url, force) {
     _res.fallbackURL = _res.fallbackURL || url;
+
+    if(!_res.server) {
+      return event('system', {});
+    }
 
     // We look for a system default
     if(force || !_res.fallbackURL) {
