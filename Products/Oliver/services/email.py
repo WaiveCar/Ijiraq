@@ -1,5 +1,6 @@
 import os
 import requests
+from urllib.error import HTTPError
 
 config = {
     'sender': 'Waive <support@waive.com>',
@@ -15,22 +16,21 @@ config = {
   }
 
 def send_message(recipient, subject, body):
+  response = requests.post(
+    'https://api.mailgun.net/v3/{}/messages'.format(config['domain']),
+    auth=("api", config['api_key']),
+    data={
+      'from': config['sender'],
+      'to': [config['recipient'] if 'recipient' in config else recipient],
+      'subject': subject,
+      'html': body
+    }
+  )
   try:
-    email = requests.post(
-      'https://api.mailgun.net/v3/{}/messages'.format(config['domain']),
-      auth=("api", config['api_key']),
-      data={
-        'from': config['sender'],
-        'to': [config['recipient'] if 'recipient' in config else recipient],
-        'subject': subject,
-        'html': body
-      }
-    )
-    email.raise_for_status()
-    return email
-  except Exception as e:
-      print('error', e)
+    response.raise_for_status()
+  except requests.exceptions.HTTPError as e: 
       raise e
+  return response
 
 def send_receipt(recipient, ad_id):
   return send_message(
@@ -55,6 +55,7 @@ def send_approval(recipient, ad_id):
         </div>
       """.format(ad_id)
   )
+  
 
 def send_rejection(recipient, ad_id):
   return send_message(

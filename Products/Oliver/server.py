@@ -16,10 +16,11 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 def buy():
     data = request.form
     try:
-        ad_id = post (
+        ad_id = 1
+        '''post (
             'http://staging.waivescreen.com/api/campaign',
             data=data
-        )
+        )'''
         charge = charge_for_notice(
            data.get('email'),
            {
@@ -35,8 +36,10 @@ def buy():
         receipt = send_receipt(data.get('email'), ad_id)
         return 'Notice Purchase Complete', 200
     except Exception as e:
-        print('Error', e.error.message)
-        return e.error.message if hasattr(e, 'error') else e, 400
+        if type(e).__name__ == 'CardError':
+            return e.error, 400
+        else:
+            return e, 400
 
 @app.route('/<path:path>')
 def serve(path):

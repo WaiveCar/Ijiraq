@@ -34,13 +34,13 @@ def charge_for_notice(email, card, amount, ad_id):
 def create_customer(email):
   try: 
     return stripe.Customer.create(description='Stripe customer for Oliver with email {}'.format(email))
-  except Exception as e:
+  except stripe.error.CardError as e:
     raise e
 
 def retrieve_cards_for_user(stripe_id):
   try: 
     return stripe.Customer.list_sources(stripe_id)
-  except Exception as e:
+  except stripe.error.CardError as e:
     raise e
 
 def create_card(stripe_id, card):
@@ -56,7 +56,7 @@ def create_card(stripe_id, card):
         'currency': 'usd',
       },  
     )
-  except Exception as e:
+  except stripe.error.CardError as e:
     raise e
 
 def update_card(stripe_id, card_id, update_obj):
@@ -66,7 +66,7 @@ def update_card(stripe_id, card_id, update_obj):
       card_id,
       metadata=update_obj,
     )
-  except Exception as e:
+  except stripe.error.CardError as e:
     raise e
 
 def delete_card(stripe_id, card_id):
@@ -75,7 +75,7 @@ def delete_card(stripe_id, card_id):
       stripe_id,
       card_id,
     )
-  except Exception as e:
+  except stripe.error.CardError as e:
     raise e
 
 def create_charge(customer_id, amount, description):
@@ -86,13 +86,13 @@ def create_charge(customer_id, amount, description):
         customer=customer_id, 
         description=description,
     )
-  except Exception as e:
+  except stripe.error.CardError as e:
     raise e
 
 def list_charges_by_user(stripe_id):
   try:
     return stripe.Charge.list(customer=stripe_id)
-  except Exception as e:
+  except stripe.error.CardError as e:
     raise e
 
 def refund_charge(charge_id, amount=None):
@@ -101,5 +101,5 @@ def refund_charge(charge_id, amount=None):
       charge=charge_id,
       amount=amount,
     )
-  except Exception as e:
+  except stripe.error.CardError as e:
     raise e
