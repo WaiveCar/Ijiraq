@@ -174,7 +174,7 @@ function split($str) {
  ?>
           <tr<?=$klass?>>
             <td>
-              <a href="#<?=$screen['id']?>" onclick='edit("<?=$screen['id']?>")' class=id data-search="<?= implode(' ',[$screen['port'], $screen['number'], $screen['id']]) ?>"><?= $screen['shortid'] ?></a>
+              <a href="#<?=$screen['id']?>" onclick='edit("<?=$screen['id']?>")' class=id data-search="<?= implode(' ',[$screen['port'], $screen['phone'], $screen['uid']]) ?>"><?= $screen['shortid'] ?></a>
             </td>
             <td>
               <select onchange=change(<?=$screen['id']?>,'project',this)>
