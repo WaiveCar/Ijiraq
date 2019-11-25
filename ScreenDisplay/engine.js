@@ -34,6 +34,7 @@ var Engine = function(opts){
     // This is the actual breakdown of the content on
     // the screen into different partitions
     Strategy = {},
+    _id = Engine.list.length,
     _box = {},
     _start = new Date(),
     _uniq = 0,
@@ -128,7 +129,7 @@ var Engine = function(opts){
   }
 
   function event(what, data) {
-    console.log(">>> event", what, data);
+    console.log(">>> event[" + _id + "]", what, data);
     _res.data[what] = data;
     if(_res.listeners[what]) {
       _res.listeners[what].forEach(cb => cb(data))
@@ -927,7 +928,7 @@ var Engine = function(opts){
         current = topicMap[null];
       }
 
-      console.log(current, activeList, topicMap, _res.db);
+      console.log(_id, current, activeList, topicMap, _res.db);
 
       render();
       nextJob();
@@ -938,7 +939,7 @@ var Engine = function(opts){
         // This means we've really fucked up somehow
         doReplace = true;
         if(!_.fallback) {
-          console.warn("I'm at a nextJob but have no assets or fallbacks");
+          console.warn(_id, "I'm at a nextJob but have no assets or fallbacks");
           return;
         }
         setNextJob(_.fallback);
