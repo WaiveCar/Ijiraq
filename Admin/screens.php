@@ -72,7 +72,6 @@ $fieldList = [
   'car' => 'car',
   'serial' => 'serial',
   'location' => 'addr',
-  'port' => 'port',
   'version' => 'version',
   'uptime' => 'uptime',
   'expected' => 'expected',
@@ -175,7 +174,7 @@ function split($str) {
  ?>
           <tr<?=$klass?>>
             <td>
-              <a href="#<?=$screen['id']?>" onclick='edit("<?=$screen['id']?>")' class=id><?= $screen['shortid'] ?></a>
+              <a href="#<?=$screen['id']?>" onclick='edit("<?=$screen['id']?>")' class=id data-search="<?= implode(' ',[$screen['port'], $screen['number'], $screen['id']]) ?>"><?= $screen['shortid'] ?></a>
             </td>
             <td>
               <select onchange=change(<?=$screen['id']?>,'project',this)>
