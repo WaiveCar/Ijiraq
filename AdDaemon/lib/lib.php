@@ -332,7 +332,6 @@ function record_screen_on($screen, $payload) {
     // the uptime_history like so:
     $uid = db_string($screen['uid']);
     $list = db_all("select * from uptime_history where action='on' and name=$uid order by id desc limit 1");
-    /*
     if(count($list) > 0) {
       $opt = [
         'name' => $uid,
@@ -351,7 +350,6 @@ function record_screen_on($screen, $payload) {
     } else {
       error_log("No records found for action on and name $uid");
     }
-     */
 
     $opt = [
       'name' => $uid,
