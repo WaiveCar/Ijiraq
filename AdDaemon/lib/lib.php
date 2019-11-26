@@ -336,8 +336,8 @@ function record_screen_on($screen, $payload) {
       $opt = [
         'name' => $uid,
         'type' => db_string('screen'),
-        'action' => db_string('off'),
-        'created_at' => "datetime('$last')"
+        'action' => db_string('off'),/*
+        'created_at' => "datetime('$last')"*/
       ];
       if(isset($screen['uptime'])) {
         $last = date('Y-m-d H:i:s', strtotime(aget($list, '0.created_at') . " + " . $screen['uptime'] . " second"));
