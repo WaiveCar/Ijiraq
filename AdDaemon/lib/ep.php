@@ -98,6 +98,7 @@ try {
     'car_history', 
     'command', 
     'ignition_status',
+    'kpi',
     'login',
     'infer',
     'logout',

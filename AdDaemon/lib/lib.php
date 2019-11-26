@@ -1076,6 +1076,22 @@ function campaign_update($data, $fileList, $user = false) {
   return $campaign_id;
 }
 
+function kpi() {
+  $window_size = 3 * 24 * 60 * 60;
+  $distance = 0.002;
+
+  return db_all(
+    "select count(*), d * $window_size from (
+      select distinct name, strftime('%s', created_at) / $window_size as d from uptime_history 
+        where type = 'screen' and action = 'on' 
+          and not (abs(lat - 34.085121) < $distance and abs(lng - -118.340250) < $disatnce) 
+          and not (abs(lat - 34.017979) < $distance and abs(lng - -118.409471) < $distance) 
+          group by d,name
+      ) group by d
+    "
+  );
+}
+
 function infer() {
   $all = db_all("SELECT id,name,type,action,lat,lng,strftime('%s', created_at) as unix from uptime_history where action='on' order by id asc");
   $ix = 0;
