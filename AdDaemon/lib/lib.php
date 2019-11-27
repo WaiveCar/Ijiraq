@@ -226,8 +226,8 @@ function upsert_screen($screen_uid, $payload) {
     'last_seen' => 'current_timestamp'
   ];
   $last = strtotime($screen['last_seen']);
-  if(time() - $last > 150) {
-    error_log($screen['uid'] . " " . time() . ' (' . (time() - $last) . ') ' );
+  if(time() - $last > 150 && $screen['project'] != 'dev') {
+    //error_log($screen['uid'] . " " . time() . ' (' . (time() - $last) . ') ' );
     record_screen_on($screen, $payload);
   }
   if(!empty($payload['lat']) && floatval($payload['lat'])) {
@@ -344,8 +344,12 @@ function record_screen_on($screen, $payload) {
         if(!$first['uptime']) {
           db_update('uptime_history', $first['id'], ['uptime' => $screen['uptime']]);
         }
-        $last = date('Y-m-d H:i:s', strtotime($first['created_at']) . " + " . $screen['uptime'] . " second"));
+        $str = intval(strtotime($first['created_at'])) + intval($screen['uptime']);
+        error_log($str);
+        $last = date('Y-m-d H:i:s', $str);
+        /*
         $opt['created_at'] = "datetime('$last')";
+         */
       }
       if(isset($screen['lat'])) {
         $opt['lat'] = $screen['lat'];
@@ -622,7 +626,7 @@ function sow($payload) {
     // should just upgrade.
     $job_id = aget($job, 'job_id');
     if(aget($job, 'id')) {
-      error_log("need to upgrade: {$payload['uid']}");
+      // error_log("need to upgrade: {$payload['uid']}");
     } else if($job_id) {
       if (! update_job($job_id, $job['completed_seconds']) ) {
         error_log("could not process job: " . json_encode($job));
@@ -1237,7 +1241,7 @@ function ignition_status($payload) {
   if($res) {
     $uid = aget($res, 'uid');
   } else {
-    return error_log("Unable to find screen for $car");
+    return false;//error_log("Unable to find screen for $car");
   }
 
   if($uid) {
