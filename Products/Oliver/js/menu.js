@@ -8,7 +8,7 @@ function toggleMenu() {
         ${[
             ['approval', 'admin'], 
             ['screens', 'admin'], 
-            ['campaigns', 'viewer'], 
+            ['notices', 'viewer'], 
             ['browse', 'viewer'],
             ['account', 'viewer'],
             ['users', 'admin'],

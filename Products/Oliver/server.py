@@ -42,8 +42,8 @@ def buy():
 
 @app.route('/<path:path>')
 def serve(path):
-  if "campaigns/wizard" in path:
-    return render_template("campaigns/wizard/index.html".format(ROOT))
+  if "notices/wizard" in path:
+    return render_template("notices/wizard/index.html".format(ROOT))
 
   elif os.path.exists("{}/templates/{}/index.html".format(ROOT, path)):
     return render_template(path + '/index.html', rand=random.random())
