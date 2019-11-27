@@ -226,7 +226,7 @@ function upsert_screen($screen_uid, $payload) {
     'last_seen' => 'current_timestamp'
   ];
   $last = strtotime($screen['last_seen']);
-  if(time() - $last > 150 && $screen['project'] != 'dev') {
+  if(time() - $last > 150 && $screen['project'] != 'dev' && $screen['uptime'] == null) {
     //error_log($screen['uid'] . " " . time() . ' (' . (time() - $last) . ') ' );
     record_screen_on($screen, $payload);
   }
@@ -345,11 +345,8 @@ function record_screen_on($screen, $payload) {
           db_update('uptime_history', $first['id'], ['uptime' => $screen['uptime']]);
         }
         $str = intval(strtotime($first['created_at'])) + intval($screen['uptime']);
-        error_log($str);
         $last = date('Y-m-d H:i:s', $str);
-        /*
         $opt['created_at'] = "datetime('$last')";
-         */
       }
       if(isset($screen['lat'])) {
         $opt['lat'] = $screen['lat'];
@@ -444,6 +441,7 @@ function ping($payload) {
       error_log("Uptime not known for " . $payload['uid']);
     }
     if($screen && isset($payload['uptime']) && intval($screen['uptime']) > intval($payload['uptime'])) {
+      record_screen_on($screen, $payload);
     }
     $screen = upsert_screen($payload['uid'], $obj);
   } else {
