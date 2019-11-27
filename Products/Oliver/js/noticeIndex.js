@@ -55,7 +55,7 @@ function groupByBrand(response, brands) {
 }
 
 (() => {
-  var pre = 'http://adcast/';
+  var pre = 'http://staging.waivescreen.com';
   /*
   if(document.location.hostname != '127.0.0.1') {
     pre = `http://192.168.86.58/`;
