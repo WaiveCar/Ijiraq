@@ -33,8 +33,9 @@ def buy():
            ad_id,
         )
         receipt = send_receipt(data.get('email'), ad_id)
-        return {'ad_id': ad_id, 'charge': dict(charge), 'email': dict(receipt.json())}, 200
+        return {'ad_id': ad_id.json(), 'charge': dict(charge), 'email': receipt.json()}, 200
     except Exception as e:
+        print('error', e)
         if type(e).__name__ == 'CardError':
             return e.error, e.http_status
         else:
