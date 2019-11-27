@@ -34,11 +34,6 @@ function renderCampaigns(campaigns, brand, brandIdx) {
         `#asset-container-${brandIdx}-${campaignIdx}`,
       ),
     });
-    window[`engine-${brandIdx}-${campaignIdx}`] = e;
-    console.log(
-      `engine-${brandIdx}-${campaignIdx}`,
-      window[`engine-${brandIdx}-${campaignIdx}`],
-    );
     e.AddJob({url: campaign.asset});
     e.Start();
   });
