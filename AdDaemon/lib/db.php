@@ -404,6 +404,10 @@ $SCHEMA = [
     'type'      => 'text',
     // either on or off
     'action'      => 'text',
+
+    // this is easier than stringing on/offs together
+    // and then trying to compute deltas
+    'uptime'      => 'integer default null',
     
     'lat'         => 'float default null',
     'lng'         => 'float default null',

@@ -340,7 +340,11 @@ function record_screen_on($screen, $payload) {
         'created_at' => "datetime('$last')"*/
       ];
       if(isset($screen['uptime'])) {
-        $last = date('Y-m-d H:i:s', strtotime(aget($list, '0.created_at') . " + " . $screen['uptime'] . " second"));
+        $first = $list[0];
+        if(!$first['uptime']) {
+          db_update('uptime_history', $first['id'], ['uptime' => $screen['uptime']]);
+        }
+        $last = date('Y-m-d H:i:s', strtotime($first['created_at']) . " + " . $screen['uptime'] . " second"));
         $opt['created_at'] = "datetime('$last')";
       }
       if(isset($screen['lat'])) {
