@@ -244,6 +244,7 @@ body {
 
 .notice-list {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
@@ -252,9 +253,6 @@ body {
 }
 
 @media(max-width: 540px) {
-  .notice-list {
-    margin-top: 5rem;
-  }
   .notice {
     flex: 1 0 88%!important;
   }
@@ -383,9 +381,6 @@ body {
   .campaign-show {
     margin-top: 120px;
   }
-  .offset-top {
-    margin-top: 20px;
-  }
 }
 
 #campaign-preview {
@@ -401,10 +396,6 @@ body {
   .campaign-show-sub {
     width: 100%;
     font-weight: 800;
-  }
-
-  .model-list {
-    margin-top: 60px;
   }
 }
 
