@@ -34,24 +34,14 @@ function renderCampaigns(campaigns, brand, brandIdx) {
         `#asset-container-${brandIdx}-${campaignIdx}`,
       ),
     });
+    window[`engine-${brandIdx}-${campaignIdx}`] = e;
+    console.log(
+      `engine-${brandIdx}-${campaignIdx}`,
+      window[`engine-${brandIdx}-${campaignIdx}`],
+    );
     e.AddJob({url: campaign.asset});
     e.Start();
   });
-}
-
-function groupByBrand(response, brands) {
-  let brandTable = {};
-  for (let brand of brands) {
-    brandTable[brand.id] = brand.name;
-  }
-  let output = {};
-  for (let c of response) {
-    if (!output[brandTable[c.brand_id]]) {
-      output[brandTable[c.brand_id]] = [];
-    }
-    output[brandTable[c.brand_id]].push(c);
-  }
-  return output;
 }
 
 (() => {
@@ -60,7 +50,7 @@ function groupByBrand(response, brands) {
   fetch(`${pre}/api/campaigns`)
     .then(response => response.json())
     .then(json => {
-      renderCampaigns(json, 'Your Notices');
+      renderCampaigns(json, 'Your Notices', 0);
     })
     .catch(e => console.log('error fetching screens', e));
 })();
