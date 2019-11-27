@@ -1082,18 +1082,26 @@ function campaign_update($data, $fileList, $user = false) {
 
 function kpi() {
   $window_size = 3 * 24 * 60 * 60;
-  $distance = 0.002;
+  $distance = 0.005;
+  $res = [];
 
-  return db_all(
-    "select count(*), d * $window_size from (
-      select distinct name, strftime('%s', created_at) / $window_size as d from uptime_history 
-        where type = 'screen' and action = 'on' 
-          and not (abs(lat - 34.085121) < $distance and abs(lng - -118.340250) < $disatnce) 
+  foreach( ['car','screen'] as $type) {
+    $inner = "select distinct count(*) as times_seen, name, strftime('%s', created_at) / $window_size as d from uptime_history 
+        where type = '$type' and action = 'on' 
+          and not (abs(lat - 34.085121) < $distance and abs(lng - -118.340250) < $distance) 
           and not (abs(lat - 34.017979) < $distance and abs(lng - -118.409471) < $distance) 
-          group by d,name
-      ) group by d
-    "
-  );
+          group by d,name";
+    $res[$type] = db_all("select count(*) as num, d * $window_size as unix from ($inner) group by d");
+  }
+  $res['ratio'] = [];
+  for($ix = 0; $ix < count($res['car']); $ix++) {
+    $res['ratio'][] = [
+      'ratio' => $res['screen'][$ix]['num'] / $res['car'][$ix]['num'],
+      'unix' => $res['screen'][$ix]['unix']
+    ];
+  }
+  return $res;
+
 }
 
 function infer() {
