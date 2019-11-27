@@ -9,7 +9,7 @@ function renderCampaigns(campaigns, brand, brandIdx) {
         .map(
           (campaign, campaignIdx) =>
             `<div class="card mt-1 ml-2">
-             <a class="prevent-underline" href="/campaigns/show?id=${
+             <a class="prevent-underline" href="/notices/show?id=${
                campaign.id
              }">
                <div id="asset-container-${brandIdx}-${campaignIdx}" style="height: 135px;"> 
