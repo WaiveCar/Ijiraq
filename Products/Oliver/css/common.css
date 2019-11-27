@@ -242,6 +242,24 @@ body {
   border: none;
 }
 
+.notice-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.notice {
+  flex: 1 0 21%!important;
+}
+
+@media(max-width: 540px) {
+  .notice-list {
+    margin-top: 5rem;
+  }
+  .notice {
+    flex: 1 0 88%!important;
+  }
+}
+
 .campaign-dates {
   font-size: 12px;
   color: #b1b1b1;
