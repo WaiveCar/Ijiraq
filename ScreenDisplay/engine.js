@@ -34,6 +34,7 @@ var Engine = function(opts){
     // This is the actual breakdown of the content on
     // the screen into different partitions
     Strategy = {},
+    _id = Engine.list.length,
     _box = {},
     _start = new Date(),
     _uniq = 0,
@@ -128,9 +129,11 @@ var Engine = function(opts){
   }
 
   function event(what, data) {
+    console.log(">>> event[" + _id + "]", what, data);
     _res.data[what] = data;
     if(_res.listeners[what]) {
       _res.listeners[what].forEach(cb => cb(data))
+      _res.listeners[what] = _res.listeners[what].filter(cb => !cb.once);
     }
   }
   function on(what, cb) {
@@ -141,6 +144,7 @@ var Engine = function(opts){
       _res.listeners[what] = [];
     }
     _res.listeners[what].push(cb);
+    return cb;
   }
 
   function assetError(obj, e) {
@@ -456,7 +460,7 @@ var Engine = function(opts){
   // conditions.
   function remote(verb, url, what, onsuccess, onfail = _log) {
     if(!_res.server) {
-      onfail();
+      return onfail();
     }
     remote.ix++;
 
@@ -767,6 +771,7 @@ var Engine = function(opts){
       return _res.NextJob();
     } 
 
+    console.log(_.current);
     _.current.shown = _.current.assetList[_.current.position];
     _.current.shown.run( function() {
       if(_res.slowCPU && prev) {
@@ -841,7 +846,7 @@ var Engine = function(opts){
     Strategy.current = what;
     Strategy[what].enable();
     // Make sure we don't try anything until we get a default
-    on('system', _res.NextJob);
+    on('system', _res.NextJob).once = true;
   };
 
   Strategy.Oliver = (function( ) {
@@ -887,7 +892,7 @@ var Engine = function(opts){
       // can choose from.  
       //
 
-      activeList = Object.values(_res.db).filter(row => row.active && row.duration);
+      activeList = Object.values(_res.db).filter(row => row.duration);
 
       //
       // We need to clear out our local copy of the ads
@@ -896,6 +901,7 @@ var Engine = function(opts){
       topicMap = {};
 
       activeList.forEach(row => {
+        // The null case is actually ok here.
         if (!topicMap[row.topic]) {
           topicMap[row.topic] = [];
         }
@@ -918,6 +924,12 @@ var Engine = function(opts){
       // of these.
       current = topicMap[topicList[topicIx].internal];
 
+      if(!current) {
+        current = topicMap[null];
+      }
+
+      console.log(_id, current, activeList, topicMap, _res.db);
+
       render();
       nextJob();
     }
@@ -926,10 +938,16 @@ var Engine = function(opts){
       if(!current) {
         // This means we've really fucked up somehow
         doReplace = true;
+        if(!_.fallback) {
+          console.warn(_id, "I'm at a nextJob but have no assets or fallbacks");
+          return;
+        }
         setNextJob(_.fallback);
+
         // Force the topics off for now.
         render(true);
-        nextTopic();
+
+        // nextAsset is at the bottom
       } else {
         console.log(topicMap, current, jobIx, topicList);
         
@@ -974,7 +992,7 @@ var Engine = function(opts){
 
     function enable() {
       // This enables the top category and swaps out the nextJob with us
-      _res.NextJob = nextJob;
+      _res.NextJob = nextTopic;
       _box.topicList = [];
       setTopicList([
         {internal: 'event', display: 'Events'},
@@ -1091,6 +1109,10 @@ var Engine = function(opts){
 
   function SetFallback (url, force) {
     _res.fallbackURL = _res.fallbackURL || url;
+
+    if(!_res.server) {
+      return event('system', {});
+    }
 
     // We look for a system default
     if(force || !_res.fallbackURL) {

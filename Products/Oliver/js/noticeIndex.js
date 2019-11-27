@@ -56,28 +56,11 @@ function groupByBrand(response, brands) {
 
 (() => {
   var pre = 'http://staging.waivescreen.com';
-  /*
-  if(document.location.hostname != '127.0.0.1') {
-    pre = `http://192.168.86.58/`;
-  }
-  */
 
-  const brandId = new URL(location.href).searchParams.get('brand_id');
-  fetch(`${pre}/api/brands`)
+  fetch(`${pre}/api/campaigns`)
     .then(response => response.json())
-    .then(brands => {
-      fetch(
-        `${pre}/api/campaigns${
-          brandId ? `?brand_id=${brandId}` : ''
-        }`,
-      )
-        .then(response => response.json())
-        .then(json => {
-          let byBrand = groupByBrand(json, brands);
-          Object.keys(byBrand).forEach((brand, brandIdx) => {
-            renderCampaigns(byBrand[brand], brand, brandIdx);
-          });
-        });
+    .then(json => {
+      renderCampaigns(json, 'Your Notices');
     })
     .catch(e => console.log('error fetching screens', e));
 })();
