@@ -1037,12 +1037,17 @@ h4 {
   .keyword {
     font-size: 14px;
   }
+  .info-holder {
+    width: 95%;
+  }
   .payment-holder {
     display: block;
   }
-
   .summary-holder {
     display: block;
+  }
+  .summary-center {
+    width: 95%;
   }
   .inner-summary {
     width: 100%;
