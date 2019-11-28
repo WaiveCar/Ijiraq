@@ -666,7 +666,7 @@
       window.history.pushState(
         {},
         pageNum,
-        window.location.origin + '/campaigns/wizard/' + pageNum,
+        window.location.origin + '/notices/wizard/' + pageNum,
       );
     }
     currentPage = pageNum;
