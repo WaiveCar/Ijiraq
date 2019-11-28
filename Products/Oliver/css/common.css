@@ -784,7 +784,7 @@ select.form-control:focus,
 }
 
 .location-input input, .title-input input, .keyword-input input {
-  width: 80%;
+  width: 100%;
 }
 
 .payment-page {
@@ -823,9 +823,6 @@ select.form-control:focus,
 
 .keyword-input input {
   width: 75%;
-}
-.layout-selection {
-  width: 80%;
 }
 
 .layout-preview {
@@ -1026,6 +1023,9 @@ h4 {
   }
   .layout-preview {
     margin: 0.5rem 0;
+  }
+  .layout-preview img {
+    width: 100%;
   }
   .triptych-text {
     margin: 1.5rem 0;

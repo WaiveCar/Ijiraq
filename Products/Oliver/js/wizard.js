@@ -147,7 +147,7 @@
 
   function layoutPage(state) {
     return `
-      <div class="layout-selection">
+      <div>
         <div class="wizard-title">
           <h2>Select a Layout for your Ad</h2>
         </div>
@@ -173,9 +173,9 @@
                     <label class="layout-preview" for="layout-${i}">
                       <img
                         src="${layout.preview}"
-                        class="${i === state.selectedLayout
-                          ? 'selected-layout'
-                          : ''}"
+                        class="${
+                          i === state.selectedLayout ? 'selected-layout' : ''
+                        }"
                         for="layout-${i}"
                       />
                     </label>
