@@ -667,6 +667,21 @@ select.form-control:focus,
 
 .wizard-nav {
   width: 100%;
+  position: fixed;
+  bottom: 0;
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+@media(max-width: 768px) {
+  .wizard-page {
+    padding-bottom: 60px;
+  }
+  .wizard-nav {
+    padding-top: 10px;
+    background-color: white;
+  }
 }
 
 .wizard-btn {
@@ -782,7 +797,7 @@ select.form-control:focus,
   width: 100%;
 }
 
-.payment-holder h4 {
+.payment-holder h4, .black-title {
   color: black;
   margin-bottom: 1rem;
 }

@@ -328,14 +328,14 @@
         <div class="wizard-title">
           <h2>Your Info</h2>
         </div>
-        <div class="keyword-input d-flex justify-content-center mt-2">
+        <div class="keyword-input d-flex justify-content-center mt-4">
           <input type="text" placeholder="Add Keywords">
           <button class="btn add-keyword">Add</button>
         </div>
         <div class="keywords d-flex justify-content-center mt-2">
           ${renderKeywords()}
         </div>
-        <div class="payment-holder mt-2">
+        <div class="payment-holder mt-4">
           <div class="inner-payment">
             <h4>
               Contact
@@ -348,7 +348,7 @@
               ],
               true,
             )}
-            <h4>
+            <h4 class="mt-2">
               Preferred Contact
             </h4>
             <div class="d-flex justify-content-around">
@@ -386,7 +386,7 @@
           </div>
         </div>
         <div>
-          <h4 class="text-center mt-2">
+          <h4 class="text-center mt-4 black-title">
             Does your notice contain any of the following restricted content types?
           </h4>
           <div class="d-flex justify-content-center mt-2">
