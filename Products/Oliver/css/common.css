@@ -702,6 +702,10 @@ select.form-control:focus,
   width: 90%;
 }
 
+.summary-center {
+  width: 62%;
+}
+
 #back-btn {
   visibility: hidden;
 }
@@ -788,7 +792,7 @@ select.form-control:focus,
 }
 
 .inner-payment {
-  width: 30%;
+  width: 40%;
   margin: 0 1rem;
 }
 
@@ -818,24 +822,21 @@ select.form-control:focus,
 }
 
 .keyword-input input {
-  width: 60%;
+  width: 75%;
 }
 .layout-selection {
   width: 80%;
 }
 
-.layout-options {
-  display: flex;
-  justify-content: space-between;
-}
-
 .layout-preview {
+  display: flex;
+  justify-content: center;
   border: 5px solid white;
   margin: 1rem 0.5rem;
 }
 
 .layout-preview img {
-  width: 100%;
+  width: 60%;
 }
 
 .selected-layout {
@@ -881,7 +882,7 @@ input[type=date]::-webkit-inner-spin-button {
 }
 
 .triptych-text {
-  width: 60%;
+  width: 85%;
   height: 4rem;
   background-color: #f3f3f3;
   border-radius: 10px;
@@ -960,12 +961,11 @@ input:focus, textarea:focus {
 .summary-holder {
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .inner-summary {
-  width: 45%;
-  margin-left: 7rem;
+  width: 41%;
 }
 
 h4 {

@@ -141,7 +141,7 @@
       .classList.remove('selected-layout');
     setState({selectedLayout: idx});
     document
-      .querySelector(`label[for=layout-${idx}]`)
+      .querySelector(`label[for=layout-${idx}] img`)
       .classList.add('selected-layout');
   };
 
@@ -170,13 +170,14 @@
                       value="${i}"
                       ${i === state.selectedLayout ? 'checked' : ''}
                     />
-                    <label
-                      class="layout-preview ${
-                        i === state.selectedLayout ? 'selected-layout' : ''
-                      }"
-                      for="layout-${i}"
-                    >
-                      <img src="${layout.preview}" />
+                    <label class="layout-preview" for="layout-${i}">
+                      <img
+                        src="${layout.preview}"
+                        class="${i === state.selectedLayout
+                          ? 'selected-layout'
+                          : ''}"
+                        for="layout-${i}"
+                      />
                     </label>
                   </div>
                 `,
@@ -335,7 +336,7 @@
         <div class="keywords d-flex justify-content-center mt-2">
           ${renderKeywords()}
         </div>
-        <div class="payment-holder mt-4">
+        <div class="payment-holder mt-3">
           <div class="inner-payment">
             <h4>
               Contact
