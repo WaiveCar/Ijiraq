@@ -39,7 +39,7 @@ window.map = function(opts) {
   });
 
   var _draw, _snap;
-  var select;
+  var _select;
   var source = {};
   var dom = document.getElementById(opts.target);
 	var styleCache = {
@@ -167,11 +167,11 @@ window.map = function(opts) {
         feature.setStyle(
           new Style({
             fill: new Fill({
-              color: '#aaaaaa66', //getGradient()
+              color: '#9999eebb', //getGradient()
             }),
             stroke: new Stroke({
-              color: "#779988ff",
-              width: 1 
+              color: '#7777ff99',
+              width: 2
             })
           })
         );
@@ -184,8 +184,12 @@ window.map = function(opts) {
       draw.getSource().addFeature(feature);
 
       if(opts.selectFirst && isFirst) {
-        select.getFeatures().push(feature);
-        select.dispatchEvent({type: 'select', selected: [feature], deselected: []});
+        _select.getFeatures().push(feature);
+        _select.on('select', function(evt) {
+          if(evt.selected.length == 0) {
+            _select.getFeatures().push(feature);
+          }
+        });
         isFirst = false;
       }
     });
@@ -225,14 +229,9 @@ window.map = function(opts) {
   var draw = new VectorLayer({
     source: source.draw,
     style: new Style({
-      /*
-      fill: new Fill({
-        color: 'rgba(255, 255, 255, 0.4)'
-      }),
-      */
       stroke: new Stroke({
         color: '#000000',
-        width: 2
+        width: 10
       }),
       image: new CircleStyle({
         radius: 2,
@@ -272,13 +271,13 @@ window.map = function(opts) {
   };
 
   if(opts.move) {
-    select = new Select();
+    _select = new Select();
 
     var translate = new Translate({
-      features: select.getFeatures()
+      features: _select.getFeatures()
     });
 
-    map_params.interactions =  defaultInteractions().extend([select, translate]);
+    map_params.interactions =  defaultInteractions().extend([_select, translate]);
   }
 
   var _map = new Map(map_params);
@@ -291,17 +290,17 @@ window.map = function(opts) {
   }
 
   return {
-    _map: _map,
     center: function(coor, zoom) {
       _map.getView().setCenter(fromLonLat(coor));
       if(zoom) {
         _map.getView().setZoom(zoom);
       }
     },
-    removeShape: removeShape,
-    removePoint: removePoint,
+    _map,
+    clear,
+    removePoint,
+    removeShape,
     save: getShapes,
     load: drawShapes,
-    clear: clear
   };
 }
