@@ -141,13 +141,13 @@
       .classList.remove('selected-layout');
     setState({selectedLayout: idx});
     document
-      .querySelector(`label[for=layout-${idx}]`)
+      .querySelector(`label[for=layout-${idx}] img`)
       .classList.add('selected-layout');
   };
 
   function layoutPage(state) {
     return `
-      <div class="layout-selection">
+      <div>
         <div class="wizard-title">
           <h2>Select a Layout for your Ad</h2>
         </div>
@@ -170,13 +170,14 @@
                       value="${i}"
                       ${i === state.selectedLayout ? 'checked' : ''}
                     />
-                    <label
-                      class="layout-preview ${
-                        i === state.selectedLayout ? 'selected-layout' : ''
-                      }"
-                      for="layout-${i}"
-                    >
-                      <img src="${layout.preview}" />
+                    <label class="layout-preview" for="layout-${i}">
+                      <img
+                        src="${layout.preview}"
+                        class="${
+                          i === state.selectedLayout ? 'selected-layout' : ''
+                        }"
+                        for="layout-${i}"
+                      />
                     </label>
                   </div>
                 `,
@@ -328,14 +329,14 @@
         <div class="wizard-title">
           <h2>Your Info</h2>
         </div>
-        <div class="keyword-input d-flex justify-content-center mt-2">
+        <div class="keyword-input d-flex justify-content-center mt-4">
           <input type="text" placeholder="Add Keywords">
           <button class="btn add-keyword">Add</button>
         </div>
         <div class="keywords d-flex justify-content-center mt-2">
           ${renderKeywords()}
         </div>
-        <div class="payment-holder mt-2">
+        <div class="payment-holder mt-3">
           <div class="inner-payment">
             <h4>
               Contact
@@ -348,7 +349,7 @@
               ],
               true,
             )}
-            <h4>
+            <h4 class="mt-2">
               Preferred Contact
             </h4>
             <div class="d-flex justify-content-around">
@@ -386,7 +387,7 @@
           </div>
         </div>
         <div>
-          <h4 class="text-center mt-2">
+          <h4 class="text-center mt-4 black-title">
             Does your notice contain any of the following restricted content types?
           </h4>
           <div class="d-flex justify-content-center mt-2">
@@ -666,7 +667,7 @@
       window.history.pushState(
         {},
         pageNum,
-        window.location.origin + '/campaigns/wizard/' + pageNum,
+        window.location.origin + '/notices/wizard/' + pageNum,
       );
     }
     currentPage = pageNum;

@@ -667,6 +667,21 @@ select.form-control:focus,
 
 .wizard-nav {
   width: 100%;
+  position: fixed;
+  bottom: 0;
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+@media(max-width: 768px) {
+  .wizard-page {
+    padding-bottom: 60px;
+  }
+  .wizard-nav {
+    padding-top: 10px;
+    background-color: white;
+  }
 }
 
 .wizard-btn {
@@ -685,6 +700,10 @@ select.form-control:focus,
 
 .width-90 {
   width: 90%;
+}
+
+.summary-center {
+  width: 62%;
 }
 
 #back-btn {
@@ -765,7 +784,7 @@ select.form-control:focus,
 }
 
 .location-input input, .title-input input, .keyword-input input {
-  width: 80%;
+  width: 100%;
 }
 
 .payment-page {
@@ -773,7 +792,7 @@ select.form-control:focus,
 }
 
 .inner-payment {
-  width: 30%;
+  width: 40%;
   margin: 0 1rem;
 }
 
@@ -782,7 +801,7 @@ select.form-control:focus,
   width: 100%;
 }
 
-.payment-holder h4 {
+.payment-holder h4, .black-title {
   color: black;
   margin-bottom: 1rem;
 }
@@ -803,29 +822,25 @@ select.form-control:focus,
 }
 
 .keyword-input input {
-  width: 60%;
-}
-.layout-selection {
-  width: 80%;
-}
-
-.layout-options {
-  display: flex;
-  justify-content: space-between;
+  width: 75%;
 }
 
 .layout-preview {
+  display: flex;
+  justify-content: center;
   border: 5px solid white;
   margin: 1rem 0.5rem;
 }
 
 .layout-preview img {
-  width: 100%;
+  width: 60%;
+  border: 5px solid white;
 }
 
 .selected-layout {
+  box-sizing: border-box;
   border-radius: 7px;
-  border: 5px solid #98e78d;
+  border: 5px solid #98e78d!important;
 }
 
 .ad-date {
@@ -866,7 +881,7 @@ input[type=date]::-webkit-inner-spin-button {
 }
 
 .triptych-text {
-  width: 60%;
+  width: 85%;
   height: 4rem;
   background-color: #f3f3f3;
   border-radius: 10px;
@@ -945,12 +960,11 @@ input:focus, textarea:focus {
 .summary-holder {
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .inner-summary {
-  width: 45%;
-  margin-left: 7rem;
+  width: 41%;
 }
 
 h4 {
@@ -1012,6 +1026,9 @@ h4 {
   .layout-preview {
     margin: 0.5rem 0;
   }
+  .layout-preview img {
+    width: 100%;
+  }
   .triptych-text {
     margin: 1.5rem 0;
     width: 100%;
@@ -1022,12 +1039,17 @@ h4 {
   .keyword {
     font-size: 14px;
   }
+  .info-holder {
+    width: 95%;
+  }
   .payment-holder {
     display: block;
   }
-
   .summary-holder {
     display: block;
+  }
+  .summary-center {
+    width: 95%;
   }
   .inner-summary {
     width: 100%;
