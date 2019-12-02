@@ -57,6 +57,12 @@ window.map = function(opts) {
 
   var _layers = [raster];
 
+  var css = document.createElement('style');
+  css.innerHTML = `
+  .ol-overlaycontainer-stopevent { display: none }
+  `;
+  dom.appendChild(css);
+
   // points {
   if(opts.points) {
     var featureMap = opts.points.filter(row => row.lng).map(row => {
