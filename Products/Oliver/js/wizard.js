@@ -215,7 +215,7 @@
           <input type="text" placeholder="Promotion Title">
         </div>
         <div class="d-flex justify-content-center mt-4">
-          <input class="ad-date start-date" type="date">
+          <label for="start-date" class="mr-2">Start Date:</label><input class="ad-date start-date" id="start-date" type="date">
         </div>
         <div class="d-flex justify-content-center mt-4">
           <canvas id="triptych-edit" width="${640 * scale}" height="${225 *
