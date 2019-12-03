@@ -672,18 +672,38 @@
     }
     currentPage = pageNum;
     topRightEls[currentPage].classList.add('top-bar-selected');
+    progressEls.forEach((el, idx) => {
+      if (idx <= currentPage) {
+        el.classList.add('progress-filled');
+      } else {
+        el.classList.remove('progress-filled');
+      }
+    });
   };
 
   let topRight = document.querySelector('.top-bar-right');
   topRight.innerHTML = pages
     .map(
       (page, idx) => `
-        <div class="top-bar-link" onclick="showPage(${idx})">${page.title}</div>
+        <div class="top-bar-link ${
+          idx === currentPage ? 'top-bar-selected' : ''
+        }" onclick="showPage(${idx})">${page.title}</div>
       `,
     )
     .join('');
   let topRightEls = document.querySelectorAll('.top-bar-right .top-bar-link');
-  topRightEls[currentPage].classList.add('top-bar-selected');
+  
+  let progress = document.querySelector('.progress');
+  progress.innerHTML = pages
+    .map(
+      (page, idx) =>
+        `<div class="bar-section ${
+          idx <= currentPage ? 'progress-filled' : ''
+        }" style="width: ${100 * (1 / pages.length)}%">
+      </div>`,
+    )
+    .join('');
+  let progressEls = document.querySelectorAll('.bar-section');
 
   let savedState = localStorage.getItem('savedState');
   if (savedState) {
