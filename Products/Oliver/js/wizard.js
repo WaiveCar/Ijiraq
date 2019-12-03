@@ -6,6 +6,7 @@
     selectedLayout: 0,
     backgroundColor: 'white',
     textColor: 'black',
+    preferredContact: 'email',
     title: '',
     startDate: '',
     endDate: '',
@@ -334,9 +335,9 @@
             </h4>
             ${formFields(
               [
-                ['businessName', 'Business Name'],
-                ['phone', 'Phone'],
-                ['email', 'E-mail'],
+                ['businessName', 'Business Name', false],
+                ['phone', 'Phone', true],
+                ['email', 'E-mail', true],
               ],
               true,
             )}
@@ -368,10 +369,10 @@
             </h4>
             ${formFields(
               [
-                ['businessStreet', 'Street'],
-                ['businessCity', 'City'],
-                ['businessState', 'State'],
-                ['businessZip', 'Zip Code'],
+                ['businessStreet', 'Street', false],
+                ['businessCity', 'City', false],
+                ['businessState', 'State', false],
+                ['businessZip', 'Zip Code', false],
               ],
               true,
             )}
@@ -439,7 +440,7 @@
       .map(
         field => `
           <div>
-            <input type="text" placeholder="${field[1]}" name="${field[0]}" ${
+            <input type="text" ${field[2] ? 'required': ''} placeholder="${field[1]}" name="${field[0]}" ${
           addOnInput
             ? `oninput="setState({${field[0]}: this.value})" value=${state[
                 field[0]
@@ -549,11 +550,11 @@
                 Card
               </h4>
               ${formFields([
-                ['name', 'Name on Card'],
-                ['number', 'Card Number'],
-                ['expMonth', 'Expiration Month'],
-                ['expYear', 'Expiration Year'],
-                ['cvv', 'Security Code'],
+                ['name', 'Name on Card', true],
+                ['number', 'Card Number', true],
+                ['expMonth', 'Expiration Month', true],
+                ['expYear', 'Expiration Year', true],
+                ['cvv', 'Security Code', true],
               ])}
             </div>
           </div>
@@ -622,6 +623,11 @@
   }
 
   window.showPage = function(pageNum) {
+    let missing = verifyData();
+    if (missing.length) {
+      console.log('form data missing');
+      return;
+    }
     topRightEls[currentPage].classList.remove('top-bar-selected');
     if (pageNum < 0 || pageNum > pages.length - 1) {
       return;
@@ -689,6 +695,12 @@
     setState(JSON.parse(savedState));
   } else {
     setState(initialState);
+  }
+
+  function verifyData() {
+    let requiredInputs = document.querySelectorAll('input[required]');
+    let missing = requiredInputs ? Array.from(requiredInputs).map(input => input.name) : [];
+    return missing;
   }
 
   function dataURLtoBlob(dataURI) {
