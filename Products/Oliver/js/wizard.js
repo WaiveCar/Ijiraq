@@ -213,7 +213,7 @@
           <h2>Create your Ad</h2>
         </div>
         <div class="title-input d-flex justify-content-center mt-4">
-          <input type="text" placeholder="Promotion Title">
+          <input type="text" placeholder="Notice Title" required>
         </div>
         <div class="d-flex justify-content-center mt-4">
           <label for="start-date" class="mr-2">Start Date:</label><input class="ad-date start-date" id="start-date" type="date">
@@ -223,7 +223,7 @@
       scale}">
         </div>
         <div class="d-flex justify-content-between mt-4 ad-input-holder">
-          <textarea type="text" class="triptych-text" placeholder="enter text"></textarea>
+          <textarea type="text" class="triptych-text" placeholder="Notice Text" required></textarea>
           <div class="ml-3 right-inputs">
             <div class="color-input">
               <span>
@@ -408,11 +408,11 @@
           </div>
         </div>
         <div class="mt-3 d-flex justify-content-center">
-          <textarea class="description triptych-text" value="${state.description ||
-            null}"
-            placeholder="Please enter a brief description of your notice"
-            oninput="setState.call(this, {'description': event.target.value})"  
-          ></textarea>
+          <textarea class="description triptych-text"
+            placeholder="Notice Description"
+            oninput="setState.call(this, {'description': event.target.value})"
+            required
+          >${state.description || ''}</textarea>
         </div>
       </div>
     `;
@@ -625,7 +625,7 @@
   window.showPage = function(pageNum) {
     let missing = verifyData();
     if (missing.length) {
-      console.log('form data missing');
+      console.log('form data missing', missing);
       return;
     }
     topRightEls[currentPage].classList.remove('top-bar-selected');
@@ -698,8 +698,13 @@
   }
 
   function verifyData() {
-    let requiredInputs = document.querySelectorAll('input[required]');
-    let missing = requiredInputs ? Array.from(requiredInputs).map(input => input.name) : [];
+    let requiredInputs = document.querySelectorAll('input[required], textarea[required]');
+    let missing = [];
+    requiredInputs.forEach(input => {
+      if (!input.value) {
+        missing.push(input.placeholder);
+      }
+    });
     return missing;
   }
 
