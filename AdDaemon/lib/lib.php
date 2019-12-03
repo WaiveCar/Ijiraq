@@ -318,7 +318,7 @@ function default_campaign($screen) {
   global $DEFAULT_CAMPAIGN_MAP;
   $id = $DEFAULT_CAMPAIGN_MAP['none'];
   if($screen['project']) {
-    $id =  $DEFAULT_CAMPAIGN_MAP[$screen['project']];
+    $id = $DEFAULT_CAMPAIGN_MAP[$screen['project']];
   }
   return Get::campaign($id);
 }
@@ -347,7 +347,10 @@ function record_screen_on($screen, $payload) {
         $str = intval(strtotime($first['created_at'])) + intval($screen['uptime']);
         $last = date('Y-m-d H:i:s', $str);
         $opt['created_at'] = "datetime('$last')";
+      } else {
+        error_log("${first['uid']} has no uptime");
       }
+
       if(isset($screen['lat'])) {
         $opt['lat'] = $screen['lat'];
         $opt['lng'] = $screen['lng'];
