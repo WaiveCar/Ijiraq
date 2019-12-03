@@ -215,8 +215,7 @@
           <input type="text" placeholder="Promotion Title">
         </div>
         <div class="d-flex justify-content-center mt-4">
-          <input class="ad-date start-date" placeholder="Start Date" onfocus="(this.type='date')" onblur="(this.type='text', this.value=moment(this.value).format('MM/DD/YYYY'))">
-          <input class="ad-date end-date" placeholder="End Date" onfocus="(this.type='date')" onblur="(this.type='text', this.value=moment(this.value).format('MM/DD/YYYY'))">
+          <input class="ad-date start-date" type="date">
         </div>
         <div class="d-flex justify-content-center mt-4">
           <canvas id="triptych-edit" width="${640 * scale}" height="${225 *
@@ -269,19 +268,11 @@
     };
 
     let startDate = document.querySelector('.start-date');
-    startDate.value = state.startDate.length
-      ? moment(state.startDate).format('MM/DD/YYYY')
-      : '';
+    startDate.valueAsDate = state.startDate.length
+      ? new Date(state.startDate)
+      : new Date();
     startDate.oninput = function(e) {
       setState({startDate: e.target.value});
-    };
-
-    let endDate = document.querySelector('.end-date');
-    endDate.value = state.endDate.length
-      ? moment(state.endDate).format('MM/DD/YYYY')
-      : '';
-    endDate.oninput = function(e) {
-      setState({endDate: e.target.value});
     };
 
     let triptychText = document.querySelector('.triptych-text');
