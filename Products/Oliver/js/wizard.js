@@ -556,18 +556,6 @@
                 ['cvv', 'Security Code'],
               ])}
             </div>
-            <div class="inner-payment">
-              <h4>
-                Billing Address
-              </h4>
-              ${formFields([
-                ['street1', 'Address Line 1'],
-                ['street2', 'Address Line 2'],
-                ['city', 'City'],
-                ['state', 'State'],
-                ['zip', 'Zip Code'],
-              ])}
-            </div>
           </div>
           <div class="d-flex justify-content-center save-method">
             <div>
