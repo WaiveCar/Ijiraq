@@ -35,7 +35,7 @@ def send_message(recipient, subject, body):
 def send_receipt(recipient, ad_id):
   return send_message(
       recipient, 
-      'Thanks For Your Oliver Purchase!', 
+      "Your notice is scheduled, here's your receipt",
       """
         <div>
           Ad: {}
