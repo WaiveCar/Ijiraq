@@ -470,7 +470,7 @@
   }
 
   function summaryPage(state) {
-    return state.finalImageSrc
+    return state.finalImageSrc && state.email
       ? `
       <div>
         <div class="wizard-title">
@@ -533,15 +533,15 @@
       : `
       <div>
         <div class="wizard-title">
-          <h2>Summary</h2>
         </div>
-        <h4 class="mt-4">Please Go Back and Create a Message</h4>
+        <h4 class="mt-4">Please go back, create a notice and enter your contact information before attempting to continue</h4>
       </div>
     `;
   }
 
   function paymentPage(state) {
-    return `
+    return state.finalImageSrc && state.email
+      ? `
       <div class="payment-page">
         <div class="wizard-title">
           <h2>Payment</h2>
@@ -573,11 +573,18 @@
         <div class="d-flex justify-content-center">
           <button class="btn add-keyword buy-btn">Complete Purchase</button>
         </div>
-      </div>`;
+      </div>`
+      : '';
   }
 
   function attachSubmit() {
-    document.querySelector('.buy-btn').onclick = submit;
+    let buyBtn = document.querySelector('.buy-btn');
+    if (buyBtn) {
+      buyBtn.onclick = submit;
+    }
+    if (!state.finalImageSrc) {
+      requestAnimationFrame(() => showPage(5));
+    }
   }
 
   let pages = [
@@ -677,7 +684,7 @@
       (page, idx) => `
         <div class="top-bar-link ${
           idx === currentPage ? 'top-bar-selected' : ''
-        }" onclick="showPage(${idx})">${page.title}</div>
+        }" onclick="showPage(${idx}, true)">${page.title}</div>
       `,
     )
     .join('');
