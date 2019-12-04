@@ -656,7 +656,6 @@
     if (isNext) {
       let missing = verifyData();
       if (missing.length) {
-        console.log('form data missing', missing);
         return;
       }
     }
