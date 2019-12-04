@@ -28,7 +28,6 @@
   window.setState = function(updateObj) {
     Object.assign(state, updateObj);
     localStorage.setItem('savedState', JSON.stringify(state));
-    console.log('new state', state);
   };
 
   window.selectCategory = function(category) {
@@ -709,8 +708,7 @@
         missing.push(input.placeholder);
       }
     });
-    console.log(adTypes[state.category].layouts[state.selectedLayout].hasImage, state.sampleImageUsed, state);
-    if (adTypes[state.category].layouts[state.selectedLayout].hasImage && state.sampleImageUsed) {
+    if (currentPage === 3 && adTypes[state.category].layouts[state.selectedLayout].hasImage && state.sampleImageUsed) {
       missing.push('Image Upload');
     }
     return missing;
