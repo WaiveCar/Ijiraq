@@ -586,9 +586,24 @@
       requestAnimationFrame(() => showPage(5));
       showErrorModal(
         'Missing Required Items',
-        'Please go back and create a notice before attempting to continue'
+        'Please go back and create a notice before attempting to continue',
       );
     }
+  }
+
+  function purchaseComplete() {
+    return `
+      <div class="payment-page">
+        <div class="wizard-title">
+          <h2>Purchase Complete</h2>
+        </div>
+      </div>`
+  }
+
+  function afterPurchase() {
+    backBtn.style.visibility = 'hidden';
+    nextBtn.style.visibility = 'hidden';
+    document.querySelector('.top-bar-right').innerHTML = '';
   }
 
   let pages = [
@@ -606,6 +621,7 @@
     {html: infoPage, title: 'Info', loadFunc: infoLoad},
     {html: summaryPage, title: 'Summary'},
     {html: paymentPage, title: 'Payment', loadFunc: attachSubmit},
+    {html: purchaseComplete, title: 'Payment', loadFunc: afterPurchase},
   ];
 
   let currentPage = Number(window.location.pathname.split('/').pop());
@@ -644,17 +660,19 @@
         return;
       }
     }
-    topRightEls[currentPage].classList.remove('top-bar-selected');
+    if (topRightEls[currentPage]) {
+      topRightEls[currentPage].classList.remove('top-bar-selected');
+    }
     if (pageNum < 0 || pageNum > pages.length - 1) {
       return;
     }
     backBtn.style.visibility = pageNum === 0 ? 'hidden' : 'visible';
     nextBtn.innerHTML =
-      pageNum !== pages.length - 1
+      pageNum !== pages.length - 2
         ? 'next<img src="/assets/chevron-right.svg">'
         : 'buy<img src="/assets/chevron-right.svg">';
     nextBtn.onclick =
-      pageNum !== pages.length - 1
+      pageNum !== pages.length - 2
         ? () => showPage(currentPage + 1, true)
         : () => submit();
     document.querySelector('#anchor').innerHTML = pages[pageNum].html(
@@ -672,7 +690,9 @@
       );
     }
     currentPage = pageNum;
-    topRightEls[currentPage].classList.add('top-bar-selected');
+    if (topRightEls[currentPage])  {
+      topRightEls[currentPage].classList.add('top-bar-selected');
+    }
     progressEls.forEach((el, idx) => {
       if (idx <= currentPage) {
         el.classList.add('progress-filled');
@@ -683,7 +703,7 @@
   };
 
   let topRight = document.querySelector('.top-bar-right');
-  topRight.innerHTML = pages
+  topRight.innerHTML = pages.slice(0, -1)
     .map(
       (page, idx) => `
         <div class="top-bar-link ${
@@ -774,7 +794,9 @@
         headers: {'Content-Type': 'multipart/form-data'},
       },
     })
-      .then(response => console.log('response', response))
+      .then(response => {
+        showPage(7);
+      })
       .catch(e =>
         showErrorModal('Error Purchasing Notice', e.response.data.message),
       );
