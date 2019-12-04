@@ -1117,3 +1117,18 @@ h4 {
   }
 }
 
+.required::-webkit-input-placeholder { /* Edge */
+  color: red;
+}
+
+.required:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: red;
+}
+
+.required::placeholder {
+  color: red;
+}
+
+.required-upload {
+  border: 1px solid red;
+}

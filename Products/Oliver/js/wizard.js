@@ -214,7 +214,7 @@
           <h2>Create your Notice</h2>
         </div>
         <div class="title-input d-flex justify-content-center mt-4">
-          <input type="text" placeholder="Notice Title" required>
+          <input type="text" placeholder="Notice Title *" required>
         </div>
         <div class="d-flex justify-content-center mt-4">
           <label for="start-date" class="mr-2">Start Date:</label><input class="ad-date start-date" id="start-date" type="date">
@@ -224,7 +224,7 @@
       scale}">
         </div>
         <div class="d-flex justify-content-between mt-4 ad-input-holder">
-          <textarea type="text" class="triptych-text" placeholder="Notice Text" required></textarea>
+          <textarea type="text" class="triptych-text" placeholder="Notice Text *" required></textarea>
           <div class="ml-3 right-inputs">
             <div class="color-input">
               <span>
@@ -410,7 +410,7 @@
         </div>
         <div class="mt-3 d-flex justify-content-center">
           <textarea class="description triptych-text"
-            placeholder="Notice Description"
+            placeholder="Notice Description *"
             oninput="setState.call(this, {'description': event.target.value})"
             required
           >${state.description || ''}</textarea>
@@ -441,7 +441,7 @@
       .map(
         field => `
           <div>
-            <input type="text" ${field[2] ? 'required': ''} placeholder="${field[1]}" name="${field[0]}" ${
+            <input type="text" ${field[2] ? 'required': ''} placeholder="${field[1]} ${field[2] ? '*': ''}" name="${field[0]}" ${
           addOnInput
             ? `oninput="setState({${field[0]}: this.value})" value=${state[
                 field[0]
@@ -705,10 +705,12 @@
     let missing = [];
     requiredInputs.forEach(input => {
       if (!input.value) {
+        input.classList.add('required');
         missing.push(input.placeholder);
       }
     });
     if (currentPage === 3 && adTypes[state.category].layouts[state.selectedLayout].hasImage && state.sampleImageUsed) {
+      document.querySelector('.input-options').classList.add('required-upload');
       missing.push('Image Upload');
     }
     return missing;
