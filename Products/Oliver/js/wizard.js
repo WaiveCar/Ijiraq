@@ -13,6 +13,7 @@
     canvasText: '',
     keywords: [],
     imageSrc: null,
+    sampleImageUsed: true,
     finalImageSrc: null,
     description: '',
     amount: 1000,
@@ -27,6 +28,7 @@
   window.setState = function(updateObj) {
     Object.assign(state, updateObj);
     localStorage.setItem('savedState', JSON.stringify(state));
+    console.log('new state', state);
   };
 
   window.selectCategory = function(category) {
@@ -210,7 +212,7 @@
     return `
       <div>
         <div class="wizard-title">
-          <h2>Create your Ad</h2>
+          <h2>Create your Notice</h2>
         </div>
         <div class="title-input d-flex justify-content-center mt-4">
           <input type="text" placeholder="Notice Title" required>
@@ -622,11 +624,13 @@
     });
   }
 
-  window.showPage = function(pageNum) {
-    let missing = verifyData();
-    if (missing.length) {
-      console.log('form data missing', missing);
-      return;
+  window.showPage = function(pageNum, isInit) {
+    if (!isInit) {
+      let missing = verifyData();
+      if (missing.length) {
+        console.log('form data missing', missing);
+        return;
+      }
     }
     topRightEls[currentPage].classList.remove('top-bar-selected');
     if (pageNum < 0 || pageNum > pages.length - 1) {
@@ -705,6 +709,10 @@
         missing.push(input.placeholder);
       }
     });
+    console.log(adTypes[state.category].layouts[state.selectedLayout].hasImage, state.sampleImageUsed, state);
+    if (adTypes[state.category].layouts[state.selectedLayout].hasImage && state.sampleImageUsed) {
+      missing.push('Image Upload');
+    }
     return missing;
   }
 
@@ -719,6 +727,11 @@
   }
 
   function submit() {
+    let missing = verifyData();
+    if (missing.length) {
+      console.log('form data missing', missing);
+      return;
+    }
     let formData = new FormData(document.querySelector('.payment-form'));
     for (let field in state) {
       if (field !== 'finalImageSrc') {
@@ -745,6 +758,6 @@
     showPage(currentPage);
   };
 
-  showPage(currentPage);
+  showPage(currentPage, true);
   document.querySelector('#back-btn').onclick = () => showPage(currentPage - 1);
 })();

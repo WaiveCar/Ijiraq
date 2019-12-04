@@ -94,10 +94,13 @@ function drawImage(e, state, isInit) {
         image.height,
         ...layout.imagePosition.map(num => num * scale),
       );
+      if (!image.src.includes('sample-image.svg')) {
+        setState({sampleImageUsed: false});
+      }
     };
     image.onerror = function() {
       image.src = '/assets/sample-image.svg';
-      setState({imageSrc: image.src});
+      setState({imageSrc: image.src, sampleImageUsed: true});
     };
     image.src = state.imageSrc;
   }
@@ -179,7 +182,7 @@ function handleFileInput(layout, state) {
           reRenderText();
         };
         image.src = URL.createObjectURL(this.files[0]);
-        setState({imageSrc: image.src});
+        setState({imageSrc: image.src, sampleImageUsed: false});
       };
       let label = document.querySelector('.input-options');
       label.style.visibility = 'visible';
