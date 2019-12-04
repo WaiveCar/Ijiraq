@@ -441,7 +441,9 @@
       .map(
         field => `
           <div>
-            <input type="text" ${field[2] ? 'required': ''} placeholder="${field[1]} ${field[2] ? '*': ''}" name="${field[0]}" ${
+            <input type="text" ${field[2] ? 'required' : ''} placeholder="${
+          field[1]
+        } ${field[2] ? '*' : ''}" name="${field[0]}" ${
           addOnInput
             ? `oninput="setState({${field[0]}: this.value})" value=${state[
                 field[0]
@@ -559,14 +561,14 @@
               ])}
             </div>
           </div>
-          <div class="d-flex justify-content-center save-method">
+          <!--<div class="d-flex justify-content-center save-method">
             <div>
               <input class="form-check-input" type="checkbox" name="saveMethod" id="saveMethod">
               <label class="form-check-label" for="saveMethod">
                 Save this method
               </label>
             </div>
-          </div>
+          </div>-->
         </form>
         <div class="d-flex justify-content-center">
           <button class="btn add-keyword buy-btn">Complete Purchase</button>
@@ -680,7 +682,7 @@
     )
     .join('');
   let topRightEls = document.querySelectorAll('.top-bar-right .top-bar-link');
-  
+
   let progress = document.querySelector('.progress');
   progress.innerHTML = pages
     .map(
@@ -701,7 +703,9 @@
   }
 
   function verifyData() {
-    let requiredInputs = document.querySelectorAll('input[required], textarea[required]');
+    let requiredInputs = document.querySelectorAll(
+      'input[required], textarea[required]',
+    );
     let missing = [];
     requiredInputs.forEach(input => {
       if (!input.value) {
@@ -709,9 +713,21 @@
         missing.push(input.placeholder);
       }
     });
-    if (currentPage === 3 && adTypes[state.category].layouts[state.selectedLayout].hasImage && state.sampleImageUsed) {
+    if (
+      currentPage === 3 &&
+      adTypes[state.category].layouts[state.selectedLayout].hasImage &&
+      state.sampleImageUsed
+    ) {
       document.querySelector('.input-options').classList.add('required-upload');
       missing.push('Image Upload');
+    }
+    if (missing.length) {
+      showErrorModal(
+        'Missing Required Items',
+        `Please fill in the following required items before continuing: ${missing
+          .map(item => item.replace(' *', ''))
+          .join(', ')}.`,
+      );
     }
     return missing;
   }
@@ -729,7 +745,6 @@
   function submit() {
     let missing = verifyData();
     if (missing.length) {
-      console.log('form data missing', missing);
       return;
     }
     let formData = new FormData(document.querySelector('.payment-form'));
@@ -749,7 +764,9 @@
       },
     })
       .then(response => console.log('response', response))
-      .catch(e => console.log('error buying', e.response));
+      .catch(e =>
+        showErrorModal('Error Purchasing Notice', e.response.data.message),
+      );
   }
 
   window.onpopstate = function() {

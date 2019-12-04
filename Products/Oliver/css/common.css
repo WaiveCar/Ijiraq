@@ -1130,5 +1130,5 @@ h4 {
 }
 
 .required-upload {
-  border: 1px solid red;
+  color: red;
 }
