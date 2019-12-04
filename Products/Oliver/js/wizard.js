@@ -584,6 +584,10 @@
     }
     if (!state.finalImageSrc) {
       requestAnimationFrame(() => showPage(5));
+      showErrorModal(
+        'Missing Required Items',
+        'Please go back and create a notice before attempting to continue'
+      );
     }
   }
 
