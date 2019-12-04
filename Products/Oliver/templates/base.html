@@ -17,23 +17,6 @@
     <title>Screen Admin</title>
   </head>
   <body id="page-top">
-    <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="example-modal-label" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="error-modal-title">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body" id="error-modal-body">
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
     <i class="fas fa-arrow-left"></i>
     <div id="fb-root"></div>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v4.0&appId=536536940468408&autoLogAppEvents=1"></script>
@@ -73,6 +56,23 @@
     <script src="/js/showModal.js"></script>
     <script src="/js/engine.js"></script>
     {% block additionalScripts %}{% endblock %}
+    <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="example-modal-label" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="error-modal-title">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="error-modal-body">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
     </body>
 </html>
 

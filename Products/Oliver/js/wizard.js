@@ -625,8 +625,8 @@
     });
   }
 
-  window.showPage = function(pageNum, isInit) {
-    if (!isInit) {
+  window.showPage = function(pageNum, isNext) {
+    if (isNext) {
       let missing = verifyData();
       if (missing.length) {
         console.log('form data missing', missing);
@@ -644,7 +644,7 @@
         : 'buy<img src="/assets/chevron-right.svg">';
     nextBtn.onclick =
       pageNum !== pages.length - 1
-        ? () => showPage(currentPage + 1)
+        ? () => showPage(currentPage + 1, true)
         : () => submit();
     document.querySelector('#anchor').innerHTML = pages[pageNum].html(
       state,
@@ -775,6 +775,6 @@
     showPage(currentPage);
   };
 
-  showPage(currentPage, true);
+  showPage(currentPage);
   document.querySelector('#back-btn').onclick = () => showPage(currentPage - 1);
 })();
