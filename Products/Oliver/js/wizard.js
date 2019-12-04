@@ -752,14 +752,6 @@
       document.querySelector('.input-options').classList.add('required-upload');
       missing.push('Image Upload');
     }
-    if (missing.length) {
-      showErrorModal(
-        'Missing Required Items',
-        `Please fill in the following required items before continuing: ${missing
-          .map(item => item.replace(' *', ''))
-          .join(', ')}.`,
-      );
-    }
     return missing;
   }
 
