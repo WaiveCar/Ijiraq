@@ -118,11 +118,11 @@
     return `
       <div>
         <div class="wizard-title">
-          <h2>Locations</h2>
+          <h2>Location</h2>
         </div>
         <div class="d-flex justify-content-center">
           <div class="subtitle">
-            A couple of sentances to provide further detail and instruction
+            Drag the circle around to the area you want your message to show in.
           </div>
         </div>
 
@@ -637,7 +637,7 @@
       zoom: 11,
       center,
     });
-    _map.load([['Circle', center, 2500]]);
+    _map.load([['Circle', center, 3500]]);
   };
 
   self.clearmap = () => _map.clear();
