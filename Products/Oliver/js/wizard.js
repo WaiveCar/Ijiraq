@@ -1,5 +1,6 @@
 (() => {
-  document.querySelector('.navbar-nav').classList.add('in-wizard');
+  // this is commented out while we are not using the menu
+  // document.querySelector('.navbar-nav').classList.add('in-wizard');
   let categories = ['promo', 'notice', 'other'];
   let initialState = {
     category: categories[0],
