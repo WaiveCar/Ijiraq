@@ -185,6 +185,11 @@ body {
   vertical-align: middle;
 }
 
+.pitch-top-bar {
+  margin-top: 2.2rem;
+  margin-left: 1.5rem;
+}
+
 .company-name {
   background-color: black;
   color: white;
