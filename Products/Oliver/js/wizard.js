@@ -8,6 +8,7 @@
     backgroundColor: 'white',
     textColor: 'black',
     preferredContact: 'email',
+    location: null,
     title: '',
     startDate: '',
     endDate: '',
@@ -122,7 +123,12 @@
   }
 
   function targetingPage(state) {
-    setTimeout(doMap, 100);
+    setTimeout(doMap.bind(this, () => {
+      setState({location: _map.save()});
+      _map._map.on('pointerup', e => {
+        setState({location: _map.save()});
+      });
+    }), 100)
     return `
       <div>
         <div class="wizard-title">
@@ -136,13 +142,16 @@
 
         <div class="row">
           <div class="col-lg-12">
-            <div class="card">
+            <div class="card map-holder">
               <div id="map"></div>
             </div>
           </div>
         </div>
       </div>
     `;
+  }
+
+  function handleTargeting() {
   }
 
   window.selectLayout = function(idx) {
@@ -636,6 +645,7 @@
     {
       html: targetingPage,
       title: 'Locations',
+      loadFunc: handleTargeting,
     },
     {html: layoutPage, title: 'Layout'},
     {html: adCreatePage, title: 'Edit', loadFunc: adCreateLoad},
@@ -649,7 +659,7 @@
   let backBtn = document.querySelector('#back-btn');
   let nextBtn = document.querySelector('#next-btn');
 
-  self.doMap = function() {
+  self.doMap = function(cb) {
     var center = [-118.33, 34.09];
     self._map = map({
       selectFirst: true,
@@ -659,6 +669,7 @@
       center,
     });
     _map.load([['Circle', center, 2500]]);
+    cb();
   };
 
   self.clearmap = () => _map.clear();
