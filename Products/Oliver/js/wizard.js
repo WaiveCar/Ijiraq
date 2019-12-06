@@ -123,10 +123,10 @@
   }
 
   function targetingPage(state) {
-    setTimeout(doMap.bind(this, () => {
-      setState({location: _map.save()});
+    setTimeout(doMap.bind(this, state.location, () => {
+      setState({location: _map.save()}[0]);
       _map._map.on('pointerup', e => {
-        setState({location: _map.save()});
+        setState({location: _map.save()[0]});
       });
     }), 100)
     return `
@@ -151,7 +151,29 @@
     `;
   }
 
-  function handleTargeting() {
+  self.doMap = function(currentSelection, cb) {
+    var center = currentSelection ? currentSelection[1] : [-118.33, 34.09];
+    self._map = map({
+      selectFirst: true,
+      draw: false,
+      resize: false,
+      zoom: 11,
+      center,
+    });
+    _map.load([['Circle', center, 2500]]);
+    cb();
+  };
+
+  self.clearmap = () => _map.clear();
+  self.removeShape = () => _map.removeShape();
+
+  function geosave() {
+    var coords = _map.save();
+    // If we click on the map again we should show the updated coords
+    _campaign.shape_list = coords;
+    post('campaign_update', {id: _id, geofence: coords}, res => {
+      show({data: 'Updated Campaign'}, 1000);
+    });
   }
 
   window.selectLayout = function(idx) {
@@ -645,7 +667,6 @@
     {
       html: targetingPage,
       title: 'Locations',
-      loadFunc: handleTargeting,
     },
     {html: layoutPage, title: 'Layout'},
     {html: adCreatePage, title: 'Edit', loadFunc: adCreateLoad},
@@ -658,31 +679,6 @@
   let currentPage = Number(window.location.pathname.split('/').pop());
   let backBtn = document.querySelector('#back-btn');
   let nextBtn = document.querySelector('#next-btn');
-
-  self.doMap = function(cb) {
-    var center = [-118.33, 34.09];
-    self._map = map({
-      selectFirst: true,
-      draw: false,
-      resize: false,
-      zoom: 11,
-      center,
-    });
-    _map.load([['Circle', center, 2500]]);
-    cb();
-  };
-
-  self.clearmap = () => _map.clear();
-  self.removeShape = () => _map.removeShape();
-
-  function geosave() {
-    var coords = _map.save();
-    // If we click on the map again we should show the updated coords
-    _campaign.shape_list = coords;
-    post('campaign_update', {id: _id, geofence: coords}, res => {
-      show({data: 'Updated Campaign'}, 1000);
-    });
-  }
 
   window.showPage = function(pageNum, isNext) {
     if (!pages[pageNum]) {
