@@ -592,11 +592,16 @@
     }
   }
 
-  function purchaseComplete() {
+  function purchaseComplete(state) {
     return `
       <div class="payment-page">
         <div class="wizard-title">
           <h2>Purchase Complete</h2>
+          <div>
+            Ad ID: ${state.adId}
+            Charge ID: ${state.charge.id}
+            Amount: ${state.charge.amount}
+          </div>
         </div>
       </div>`
   }
@@ -790,11 +795,15 @@
       },
     })
       .then(response => {
+        setState(Object.assign(initialState, {
+          adId: response.data.ad_id,
+          charge: response.data.charge,
+        }));
         showPage(7);
       })
-      .catch(e =>
-        showErrorModal('Error Purchasing Notice', e.response.data.message),
-      );
+      .catch(e => {
+        showErrorModal('Error Purchasing Notice', e.response.data.message);
+      });
   }
 
   window.onpopstate = function() {
