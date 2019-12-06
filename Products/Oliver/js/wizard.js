@@ -16,6 +16,8 @@
     imageSrc: null,
     sampleImageUsed: true,
     finalImageSrc: null,
+    phone: '',
+    email: '',
     description: '',
     amount: 1000,
   };
