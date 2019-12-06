@@ -600,12 +600,20 @@
         <div class="wizard-title">
           <h2>Purchase Complete</h2>
           <div>
+            Congratualtions on your purchase! A confirmation has been sent to your email.
+          </div>
+          <div>
             Ad ID: ${state.adId}
+          </div>
+          <div>
             Charge ID: ${state.charge.id}
+          </div>
+          <div>
             Amount: ${state.charge.amount}
           </div>
+          </div>
         </div>
-      </div>`
+      </div>`;
   }
 
   function afterPurchase() {
@@ -700,7 +708,7 @@
       );
     }
     currentPage = pageNum;
-    if (topRightEls[currentPage])  {
+    if (topRightEls[currentPage]) {
       topRightEls[currentPage].classList.add('top-bar-selected');
     }
     progressEls.forEach((el, idx) => {
@@ -713,7 +721,8 @@
   };
 
   let topRight = document.querySelector('.top-bar-right');
-  topRight.innerHTML = pages.slice(0, -1)
+  topRight.innerHTML = pages
+    .slice(0, -1)
     .map(
       (page, idx) => `
         <div class="top-bar-link ${
@@ -797,10 +806,12 @@
       },
     })
       .then(response => {
-        setState(Object.assign(initialState, {
-          adId: response.data.ad_id,
-          charge: response.data.charge,
-        }));
+        setState(
+          Object.assign(initialState, {
+            adId: response.data.ad_id,
+            charge: response.data.charge,
+          }),
+        );
         showPage(7);
       })
       .catch(e => {
