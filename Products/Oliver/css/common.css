@@ -697,7 +697,7 @@ select.form-control:focus,
 
 @media(max-width: 768px) {
   .wizard-page {
-    padding-bottom: 60px;
+    padding-bottom: 20px;
   }
   .wizard-nav {
     padding-top: 10px;

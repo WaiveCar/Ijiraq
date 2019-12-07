@@ -705,6 +705,7 @@
       pageNum !== pages.length - 2
         ? () => showPage(currentPage + 1, true)
         : () => submit();
+    scroll(0, 0);
     document.querySelector('#anchor').innerHTML = pages[pageNum].html(
       state,
       anchor,
