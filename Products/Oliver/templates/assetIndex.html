@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block topbar %}
+<span class="top-bar-right ml-4 mt-2">
+  <div class="vertical-flex">
+    <span class="company-name">{{title}}s</span>
+  </div>
+  <div class="vertical-flex">
+    <a href="/{{name}}s/create" class="new-campaign-btn">New {{name}}</a>
+  </div>
+</span>
+{% endblock %}
+{% block content %}
+<div id="content-wrapper" class="d-flex flex-column">
+  <div class="table-responsive">
+    <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
+      <thead id="table-head"> </thead>
+      <tbody id="table-body"> </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -13,11 +13,11 @@ stripe.api_key = config['secret']
 # The function below will be what is used to actually charge users for an ad. 
 # I am going to add an outline of additional logic that will need to be here once 
 # this code is incorporated into the server
-def charge_for_ad(user_id, email, card, amount, ad_id):
+def charge_for_notice(email, card, amount, ad_id):
   try:
     # First, a user will be checked for a stripe_id. If no stripe_id is present,
     # create_customer will need to be called
-    customer = create_customer(user_id, email)
+    customer = create_customer(email)
     # Then, we will need to check if a user has a card in stripe already or if they 
     # provided one with this request. If neither, we need to create a card in stripe 
     # as below
@@ -26,27 +26,22 @@ def charge_for_ad(user_id, email, card, amount, ad_id):
     return create_charge(
         customer.id, 
         amount, 
-        ad_id, 
-        email, 
         'Charge for Oliver ad #{} for user with email {}'.format(ad_id, email)
     )
   except Exception as e:
-    print('Error charging user', e)
-    raise Exception
+    raise e
 
-def create_customer(user_id, email):
+def create_customer(email):
   try: 
-    return stripe.Customer.create(description='Stripe customer for Oliver with id {} and email {}'.format(user_id, email))
-  except Exception as e:
-    print('Error creating user', e)
-    raise Exception
+    return stripe.Customer.create(description='Stripe customer for Oliver with email {}'.format(email))
+  except stripe.error.CardError as e:
+    raise e
 
 def retrieve_cards_for_user(stripe_id):
   try: 
     return stripe.Customer.list_sources(stripe_id)
-  except Exception as e:
-    print('Error retrieving cards', e)
-    raise Exception
+  except stripe.error.CardError as e:
+    raise e
 
 def create_card(stripe_id, card):
   try: 
@@ -61,9 +56,8 @@ def create_card(stripe_id, card):
         'currency': 'usd',
       },  
     )
-  except Exception as e:
-    print('Error adding new card', e)
-    raise Exception
+  except stripe.error.CardError as e:
+    raise e
 
 def update_card(stripe_id, card_id, update_obj):
   try: 
@@ -72,9 +66,8 @@ def update_card(stripe_id, card_id, update_obj):
       card_id,
       metadata=update_obj,
     )
-  except Exception as e:
-    print('Error upadating card', e)
-    raise Exception
+  except stripe.error.CardError as e:
+    raise e
 
 def delete_card(stripe_id, card_id):
   try: 
@@ -82,11 +75,10 @@ def delete_card(stripe_id, card_id):
       stripe_id,
       card_id,
     )
-  except Exception as e:
-    print('Error deleting card', e)
-    raise Exception
+  except stripe.error.CardError as e:
+    raise e
 
-def create_charge(customer_id, amount, descirption):
+def create_charge(customer_id, amount, description):
   try: 
     return stripe.Charge.create(
         amount=amount, 
@@ -94,16 +86,14 @@ def create_charge(customer_id, amount, descirption):
         customer=customer_id, 
         description=description,
     )
-  except Exception as e:
-    print('Error creating charge', e)
-    raise Exception
+  except stripe.error.CardError as e:
+    raise e
 
 def list_charges_by_user(stripe_id):
   try:
     return stripe.Charge.list(customer=stripe_id)
-  except Exception as e:
-    print('Error retrieving charges', e)
-    raise Exception
+  except stripe.error.CardError as e:
+    raise e
 
 def refund_charge(charge_id, amount=None):
   try:
@@ -111,13 +101,5 @@ def refund_charge(charge_id, amount=None):
       charge=charge_id,
       amount=amount,
     )
-  except Exception as e:
-    print('Error refunding charge', e)
-    raise Exception
-  
-
-#print(charge_for_ad(1, 'daleighan@gmail.com', {'card_number': '4242424242424242', 'exp_month': 1, 'exp_year': 2021, 'cvc': 111}, 1000, 1))
-#print(retrieve_cards_for_user('cus_G0OgG30WYANHBs'))
-#print(update_card('cus_G0OgG30WYANHBs', 'card_1FUNsxHjZj603nmB4Cp2KNST', {'exp_month': 5}))
-#print(refund_charge('ch_1FUNsyHjZj603nmBHhEzZDOs'))
-print(list_charges_by_user('cus_G0OgG30WYANHBs'))
+  except stripe.error.CardError as e:
+    raise e
