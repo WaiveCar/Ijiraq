@@ -1,4 +1,0 @@
-websockets
-aiohttp
-flask-socketio
-Flask-Sockets
