@@ -1085,11 +1085,19 @@ function campaign_update($data, $fileList, $user = false) {
   return $campaign_id;
 }
 
-function kpi() {
-  $window_size = 3 * 24 * 60 * 60;
-  $distance = 0.005;
+function kpi($opts) {
+  $window_size = aget($opts, 'time', 3 * 24 * 60 * 60);
+  if($window_size < 12) {
+    $window_size *= 86400;
+  }
+  if($window_size < 100) {
+    $window_size *= 3600;
+  }
+  $distance = aget($opts, 'distance', 0.005);
 
   $res = [
+    'window' => $window_size,
+    'distance' => $distance,
     'ratio' => [],
     'runtime' => db_all("select uptime, d * $window_size as unix from (
       select sum(uptime) as uptime, strftime('%s', created_at) / $window_size as d from uptime_history 
@@ -1108,11 +1116,28 @@ function kpi() {
     $res[$type] = db_all("select count(*) as num, d * $window_size as unix from ($inner) group by d");
   }
 
+  $run_ix = 0;
   for($ix = 0; $ix < count($res['car']); $ix++) {
-    $res['ratio'][] = [
-      'ratio' => $res['screen'][$ix]['num'] / $res['car'][$ix]['num'],
-      'unix' => $res['screen'][$ix]['unix']
+    $time = $res['screen'][$ix]['unix'];
+    $cars = $res['car'][$ix]['num'];
+    $screens = $res['screen'][$ix]['num'];
+    $row = [
+      'screen_perc' => $screens / $cars,
+      'car_count' => $cars,
+      'screen_count' => $screens,
+      'unix' => $time
     ];
+    if(aget($res, "runtime.$run_ix.unix") == $time) {
+      $uptime = aget($res, "runtime.$run_ix.uptime");
+      $row['screen_avg'] = $uptime / $screens;
+      $row['screen_time'] = $uptime;
+      $row['screen_avg_hrday'] = $row['screen_avg'] / ($window_size / 86400) / (3600);
+      $run_ix ++;
+    }
+    $res['ratio'][] = $row;
+  }
+  foreach(['screen','car','runtime'] as $k) {
+    unset( $res[$k] );
   }
 
   return $res;
