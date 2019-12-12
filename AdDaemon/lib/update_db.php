@@ -4,6 +4,11 @@
 include_once('db.php');
 
 $db = db_connect();
+
+$backup = '/tmp/upgrade_backup.db';
+echo "Creating $backup in case we hose the db.\n";
+shell_exec("/usr/bin/sqlite3 $DBPATH '.save $backup'");
+
 foreach($SCHEMA as $table_name => $table_schema) {
   $existing_schema = [];
   $existing_column_name_list = [];
