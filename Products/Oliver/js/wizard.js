@@ -1,5 +1,6 @@
 (() => {
-  document.querySelector('.navbar-nav').classList.add('in-wizard');
+  // this is commented out while we are not using the menu
+  // document.querySelector('.navbar-nav').classList.add('in-wizard');
   let categories = ['promo', 'notice', 'other'];
   let initialState = {
     category: categories[0],
@@ -7,6 +8,7 @@
     backgroundColor: 'white',
     textColor: 'black',
     preferredContact: 'email',
+    location: null,
     title: '',
     startDate: '',
     endDate: '',
@@ -15,6 +17,13 @@
     imageSrc: null,
     sampleImageUsed: true,
     finalImageSrc: null,
+    businessName: '',
+    businessStreet: '',
+    businessCity: '',
+    businessState: '',
+    businessZip: '',
+    phone: '',
+    email: '',
     description: '',
     amount: 1000,
   };
@@ -114,27 +123,62 @@
   }
 
   function targetingPage(state) {
-    setTimeout(doMap, 100);
+    setTimeout(doMap.bind(this, state.location, () => {
+      setState({location: _map.save()}[0]);
+      _map._map.on('pointerup', e => {
+        setState({location: _map.save()[0]});
+      });
+    }), 100)
     return `
       <div>
         <div class="wizard-title">
-          <h2>Location</h2>
+          <h2>Boost Zone</h2>
         </div>
         <div class="d-flex justify-content-center">
           <div class="subtitle">
-            Drag the circle around to the area you want your message to show in.
+            <p>
+              You'll get free additional time for the duration of your campaign whenever cars pass through wherever you move the circle.
+            </p>
+            <p>
+              Tip: Drag the circle to where your best audience is.
+            </p>
           </div>
         </div>
 
         <div class="row">
           <div class="col-lg-12">
-            <div class="card">
+            <div class="card map-holder">
               <div id="map"></div>
             </div>
           </div>
         </div>
       </div>
     `;
+  }
+
+  self.doMap = function(currentSelection, cb) {
+    var center = currentSelection ? currentSelection[1] : [-118.33, 34.09];
+    self._map = map({
+      selectFirst: true,
+      draw: false,
+      resize: false,
+      zoom: 11,
+      center,
+    });
+    _map.load([['Circle', center, 2500]]);
+    cb();
+  };
+
+  self.clearmap = () => _map.clear();
+  self.removeShape = () => _map.removeShape();
+
+  function geosave() {
+    var coords = _map.save();
+    // If we click on the map again we should show the updated coords
+    _campaign.shape_list = coords;
+    post('campaign_update', {id: _id, geofence: coords}, res => {
+      show({data: 'Updated Campaign'}, 1000);
+    });
   }
 
   window.selectLayout = function(idx) {
@@ -480,7 +524,7 @@
           <div class="inner-summary">
             <h4 class="mt-4">Ad Type</h4>
             <h2 class="summary-title">${capitalize(state.category)}</h2>
-            <h4 class="mt-2">Locations</h4>
+            <h4 class="mt-2">Boost Zone</h4>
             <div class="mb-2">
               ${['one', 'two', 'three']
                 .map(
@@ -591,13 +635,26 @@
     }
   }
 
-  function purchaseComplete() {
+  function purchaseComplete(state) {
     return `
       <div class="payment-page">
         <div class="wizard-title">
           <h2>Purchase Complete</h2>
+          <div>
+            Congratualtions on your purchase! A confirmation has been sent to your email.
+          </div>
+          <div>
+            Ad ID: ${state.adId}
+          </div>
+          <div>
+            Charge ID: ${state.charge.id}
+          </div>
+          <div>
+            Amount: ${state.charge.amount}
+          </div>
+          </div>
         </div>
-      </div>`
+      </div>`;
   }
 
   function afterPurchase() {
@@ -614,9 +671,9 @@
     },
     {
       html: targetingPage,
-      title: 'Locations',
+      title: 'Boost',
     },
-    {html: layoutPage, title: 'Layout'},
+    //{html: layoutPage, title: 'Layout'},
     {html: adCreatePage, title: 'Edit', loadFunc: adCreateLoad},
     {html: infoPage, title: 'Info', loadFunc: infoLoad},
     {html: summaryPage, title: 'Summary'},
@@ -628,35 +685,13 @@
   let backBtn = document.querySelector('#back-btn');
   let nextBtn = document.querySelector('#next-btn');
 
-  self.doMap = function() {
-    var center = [-118.33, 34.09];
-    self._map = map({
-      selectFirst: true,
-      draw: false,
-      resize: false,
-      zoom: 11,
-      center,
-    });
-    _map.load([['Circle', center, 3500]]);
-  };
-
-  self.clearmap = () => _map.clear();
-  self.removeShape = () => _map.removeShape();
-
-  function geosave() {
-    var coords = _map.save();
-    // If we click on the map again we should show the updated coords
-    _campaign.shape_list = coords;
-    post('campaign_update', {id: _id, geofence: coords}, res => {
-      show({data: 'Updated Campaign'}, 1000);
-    });
-  }
-
   window.showPage = function(pageNum, isNext) {
+    if (!pages[pageNum]) {
+      showPage(0);
+    }
     if (isNext) {
       let missing = verifyData();
       if (missing.length) {
-        console.log('form data missing', missing);
         return;
       }
     }
@@ -675,6 +710,7 @@
       pageNum !== pages.length - 2
         ? () => showPage(currentPage + 1, true)
         : () => submit();
+    scroll(0, 0);
     document.querySelector('#anchor').innerHTML = pages[pageNum].html(
       state,
       anchor,
@@ -690,7 +726,7 @@
       );
     }
     currentPage = pageNum;
-    if (topRightEls[currentPage])  {
+    if (topRightEls[currentPage]) {
       topRightEls[currentPage].classList.add('top-bar-selected');
     }
     progressEls.forEach((el, idx) => {
@@ -703,7 +739,8 @@
   };
 
   let topRight = document.querySelector('.top-bar-right');
-  topRight.innerHTML = pages.slice(0, -1)
+  topRight.innerHTML = pages
+    .slice(0, -1)
     .map(
       (page, idx) => `
         <div class="top-bar-link ${
@@ -787,11 +824,17 @@
       },
     })
       .then(response => {
+        setState(
+          Object.assign(initialState, {
+            adId: response.data.ad_id,
+            charge: response.data.charge,
+          }),
+        );
         showPage(7);
       })
-      .catch(e =>
-        showErrorModal('Error Purchasing Notice', e.response.data.message),
-      );
+      .catch(e => {
+        showErrorModal('Error Purchasing Notice', e.response.data.message);
+      });
   }
 
   window.onpopstate = function() {
