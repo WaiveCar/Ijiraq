@@ -413,6 +413,31 @@ function ping($payload) {
 
     $screen = Get::screen(['uid' => $payload['uid']]);
 
+    if(!isset($payload['uptime'])) {
+      error_log("Uptime not known for " . $payload['uid']);
+    }
+    if($screen) {
+      if(isset($payload['uptime']) && intval($screen['uptime']) > intval($payload['uptime'])) {
+        record_screen_on($screen, $payload);
+      }
+      //
+      // If we are getting a bootcount from the screen that is less then what we
+      // have previously recorded then we distrust the lying screen and keep our
+      // own record.
+      if(isset($obj['bootcount']) && $screen['bootcount'] > $obj['bootcount']) {
+        unset($obj['bootcount']);
+      }
+    }
+
+    $screen = upsert_screen($payload['uid'], $obj);
+    //
+    // After this point we know that $screen is valid.
+    // 
+    // IMPORTANT: We shouldn't permute any values in $obj
+    // past this and expect them to be inserted into the screen
+    // because ^^^ we just did that. 
+    //
+
     if(isset($obj['last_uptime'])) {
       $bc = intval($payload['bootcount']) - 1;
       $opts = [
@@ -441,13 +466,6 @@ function ping($payload) {
       }
     }
 
-    if(!isset($payload['uptime'])) {
-      error_log("Uptime not known for " . $payload['uid']);
-    }
-    if($screen && isset($payload['uptime']) && intval($screen['uptime']) > intval($payload['uptime'])) {
-      record_screen_on($screen, $payload);
-    }
-    $screen = upsert_screen($payload['uid'], $obj);
   } else {
     return doError("UID needs to be set before continuing");
   }
@@ -469,8 +487,6 @@ function ping($payload) {
   // The latest version of the software
   // and the definition of the screen.
   $res = [
-    'version' => $VERSION,
-    'version_date' => $LASTCOMMIT,
     'screen' => $screen,
     'default' => default_campaign($screen)
   ];
