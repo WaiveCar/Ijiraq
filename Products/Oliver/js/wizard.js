@@ -132,11 +132,16 @@
     return `
       <div>
         <div class="wizard-title">
-          <h2>Locations</h2>
+          <h2>Boost Zone</h2>
         </div>
         <div class="d-flex justify-content-center">
           <div class="subtitle">
-            A couple of sentances to provide further detail and instruction
+            <p>
+              You'll get free additional time for the duration of your campaign whenever cars pass through wherever you move the circle.
+            </p>
+            <p>
+              Tip: Drag the circle to where your best audience is.
+            </p>
           </div>
         </div>
 
@@ -519,7 +524,7 @@
           <div class="inner-summary">
             <h4 class="mt-4">Ad Type</h4>
             <h2 class="summary-title">${capitalize(state.category)}</h2>
-            <h4 class="mt-2">Locations</h4>
+            <h4 class="mt-2">Boost Zone</h4>
             <div class="mb-2">
               ${['one', 'two', 'three']
                 .map(
@@ -666,9 +671,9 @@
     },
     {
       html: targetingPage,
-      title: 'Locations',
+      title: 'Boost',
     },
-    {html: layoutPage, title: 'Layout'},
+    //{html: layoutPage, title: 'Layout'},
     {html: adCreatePage, title: 'Edit', loadFunc: adCreateLoad},
     {html: infoPage, title: 'Info', loadFunc: infoLoad},
     {html: summaryPage, title: 'Summary'},
