@@ -194,7 +194,7 @@ function log_screen_changes($old, $new) {
     $compare_before = trim($compare_before, "'");
     $compare_after = trim($compare_after, "'");
     if($compare_before !== $compare_after) {
-      error_log("'$compare_before' != '$compare_after'");
+      error_log("${old['id']}: '$compare_before' != '$compare_after'");
       db_insert('screen_history', [
         'screen_id' => $old['id'],
         'action' => db_string($delta),
