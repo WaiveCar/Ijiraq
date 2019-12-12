@@ -102,7 +102,7 @@ function remove() {
 
 function edit(id) {
   var screen = get(id);
-  var keylist = ['last_seen','ignition_time','ignition_state','expected_hour','port','phone','imei','pings','last_task'];
+  var keylist = ['last_seen','ignition_time','ignition_state','expected_hour','port','phone','imei','ping_count','last_task'];
   var out = keylist.map(row => screen[row] ? 
     `<span>${row}</span><span>${JSON.stringify(screen[row]).replace(/\"/g,'')}</span>`:
     `<span>${row}</span><span>&mdash;</span>`
