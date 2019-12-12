@@ -104,6 +104,7 @@ $SCHEMA = [
     'version_time'=> 'integer',
     'uptime'      => 'integer',
     'pings'       => 'integer default 0',
+    'bootcount'   => 'integer default 0',
     'port'        => 'integer', 
     'active'      => 'boolean default true',
     'removed'     => 'boolean default false',
