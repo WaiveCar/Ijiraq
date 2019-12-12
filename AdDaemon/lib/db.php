@@ -1,6 +1,7 @@
 <?php
 date_default_timezone_set('UTC');
 
+$DBPATH = "/var/db/waivescreen/main.db";
 $JSON = [
   'pre' => function($v) { 
     if ($v === null) { return $v; } 
@@ -103,6 +104,7 @@ $SCHEMA = [
     'version'     => 'text',
     'version_time'=> 'integer',
     'uptime'      => 'integer',
+    'ping_count'  => 'integer default 0',
     'pings'       => 'integer default 0',
     'bootcount'   => 'integer default 0',
     'port'        => 'integer', 
@@ -466,13 +468,12 @@ $SCHEMA = [
 ];
 $_db = false;
 function db_connect() {
-  global $_db;
+  global $_db, $DBPATH;
   if(!$_db) {
-    $dbPath = "/var/db/waivescreen/main.db";
-    if(!file_exists($dbPath)) {
-      touch($dbPath);
+    if(!file_exists($DBPATH)) {
+      touch($DBPATH);
     }
-    $_db = new SQLite3($dbPath);
+    $_db = new SQLite3($DBPATH);
     $_db->busyTimeout(5000);
     // WAL mode has better control over concurrency.
     // Source: https://www.sqlite.org/wal.html

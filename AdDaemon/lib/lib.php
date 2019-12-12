@@ -458,7 +458,7 @@ function ping($payload) {
     error_log(" ${screen['port']} -> ${obj['port']} : forwarding request");
   }
 
-  $obj['pings'] = intval($screen['pings']) + 1;
+  $obj['ping_count'] = intval($screen['ping_count']) + 1;
 
   log_screen_changes($screen, $obj);
 
