@@ -953,9 +953,7 @@ input:focus, textarea:focus {
 }
 
 #triptych-edit, .summary-preview {
-  -webkit-box-shadow: 3.5px 3.5px 4px 1px rgba(143,143,143,1);
-  -moz-box-shadow: 3.5px 3.5px 4px 1px rgba(143,143,143,1);
-  box-shadow: 3.5px 3.5px 4px 1px rgba(143,143,143,1);
+  box-shadow: 3px 3px 4px 1px rgba(143,143,143,0.3);
 }
 
 .input-options {
