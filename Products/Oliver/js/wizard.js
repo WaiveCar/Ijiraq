@@ -597,7 +597,7 @@
             </div>
             <div>
               <h4 class="mt-4">Price</h4>
-              <h2 class="summary-title">$**.**</h2>
+              <h2 class="summary-title"><small>200 plays for</small> $3.99</h2>
             </div>
           </div>
           <div class="inner-summary">
@@ -618,12 +618,14 @@
                   `
                 : '<h2 class="summary-title">For the next week.</h2>'
             }
+    <!--
             <div>
               <h4 class="mt-2">Keywords</h4>
               <div class="mb-2">
                 ${renderKeywords() ? renderKeywords() : 'No Keywords Entered'}
               </div>
             </div>
+      -->
             <h4 class="mt-4">Content</h4>
             <div>
               <img src="${state.finalImageSrc}" class="summary-preview">
