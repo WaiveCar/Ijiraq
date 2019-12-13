@@ -6,6 +6,7 @@
     category: categories[0],
     selectedLayout: 0,
     backgroundColor: 'white',
+    foregroundColor: 'black',
     textColor: 'black',
     preferredContact: 'email',
     location: null,
@@ -74,12 +75,7 @@
     return `
       <div>
         <div class="wizard-title">
-          <h2>Message Type</h2>
-        </div>
-        <div class="d-flex justify-content-center">
-          <div class="subtitle">
-            What is the purpose of your message?
-          </div>
+          <h2>What is the purpose of your message?</h2>
         </div>
         <div class="category-holder d-flex justify-content-between">
           ${categories
@@ -137,10 +133,7 @@
         <div class="d-flex justify-content-center">
           <div class="subtitle">
             <p>
-              You'll get free additional time for the duration of your campaign whenever cars pass through wherever you move the circle.
-            </p>
-            <p>
-              Tip: Drag the circle to where your best audience is.
+              <b>Drag the circle.</b> Along with 200 plays, you get free bonus plays during your campaign when cars pass through wherever you place the circle.
             </p>
           </div>
         </div>
@@ -162,10 +155,10 @@
       selectFirst: true,
       draw: false,
       resize: false,
-      zoom: 11,
+      zoom: 12.5,
       center,
     });
-    _map.load([['Circle', center, 2500]]);
+    _map.load([['Circle', center, 2256]]);
     cb();
   };
 
@@ -258,36 +251,87 @@
           <h2>Create your Notice</h2>
         </div>
         <div class="title-input d-flex justify-content-center mt-4">
+      <!--
           <input type="text" placeholder="Notice Title *" required>
-        </div>
-        <div class="d-flex justify-content-center mt-4">
-          <label for="start-date" class="mr-2">Start Date:</label><input class="ad-date start-date" id="start-date" type="date">
-        </div>
-        <div class="d-flex justify-content-center mt-4">
-          <canvas id="triptych-edit" width="${640 * scale}" height="${225 *
-      scale}">
+      -->
         </div>
         <div class="d-flex justify-content-between mt-4 ad-input-holder">
-          <textarea type="text" class="triptych-text" placeholder="Notice Text *" required></textarea>
           <div class="ml-3 right-inputs">
             <div class="color-input">
-              <span>
-                <input type="color" name="background-color-picker"><label for="background-color-picker">Background</label>
-              </span>
-              <span class="ml-2">
-                <input type="color" name="text-color-picker"><label for="text-color-picker">Text</label>
-              </span>
+              <button title="Previous color" class='btn wizard-btn disabled' id=colorBack onclick=pick.back()>&#x1f870;</button>
+              <button title="Next color" class='btn wizard-btn disabled' id=colorForward onclick=pick.forward()>&#x1f872;</button>
+              <button class='btn wizard-btn' onclick=pick.gen()>change color</button>
             </div>
             <div class="mobile-flex-center file-holder">
               <label class="input-options">
               </label>
             </div>
           </div>
+          <textarea type="text" class="triptych-text" placeholder="Notice Text *" required></textarea>
+        </div>
+        <div class="d-flex justify-content-center mt-4">
+          <canvas id="triptych-edit" width="${640 * scale}" height="${225 *
+      scale}">
+        </div>
+        <div class="d-flex justify-content-center mt-4">
+          <label for="start-date" class="mr-2">Start Date:</label><input class="ad-date start-date" id="start-date" type="date">
         </div>
       </div>
     `;
   }
 
+  self.pick = function(){
+    var _dark = 1, stack = [], ptr = 0;
+
+    function draw() {
+      var [base, bg, fg] = stack[stack.length - (ptr + 1)];
+
+      setState({backgroundColor: 'hsl(' + [base, '20%', bg].join(',') + ')'});
+      setState({foregroundColor: 'hsl(' + [(base +180)%360, fg, fg].join(',') + ')'});
+      /*
+      reRenderText();
+      drawImage(e, state);
+      */
+      handleCanvasText(0, state);
+      document.getElementById('colorBack').classList[pick.canBack() ? 'remove' : 'add']('disabled');
+      document.getElementById('colorForward').classList[pick.canForward() ? 'remove' : 'add']('disabled');
+    }
+    return {
+      stack: stack,
+      gen: function() {
+        if(stack.length == 0){
+          stack.push([0, "100%", "0%"]);
+        } else if(stack.length == 1) {
+          stack.push([0, "0%", "100%"]);
+        } else {
+          var base = (Math.random() * 360);
+          ptr = 0;
+          _dark = !_dark;
+
+          var bg = (_dark ? 20 : 80) + "%";
+          var fg = (_dark ? 80 : 20) + "%";
+          stack.push([base, bg, fg]);
+        }
+        draw();
+      },
+      canBack: () => ptr + 1 < stack.length,
+      canForward: () => ptr > 0,
+      forward: function() {
+        if(pick.canForward()) {
+          ptr --;
+          draw();
+        }
+      },
+      back: function() {
+        if(pick.canBack()) {
+          ptr ++;
+          draw();
+        }
+      }
+    };
+  }();
+
+    
   function adCreateLoad() {
     triptych = document.querySelector('#triptych-edit');
     ctx = triptych.getContext('2d');
@@ -297,21 +341,23 @@
     } else {
       image = document.querySelector('.triptych-images img');
     }
+    /*
     let backgroundColorPicker = document.querySelector(
       '[name=background-color-picker]',
     );
+
     backgroundColorPicker.value = state.backgroundColor;
     backgroundColorPicker.oninput = function(e) {
       drawImage(e, state);
       setState({backgroundColor: e.target.value});
       reRenderText();
     };
-
     let titleInput = document.querySelector('.title-input input');
     titleInput.value = state.title;
     titleInput.oninput = function(e) {
       setState({title: e.target.value});
     };
+    */
 
     let startDate = document.querySelector('.start-date');
     startDate.valueAsDate = state.startDate.length
@@ -328,6 +374,7 @@
       handleCanvasText(e, state);
     };
 
+    /*
     let textColorPicker = document.querySelector('[name=text-color-picker]');
     textColorPicker.value = state.textColor;
     textColorPicker.oninput = function(e) {
@@ -335,6 +382,7 @@
       setState({textColor: e.target.value});
     };
 
+      */
     drawImage(null, state, true);
     reRenderText();
     handleFileInput(
@@ -366,27 +414,32 @@
         <div class="wizard-title">
           <h2>Your Info</h2>
         </div>
+      <!--
         <div class="keyword-input d-flex justify-content-center mt-4">
           <input type="text" placeholder="Add Keywords">
           <button class="btn add-keyword">Add</button>
         </div>
+      -->
         <div class="keywords d-flex justify-content-center mt-2">
           ${renderKeywords()}
         </div>
         <div class="payment-holder mt-3">
           <div class="inner-payment">
+      <!--
             <h4>
               Contact
             </h4>
+      -->
             ${formFields(
               [
-                ['businessName', 'Business Name', false],
+                ['name', 'Name', false],
                 ['phone', 'Phone', true],
                 ['email', 'E-mail', true],
               ],
               true,
             )}
-            <h4 class="mt-2">
+    <!--
+            <h4 class="mt-2" style='margin-bottom:0.5rem'>
               Preferred Contact
             </h4>
             <div class="d-flex justify-content-around">
@@ -407,7 +460,9 @@
                 )
                 .join('')}
             </div>
+      -->
           </div>
+      <!--
           <div class="inner-payment">
             <h4>
               Business Address
@@ -422,10 +477,11 @@
               true,
             )}
           </div>
+      -->
         </div>
         <div>
           <h4 class="text-center mt-4 black-title">
-            Does your notice contain any of the following restricted content types?
+            Does your notice contain any of the following?
           </h4>
           <div class="d-flex justify-content-center mt-2">
             <div class="d-flex justify-content-around checkboxes">
@@ -453,11 +509,13 @@
           </div>
         </div>
         <div class="mt-3 d-flex justify-content-center">
+      <!--
           <textarea class="description triptych-text"
             placeholder="Notice Description *"
             oninput="setState.call(this, {'description': event.target.value})"
             required
           >${state.description || ''}</textarea>
+      -->
         </div>
       </div>
     `;

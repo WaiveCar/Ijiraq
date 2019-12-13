@@ -74,6 +74,7 @@ function drawImage(e, state, isInit) {
   ctx.clearRect(0, 0, triptych.width, triptych.height);
   ctx.fillStyle = e ? e.target.value : state.backgroundColor;
   ctx.fillRect(0, 0, triptych.width, triptych.height);
+  return;
   if (layout.hasImage && !isInit) {
     ctx.drawImage(
       image,
@@ -114,8 +115,8 @@ function reRenderText() {
 
 function handleCanvasText(e, state) {
   let layout = adTypes[state.category].layouts[state.selectedLayout];
-  ctx.font = `bold ${layout.textSize * scale}px Object Sans`;
-  let words = e.target.value.split(' ');
+  ctx.font = `bold ${layout.textSize * scale}px Lato`;
+  let words = document.querySelector('.triptych-text').value.split(' ');
   let lines = [];
   let currentLine = '';
   for (let i = 0; i < words.length; i++) {
@@ -155,7 +156,7 @@ function handleCanvasText(e, state) {
     return;
   }
   drawImage(null, state);
-  let textColor = document.querySelector('[name=text-color-picker]').value;
+  let textColor = state.foregroundColor || 'black';//document.querySelector('[name=text-color-picker]').value;
   ctx.fillStyle = textColor;
   for (let i = 0; i < lines.length && i < layout.maxLines; i++) {
     ctx.fillText(
