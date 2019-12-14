@@ -72,9 +72,8 @@ let scale = 1;
 function drawImage(e, state, isInit) {
   let layout = adTypes[state.category].layouts[state.selectedLayout];
   ctx.clearRect(0, 0, triptych.width, triptych.height);
-  ctx.fillStyle = e ? e.target.value : state.backgroundColor;
+  // ctx.fillStyle = e ? e.target.value : state.backgroundColor;
   ctx.fillRect(0, 0, triptych.width, triptych.height);
-  return;
   if (layout.hasImage && !isInit) {
     ctx.drawImage(
       image,
@@ -104,6 +103,7 @@ function drawImage(e, state, isInit) {
       setState({imageSrc: image.src, sampleImageUsed: true});
     };
     image.src = state.imageSrc;
+    console.log(image.src);
   }
 }
 

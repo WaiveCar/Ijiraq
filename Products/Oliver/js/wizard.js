@@ -63,12 +63,12 @@
         body: JSON.stringify(body),
       }),
     )
-      .then(res => {
-        if (res.status === 200) {
-          return res.json();
-        }
-      })
-      .then(cb);
+    .then(res => {
+      if (res.status === 200) {
+        return res.json();
+      }
+    })
+    .then(cb);
   }
 
   function categoryPage(state) {
@@ -256,22 +256,27 @@
       -->
         </div>
         <div class="d-flex justify-content-between mt-4 ad-input-holder">
+          <textarea type="text" class="triptych-text" placeholder="Notice Text *" required></textarea>
           <div class="ml-3 right-inputs">
-            <div class="color-input">
-              <button title="Previous color" class='btn wizard-btn disabled' id=colorBack onclick=pick.back()>&#x1f870;</button>
-              <button title="Next color" class='btn wizard-btn disabled' id=colorForward onclick=pick.forward()>&#x1f872;</button>
-              <button class='btn wizard-btn' onclick=pick.gen()>change color</button>
-            </div>
             <div class="mobile-flex-center file-holder">
+
+              <!-- Choose Image upload -->
+      <label style='line-height:1.75rem;margin-right:.5rem'> <input type="checkbox" > Use Image </label>
               <label class="input-options">
               </label>
             </div>
           </div>
-          <textarea type="text" class="triptych-text" placeholder="Notice Text *" required></textarea>
         </div>
-        <div class="d-flex justify-content-center mt-4">
+        <div class="d-flex justify-content-center">
           <canvas id="triptych-edit" width="${640 * scale}" height="${225 *
       scale}">
+        </div>
+        <div class="d-flex justify-content-end mt-2">
+          <div class="color-input">
+            <button title="Previous color" class='btn wizard-btn disabled' id=colorBack onclick=pick.back()>&#x1f870;</button>
+            <button title="Next color" class='btn wizard-btn disabled' id=colorForward onclick=pick.forward()>&#x1f872;</button>
+            <button class='btn wizard-btn' onclick=pick.gen()>change color</button>
+          </div>
         </div>
         <div class="d-flex justify-content-center mt-4">
           <label for="start-date" class="mr-2">Start Date:</label><input class="ad-date start-date" id="start-date" type="date">
@@ -288,10 +293,8 @@
 
       setState({backgroundColor: 'hsl(' + [base, '20%', bg].join(',') + ')'});
       setState({foregroundColor: 'hsl(' + [(base +180)%360, fg, fg].join(',') + ')'});
-      /*
       reRenderText();
-      drawImage(e, state);
-      */
+      drawImage(window, state);
       handleCanvasText(0, state);
       document.getElementById('colorBack').classList[pick.canBack() ? 'remove' : 'add']('disabled');
       document.getElementById('colorForward').classList[pick.canForward() ? 'remove' : 'add']('disabled');
@@ -572,6 +575,16 @@
   }
 
   function summaryPage(state) {
+    setTimeout(() => {
+      map({
+        target: 'map-summary',
+        draw: false,
+        resize: false,
+        move: false,
+        center: state.location[1],
+        zoom: 11
+      }).load([state.location]);
+    }, 100);
     return state.finalImageSrc && state.email
       ? `
       <div>
@@ -583,37 +596,21 @@
             <h4 class="mt-4">Ad Type</h4>
             <h2 class="summary-title">${capitalize(state.category)}</h2>
             <h4 class="mt-2">Boost Zone</h4>
+              <div id='map-summary'></div>
             <div class="mb-2">
-              ${['one', 'two', 'three']
-                .map(
-                  location =>
-                    `
-                    <div class="btn add-keyword">
-                      ${location}
-                    </div>
-                  `,
-                )
-                .join('')}
             </div>
             <div>
               <h4 class="mt-4">Price</h4>
-              <h2 class="summary-title"><small>200 plays for</small> $3.99</h2>
+              <h2 class="summary-title">$3.99 <small>for 200 plays</small></h2>
             </div>
           </div>
           <div class="inner-summary">
-            <h4 class="mt-4">Active Dates</h4>
+            <h4 class="mt-4">Start Date</h4>
             ${
               state.startDate
                 ? `
                     <h2 class="summary-title">
                       ${moment(state.startDate).format('MM/DD/YYYY')} 
-                      ${
-                        state.endDate
-                          ? `
-                      to ${moment(state.endDate).format('MM/DD/YYYY')}
-                      `
-                          : ''
-                      }
                     </h2>
                   `
                 : '<h2 class="summary-title">For the next week.</h2>'
