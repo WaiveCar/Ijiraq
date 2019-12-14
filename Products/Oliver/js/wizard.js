@@ -289,10 +289,10 @@
     var _dark = 1, stack = [], ptr = 0;
 
     function draw() {
-      var [base, bg, fg] = stack[stack.length - (ptr + 1)];
+      var [base, text, bg, fg] = stack[stack.length - (ptr + 1)];
 
       setState({backgroundColor: 'hsl(' + [base, '20%', bg].join(',') + ')'});
-      setState({foregroundColor: 'hsl(' + [(base +180)%360, fg, fg].join(',') + ')'});
+      setState({foregroundColor: 'hsl(' + [text, fg, fg].join(',') + ')'});
       reRenderText();
       drawImage(window, state);
       handleCanvasText(0, state);
@@ -303,17 +303,20 @@
       stack: stack,
       gen: function() {
         if(stack.length == 0){
-          stack.push([0, "100%", "0%"]);
+          stack.push([0, 180, "100%", "0%"]);
         } else if(stack.length == 1) {
-          stack.push([0, "0%", "100%"]);
+          stack.push([0, 180, "0%", "100%"]);
         } else {
-          var base = (Math.random() * 360);
           ptr = 0;
           _dark = !_dark;
 
           var bg = (_dark ? 20 : 80) + "%";
           var fg = (_dark ? 80 : 20) + "%";
-          stack.push([base, bg, fg]);
+
+          stack.push([
+            (Math.random() * 360),
+            (Math.random() * 360),
+            bg, fg]);
         }
         draw();
       },
@@ -403,7 +406,7 @@
     topBtns.forEach(function(btn) {
       let nextClick = btn.onclick;
       btn.onclick = function(e) {
-        if (currentPage === 3) {
+        if (currentPage === 2) {
           getImageFromCanvas(e, state);
         }
         nextClick();
@@ -597,6 +600,7 @@
             <h2 class="summary-title">${capitalize(state.category)}</h2>
             <h4 class="mt-2">Boost Zone</h4>
               <div id='map-summary'></div>
+              <h2 class="summary-title"><small>4 square miles</small></h2>
             <div class="mb-2">
             </div>
             <div>
@@ -611,6 +615,7 @@
                 ? `
                     <h2 class="summary-title">
                       ${moment(state.startDate).format('MM/DD/YYYY')} 
+                      <small> over 3 days</small>
                     </h2>
                   `
                 : '<h2 class="summary-title">For the next week.</h2>'
