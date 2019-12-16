@@ -431,7 +431,6 @@
         </div>
         <div class="payment-holder mt-3">
           <div class="inner-payment">
-      <!--
             <h4>
               Contact
             </h4>
@@ -443,6 +442,7 @@
               ],
               true,
             )}
+      <!--
             <h4 class="mt-2" style='margin-bottom:0.5rem'>
               Preferred Contact
             </h4>
@@ -478,8 +478,8 @@
               ],
               true,
             )}
-          </div>
       -->
+          </div>
         </div>
         <div>
           <h4 class="text-center mt-4 black-title">
@@ -672,9 +672,6 @@
         <form class="payment-form mt-4">
           <div class="payment-holder">
             <div class="inner-payment">
-              <h4>
-                Card
-              </h4>
               ${formFields([
                 ['name', 'Name on Card', true],
                 ['number', 'Card Number', true],
