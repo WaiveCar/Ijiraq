@@ -1104,7 +1104,7 @@ function campaign_update($data, $fileList, $user = false) {
 
 function kpi($opts) {
   $window_size = aget($opts, 'time', 3 * 24 * 60 * 60);
-  $tz_off = 8 * 3600;
+  $tz_offset = 8 * 3600;
   if($window_size < 12) {
     $window_size *= 86400;
   }
