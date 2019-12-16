@@ -435,7 +435,6 @@
             <h4>
               Contact
             </h4>
-      -->
             ${formFields(
               [
                 ['name', 'Name', false],
@@ -444,7 +443,6 @@
               ],
               true,
             )}
-    <!--
             <h4 class="mt-2" style='margin-bottom:0.5rem'>
               Preferred Contact
             </h4>
@@ -466,9 +464,7 @@
                 )
                 .join('')}
             </div>
-      -->
           </div>
-      <!--
           <div class="inner-payment">
             <h4>
               Business Address
@@ -579,6 +575,9 @@
 
   function summaryPage(state) {
     setTimeout(() => {
+
+      var mymap = document.querySelector('#map-summary');
+      mymap.style.height = mymap.clientWidth * 675/1920 + 'px';
       map({
         target: 'map-summary',
         draw: false,
@@ -596,30 +595,51 @@
         </div>
         <div class="summary-holder mt-4">
           <div class="inner-summary">
-            <h4 class="mt-4">Ad Type</h4>
-            <h2 class="summary-title">${capitalize(state.category)}</h2>
-            <h4 class="mt-2">Boost Zone</h4>
-              <div id='map-summary'></div>
-              <h2 class="summary-title"><small>4 square miles</small></h2>
-            <div class="mb-2">
+      <!--
+            <div class='summary-section'>
+              <h4>Ad Type</h4>
+              <h2 class="summary-title">${capitalize(state.category)}</h2>
             </div>
-            <div>
-              <h4 class="mt-4">Price</h4>
-              <h2 class="summary-title">$3.99 <small>for 200 plays</small></h2>
+      -->
+            <div class='summary-section'>
+              <h4>Boost Zone</h4>
+                <h2 class="summary-title">
+                  <small>4 square miles</small>
+                  <div id='map-summary' class='map'></div>
+                </h2>
+              <div class="mb-2">
+              </div>
             </div>
+            <div class='summary-section'>
+              <h4>Start Date</h4>
+              ${
+                state.startDate
+                  ? `
+                      <h2 class="summary-title">
+                        <small> Over 3 days</small>
+                        ${moment(state.startDate).format('MM/DD/YYYY')} 
+                      </h2>
+                    `
+                  : '<h2 class="summary-title">For the next week.</h2>'
+              }
+           </div>
           </div>
           <div class="inner-summary">
-            <h4 class="mt-4">Start Date</h4>
-            ${
-              state.startDate
-                ? `
-                    <h2 class="summary-title">
-                      ${moment(state.startDate).format('MM/DD/YYYY')} 
-                      <small> over 3 days</small>
-                    </h2>
-                  `
-                : '<h2 class="summary-title">For the next week.</h2>'
-            }
+            <div class='summary-section'>
+              <h4>Content</h4>
+                <h2 class="summary-title">
+                  <small>1920x675</small>
+              <div>
+                <img src="${state.finalImageSrc}" class="summary-preview">
+              </div>
+                </h2>
+            </div>
+            <div class='summary-section'>
+              <h4>Price</h4>
+              <h2 class="summary-title">
+                <small><b>200</b> plays</small> $3.99 
+              </h2>
+            </div>
     <!--
             <div>
               <h4 class="mt-2">Keywords</h4>
@@ -627,11 +647,8 @@
                 ${renderKeywords() ? renderKeywords() : 'No Keywords Entered'}
               </div>
             </div>
-      -->
-            <h4 class="mt-4">Content</h4>
-            <div>
-              <img src="${state.finalImageSrc}" class="summary-preview">
             </div>
+      -->
           </div>
         </div>
       </div>
