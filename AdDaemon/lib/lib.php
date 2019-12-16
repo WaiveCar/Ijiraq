@@ -1117,7 +1117,7 @@ function kpi($opts) {
     'window' => $window_size,
     'distance' => $distance,
     'ratio' => [],
-    'runtime' => db_all("select uptime, d * $window_size as unix from (
+    'runtime' => db_all("select uptime, d * $window_size + $tz_offset as unix from (
       select sum(uptime) as uptime, (strftime('%s', created_at) - $tz_offset) / $window_size as d from uptime_history 
         where uptime is not null 
           and not (abs(lat - 34.085121) < $distance and abs(lng - -118.340250) < $distance) 
@@ -1131,7 +1131,7 @@ function kpi($opts) {
           and not (abs(lat - 34.085121) < $distance and abs(lng - -118.340250) < $distance) 
           and not (abs(lat - 34.017979) < $distance and abs(lng - -118.409471) < $distance) 
           group by d,name";
-    $res[$type] = db_all("select count(*) as num, d * $window_size as unix from ($inner) group by d");
+    $res[$type] = db_all("select count(*) as num, d * $window_size + $tz_offset as unix from ($inner) group by d");
   }
 
   $run_ix = 0;
