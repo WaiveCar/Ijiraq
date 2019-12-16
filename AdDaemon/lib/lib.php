@@ -1104,6 +1104,7 @@ function campaign_update($data, $fileList, $user = false) {
 
 function kpi($opts) {
   $window_size = aget($opts, 'time', 3 * 24 * 60 * 60);
+  $tz_off = 8 * 3600;
   if($window_size < 12) {
     $window_size *= 86400;
   }
@@ -1117,7 +1118,7 @@ function kpi($opts) {
     'distance' => $distance,
     'ratio' => [],
     'runtime' => db_all("select uptime, d * $window_size as unix from (
-      select sum(uptime) as uptime, strftime('%s', created_at) / $window_size as d from uptime_history 
+      select sum(uptime) as uptime, (strftime('%s', created_at) - $tz_offset) / $window_size as d from uptime_history 
         where uptime is not null 
           and not (abs(lat - 34.085121) < $distance and abs(lng - -118.340250) < $distance) 
           and not (abs(lat - 34.017979) < $distance and abs(lng - -118.409471) < $distance) 
@@ -1125,7 +1126,7 @@ function kpi($opts) {
   ];
 
   foreach(['car','screen'] as $type) {
-    $inner = "select distinct count(*) as times_seen, name, strftime('%s', created_at) / $window_size as d from uptime_history 
+    $inner = "select distinct count(*) as times_seen, name, (strftime('%s', created_at) - $tz_offset) / $window_size as d from uptime_history 
         where type = '$type' and action = 'on' 
           and not (abs(lat - 34.085121) < $distance and abs(lng - -118.340250) < $distance) 
           and not (abs(lat - 34.017979) < $distance and abs(lng - -118.409471) < $distance) 
