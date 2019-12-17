@@ -146,6 +146,7 @@
             </div>
           </div>
         </div>
+        <p><b>Reminder:</b> You get 200 plays throughout Los Angeles for $3.99! The 4 square mile boost zone gives you additional free plays throughout your campaign!</p>
       </div>
     `;
   }
@@ -441,9 +442,11 @@
         </div>
         <div class="payment-holder mt-3">
           <div class="inner-payment">
+          <!--
             <h4>
               Contact
             </h4>
+          -->
             ${formFields(
               [
                 ['name', 'Name', false],
