@@ -223,15 +223,6 @@ $SCHEMA = [
   // that aren't active as opposed to relying on a boolean
   // in this table below
   //
-  // The start_minute and end_minute are for campaigns that 
-  // don't run 24 hours a day.
-  //
-  // The start_time and end_time are the bounds to do the 
-  // campaign. It doesn't need to be exactly timebound by
-  // these and can bleed over in either direction if it 
-  // gets to that.
-  // 
-  // If they are empty, then it means that it's 24 hours a day
   //
   'campaign' => [
     'id'          => 'integer primary key autoincrement',
@@ -272,6 +263,12 @@ $SCHEMA = [
     //
     'shape_list'  => 'text',
 
+    //
+    // The start_minute and end_minute are for campaigns that 
+    // don't run 24 hours a day.
+    //
+    // If they are empty, then it means that it's 24 hours a day
+    //
     'start_minute'=> 'integer default null',
     'end_minute'  => 'integer default null',
     'is_approved' => 'boolean default false',
@@ -307,6 +304,10 @@ $SCHEMA = [
     'priority'    => 'integer default 0',
     'impression_count' => 'integer',
 
+    // The start_time and end_time are the bounds to do the 
+    // campaign. It doesn't need to be exactly timebound by
+    // these and can bleed over in either direction if it 
+    // gets to that.
     'start_time'  => 'datetime default current_timestamp',
     'end_time'    => 'datetime'
   ],
