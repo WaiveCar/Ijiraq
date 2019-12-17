@@ -69,6 +69,11 @@ let ctx = null;
 let image = null;
 let scale = 1;
 
+function redraw() {
+  drawImage(null, state);
+  reRenderText();
+}
+
 function drawImage(e, state, isInit) {
   let layout = adTypes[state.category].layouts[state.selectedLayout];
   ctx.clearRect(0, 0, triptych.width, triptych.height);

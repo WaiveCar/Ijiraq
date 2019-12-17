@@ -35,6 +35,7 @@
     other: 'Art, fun and leisure',
   };
 
+  window.state = state;
   window.setState = function(updateObj) {
     Object.assign(state, updateObj);
     localStorage.setItem('savedState', JSON.stringify(state));
@@ -237,6 +238,17 @@
   scale = windowWidth < 640 ? (windowWidth - 20) / 640 : 1;
 
   function adCreatePage(state) {
+    setTimeout(() => {
+      var use = document.querySelector('#useimage');
+
+      function selectLayout() {
+        setState({selectedLayout: +!use.checked});
+        redraw();
+      }
+
+      use.addEventListener('change', selectLayout);
+      selectLayout();
+    },500);
     window.onresize = function(e) {
       let windowWidth = window.innerWidth - 20;
       scale = windowWidth < 640 ? (windowWidth - 20) / 640 : 1;
@@ -259,9 +271,7 @@
           <textarea type="text" class="triptych-text" placeholder="Notice Text *" required></textarea>
           <div class="ml-3 right-inputs">
             <div class="mobile-flex-center file-holder">
-
-              <!-- Choose Image upload -->
-      <label style='line-height:1.75rem;margin-right:.5rem'> <input type="checkbox" > Use Image </label>
+              <label style='line-height:1.75rem;margin-right:.5rem'> <input type="checkbox" id="useimage"> Use Image </label>
               <label class="input-options">
               </label>
             </div>
