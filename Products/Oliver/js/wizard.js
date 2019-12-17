@@ -241,14 +241,17 @@
   function adCreatePage(state) {
     setTimeout(() => {
       var use = document.querySelector('#useimage');
-
+      /*
       function selectLayout() {
         setState({selectedLayout: +!use.checked});
         redraw();
       }
 
       use.addEventListener('change', selectLayout);
+      
       selectLayout();
+      */
+      redraw();
     },500);
     window.onresize = function(e) {
       let windowWidth = window.innerWidth - 20;
@@ -258,6 +261,8 @@
       drawImage(e, state);
       reRenderText();
     };
+    let isChecked = state.selectedLayout ? 'checked' : '';
+    console.log(isChecked);
     return `
       <div>
         <div class="wizard-title">
@@ -272,25 +277,23 @@
           <textarea type="text" class="triptych-text" placeholder="Notice Text *" required></textarea>
           <div class="ml-3 right-inputs">
             <div class="mobile-flex-center file-holder">
-              <label style='line-height:1.75rem;margin-right:.5rem'> <input type="checkbox" id="useimage"> Use Image </label>
               <label class="input-options">
               </label>
             </div>
           </div>
         </div>
         <div class="d-flex justify-content-center">
-          <canvas id="triptych-edit" width="${640 * scale}" height="${225 *
-      scale}">
+          <canvas id="triptych-edit" width="${640 * scale}" height="${225 * scale}">
         </div>
         <div class="d-flex justify-content-end mt-2">
+          <div class='date-chooose'>
+            <label for="start-date" class="mr-2">Start on</label><input class="ad-date start-date" id="start-date" type="date">
+          </div>
           <div class="color-input">
             <button title="Previous color" class='btn wizard-btn disabled' id=colorBack onclick=pick.back()>&#x1f870;</button>
             <button title="Next color" class='btn wizard-btn disabled' id=colorForward onclick=pick.forward()>&#x1f872;</button>
             <button class='btn wizard-btn' onclick=pick.gen()>change color</button>
           </div>
-        </div>
-        <div class="d-flex justify-content-center mt-4">
-          <label for="start-date" class="mr-2">Start Date:</label><input class="ad-date start-date" id="start-date" type="date">
         </div>
       </div>
     `;

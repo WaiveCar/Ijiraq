@@ -174,34 +174,25 @@ function handleCanvasText(e, state) {
 }
 
 function handleFileInput(layout, state) {
-  if (layout.hasImage) {
-    let hasInput = document.querySelector('.file-upload');
-    if (!hasInput) {
-      let fileUpload = document.createElement('input');
-      fileUpload.type = 'file';
-      fileUpload.classList.add('file-upload');
-      fileUpload.accept = 'image/png, image/jpeg';
-      fileUpload.oninput = function() {
-        image = new Image();
-        image.onload = function() {
-          drawImage(null, state);
-          reRenderText();
-        };
-        image.src = URL.createObjectURL(this.files[0]);
-        setState({imageSrc: image.src, sampleImageUsed: false});
+  let hasInput = document.querySelector('.file-upload');
+  if (!hasInput) {
+    let fileUpload = document.createElement('input');
+    fileUpload.type = 'file';
+    fileUpload.classList.add('file-upload');
+    fileUpload.accept = 'image/png, image/jpeg';
+    fileUpload.oninput = function() {
+      image = new Image();
+      image.onload = function() {
+        drawImage(null, state);
+        reRenderText();
       };
-      let label = document.querySelector('.input-options');
-      label.style.visibility = 'visible';
-      label.innerHTML = 'Choose Image';
-      label.appendChild(fileUpload);
-    }
-  } else {
-    let input = document.querySelector('.file-upload');
+      image.src = URL.createObjectURL(this.files[0]);
+      setState({imageSrc: image.src, sampleImageUsed: false});
+    };
     let label = document.querySelector('.input-options');
-    label.style.visibility = 'hidden';
-    if (input) {
-      label.removeChild(input);
-    }
+    label.style.visibility = 'visible';
+    label.innerHTML = 'Choose 4x3 Image';
+    label.appendChild(fileUpload);
   }
 }
 
