@@ -537,6 +537,7 @@
   }
 
   function infoLoad() {
+    /*
     let addKeyword = document.querySelector('.add-keyword');
     let keywordInput = document.querySelector('.keyword-input input');
     let keywords = document.querySelector('.keywords');
@@ -551,6 +552,7 @@
         keywordInput.value = '';
       }
     };
+    */
   }
 
   function formFields(fields, addOnInput) {
