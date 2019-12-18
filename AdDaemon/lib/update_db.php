@@ -5,9 +5,16 @@ include_once('db.php');
 
 $db = db_connect();
 
-$backup = '/tmp/upgrade_backup.db';
-echo "Creating $backup in case we hose the db.\n";
-shell_exec("/usr/bin/sqlite3 $DBPATH '.save $backup'");
+$did_backup = false;
+function backup_if_needed() {
+  global $did_backup;
+  if(!$did_backup) {
+    $backup = '/tmp/upgrade_backup.db';
+    echo "Creating $backup in case we hose the db.\n";
+    shell_exec("/usr/bin/sqlite3 $DBPATH '.save $backup'");
+    $did_backup = true;
+  }
+}
 
 foreach($SCHEMA as $table_name => $table_schema) {
   $existing_schema = [];
@@ -27,6 +34,7 @@ foreach($SCHEMA as $table_name => $table_schema) {
     echo "Creating the $table_name table.\n";
     $sql = "create table $table_name ( $new_schema )";
     echo $sql;
+    backup_if_needed();
     $db->exec($sql);
 
   } else {
@@ -55,6 +63,7 @@ foreach($SCHEMA as $table_name => $table_schema) {
       ";
 
       //echo $add_column_sql;
+      backup_if_needed();
       $db->exec($add_column_sql);
 
       // If we added columns then we need to revisit our pragma
@@ -81,7 +90,14 @@ foreach($SCHEMA as $table_name => $table_schema) {
       ";
 
       //echo $drop_column_sql;
+      backup_if_needed();
       $db->exec($drop_column_sql);
     }
   }
+}
+$table_list = array_map(function($n) { return $n['name']; }, db_all("SELECT name FROM sqlite_master WHERE type='table'"));
+$unaccounted_for_tables = array_filter( array_diff($table_list, array_keys($SCHEMA)), function($n) { return $n != 'sqlite_sequence'; });
+if (count($unaccounted_for_tables) > 0) {
+  echo "Tables in the db that aren't in the schema:\n";
+  echo "  " . implode(' ', $unaccounted_for_tables);
 }
