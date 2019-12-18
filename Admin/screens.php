@@ -59,6 +59,7 @@ $PROJECT_LIST = [
   'NY' => 'NY',
   'dev' => 'dev',
   'REEF' => 'REEF',
+  'Oliver' => 'Oliver',
   'Amazon' => 'CES/Amazon',
   'CES' => 'CES/Oliver',
 ];
