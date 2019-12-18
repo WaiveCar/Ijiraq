@@ -100,4 +100,5 @@ $unaccounted_for_tables = array_filter( array_diff($table_list, array_keys($SCHE
 if (count($unaccounted_for_tables) > 0) {
   echo "Tables in the db that aren't in the schema:\n";
   echo "  " . implode(' ', $unaccounted_for_tables);
+  echo "\n";
 }
