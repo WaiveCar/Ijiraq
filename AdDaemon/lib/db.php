@@ -122,29 +122,6 @@ $SCHEMA = [
     'ignition_time' => 'datetime'
   ],
 
-  'place' => [
-    'id'     => 'integer primary key autoincrement',
-    'name'   => 'text not null',
-    'lat'    => 'float default null',
-    'lng'    => 'float default null',
-    'radius' => 'float default null'
-  ],
-
-  'attribution' => [
-    'id'         => 'integer primary key autoincrement',
-    'screen_id'  => 'integer',
-    'type'       => 'text',    // such as wifi/plate, etc
-    'signal'     => 'integer', // optional, could be distance, RSSI
-    'mark'       => 'text',    // such as the 48-bit MAC address
-    'created_at' => 'datetime default current_timestamp',
-  ],
-
-  'exclusive' => [
-    'id'          => 'integer primary key autoincrement',
-    'set_id'      => 'integer',
-    'whitelist'   => 'boolean', // if true then this is inclusive, if false 
-    'campaign_id' => 'integer'  // then we should leave it out.
-  ],
     
   // revenue historicals
   'revenue_history' => [
@@ -152,21 +129,6 @@ $SCHEMA = [
     'screen_id'     => 'integer',
     'revenue_total' => 'integer', // deltas can be manually computed for now
     'created_at'    => 'datetime default current_timestamp',
-  ],
-
-  'organization' => [
-    'id'         => 'integer primary key autoincrement',
-    'name'       => 'text',
-    'image'      => 'text',
-  ],
-
-  'brand' => [
-    'id'         => 'integer primary key autoincrement',
-    'organization_id'     => 'integer',
-    'name'       => 'text',
-    'image'      => 'text',
-    'balance'    => 'integer',
-    'created_at' => 'datetime default current_timestamp',
   ],
 
   'social' => [
@@ -205,16 +167,6 @@ $SCHEMA = [
     'organization_id'     => 'integer',
     'brand_id'   => 'integer',
     'role'       => 'text', // either admin/manager/viewer
-    'created_at' => 'datetime default current_timestamp',
-  ],
-
-  'widget' => [
-    'id'     => 'integer primary key autoincrement',
-    'name'   => 'text', // what to call it
-    'image'  => 'text', // url of logo or screenshot
-    'type'   => 'text', // ticker or app
-    'topic'  => 'text', // optional, such as "weather"
-    'source' => 'text', // The url where to get things
     'created_at' => 'datetime default current_timestamp',
   ],
 
@@ -323,45 +275,6 @@ $SCHEMA = [
     'job_end'     => 'datetime'
   ],
 
-  // In the future we can have different tag classes or namespaces
-  // But for the time being we just need 1 separation: LA and NY
-  // and that's literally it. Generalizability can come later.
-  //
-  // This is a list of tags, it's notable that we aren't really
-  // doing some kind of "normalization" like all the proper kids
-  // do because we don't want to be doing stupid table joins 
-  // everywhere to save a couple bytes.
-  'tag' => [
-    'id'        => 'integer primary key autoincrement',
-    'name'      => 'text',
-    'created_at' => 'datetime default current_timestamp',
-  ],
-
-  // #47 - the screen_id/tag is the unique constraint. There's
-  // probably a nice way to do it. Also if you really are doing
-  // things well then you use the whitelist from the tag table
-  // before inserting since we are keeping it daringly free-form
-  'screen_tag' => [
-    'id'        => 'integer primary key autoincrement',
-    'screen_id' => 'integer',
-    'tag'       => 'text',
-    'created_at' => 'datetime default current_timestamp',
-  ],
-
-  // #95 If different tags need different default campaign ids 
-  // or split kingdoms we do that here. It's basically a
-  // key/value with a name-space. Right now we don't have 
-  // a list of tags, probably should so that the screen_tag
-  // and tag_info table references a tag_list but this is
-  // fine for now.
-  'tag_info' => [
-    'id'         => 'integer primary key autoincrement',
-    'tag'        => 'text not null',
-    'key'        => 'text',
-    'value'      => 'text',
-    'created_at' => 'datetime default current_timestamp',
-  ],
-
   // #107 - scoped tasks
   // The id here is the referential id so that we 
   // can group the responses
@@ -443,7 +356,7 @@ $SCHEMA = [
   ],
 
   # This is a normalized system. Dunno if it's a good idea
-  # becaue most of thetime this will return no results. Maybe
+  # becaue most of the time this will return no results. Maybe
   # keeping a counter in a screen definition of "has_campaigns"
   # and then when they are purged from this list that gets updated.
   #
@@ -466,6 +379,100 @@ $SCHEMA = [
     'created_at'  => 'datetime default current_timestamp',
   ],
 ];
+/*
+ 
+ // adcast related
+  'attribution' => [
+    'id'         => 'integer primary key autoincrement',
+    'screen_id'  => 'integer',
+    'type'       => 'text',    // such as wifi/plate, etc
+    'signal'     => 'integer', // optional, could be distance, RSSI
+    'mark'       => 'text',    // such as the 48-bit MAC address
+    'created_at' => 'datetime default current_timestamp',
+  ],
+  'widget' => [
+    'id'     => 'integer primary key autoincrement',
+    'name'   => 'text', // what to call it
+    'image'  => 'text', // url of logo or screenshot
+    'type'   => 'text', // ticker or app
+    'topic'  => 'text', // optional, such as "weather"
+    'source' => 'text', // The url where to get things
+    'created_at' => 'datetime default current_timestamp',
+  ],
+
+ 
+ // b2b model
+  'brand' => [
+    'id'         => 'integer primary key autoincrement',
+    'organization_id'     => 'integer',
+    'name'       => 'text',
+    'image'      => 'text',
+    'balance'    => 'integer',
+    'created_at' => 'datetime default current_timestamp',
+  ],
+  'exclusive' => [
+    'id'          => 'integer primary key autoincrement',
+    'set_id'      => 'integer',
+    'whitelist'   => 'boolean', // if true then this is inclusive, if false 
+    'campaign_id' => 'integer'  // then we should leave it out.
+  ],
+  'organization' => [
+    'id'         => 'integer primary key autoincrement',
+    'name'       => 'text',
+    'image'      => 'text',
+  ],
+
+ // ??
+  'place' => [
+    'id'     => 'integer primary key autoincrement',
+    'name'   => 'text not null',
+    'lat'    => 'float default null',
+    'lng'    => 'float default null',
+    'radius' => 'float default null'
+  ],
+
+  // In the future we can have different tag classes or namespaces
+  // But for the time being we just need 1 separation: LA and NY
+  // and that's literally it. Generalizability can come later.
+  //
+  // This is a list of tags, it's notable that we aren't really
+  // doing some kind of "normalization" like all the proper kids
+  // do because we don't want to be doing stupid table joins 
+  // everywhere to save a couple bytes.
+  'tag' => [
+    'id'        => 'integer primary key autoincrement',
+    'name'      => 'text',
+    'created_at' => 'datetime default current_timestamp',
+  ],
+
+  // #47 - the screen_id/tag is the unique constraint. There's
+  // probably a nice way to do it. Also if you really are doing
+  // things well then you use the whitelist from the tag table
+  // before inserting since we are keeping it daringly free-form
+  'screen_tag' => [
+    'id'        => 'integer primary key autoincrement',
+    'screen_id' => 'integer',
+    'tag'       => 'text',
+    'created_at' => 'datetime default current_timestamp',
+  ],
+
+  // #95 If different tags need different default campaign ids 
+  // or split kingdoms we do that here. It's basically a
+  // key/value with a name-space. Right now we don't have 
+  // a list of tags, probably should so that the screen_tag
+  // and tag_info table references a tag_list but this is
+  // fine for now.
+  'tag_info' => [
+    'id'         => 'integer primary key autoincrement',
+    'tag'        => 'text not null',
+    'key'        => 'text',
+    'value'      => 'text',
+    'created_at' => 'datetime default current_timestamp',
+  ],
+
+
+
+ */
 $_db = false;
 function db_connect() {
   global $_db, $DBPATH;
