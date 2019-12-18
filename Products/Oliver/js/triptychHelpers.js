@@ -74,10 +74,14 @@ function redraw() {
   reRenderText();
 }
 
+function reset() {
+  localStorage.removeItem('savedState');
+  console.log(localStorage);
+}
 function drawImage(e, state, isInit) {
   let layout = adTypes[state.category].layouts[state.selectedLayout];
   ctx.clearRect(0, 0, triptych.width, triptych.height);
-  // ctx.fillStyle = e ? e.target.value : state.backgroundColor;
+  ctx.fillStyle = state.backgroundColor;
   ctx.fillRect(0, 0, triptych.width, triptych.height);
   if (layout.hasImage && !isInit) {
     ctx.drawImage(
@@ -197,6 +201,7 @@ function handleFileInput(layout, state) {
 }
 
 function getImageFromCanvas(e, state) {
+  state = state || window.state;
   let oldCanvas = triptych;
   let newCanvas = document.createElement('canvas');
   newCanvas.width = 1920;

@@ -125,6 +125,7 @@
       _map._map.on('pointerup', e => {
         setState({location: _map.save()[0]});
       });
+      setState({location: _map.save()[0]});
     }), 100)
     return `
       <div>
@@ -252,7 +253,7 @@
       selectLayout();
       */
       redraw();
-    },500);
+    },10);
     window.onresize = function(e) {
       let windowWidth = window.innerWidth - 20;
       scale = windowWidth < 640 ? (windowWidth - 20) / 640 : 1;
@@ -262,7 +263,6 @@
       reRenderText();
     };
     let isChecked = state.selectedLayout ? 'checked' : '';
-    console.log(isChecked);
     return `
       <div>
         <div class="wizard-title">
@@ -380,7 +380,7 @@
     */
 
     let startDate = document.querySelector('.start-date');
-    startDate.valueAsDate = state.startDate.length
+    startDate.valueAsDate = state.startDate
       ? new Date(state.startDate)
       : new Date();
     startDate.oninput = function(e) {
@@ -439,10 +439,10 @@
           <input type="text" placeholder="Add Keywords">
           <button class="btn add-keyword">Add</button>
         </div>
-      -->
         <div class="keywords d-flex justify-content-center mt-2">
           ${renderKeywords()}
         </div>
+      -->
         <div class="payment-holder mt-3">
           <div class="inner-payment">
           <!--
@@ -526,15 +526,15 @@
             </div>
           </div>
         </div>
-        <div class="mt-3 d-flex justify-content-center">
       <!--
+        <div class="mt-3 d-flex justify-content-center">
           <textarea class="description triptych-text"
             placeholder="Notice Description *"
             oninput="setState.call(this, {'description': event.target.value})"
             required
           >${state.description || ''}</textarea>
-      -->
         </div>
+      -->
       </div>
     `;
   }
@@ -579,6 +579,7 @@
   }
 
   function renderKeywords() {
+    return;
     return state.keywords
       .map(
         (word, i) =>
@@ -630,16 +631,10 @@
             </div>
             <div class='summary-section'>
               <h4>Start Date</h4>
-              ${
-                state.startDate
-                  ? `
-                      <h2 class="summary-title">
-                        <small> Over 3 days</small>
-                        ${moment(state.startDate).format('MM/DD/YYYY')} 
-                      </h2>
-                    `
-                  : '<h2 class="summary-title">For the next week.</h2>'
-              }
+              <h2 class="summary-title">
+                <small> Over 3 days</small>
+                ${ state.startDate ? ` ${moment(state.startDate).format('MM/DD/YYYY')} ` : 'From Now' }
+              </h2>
            </div>
           </div>
           <div class="inner-summary">
@@ -832,37 +827,6 @@
     });
   };
 
-  let topRight = document.querySelector('.top-bar-right');
-  topRight.innerHTML = pages
-    .slice(0, -1)
-    .map(
-      (page, idx) => `
-        <div class="top-bar-link ${
-          idx === currentPage ? 'top-bar-selected' : ''
-        }" onclick="showPage(${idx}, true)">${page.title}</div>
-      `,
-    )
-    .join('');
-  let topRightEls = document.querySelectorAll('.top-bar-right .top-bar-link');
-
-  let progress = document.querySelector('.progress');
-  progress.innerHTML = pages
-    .map(
-      (page, idx) =>
-        `<div class="bar-section ${
-          idx <= currentPage ? 'progress-filled' : ''
-        }" style="width: ${100 * (1 / pages.length)}%">
-      </div>`,
-    )
-    .join('');
-  let progressEls = document.querySelectorAll('.bar-section');
-
-  let savedState = localStorage.getItem('savedState');
-  if (savedState) {
-    setState(JSON.parse(savedState));
-  } else {
-    setState(initialState);
-  }
 
   function verifyData() {
     let requiredInputs = document.querySelectorAll(
@@ -876,12 +840,12 @@
       }
     });
     if (
-      currentPage === 3 &&
+      currentPage === 2 &&
       adTypes[state.category].layouts[state.selectedLayout].hasImage &&
       state.sampleImageUsed
     ) {
-      document.querySelector('.input-options').classList.add('required-upload');
-      missing.push('Image Upload');
+     // document.querySelector('.input-options').classList.add('required-upload');
+    //  missing.push('Image Upload');
     }
     return missing;
   }
@@ -936,6 +900,38 @@
     currentPage = Number(window.location.pathname.split('/').pop());
     showPage(currentPage);
   };
+
+  let topRight = document.querySelector('.top-bar-right');
+  topRight.innerHTML = pages
+    .slice(0, -1)
+    .map(
+      (page, idx) => `
+        <div class="top-bar-link ${
+          idx === currentPage ? 'top-bar-selected' : ''
+        }" onclick="showPage(${idx}, true)">${page.title}</div>
+      `,
+    )
+    .join('');
+  let topRightEls = document.querySelectorAll('.top-bar-right .top-bar-link');
+
+  let progress = document.querySelector('.progress');
+  progress.innerHTML = pages
+    .map(
+      (page, idx) =>
+        `<div class="bar-section ${
+          idx <= currentPage ? 'progress-filled' : ''
+        }" style="width: ${100 * (1 / pages.length)}%">
+      </div>`,
+    )
+    .join('');
+  let progressEls = document.querySelectorAll('.bar-section');
+
+  let savedState = localStorage.getItem('savedState');
+  if (savedState) {
+    setState(JSON.parse(savedState));
+  } else {
+    setState(initialState);
+  }
 
   showPage(currentPage);
   document.querySelector('#back-btn').onclick = () => showPage(currentPage - 1);
