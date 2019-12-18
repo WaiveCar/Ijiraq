@@ -7,7 +7,7 @@ $db = db_connect();
 
 $did_backup = false;
 function backup_if_needed() {
-  global $did_backup;
+  global $did_backup, $DBPATH;
   if(!$did_backup) {
     $backup = '/tmp/upgrade_backup.db';
     echo "Creating $backup in case we hose the db.\n";

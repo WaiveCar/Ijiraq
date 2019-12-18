@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import logging
-from flask import Flask, send_from_directory, render_template, request
+from flask import Flask, send_from_directory, render_template, request, jsonify
 from requests import post
 from services.payments import charge_for_notice
 from services.email import send_receipt
@@ -20,6 +20,9 @@ def buy():
             'http://staging.waivescreen.com/api/campaign',
             data=data
         )
+        logging.debug(ad_id.text)
+
+        """
         charge = charge_for_notice(
            data.get('email'),
            {
@@ -27,18 +30,28 @@ def buy():
                 'exp_month': data.get('expMonth'),
                 'exp_year': data.get('expYear'),
                 'cvc': data.get('cvc'),
-
-            },
+           },
            data.get('amount'),
            ad_id,
         )
+        charge = dict(charge)
+        """
+        charge = {}
         receipt = send_receipt(data.get('email'), ad_id)
-        return {'ad_id': ad_id.json(), 'charge': dict(charge), 'email': receipt.json()}, 200
+        logging.warning(ad_id)
+        return jsonify({'ad_id': ad_id.text})
+        
+        return jsonify({
+            'ad_id': ad_id,
+            'email': receipt
+        })
+
     except Exception as e:
-        if type(e).__name__ == 'CardError':
-            return e.error, e.http_status
-        else:
-            return e.response.reason, e.response.status_code
+      logging.warning(e)
+      if type(e).__name__ == 'CardError':
+          return e.error, e.http_status
+      else:
+          return e.response.reason, e.response.status_code
 
 @app.route('/<path:path>')
 def serve(path):
