@@ -627,7 +627,6 @@ function inject_priority($job, $screen, $campaign) {
 
 function sow($payload) {
   global $SCHEMA;
-  //error_log(json_encode($payload));
   if(isset($payload['uid'])) {
     $screen = upsert_screen($payload['uid'], $payload);
   } else {
@@ -643,6 +642,7 @@ function sow($payload) {
     // this is the old system ... these machines
     // should just upgrade.
     $job_id = aget($job, 'job_id');
+    // error_log(implode(' ', array_keys($job)));
     if(aget($job, 'id')) {
       // error_log("need to upgrade: {$payload['uid']}");
     } else if($job_id) {
@@ -652,15 +652,19 @@ function sow($payload) {
         $whiteMap = $SCHEMA['sensor_history'];
         unset($whiteMap['id']);
         $ins = [];
-        foreach($job['sensor'] as $j) {
-          $row = [];
-          foreach($j as $k => $v) {
-            if(isset($whiteMap[$k])) {
-              $row[$k] = $v;
+        if(array_key_exists($job['sensor'])) {
+          foreach($job['sensor'] as $j) {
+            $row = [];
+            foreach($j as $k => $v) {
+              if(isset($whiteMap[$k])) {
+                $row[$k] = $v;
+              }
             }
+            $row['job_id'] = $job_id;
+            $ins[] = $row;
           }
-          $row['job_id'] = $job_id;
-          $ins[] = $row;
+        } else if(array_key_exists($job['location'])) {
+          error_log(json_encode($job['location']));
         }
 
         db_insert_many('sensor_history', $ins);
