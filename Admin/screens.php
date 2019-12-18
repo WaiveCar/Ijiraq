@@ -58,7 +58,9 @@ $PROJECT_LIST = [
   'LA' => 'LA', 
   'NY' => 'NY',
   'dev' => 'dev',
-  'REEF' => 'REEF'
+  'REEF' => 'REEF',
+  'Amazon' => 'CES/Amazon',
+  'CES' => 'CES/Oliver',
 ];
 $MODEL_LIST = [
   '' => 'none',
