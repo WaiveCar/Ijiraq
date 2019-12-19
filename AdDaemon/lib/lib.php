@@ -940,7 +940,7 @@ function make_infinite($campaign_id) {
 
 function active_campaigns() {
   //  end_time > current_timestamp     and 
-  return [];
+  //return [];
   return show('campaign', "where 
     is_default = 0                   and
     completed_seconds < duration_seconds 

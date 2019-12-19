@@ -7,7 +7,6 @@
     selectedLayout: 0,
     backgroundColor: 'white',
     foregroundColor: 'black',
-    textColor: 'black',
     preferredContact: 'email',
     location: null,
     title: '',
@@ -870,6 +869,7 @@
       if (field !== 'finalImageSrc') {
         formData.append(field, state[field]);
       } else {
+        console.log("hi");
         formData.append('file1', dataURLtoBlob(state[field]));
       }
     }
