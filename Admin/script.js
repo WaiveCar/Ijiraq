@@ -76,9 +76,14 @@ function command(id, name) {
 }
 
 function obj2span(obj) {
-  var out = [];
+  var out = [], value;
   for(var key in obj) {
-    out.push(`<span>${key}</span><span>${obj[key]}</span>`);
+    if($.isPlainObject(obj[key])) {
+      value = obj2span(obj[key]));
+    } else {
+      value = obj[key];
+    }
+    out.push(`<span>${key}</span><span>${value}</span>`);
   }
   return '<div>' + out.join('</div><div>') + '</div>';
 }
