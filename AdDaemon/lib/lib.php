@@ -1165,6 +1165,10 @@ function kpi($opts) {
   return $res;
 }
 
+function screen_history($param) {
+  return db_all("select action,value,old,created_at from screen_history where screen_id=${param['id']} order by id desc");
+}
+  
 function infer() {
   $all = db_all("SELECT id,name,type,action,lat,lng,strftime('%s', created_at) as unix from uptime_history where action='on' order by id asc");
   $ix = 0;

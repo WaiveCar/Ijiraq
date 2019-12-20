@@ -96,6 +96,7 @@ try {
     'active_campaigns', 
     'campaign_history', 
     'car_history', 
+    'screen_history',
     'command', 
     'ignition_status',
     'kpi',
