@@ -79,11 +79,11 @@ function obj2span(obj) {
   var out = [], value;
   for(var key in obj) {
     if($.isPlainObject(obj[key])) {
-      value = obj2span(obj[key]));
+      value = "</div><div>" + obj2span(obj[key]);
     } else {
-      value = obj[key];
+      value = "<span>" + obj[key] + "</span>";
     }
-    out.push(`<span>${key}</span><span>${value}</span>`);
+    out.push(`<span>${key}</span>${value}`);
   }
   return '<div>' + out.join('</div><div>') + '</div>';
 }
@@ -112,7 +112,7 @@ function edit(id) {
     `<span>${row}</span><span>${JSON.stringify(screen[row]).replace(/\"/g,'')}</span>`:
     `<span>${row}</span><span>&mdash;</span>`
   );
-  out.push(`<span>features</span><span>${obj2span(screen.features)}</span>`); 
+  out.push(`<span>features</span></div><div><span>${obj2span(screen.features)}</span>`); 
   out.unshift(`<span>Now</span><span>${now}</span>`); 
   
   _screen = screen;
