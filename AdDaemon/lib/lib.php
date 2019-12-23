@@ -603,9 +603,11 @@ function task_inject($screen, $res) {
     }
   }
   $tasks = aget($res,'taskList');
+  /*
   if ($tasks) {
     error_log($screen['uid'] . ' ' . json_encode($tasks));
   }
+   */
   return $res;
 }
 
@@ -651,8 +653,8 @@ function sow($payload) {
       } else {
         $whiteMap = $SCHEMA['sensor_history'];
         unset($whiteMap['id']);
-        $ins = [];
         if(array_key_exists($job['sensor'])) {
+          $ins = [];
           foreach($job['sensor'] as $j) {
             $row = [];
             foreach($j as $k => $v) {
@@ -663,11 +665,10 @@ function sow($payload) {
             $row['job_id'] = $job_id;
             $ins[] = $row;
           }
+          db_insert_many('sensor_history', $ins);
         } else if(array_key_exists($job['location'])) {
-          error_log(json_encode($job['location']));
+          error_log('new location format:' . json_encode($job['location']));
         }
-
-        db_insert_many('sensor_history', $ins);
       }
 
       if(!isset($job['campaign_id'])) {

@@ -83,6 +83,13 @@ $fieldList = [
 ];
 $editable = ['car', 'serial'];
 
+$value = [
+  'version' => function($value, $row) {
+    $id = $row['id'];
+    return "<a href=#<?= $id ?> onclick='history(\"<?= $id ?>\")' class=version><?= $value ?></a>";
+  }
+];
+
 $props = [
   'version' => [ 
     'order' => function($value, $row) {
