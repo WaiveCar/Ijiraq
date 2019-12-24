@@ -636,7 +636,7 @@ function sow($payload) {
   }
 
   if($payload['uid'] == 'jff6S9NbIGqv6cM3pA0gA') {
-    error_log($payload['uid']);
+    error_log(json_encode($payload));
   }
   $jobList = aget($payload, 'jobs', []);
   $campaignsToUpdateList = [];
