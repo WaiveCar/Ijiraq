@@ -658,7 +658,7 @@ function sow($payload) {
             'screen_id' => $screen['id'],
             'campaign_id' => $job['campaign_id']
           ]);
-          $row['created_at'] = db_date($row['created_at']);
+          $row['created_at'] = db_date(db_string($row['created_at']));
           db_insert('location_history',$row);
         }
       }
