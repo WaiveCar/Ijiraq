@@ -653,20 +653,7 @@ function sow($payload) {
       } else {
         $whiteMap = $SCHEMA['sensor_history'];
         unset($whiteMap['id']);
-        if(array_key_exists($job['sensor'])) {
-          $ins = [];
-          foreach($job['sensor'] as $j) {
-            $row = [];
-            foreach($j as $k => $v) {
-              if(isset($whiteMap[$k])) {
-                $row[$k] = $v;
-              }
-            }
-            $row['job_id'] = $job_id;
-            $ins[] = $row;
-          }
-          db_insert_many('sensor_history', $ins);
-        } else if(array_key_exists($job['location'])) {
+        if(array_key_exists($job['location'])) {
           error_log('new location format:' . json_encode($job['location']));
         }
       }
