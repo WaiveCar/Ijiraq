@@ -661,6 +661,7 @@ function sow($payload) {
             'campaign_id' => $job['camp']
           ]);
           $row['created_at'] = db_string($row['t']);
+          unset($row['t']);
           db_insert('location_history', $row);
         }
       }
