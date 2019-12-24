@@ -629,6 +629,8 @@ function inject_priority($job, $screen, $campaign) {
 
 function sow($payload) {
   global $SCHEMA;
+  $lat = false;
+  $lng = false;
   if(isset($payload['uid'])) {
     $screen = upsert_screen($payload['uid'], $payload);
   } else {
@@ -663,6 +665,8 @@ function sow($payload) {
           $row['created_at'] = db_string($row['t']);
           unset($row['t']);
           db_insert('location_history', $row);
+          $lat = $row['lat'];
+          $lng = $row['lng'];
         }
       }
 
@@ -979,20 +983,7 @@ function campaign_history($data) {
     return doError("Campaign not found");
   }  
 
-  $jobList = Many::job([ 'campaign_id' => $campaignId ]);
-  $jobMap = mapBy($jobList, 'id');
-  $jobHistory = Many::sensor_history(['job_id in (' . implode(',', array_keys($jobMap)) .')']);
-
-  foreach($jobHistory as $row) {
-    $job_id = $row['job_id'];
-    if(!array_key_exists('log', $jobMap[$job_id])) {
-      $jobMap[$job_id]['log'] = [];
-    }
-    $jobMap[$job_id]['log'][] = $row;
-  }
-
-  $campaign['jobs'] = array_values($jobMap);
-  return $campaign;
+  return Many::location_history(['campaign_id' => $campaignId]);
 }
 
 function circle($lng = -118.390412, $lat = 33.999819, $radius = 3500) {
