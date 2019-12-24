@@ -635,7 +635,9 @@ function sow($payload) {
     return doError("UID needs to be set before continuing");
   }
 
-  //error_log($payload['uid']);
+  if($payload['uid'] == 'jff6S9NbIGqv6cM3pA0gA') {
+    error_log($payload['uid']);
+  }
   $jobList = aget($payload, 'jobs', []);
   $campaignsToUpdateList = [];
 
@@ -658,7 +660,7 @@ function sow($payload) {
             'screen_id' => $screen['id'],
             'campaign_id' => $job['camp']
           ]);
-          $row['created_at'] = db_date(db_string($row['t']));
+          $row['created_at'] = db_string($row['t']);
           db_insert('location_history', $row);
         }
       }
