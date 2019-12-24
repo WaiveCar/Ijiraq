@@ -650,7 +650,7 @@ function sow($payload) {
     } else if($job_id) {
       if (! update_job($job_id, $job['completed_seconds']) ) {
         error_log("could not process job: " . json_encode($job));
-      } else if(array_key_exists($job['location'])) {
+      } else if(array_key_exists('location', $job)) {
         error_log('new location format:' . json_encode($job['location']));
       }
 
