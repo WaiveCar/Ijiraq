@@ -643,12 +643,12 @@ function sow($payload) {
 
     // this is the old system ... these machines
     // should just upgrade.
-    $job_id = aget($job, 'job_id');
+    $job_id = aget($job, 'job');
     // error_log(implode(' ', array_keys($job)));
     if(aget($job, 'id')) {
       // error_log("need to upgrade: {$payload['uid']}");
     } else if($job_id) {
-      if (! update_job($job_id, $job['completed_seconds']) ) {
+      if (! update_job($job_id, $job['done']) ) {
         error_log("could not process job: " . json_encode($job));
       } else if(array_key_exists('location', $job)) {
 
@@ -656,10 +656,10 @@ function sow($payload) {
           $row = array_merge($row, [
             'job_id' => $job_id,
             'screen_id' => $screen['id'],
-            'campaign_id' => $job['campaign_id']
+            'campaign_id' => $job['camp']
           ]);
-          $row['created_at'] = db_date(db_string($row['created_at']));
-          db_insert('location_history',$row);
+          $row['created_at'] = db_date(db_string($row['t']));
+          db_insert('location_history', $row);
         }
       }
 
