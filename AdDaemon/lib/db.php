@@ -373,6 +373,7 @@ $SCHEMA = [
   'location_history' => [
     'id'          => 'integer primary key autoincrement',
     'job_id'      => 'integer',
+    'campaign_id' => 'integer',
     'screen_id'   => 'integer',
     'lat'         => 'float default null',
     'lng'         => 'float default null',

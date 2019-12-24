@@ -651,7 +651,14 @@ function sow($payload) {
       if (! update_job($job_id, $job['completed_seconds']) ) {
         error_log("could not process job: " . json_encode($job));
       } else if(array_key_exists('location', $job)) {
-        error_log('new location format:' . json_encode($job['location']));
+
+        foreach($job['location'] as $row) {
+          db_insert('location_history', array_merge($row, [
+            'job_id' => $job_id,
+            'screen_id' => $screen['id'],
+            'campaign_id' => $job['campaign_id']
+          ]));
+        }
       }
 
       if(!isset($job['campaign_id'])) {
