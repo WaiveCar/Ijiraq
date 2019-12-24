@@ -650,12 +650,8 @@ function sow($payload) {
     } else if($job_id) {
       if (! update_job($job_id, $job['completed_seconds']) ) {
         error_log("could not process job: " . json_encode($job));
-      } else {
-        $whiteMap = $SCHEMA['sensor_history'];
-        unset($whiteMap['id']);
-        if(array_key_exists($job['location'])) {
-          error_log('new location format:' . json_encode($job['location']));
-        }
+      } else if(array_key_exists($job['location'])) {
+        error_log('new location format:' . json_encode($job['location']));
       }
 
       if(!isset($job['campaign_id'])) {
