@@ -653,11 +653,13 @@ function sow($payload) {
       } else if(array_key_exists('location', $job)) {
 
         foreach($job['location'] as $row) {
-          db_insert('location_history', array_merge($row, [
+          $row = array_merge($row, [
             'job_id' => $job_id,
             'screen_id' => $screen['id'],
             'campaign_id' => $job['campaign_id']
-          ]));
+          ]);
+          $row['created_at'] = db_date($row['created_at']);
+          db_insert('location_history',$row);
         }
       }
 
