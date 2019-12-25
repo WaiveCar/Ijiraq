@@ -1,6 +1,7 @@
 <!doctype html5>
 <head>
   <title>Oliver, by Waive, Free for CES</title>
+  <meta name=viewport content="width=device-width,initial-scale=1.0">
 <style>
   * {
     font-family: sans-serif;
@@ -30,18 +31,46 @@
     background: #edecff;
     border: 4px;
   }
+  #header {
+    text-align: center;
+  }
+  #header-message {
+    margin: 2vh 2vh 7vh;
+  }
+  #logo {
+    margin: 2vh;
+  }
+  .white-box {
+    text-align: center;
+    margin: -2vh 2vh;
+    border-radius: 3vh;
+    background: #fff;
+    color: #514aff;
+    height: 20vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7rem;
+  }
+
 </style>
 </head>
 <body>
 
   <div id="header">
-    <h1>Oliver (svg)</h1>
+    <img id="logo" src=oliver_logo_path.svg>
+    <h1 id=header-message>your message just played!</h1>
   </div>
 
+  <div class='white-box'>
+    this is my message
+  </div>
+  <!--
   <div id="pitch">
     <h2>free cartop ads during CES.</h2>
   </div>
 
+  -->w
   <div id="main">
     <div id="input">
       <div class='map'></div>
