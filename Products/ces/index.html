@@ -8,8 +8,9 @@
     font-family: 'Roboto', sans-serif;
   }
   body { 
-    background: #514aff;
+    background: #aaa;
     color: #fff;
+    height: 100%;
     margin: 0;
   }
   #map {
@@ -30,6 +31,7 @@
   form {
     border-radius: 3vh 3vh 0 0;
     padding: 2vh;
+    margin: 0;
   }
   form.light {
     background: #fff;
@@ -71,6 +73,7 @@
   }
   #header {
     text-align: center;
+    background: #514aff;
   }
   #header-message {
     margin: 2vh 2vh 7vh;
@@ -97,6 +100,15 @@
   form.light label {
     display:block
   }
+  #bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+  }
+  #result {
+    display: none;
+  }
 
 </style>
 </head>
@@ -104,7 +116,7 @@
 
   <div id="header">
     <img id="logo" src=oliver_logo_path.svg>
-    <h1 id=header-message>your message just played!</h1>
+    <h1 id=header-message></h1>
   </div>
 
   <div class='white-box'>
@@ -116,7 +128,7 @@
   </div>
 
   -->
-  <div id="main">
+  <div id="bottom">
     <div id="input">
       <form class='light'>
         <textarea class='message' name="message" id="message" placeholder="Enter message"></textarea>
@@ -130,7 +142,6 @@
     </div>
 
     <div id="result">
-      <h2>your message just played!</h2>
       <div class='message'></div>
       <div class='map' id='map'></div>
       <button class='white'>share</button>
@@ -159,7 +170,9 @@
         });
     }
   </script>
+  <!--
   <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBibUDNVBjFAKpwyPcZirJW4qHq2W2OO8M&libraries=visualization&callback=initMap">
   </script>
+  -->
 </html>
