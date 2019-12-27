@@ -8,19 +8,22 @@
     font-family: 'Roboto', sans-serif;
   }
   body { 
-    background: #ddd;
+    background: #514aff;
     color: #fff;
     height: 100%;
     margin: 0;
   }
   #map {
     height: 50vw;
+    background: lightgrey;
+    position:relative;
+    z-index: -1;
   }
   .full {
     width: 100%;
   }
   button { 
-    padding: 1rem 2rem;
+    padding: 1.75vh 7vh;
     color: #fff;
     background: #514aff;
     font-weight: 800;
@@ -44,6 +47,7 @@
   }
   button.primary { 
     background: #ff4d7d;
+    font-size: 1.05rem;
   }
   input[type="text"],textarea {
     padding: .5rem;
@@ -80,12 +84,16 @@
   }
   #header-message {
     margin: 0;
+    font-weight: 900;
     padding: 3vh 2vh 3vh;
-    display: none;
   }
   #logo {
     margin: 3.5vh 0 2vh;
     width: 33%;
+  }
+  #white-box-parent {
+    height: 8vh;
+    overflow: visible;
   }
   .white-box {
     text-align: center;
@@ -116,21 +124,41 @@
     width: 100%;
     left: 0;
   }
-  #result {
+
+  .create,.dashboard {
     display: none;
   }
-
+  #go-again {
+    width: 100%;
+    background: #514aff;
+    text-align: center;
+  }
+  #go-again button {
+    margin: 1vh 0;
+  }
+  .dashboard #header { height: 28vh; }
+  .dashboard #go-again { 
+    padding-top: 1vh;
+    height: 20vh; }
+  /* There's 10vh margin on the header */
+  .dashboard #map { 
+    border-radius: 2vh;
+    margin: 0 1vh;
+    height: 41vh; }
+  
 </style>
 </head>
 <body>
 
   <div id="header">
     <img id="logo" src=oliver_logo_path.svg>
-    <h1 id=header-message>asdf</h1>
+    <h1 class=dashboard id=header-message>your message just played!</h1>
   </div>
 
-  <div class='white-box'>
-    this is my message
+  <div id='white-box-parent'>
+    <div class='white-box'>
+      this is my message
+    </div>
   </div>
   <!--
   <div id="pitch">
@@ -138,8 +166,9 @@
   </div>
 
   -->
+  <div id="map"></div>
   <div id="bottom">
-    <div id="input">
+    <div id="input" class="create">
       <form class='light'>
         <textarea class='message' name="message" id="message" placeholder="Enter message"></textarea>
         <input type="text" placeholder="Enter phone number" name="phone" id="phone">
@@ -151,16 +180,24 @@
       </form>
     </div>
 
-    <div id="result">
-      <div class='message'></div>
-      <div class='map' id='map'></div>
+    <div id="go-again" class='dashboard'>
+      <div>
       <button class='white'>share</button>
+      </div>
       <button class='primary'>make another</button>
     </div>
   </div>
 </body>
   <script>
     var id = 56;
+// either create pitch or dashboard
+function setMode(what) {
+  document.body.classList.add(what);
+  for(let i of document.querySelectorAll(`.${what}`)) {
+    i.style.display = 'block';
+  }
+}
+
     function initMap() {
       fetch(`/api/heatmap?id=${id}`)
         .then(response => response.json())
@@ -179,6 +216,9 @@
           });
         });
     }
+window.onload = function() {
+  setMode('dashboard');
+}
   </script>
   <!--
   <script async defer
