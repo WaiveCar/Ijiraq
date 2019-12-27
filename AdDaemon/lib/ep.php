@@ -95,6 +95,7 @@ try {
   else if(array_search($func, [
     'active_campaigns', 
     'campaign_history', 
+    'heatmap',
     'car_history', 
     'screen_history',
     'command', 
