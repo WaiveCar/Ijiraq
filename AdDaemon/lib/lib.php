@@ -984,7 +984,7 @@ function heatmap($data) {
   }  
 
   return array_map(function ($n) { 
-    return array_values($n)
+    return array_values($n);
   }, Many::location_history(['campaign_id' => $campaignId], 'lat,lng'));
 }
 
