@@ -2,28 +2,37 @@
 <head>
   <title>Oliver, by Waive, Free for CES</title>
   <meta name=viewport content="width=device-width,initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
 <style>
   * {
     font-family: 'Roboto', sans-serif;
-    color: #fff;
   }
   body { 
     background: #514aff;
+    color: #fff;
   }
   #map {
     height: 50vw;
   }
+  .full {
+    width: 100%;
+  }
   button { 
-    padding: 0.5rem;
-    background: #514aff;
+    padding: 1rem 2rem;
     color: #fff;
+    background: #514aff;
     border: 4px;
+    font-weight: 700;
     border-radius: 40px;
     text-transform: uppercase;
   }
+  form.light {
+    background: #fff;
+    color: #514aff;
+  } 
   button.white { 
     background: #fff;
+    color: #514aff;
   }
   button.primary { 
     background: #ff4d7d;
@@ -83,14 +92,13 @@
   -->
   <div id="main">
     <div id="input">
-      <div class='map'></div>
-      <form>
+      <form class='light'>
         <textarea class='message' name="message" id="message" placeholder="Enter message"></textarea>
       <input type="text" placeholder="enter phone number" name="phone" id="phone">
-      <label>I agree with terms & conditions
-        <input type=checkbox required>
-      </label>
-      <button>Continue</button>
+        <label>I agree with terms & conditions
+          <input type=checkbox required>
+        </label>
+      <button class='full'>Continue</button>
       </form>
     </div>
 
