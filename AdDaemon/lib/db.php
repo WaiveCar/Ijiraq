@@ -560,6 +560,7 @@ class Get {
       }
     }
 
+    $fields = aget($argList, 1, '*');
     $kvargs = [];
     foreach($arg as $key => $value) {
       // this means a raw string was passed
@@ -578,14 +579,14 @@ class Get {
     }
     $kvstr = implode(' and ', $kvargs);
 
-    $qstr = "select * from $name where $kvstr";
+    $qstr = "select $fields from $name where $kvstr";
     return static::doquery($qstr, $name);
   }
 };
 
 class Many extends Get {
-  public static function doquery($qstr, $table) {
-    return db_all($qstr, $table);
+  public static function doquery($qstr, $table, $fields = '*') {
+    return db_all($qstr, $table, $fields);
   }
 };
 

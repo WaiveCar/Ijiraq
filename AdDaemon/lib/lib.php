@@ -971,6 +971,21 @@ function campaigns_list($opts = []) {
   return show('campaign', $append);
 }
 
+function heatmap($data) {
+  $campaign = Get::campaign($data);
+
+  if($campaign) {
+    $campaignId = $campaign['id'];
+  } else if(isset($data['id'])) {
+    $campaign = [];
+    $campaignId = $data['id'];
+  } else {
+    return doError("Campaign not found");
+  }  
+
+  return Many::location_history(['campaign_id' => $campaignId], 'lat,lng');
+}
+
 function campaign_history($data) {
   $campaign = Get::campaign($data);
 
@@ -983,7 +998,7 @@ function campaign_history($data) {
     return doError("Campaign not found");
   }  
 
-  return Many::location_history(['campaign_id' => $campaignId]);
+  return Many::location_history(['campaign_id' => $campaignId], 'lat,lng');
 }
 
 function circle($lng = -118.390412, $lat = 33.999819, $radius = 3500) {
