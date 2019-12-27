@@ -2,10 +2,10 @@
 <head>
   <title>Oliver, by Waive, Free for CES</title>
   <meta name=viewport content="width=device-width,initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,400,500,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600&display=swap" rel="stylesheet">
 <style>
   * {
-    font-family: 'IBM Plex Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: #fff;
   }
   body { 
@@ -22,7 +22,10 @@
     border-radius: 40px;
     text-transform: uppercase;
   }
-  button .primary { 
+  button.white { 
+    background: #fff;
+  }
+  button.primary { 
     background: #ff4d7d;
   }
   input[type="text"],textarea {
@@ -95,8 +98,8 @@
       <h2>your message just played!</h2>
       <div class='message'></div>
       <div class='map' id='map'></div>
-      <button>share</button>
-      <button>make another</button>
+      <button class='white'>share</button>
+      <button class='primary'>make another</button>
     </div>
   </div>
 </body>
