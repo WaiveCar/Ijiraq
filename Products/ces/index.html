@@ -2,7 +2,7 @@
 <head>
   <title>Oliver, by Waive, Free for CES</title>
   <meta name=viewport content="width=device-width,initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,600,900&display=swap" rel="stylesheet">
 <style>
   * {
     font-family: 'Roboto', sans-serif;
@@ -12,6 +12,9 @@
     color: #fff;
     height: 100%;
     margin: 0;
+  }
+  a, :visited {
+    color: #fff;
   }
   #map {
     height: 50vw;
@@ -95,7 +98,7 @@
     height: 8vh;
     overflow: visible;
   }
-  .white-box {
+  #white-box {
     text-align: center;
     margin: -8vh 2vh 0;
     background: #fff;
@@ -124,8 +127,21 @@
     width: 100%;
     left: 0;
   }
+  #wait-pitch .footer { position: absolute;
+    bottom: 2vh;
+    text-align: center;
+    width: 80vw;
+  }
+  #wait-pitch { margin: 0 2vh;
+    text-align: center;
+    height: 60vh;
+  }
+  #wait-pitch h2 { font-weight: 500;margin:20vh 0 }
+  #wait-pitch h2 big { font-weight: 900 }
+  #wait-pitch h3 small { font-weight: 500 }
 
-  .create,.dashboard {
+  #wait-pitch h4 { font-weight: 500 }
+  .wait,.create,.dashboard {
     display: none;
   }
   #go-again {
@@ -145,6 +161,8 @@
     border-radius: 2vh;
     margin: 0 1vh;
     height: 41vh; }
+  .create #map { height: 72vh; }
+  .wait #map { display: none }
   
 </style>
 </head>
@@ -156,7 +174,7 @@
   </div>
 
   <div id='white-box-parent'>
-    <div class='white-box'>
+    <div id='white-box'>
       this is my message
     </div>
   </div>
@@ -180,6 +198,18 @@
       </form>
     </div>
 
+    <div id=wait-pitch class='wait'>
+      <h2><big>Oliver</big> is the fastest and easiest way to get the word out.</h2>
+      <h3>
+        Free at CES<br>
+        <small>Advertising for Everyone</small>
+      </h3>
+      <h3>Come see us at the Amazon booth</h3>
+      <div class='footer'>
+        Created by <a href=https://waive.com>Waive</a>
+      </div>
+    </div>
+
     <div id="go-again" class='dashboard'>
       <div>
       <button class='white'>share</button>
@@ -190,11 +220,22 @@
 </body>
   <script>
     var id = 56;
-// either create pitch or dashboard
+var load = {
+  wait: function () {
+    whiteit("Thanks, we'll send you a text when it plays.");
+  }
+}
+function whiteit(what) {
+  document.querySelector('#white-box').innerHTML = what;
+}
+// either create wait pitch or dashboard
 function setMode(what) {
   document.body.classList.add(what);
   for(let i of document.querySelectorAll(`.${what}`)) {
     i.style.display = 'block';
+  }
+  if(load[what]) {
+    load[what]();
   }
 }
 
@@ -217,7 +258,7 @@ function setMode(what) {
         });
     }
 window.onload = function() {
-  setMode('dashboard');
+  setMode('wait');
 }
   </script>
   <!--
