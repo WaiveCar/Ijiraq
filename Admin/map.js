@@ -9,6 +9,7 @@ import {fromLonLat, toLonLat} from 'ol/proj';
 import Feature from 'ol/Feature';
 import Polygon from 'ol/geom/Polygon';
 import Circle from 'ol/geom/Circle';
+import MultiLineString from 'ol/geom/MultiLineString';
 import {asColorLike} from 'ol/colorlike';
 import {bbox} from 'ol/loadingstrategy';
 
@@ -155,12 +156,29 @@ window.map = function(opts) {
     return shapes;
   }
 
+
+  var recurseFll = x => x.map(y => y[0].length ? recurseFll(y) : fromLonLat(y) );
+
   function drawShapes(list) {
     clear();
     var isFirst = true;
     list.forEach(shape => {
       var feature;
-      if(shape[0] === 'Circle') {
+      // line is an array of points, [ [lat,lng], [lat,lng] ... ]
+      // as the second argument.
+      if(shape[0] === 'Line') {
+        feature = new Feature({
+          geometry: new MultiLineString(recurseFll(shape.slice(1)))
+        });
+        feature.setStyle(
+          new Style({
+            stroke: new Stroke({
+              color: '#7777ff99',
+              width: 2
+            })
+          })
+        );
+      } else if(shape[0] === 'Circle') {
         feature = new Feature({
           geometry: new Circle(fromLonLat(shape[1]), shape[2]),
         });
@@ -175,8 +193,7 @@ window.map = function(opts) {
             })
           })
         );
-      }
-      else if(shape[0] === 'Polygon') {
+      } else if(shape[0] === 'Polygon') {
         feature = new Feature({
           geometry: new Polygon([shape[1].map(coor => fromLonLat(coor))]),
         });
