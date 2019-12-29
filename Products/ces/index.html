@@ -244,10 +244,12 @@ function api(what) {
 }
 
 function getCars() {
-  /*
   api("screens?project=dev&fields=lat,lng")
     .then(carList => {
-    */
+      carList = carList.filter(x => x.lat).map(r => ['Point', [r.lng, r.lat]]);
+      _map.load(carList);
+      console.log(carList);
+    });
 }
 
 function initMap() {
