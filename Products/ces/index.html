@@ -16,16 +16,6 @@
   a, :visited {
     color: #fff;
   }
-  #map {
-    width: 100%;
-    height: 100%;
-    height: 50vw;
-    background: lightgrey;
-    z-index: -1;
-  }
-  .full {
-    width: 100%;
-  }
   button { 
     padding: 1.75vh 7vh;
     color: #fff;
@@ -80,6 +70,13 @@
     align-items: center;
     font-weight: 800;
     justify-content: center;
+  }
+  #map {
+    height: 50vw;
+    background: lightgrey;
+  }
+  .full {
+    width: 100%;
   }
   #header {
     text-align: center;
@@ -166,7 +163,6 @@
     height: 41vh; }
   .create #map { height: 72vh; }
   .wait #map { display: none }
-  
 </style>
 </head>
 <body>
@@ -218,7 +214,7 @@
 </body>
   <script src=map.js></script>
   <script>
-    var id = 56;
+var id = 56;
 var load = {
   wait: function () {
     whiteit("Thanks, we'll send you a text when it plays.");
@@ -272,17 +268,11 @@ function initMap() {
 }
 window.onload = function() {
   setMode('create');
-   self._map = map({
-        selectFirst: false,
-        draw: false,
-        resize: true});
-      _map.load([["Line",
-        [
-          [-118.35,34.034], [-118.55,34.054],
-          [-118.56,34.064]
-        ]
-      ]]);
-
+  self._map = map({
+    selectFirst: false,
+    draw: false,
+    resize: false
+  });
 }
   </script>
 </html>
