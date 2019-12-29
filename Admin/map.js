@@ -7,11 +7,10 @@ import {OSM, Cluster, Vector as VectorSource} from 'ol/source.js';
 import {Circle as CircleStyle, Icon, Fill, Stroke, Style, Text} from 'ol/style.js';
 import {fromLonLat, toLonLat} from 'ol/proj';
 import Feature from 'ol/Feature';
+import Point from 'ol/geom/Point';
 import Polygon from 'ol/geom/Polygon';
 import Circle from 'ol/geom/Circle';
 import MultiLineString from 'ol/geom/MultiLineString';
-import {asColorLike} from 'ol/colorlike';
-import {bbox} from 'ol/loadingstrategy';
 
 window.map = function(opts) {
   //
@@ -26,13 +25,13 @@ window.map = function(opts) {
   opts = Object.assign({}, {
     target: 'map',
     center: [-118.3, 34.02],
+    select: false,
     selectFirst: false,
     zoom: 13,
     typeSelect: 'type',
-    draw: true,
-    resize: true,
-    move: true,
-    select: false,
+    draw: false,
+    resize: false,
+    move: false,
   }, opts || {});
 
   var raster = new TileLayer({
@@ -46,17 +45,18 @@ window.map = function(opts) {
 	var styleCache = {
     car: new Style({
       image: new Icon({
-        src: '/Admin/car.png'
+        src: 'car.png'
       })
     }),
     screen: new Style({
       image: new Icon({
-        src: '/Admin/screen.png'
+        src: 'screen.png'
       })
     })
   };
 
   var _layers = [raster];
+  var recurseFll = x => x[0].length ? x.map(y => y[0].length ? recurseFll(y) : fromLonLat(y) ) : fromLonLat(x);
 
   var css = document.createElement('style');
   css.innerHTML = `
@@ -134,15 +134,6 @@ window.map = function(opts) {
   // } points
 
   // drawlayer {
-  function addInteractions() {
-    _draw = new Draw({
-      source: source.draw,
-      type: typeSelect.value
-    });
-    _map.addInteraction(_draw);
-    _snap = new Snap({source: source.draw});
-    _map.addInteraction(_snap);
-  }
   function getShapes() {
     let shapes = draw.getSource().getFeatures().map(row => {
       var kind = row.getGeometry();
@@ -156,17 +147,19 @@ window.map = function(opts) {
     return shapes;
   }
 
-
-  var recurseFll = x => x.map(y => y[0].length ? recurseFll(y) : fromLonLat(y) );
-
   function drawShapes(list) {
     clear();
     var isFirst = true;
-    list.forEach(shape => {
+    return list.map(shape => {
       var feature;
       // line is an array of points, [ [lat,lng], [lat,lng] ... ]
       // as the second argument.
-      if(shape[0] === 'Line') {
+      if(shape[0] === 'Point') {
+        feature = new Feature({ 
+          geometry: new Point(fromLonLat(shape[1])),
+        });
+        feature.setStyle(styleCache.car);
+      } else if(shape[0] === 'Line') {
         feature = new Feature({
           geometry: new MultiLineString(recurseFll(shape.slice(1)))
         });
@@ -197,6 +190,8 @@ window.map = function(opts) {
         feature = new Feature({
           geometry: new Polygon([shape[1].map(coor => fromLonLat(coor))]),
         });
+      } else {
+        console.error("What the fuck is a " + shape[0] + "?");
       }
       draw.getSource().addFeature(feature);
 
@@ -209,6 +204,10 @@ window.map = function(opts) {
         });
         isFirst = false;
       }
+      // the most common thing we'll want to do is 
+      // move the object. BUT WE CAN'T PASS LAT/LNG
+      return feature;
+      
     });
   }
 
@@ -227,22 +226,7 @@ window.map = function(opts) {
     _draw.removeLastPoint();
   }
 
-  function getGradient() {
-    var canvas = document.createElement('canvas');
-    var size = 512;
-    canvas.width = canvas.height = size;
-    var ctx = canvas.getContext('2d');
-    var gradient = ctx.createRadialGradient(
-      size/2,size/2,size/4,
-      size/2,size/2,size/2
-    );
-    gradient.addColorStop(0, 'red');
-    gradient.addColorStop(1, 'blue');//rgba(0,0,0,0)');
-    return gradient;
-  }
-
   source.draw = new VectorSource();
-  var modify = new Modify({source: source.draw});
   var draw = new VectorLayer({
     source: source.draw,
     style: new Style({
@@ -300,9 +284,15 @@ window.map = function(opts) {
   var _map = new Map(map_params);
 
   if(opts.draw) {
-    addInteractions();
+    _draw = new Draw({
+      source: source.draw,
+      type: typeSelect.value
+    });
+    _map.addInteraction(_draw);
+    _snap = new Snap({source: source.draw});
+    _map.addInteraction(_snap);
     if(opts.resize) {
-      _map.addInteraction(modify);
+      _map.addInteraction(new Modify({source: source.draw}));
     }
   }
 
@@ -317,6 +307,7 @@ window.map = function(opts) {
     clear,
     removePoint,
     removeShape,
+    ll: a =>  a.length ? recurseFll(a) : recurseFll(Array.from(arguments)),
     save: getShapes,
     load: drawShapes,
   };
