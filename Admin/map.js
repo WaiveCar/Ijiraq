@@ -34,12 +34,7 @@ window.map = function(opts) {
     move: false,
   }, opts || {});
 
-  var raster = new TileLayer({
-    source: new OSM()
-  });
-
-  var _draw, _snap;
-  var _select;
+  var _draw, _snap, _featureList = [], _select;
   var source = {};
   var dom = document.getElementById(opts.target);
 	var styleCache = {
@@ -55,7 +50,7 @@ window.map = function(opts) {
     })
   };
 
-  var _layers = [raster];
+  var _layers = [ new TileLayer({ source: new OSM() }) ];
   var recurseFll = x => x[0].length ? x.map(y => y[0].length ? recurseFll(y) : fromLonLat(y) ) : fromLonLat(x);
 
   var css = document.createElement('style');
@@ -206,9 +201,25 @@ window.map = function(opts) {
       }
       // the most common thing we'll want to do is 
       // move the object. BUT WE CAN'T PASS LAT/LNG
+      // The batshit crazy syntax is something like
+      // mypoints[0].getGeometry().setCoordinates(_map.ll([-118.35,34.024]))
+      // which can honestly go to hell. so we just have one that requires
+      // more um ... accounting?
+      //
+      // V this is the features, followed by the actual shape
+      //   definition that went in ... (this can be used for searching
+      //   and debugging)
+      //
+      _featureList.push([feature, shape]);
       return feature;
       
     });
+  }
+
+  // this is the function with perhaps more accounting
+  function move(index, lat, lng) {
+    console.debug("Moving ", _featureList[index][1], "to", lat, lng);
+    _featureList[index][0].getGeometry().setCoordinates(recurseFll([lat, lng]));
   }
 
   function clear() {
@@ -274,11 +285,10 @@ window.map = function(opts) {
   if(opts.move) {
     _select = new Select();
 
-    var translate = new Translate({
-      features: _select.getFeatures()
-    });
-
-    map_params.interactions =  defaultInteractions().extend([_select, translate]);
+    map_params.interactions =  defaultInteractions().extend([
+      _select, 
+      new Translate({ features: _select.getFeatures() })
+    ]);
   }
 
   var _map = new Map(map_params);
@@ -307,7 +317,10 @@ window.map = function(opts) {
     clear,
     removePoint,
     removeShape,
-    ll: a =>  a.length ? recurseFll(a) : recurseFll(Array.from(arguments)),
+    move,
+    ll: function(a) {
+      return a.length ? recurseFll(a) : recurseFll(Array.from(arguments))
+    },
     save: getShapes,
     load: drawShapes,
   };
