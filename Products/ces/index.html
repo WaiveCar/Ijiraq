@@ -17,9 +17,10 @@
     color: #fff;
   }
   #map {
+    width: 100%;
+    height: 100%;
     height: 50vw;
     background: lightgrey;
-    position:relative;
     z-index: -1;
   }
   .full {
@@ -95,6 +96,8 @@
     width: 33%;
   }
   #white-box-parent {
+    position: relative;
+    z-index: 10;
     height: 8vh;
     overflow: visible;
   }
@@ -178,12 +181,7 @@
       this is my message
     </div>
   </div>
-  <!--
-  <div id="pitch">
-    <h2>free cartop ads during CES.</h2>
-  </div>
 
-  -->
   <div id="map"></div>
   <div id="bottom">
     <div id="input" class="create">
@@ -218,6 +216,7 @@
     </div>
   </div>
 </body>
+  <script src=map.js></script>
   <script>
     var id = 56;
 var load = {
@@ -239,31 +238,49 @@ function setMode(what) {
   }
 }
 
-    function initMap() {
-      fetch(`/api/heatmap?id=${id}`)
-        .then(response => response.json())
-        .then(points => {
-          var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 14,
-            center: {lat: points[0][0], lng: points[0][1]}
-          });
+function api(what) {
+  return fetch(`/api/${what}`)
+    .then(response => response.json())
+}
 
-          var heatmap = new google.maps.visualization.HeatmapLayer({
-            data: points.map(row => ( {location: new google.maps.LatLng(row[0], row[1])} )),
-            map: map,
-            maxIntensity: 30,
-            radius: 4,
-            opacity: 1
-          });
-        });
-    }
+function getCars() {
+  /*
+  api("screens?project=dev&fields=lat,lng")
+    .then(carList => {
+    */
+}
+
+function initMap() {
+  fetch(`/api/heatmap?id=${id}`)
+    .then(response => response.json())
+    .then(points => {
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 14,
+        center: {lat: points[0][0], lng: points[0][1]}
+      });
+
+      var heatmap = new google.maps.visualization.HeatmapLayer({
+        data: points.map(row => ( {location: new google.maps.LatLng(row[0], row[1])} )),
+        map: map,
+        maxIntensity: 30,
+        radius: 4,
+        opacity: 1
+      });
+    });
+}
 window.onload = function() {
-  setMode('wait');
+  setMode('create');
+   self._map = map({
+        selectFirst: false,
+        draw: false,
+        resize: true});
+      _map.load([["Line",
+        [
+          [-118.35,34.034], [-118.55,34.054],
+          [-118.56,34.064]
+        ]
+      ]]);
+
 }
   </script>
-  <!--
-  <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBibUDNVBjFAKpwyPcZirJW4qHq2W2OO8M&libraries=visualization&callback=initMap">
-  </script>
-  -->
 </html>
