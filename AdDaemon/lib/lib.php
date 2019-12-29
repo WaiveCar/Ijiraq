@@ -890,7 +890,12 @@ function show($what, $clause = []) {
     }
   }
 
+  $fields = '*';
   if(is_array($clause)) {
+    if(array_key_exists('fields', $clause)) {
+      $fields = $clause['fields'];
+      unset($clause['fields']);
+    }
     $clause = array_merge($where, $clause);
     if( !empty($clause) ) {
       $clause = " where " . implode(' and ', sql_kv($clause));
@@ -902,7 +907,7 @@ function show($what, $clause = []) {
     $clause .= ' order by id desc';
   }
   //error_log(preg_replace('/\s+/', ' ', "select * from $what $clause"));
-  return db_all("select * from $what $clause", $what);
+  return db_all("select $fields from $what $clause", $what);
 }
 
 function create($table, $payload) {
