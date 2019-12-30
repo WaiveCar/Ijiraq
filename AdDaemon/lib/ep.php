@@ -96,6 +96,7 @@ try {
     'active_campaigns', 
     'campaign_history', 
     'heatmap',
+    'path',
     'car_history', 
     'screen_history',
     'command', 

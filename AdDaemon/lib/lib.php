@@ -976,6 +976,21 @@ function campaigns_list($opts = []) {
   return show('campaign', $append);
 }
 
+function path($data) {
+  $heatmap = heatmap($data);
+  $nodup = [];
+  $last = [0,0];
+
+  foreach($heatmap as $x) {
+    if($x[0] === $last[0] && $x[1] === $last[1]) {
+      continue;
+    }
+    $nodup[] = $x;
+    $last = $x;
+  }
+  return $nodup;
+}
+
 function heatmap($data) {
   $campaign = Get::campaign($data);
 
