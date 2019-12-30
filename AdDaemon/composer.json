@@ -6,6 +6,7 @@
         "ramsey/uuid": "^3.8",
         "php-http/curl-client": "^1.7",
         "guzzlehttp/psr7": "^1.6",
-        "jolicode/slack-php-api": "^1.2"
+        "jolicode/slack-php-api": "^1.2",
+        "twilio/sdk": "^5.41"
     }
 }
