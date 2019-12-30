@@ -319,6 +319,7 @@ window.map = function(opts) {
     removePoint,
     removeShape,
     move,
+    fit: () => _map.getView().fit(_layers[1].getSource().getExtent()),
     ll: function(a) {
       return a.length ? recurseFll(a) : recurseFll(Array.from(arguments))
     },
