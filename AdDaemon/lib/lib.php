@@ -990,7 +990,7 @@ function heatmap($data) {
 
   return array_map(function ($n) { 
     return array_values($n);
-  }, Many::location_history(['campaign_id' => $campaignId], 'lat,lng'));
+  }, Many::location_history(['campaign_id' => $campaignId], 'lng,lat'));
 }
 
 function campaign_history($data) {
