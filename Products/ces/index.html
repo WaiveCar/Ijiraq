@@ -69,7 +69,8 @@
   } 
   #map {
     height: 50vw;
-    background: lightgrey;
+    overflow: hidden;
+    background: #ddd;
   }
   .full {
     width: 100%;
@@ -218,6 +219,7 @@
 var id = 56;
 var load = {
   create: getCars,
+  dashboard: getPath,
   wait: function () {
     whiteit("Thanks, we'll send you a text when it plays.");
   }
@@ -254,22 +256,13 @@ function addMessage() {
   setMode('wait');
 }
 
-function initMap() {
-  fetch(`/api/heatmap?id=${id}`)
+function getPath() {
+  fetch(`/api/path?id=${id}`)
     .then(response => response.json())
     .then(points => {
-      var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 14,
-        center: {lat: points[0][0], lng: points[0][1]}
-      });
-
-      var heatmap = new google.maps.visualization.HeatmapLayer({
-        data: points.map(row => ( {location: new google.maps.LatLng(row[0], row[1])} )),
-        map: map,
-        maxIntensity: 30,
-        radius: 4,
-        opacity: 1
-      });
+      _map.clear();
+      _map.load([["Line", points]]);
+      _map.fit();
     });
 }
 
@@ -280,6 +273,7 @@ window.onload = function() {
     draw: false,
     resize: false
   });
+  setMode('dashboard');
 }
   </script>
 </html>
