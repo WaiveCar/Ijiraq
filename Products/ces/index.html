@@ -210,7 +210,7 @@
       <div>
       <button class='white'>share</button>
       </div>
-      <button class='primary'>make another</button>
+      <button onclick="another()" class='primary'>make another</button>
     </div>
   </div>
 </body>
@@ -223,6 +223,9 @@ var load = {
   wait: function () {
     whiteit("Thanks, we'll send you a text when it plays.");
   }
+}
+function another() {
+  setMode('create');
 }
 function whiteit(what) {
   document.querySelector('#white-box').innerHTML = what;
