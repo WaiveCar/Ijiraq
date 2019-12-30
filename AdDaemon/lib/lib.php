@@ -5,6 +5,13 @@ session_start();
 use Aws\S3\S3Client;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use Twilio\Rest\Client;
+
+$TWIL = [
+  'num'  => '+18559248355',
+  'sid'  => 'ACa061f336122514af845ea65fb1e6c2bb',
+  'token'=> 'b39d95c162c1e9ad1893acbb61af8bb4'
+];
 
 $mypath = $_SERVER['DOCUMENT_ROOT'] . 'AdDaemon/lib/';
 include_once($mypath . 'db.php');
@@ -92,6 +99,7 @@ function missing($what, $list) {
   }
 }
 
+
 function find_missing($obj, $fieldList) {
   return array_diff($fieldList, array_keys($obj));
 }
@@ -140,6 +148,16 @@ function distance($pos1, $pos2) {
   $dist = rad2deg($dist);
   // meters
   return $dist * 60 * 1397.60312636;
+}
+
+
+function text_rando($number, $message) {
+  global $TWIL;
+  $client = new Client($TWIL['sid'], $TWIL['token']);
+  return $client->message->create($number, [ 
+    'from' => $TWIL['num'], 
+    'body' => $message
+  ]);
 }
 
 function create_screen($uid, $data = []) {
@@ -980,6 +998,7 @@ function path($data) {
   $heatmap = heatmap($data);
   $nodup = [];
   $last = [0,0];
+  text_rando('+16572101337', 'hello fucker');
 
   foreach($heatmap as $x) {
     if($x[0] === $last[0] && $x[1] === $last[1]) {
