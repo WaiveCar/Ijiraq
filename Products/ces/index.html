@@ -161,7 +161,7 @@
     border-radius: 2vh;
     margin: 0 1vh;
     height: 41vh; }
-  .create #map { height: 72vh; }
+  .create #map { height: 42vh; }
   .wait #map { display: none }
 </style>
 </head>
@@ -244,7 +244,7 @@ function getCars() {
     .then(carList => {
       carList = carList.filter(x => x.lat).map(r => ['Point', [r.lng, r.lat]]);
       _map.load(carList);
-      console.log(carList);
+      _map.fit();
     });
 }
 
@@ -266,6 +266,7 @@ function initMap() {
       });
     });
 }
+
 window.onload = function() {
   setMode('create');
   self._map = map({
