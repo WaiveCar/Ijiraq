@@ -1002,7 +1002,6 @@ function path($data) {
   $heatmap = heatmap($data);
   $nodup = [];
   $last = [0,0];
-  error_log(text_rando('+16572101337', 'hello fucker'));
 
   foreach($heatmap as $x) {
     if($x[0] === $last[0] && $x[1] === $last[1]) {
@@ -1051,6 +1050,10 @@ function circle($lng = -118.390412, $lat = 33.999819, $radius = 3500) {
     'lat' => $lat, 'lng' => $lng, 'radius' => $radius,
     'shape_list' => [[ 'Circle', [$lng, $lat], $radius ]]
   ];
+}
+
+function campaign_create_ces($number, $message) {
+  text_rando($number, "Thanks for trying oliver, free exclusively at CES. Your message will be shown on the streets of Vegas shortly. We'll text you after with a link so you can see where it played!");
 }
 
 // This is the first entry point ... I know naming and caching

@@ -1,3 +1,10 @@
+<?
+session_start();
+if (!array_key_exists('state', $_SESSION)) {
+  $_SESSION['state'] = 'create';
+}
+$state = $_SESSION['state'];
+?>
 <!doctype html5>
 <head>
   <title>Oliver, by Waive, Free for CES</title>
@@ -276,7 +283,7 @@ window.onload = function() {
     draw: false,
     resize: false
   });
-  setMode('dashboard');
+  setMode('<?=$state?>');
 }
   </script>
 </html>
