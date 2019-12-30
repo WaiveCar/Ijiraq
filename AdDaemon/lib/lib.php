@@ -154,10 +154,14 @@ function distance($pos1, $pos2) {
 function text_rando($number, $message) {
   global $TWIL;
   $client = new Client($TWIL['sid'], $TWIL['token']);
-  return $client->message->create($number, [ 
-    'from' => $TWIL['num'], 
-    'body' => $message
-  ]);
+  try {
+    $client->messages->create($number, [ 
+      'from' => $TWIL['num'], 
+      'body' => $message
+    ]);
+  } catch(Exception  $e) {
+    error_log($e);
+  }
 }
 
 function create_screen($uid, $data = []) {
@@ -998,7 +1002,7 @@ function path($data) {
   $heatmap = heatmap($data);
   $nodup = [];
   $last = [0,0];
-  text_rando('+16572101337', 'hello fucker');
+  error_log(text_rando('+16572101337', 'hello fucker'));
 
   foreach($heatmap as $x) {
     if($x[0] === $last[0] && $x[1] === $last[1]) {
