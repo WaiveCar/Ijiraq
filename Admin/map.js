@@ -314,6 +314,7 @@ window.map = function(opts) {
       }
     },
     _map,
+    _layers,
     clear,
     removePoint,
     removeShape,
