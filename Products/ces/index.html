@@ -4,17 +4,13 @@
   <meta name=viewport content="width=device-width,initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,600,900&display=swap" rel="stylesheet">
 <style>
-  * {
-    font-family: 'Roboto', sans-serif;
-  }
+  * { font-family: 'Roboto', sans-serif; }
+  a, :visited { color: #fff; }
   body { 
     background: #514aff;
     color: #fff;
     height: 100%;
     margin: 0;
-  }
-  a, :visited {
-    color: #fff;
   }
   button { 
     padding: 1.75vh 7vh;
@@ -25,16 +21,6 @@
     border-radius: 4vh;
     text-transform: uppercase;
   }
-  form {
-    border-radius: 3vh 3vh 0 0;
-    padding: 2vh;
-    margin: 0;
-  }
-  form.light {
-    background: #fff;
-    color: #514aff;
-    box-shadow: 0 0 6px 1px rgba(0,0,0,0.2);
-  } 
   button.white { 
     background: #fff;
     color: #514aff;
@@ -71,6 +57,16 @@
     font-weight: 800;
     justify-content: center;
   }
+  .form {
+    border-radius: 3vh 3vh 0 0;
+    padding: 2vh;
+    margin: 0;
+  }
+  .form.light {
+    background: #fff;
+    color: #514aff;
+    box-shadow: 0 0 6px 1px rgba(0,0,0,0.2);
+  } 
   #map {
     height: 50vw;
     background: lightgrey;
@@ -113,11 +109,11 @@
     font-weight: 900;
     box-shadow: 0 0 6px 1px rgba(0,0,0,0.2);
   }
-  form.light input, form.light label {
+  .form.light input, .form.light label {
     margin: 1.5vh 0;
     text-align: center;
   }
-  form.light label {
+  .form.light label {
     margin-top:0;
     display:block
   }
@@ -132,18 +128,23 @@
     text-align: center;
     width: 80vw;
   }
-  #wait-pitch { margin: 0 2vh;
+  #wait-pitch { 
+    margin: 0 2vh;
     text-align: center;
     height: 60vh;
   }
   #wait-pitch h2 { font-weight: 500;margin:20vh 0 }
   #wait-pitch h2 big { font-weight: 900 }
   #wait-pitch h3 small { font-weight: 500 }
-
   #wait-pitch h4 { font-weight: 500 }
-  .wait,.create,.dashboard {
+
+  .wait, .create, .dashboard {
     display: none;
   }
+
+  .mode-create .create { display: block; }
+  .mode-wait .wait { display: block; }
+  .mode-dashboard .dashboard { display: block; }
   #go-again {
     width: 100%;
     background: #514aff;
@@ -152,17 +153,17 @@
   #go-again button {
     margin: 1vh 0;
   }
-  .dashboard #header { height: 28vh; }
-  .dashboard #go-again { 
+  .mode-dashboard #header { height: 28vh; }
+  .mode-dashboard #go-again { 
     padding-top: 1vh;
     height: 20vh; }
   /* There's 10vh margin on the header */
-  .dashboard #map { 
+  .mode-dashboard #map { 
     border-radius: 2vh;
     margin: 0 1vh;
     height: 41vh; }
-  .create #map { height: 42vh; }
-  .wait #map { display: none }
+  .mode-create #map { height: 42vh; }
+  .mode-wait #map { display: none }
 </style>
 </head>
 <body>
@@ -181,15 +182,15 @@
   <div id="map"></div>
   <div id="bottom">
     <div id="input" class="create">
-      <form class='light'>
+      <div class='light form'>
         <textarea class='message' name="message" id="message" placeholder="Enter message"></textarea>
         <input type="text" placeholder="Enter phone number" name="phone" id="phone">
         <label>
-          <input type=checkbox required>
+          <input checked type=checkbox required>
           I agree with terms & conditions
         </label>
-        <button class='full'>Continue</button>
-      </form>
+        <button onclick='addMessage()' class='full'>Continue</button>
+      </div>
     </div>
 
     <div id=wait-pitch class='wait'>
@@ -225,10 +226,7 @@ function whiteit(what) {
 }
 // either create wait pitch or dashboard
 function setMode(what) {
-  document.body.classList.add(what);
-  for(let i of document.querySelectorAll(`.${what}`)) {
-    i.style.display = 'block';
-  }
+  document.body.className = 'mode-' + what;
   if(load[what]) {
     load[what]();
   }
@@ -246,6 +244,13 @@ function getCars() {
       _map.load(carList);
       _map.fit();
     });
+}
+
+function addMessage() {
+  var toPost = {};
+  ['message','phone'].forEach(w => toPost[w] = document.getElementById(w).value);
+  console.log(toPost);
+  setMode('wait');
 }
 
 function initMap() {
