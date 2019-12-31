@@ -19,6 +19,7 @@ $state = $_SESSION['state'];
     height: 100%;
     margin: 0;
   }
+
   button { 
     padding: 1.75vh 7vh;
     color: #fff;
@@ -99,11 +100,11 @@ $state = $_SESSION['state'];
   #white-box-parent {
     position: relative;
     z-index: 10;
+    text-align: center;
     height: 8vh;
     overflow: visible;
   }
   #white-box {
-    text-align: center;
     margin: calc(-33.94vw/2) 4vw 0;
     height: 33.94vw;
     border: .5vw solid #514aff;
@@ -176,6 +177,17 @@ $state = $_SESSION['state'];
     height: 41vh; }
   .mode-create #map { height: 42vh; }
   .mode-wait #map { display: none }
+@media all and (orientation:landscape) {
+#header { 
+  display: none 
+}
+  #white-box {
+    margin-top: 0; 
+    display: inline-block;
+    width: calc(1920/675 * 0.6 * 33.94vw);
+    height: calc(0.6 * 33.94vw);
+  }
+}
 </style>
 </head>
 <body>
