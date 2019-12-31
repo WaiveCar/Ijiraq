@@ -170,6 +170,13 @@ $SCHEMA = [
     'created_at' => 'datetime default current_timestamp',
   ],
 
+  'ces' =>  [
+    'id'          => 'integer primary key autoincrement',
+    'phone'       => 'text',
+    'message'     => 'text',
+    'created_at'  => 'datetime default current_timestamp',
+  ],
+
   //
   // consider: potentially create a second table for "staging" campaigns
   // that aren't active as opposed to relying on a boolean

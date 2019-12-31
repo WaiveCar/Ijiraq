@@ -82,9 +82,11 @@ try {
     post_return(show('widget', array_merge(['type' => $type], $all)));
 
   } else if(array_search($func, [
-    'brands', 'organizations', 'attributions', 'users', 'widgets',
+    'brands', 'ces', 'organizations', 'attributions', 'users', 'widgets',
     'jobs', 'sensor_history', 'campaigns', 'screens', 'tasks']) !== false) {
-    $table = rtrim($func, 's');
+    if($func !== 'ces') {
+      $table = rtrim($func, 's');
+    }
     $action = 'show';
 
     if($verb == 'POST' || $verb == 'PUT') {

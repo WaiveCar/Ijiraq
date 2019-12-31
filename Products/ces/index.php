@@ -3,7 +3,7 @@ session_start();
 if (!array_key_exists('state', $_SESSION)) {
   $_SESSION['state'] = 'create';
 }
-$state = $_SESSION['state'];
+$state = 'dashboard'; //$_SESSION['state'];
 ?>
 <!doctype html5>
 <head>
