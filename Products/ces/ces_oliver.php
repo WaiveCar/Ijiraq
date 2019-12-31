@@ -17,13 +17,17 @@ $message = $Parsedown->text($payload[0]['message']);
 * { font-family: 'Roboto', sans-serif; }
 body {
 margin: 0;
-font-size: 120px;
+font-size: 6.25vw;
 background: white;
+ color: #514aff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 blockquote {
-margin: 0 0 0 25px;
-border-left: 25px solid rgba(0,0,0,0.9);
-padding: 0 0 0 25px;
+margin: 0 0 0 1.3vw;
+border-left: 1.3vw solid rgba(0,0,0,0.9);
+padding: 0 0 0 1.3vw;
 }
 ol,ul {
 margin: 0;
@@ -36,12 +40,15 @@ hr { margin: 0 }
 code { 
 font-weight: 700;
 background: rgba(0,0,0,0.9); color: #aef;
-padding: 0 25px;
+padding: 0 1.3vw;
 font-family: 'Roboto Mono', monospace; }
 #message {
+text-align: center;
+display: block;
 font-weight: 400;
 margin: 0;
-padding: 25px 75px;
+height: 100%;
+padding: 1.3vw 3.9vw;
 }
 #message p {
 margin: 0;

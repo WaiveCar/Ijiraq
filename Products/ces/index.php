@@ -104,18 +104,21 @@ $state = 'dashboard'; //$_SESSION['state'];
   }
   #white-box {
     text-align: center;
-    margin: -8vh 2vh 0;
-    background: #fff;
-    color: #514aff;
-    height: 15vh;
-    display: flex;
-    border: .5vh solid #514aff;
+    margin: calc(-33.94vw/2) 4vw 0;
+    height: 33.94vw;
+    border: .5vw solid #514aff;
     border-radius: 3vh;
-    align-items: center;
-    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 0 6px 1px rgba(0,0,0,0.2);
     font-size: 1.7rem;
     font-weight: 900;
-    box-shadow: 0 0 6px 1px rgba(0,0,0,0.2);
+    color: #514aff;
+  }
+  iframe { 
+    width: 100%;
+    height: 100%;
+    border: 0; 
+    overflow: hidden;
   }
   .form.light input, .form.light label {
     margin: 1.5vh 0;
@@ -183,7 +186,7 @@ $state = 'dashboard'; //$_SESSION['state'];
 
   <div id='white-box-parent'>
     <div id='white-box'>
-      this is my message
+      <iframe src="ces_oliver.php?id=1"></iframe>
     </div>
   </div>
 
