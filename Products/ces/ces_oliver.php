@@ -1,14 +1,20 @@
 <?
-$id = $_GET['id'];
-if(!$id) {
-  exit;
-}
 require 'vendor/autoload.php';
 $Parsedown = new Parsedown();
 $Parsedown->setSafeMode(true);
-$payload_raw = file_get_contents("http://waivescreen.com/api/ces?id=$id");
-$payload = json_decode($payload_raw, true);
-$message = $Parsedown->text($payload[0]['message']);
+if(array_key_exists('message', $_GET)) {
+  $message_md = $_GET['message'];
+} else {
+  $id = $_GET['id'];
+  if(!$id) {
+    exit;
+  }
+  $payload_raw = file_get_contents("http://waivescreen.com/api/ces?id=$id");
+  $payload = json_decode($payload_raw, true);
+  $message_md = $payload[0]['message'];
+}
+
+$message = $Parsedown->text($message_md);
 ?>
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700,900&display=swap" rel="stylesheet">
@@ -17,7 +23,7 @@ $message = $Parsedown->text($payload[0]['message']);
 * { font-family: 'Roboto', sans-serif; }
 body {
 margin: 0;
-font-size: 6.25vw;
+font-size: 6.45vw;
 background: white;
  color: #514aff;
     display: flex;
@@ -26,7 +32,7 @@ background: white;
 }
 blockquote {
 margin: 0 0 0 1.3vw;
-border-left: 1.3vw solid rgba(0,0,0,0.9);
+border-left: 1.3vw solid #ff4d7d;
 padding: 0 0 0 1.3vw;
 }
 ol,ul {

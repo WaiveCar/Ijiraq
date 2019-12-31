@@ -3,7 +3,7 @@ session_start();
 if (!array_key_exists('state', $_SESSION)) {
   $_SESSION['state'] = 'create';
 }
-$state = 'dashboard'; //$_SESSION['state'];
+$state = $_SESSION['state'];
 ?>
 <!doctype html5>
 <head>
@@ -112,6 +112,7 @@ $state = 'dashboard'; //$_SESSION['state'];
     box-shadow: 0 0 6px 1px rgba(0,0,0,0.2);
     font-size: 1.7rem;
     font-weight: 900;
+    background: #fff;
     color: #514aff;
   }
   iframe { 
@@ -186,7 +187,7 @@ $state = 'dashboard'; //$_SESSION['state'];
 
   <div id='white-box-parent'>
     <div id='white-box'>
-      <iframe src="ces_oliver.php?id=1"></iframe>
+      <iframe id=preview src="ces_oliver.php?id=1"></iframe>
     </div>
   </div>
 
@@ -227,6 +228,7 @@ $state = 'dashboard'; //$_SESSION['state'];
   <script src=map.js></script>
   <script>
 var id = 56;
+var Dom = {};
 var load = {
   create: getCars,
   dashboard: getPath,
@@ -254,6 +256,7 @@ function api(what) {
 }
 
 function getCars() {
+  document.getElementById('message').focus();
   api("screens?project=dev&fields=lat,lng")
     .then(carList => {
       carList = carList.filter(x => x.lat).map(r => ['Point', [r.lng, r.lat]]);
@@ -278,6 +281,77 @@ function getPath() {
       _map.fit();
     });
 }
+/*
+var ajaxInput = (function(){
+  var tMap = {}, ix = 0;
+
+  function handler(key) {
+    var
+      obj = tMap[key],
+      dom = obj.dom,
+      val = dom.value,
+      ix = obj.ix ++;
+
+    // if it's the same value that we sent before
+    // then we bail
+    if('last' in obj && obj.last === val) {
+      return;
+    }
+
+    // record the last value
+    obj.last = val;
+
+    obj.cb.forEach(what => what(val, ix));
+  }
+
+  return function(dom, cb) {
+    var key = ix++;
+
+    if(!tMap[key]) {
+      tMap[key] = {
+        dom: dom,
+        cb: [],
+        ix: 0,
+        last: '',
+        timeout: 300
+      };
+
+      tMap[key].poll= setInterval(function(){
+        if(!tMap[key].handler) {
+          handler(key);
+        }
+      }, tMap[key].timeout);
+
+      $(dom).on('keydown keyup', function(){
+        var obj = tMap[key];
+
+        if(obj.handler) {
+          clearTimeout(obj.handler);
+          delete obj.handler;
+        }
+
+        obj.handler = setTimeout(function(){
+          handler(key);
+          delete obj.handler;
+        }, obj.timeout);
+      });
+    }
+
+    tMap[key].cb.push(cb);
+  }
+
+})();
+ */
+
+function preview() {
+  let last = '';
+  setInterval(function() {
+    if(Dom.message.value != last) {
+      Dom.preview.src = "ces_oliver.php?message=" + encodeURIComponent(Dom.message.value);
+      last = Dom.message.value;
+    }
+  }, 400);
+}
 
 window.onload = function() {
   setMode('create');
@@ -287,6 +361,8 @@ window.onload = function() {
     resize: false
   });
   setMode('<?=$state?>');
+  ['preview', 'message'].forEach(row => Dom[row] = document.getElementById(row));
+  preview();
 }
   </script>
 </html>
