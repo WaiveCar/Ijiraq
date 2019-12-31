@@ -84,6 +84,7 @@ try {
   } else if(array_search($func, [
     'brands', 'ces', 'organizations', 'attributions', 'users', 'widgets',
     'jobs', 'sensor_history', 'campaigns', 'screens', 'tasks']) !== false) {
+    $table = $func;
     if($func !== 'ces') {
       $table = rtrim($func, 's');
     }
