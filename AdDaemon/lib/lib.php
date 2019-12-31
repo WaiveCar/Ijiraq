@@ -954,6 +954,11 @@ function create($table, $payload) {
     }
   }
 
+  $id = aget($payload, 'id');
+  if($id) {
+    return db_update($table, $id, $payload);
+  } 
+
   return db_insert($table, $payload);
 }
 
