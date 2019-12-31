@@ -281,7 +281,19 @@ function addMessage() {
   var toPost = {};
   ['message','phone'].forEach(w => toPost[w] = document.getElementById(w).value);
   console.log(toPost);
-  setMode('wait');
+  fetch("/api/ces", {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(toPost)
+  })
+  .then((response) => response.json())
+  .then((data) => {
+    setMode('wait');
+    console.log('Success:', data);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 }
 
 function getPath() {
