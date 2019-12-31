@@ -359,7 +359,11 @@ function preview() {
   let last = '';
   setInterval(function() {
     if(Dom.message.value != last) {
-      Dom.preview.src = "ces_oliver.php?message=" + encodeURIComponent(Dom.message.value);
+      if(Dom.message.value.length == 0) {
+        Dom.preview.src = "ces_oliver.php?id=1";
+      } else {
+        Dom.preview.src = "ces_oliver.php?message=" + encodeURIComponent(Dom.message.value);
+      }
       last = Dom.message.value;
     }
   }, 400);
