@@ -6,31 +6,26 @@ $message = $Parsedown->text("
 # olvr.io 
  __The way__ to advertise for free during CES.");
 ?>
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500,700,900&display=swap" rel="stylesheet">
- <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700i&display=swap" rel="stylesheet"> 
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500,700,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700i&display=swap" rel="stylesheet"> 
 <style>
   * { font-family: 'Roboto', sans-serif; }
 body {
 margin: 0;
 font-size: 120px;
-background: black;
+background: white;
 }
 blockquote {
 margin: 0 0 0 25px;
 border-left: 25px solid rgba(0,0,0,0.9);
 padding: 0 0 0 25px;
 }
-#screen {
-  width: 1920px;
-  height: 675px;
-  background: white;
-}
 ol,ul {
-  margin: 0;
-  padding: 0;
-  list-style-position: inside;
-  list-style-type: square;
+margin: 0;
+padding: 0;
+list-style-position: inside;
+list-style-type: square;
 }
 li { margin: 0;padding: 0 }
 hr { margin: 0 }
@@ -56,11 +51,6 @@ h1 { font-weight: 900; font-size: 1.35em}
 h2 { font-weight: 600; font-size: 1.20em}
 h3 { font-weight: 400; font-size: 1.10em}
 </style>
-<body>
-
-<div id="screen">
 <div id=message>
 <?= $message ?>
-
-</div>
 </div>
