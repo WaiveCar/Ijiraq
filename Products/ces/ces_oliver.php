@@ -1,10 +1,14 @@
 <?
+$id = $_GET['id'];
+if(!$id) {
+  exit;
+}
 require 'vendor/autoload.php';
 $Parsedown = new Parsedown();
 $Parsedown->setSafeMode(true);
-$message = $Parsedown->text("
-# olvr.io 
-> __The way__ to advertise for free during CES.");
+$payload_raw = file_get_contents("http://waivescreen.com/api/ces?id=$id");
+$payload = json_decode($payload_raw, true);
+$message = $Parsedown->text($payload[0]['message']);
 ?>
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700,900&display=swap" rel="stylesheet">
