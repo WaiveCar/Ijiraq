@@ -228,13 +228,16 @@ window.map = function(opts) {
     for(var feature of draw.getSource().getFeatures()) {
       draw.getSource().removeFeature(feature);
     }
+    _featureList = [];
   }
+
   function removeShape() {
     let shapeList = draw.getSource().getFeatures();
     if(shapeList) {
       draw.getSource().removeFeature(shapeList.slice(-1)[0]);
     }
   }
+
   function removePoint() {
     _draw.removeLastPoint();
   }
