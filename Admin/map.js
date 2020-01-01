@@ -162,7 +162,7 @@ window.map = function(opts) {
           new Style({
             stroke: new Stroke({
               color: '#7777ff99',
-              width: 2
+              width: 5
             })
           })
         );
