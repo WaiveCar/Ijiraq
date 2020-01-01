@@ -136,19 +136,21 @@ $state = $_SESSION['state'];
     width: 100%;
     left: 0;
   }
-  #wait-pitch .footer { position: absolute;
+  #wait-pitch .footer { 
+    position: absolute;
     bottom: 2vh;
+    left: 0;
     text-align: center;
-    width: 80vw;
+    width: 100%;
   }
   #wait-pitch { 
     margin: 0 2vh;
     text-align: center;
     height: 60vh;
   }
-  #wait-pitch h2 { font-weight: 500;margin:20vh 0 }
+  #wait-pitch h2 { font-weight: 500 }
   #wait-pitch h2 big { font-weight: 900 }
-  #wait-pitch h3 small { font-weight: 500 }
+  #wait-pitch h2 small { font-weight: 700;font-size: 1rem;margin-top:1rem;display:block;text-transform: uppercase }
   #wait-pitch h4 { font-weight: 500 }
 
   .wait, .create, .dashboard {
@@ -169,25 +171,28 @@ $state = $_SESSION['state'];
   .mode-dashboard #header { height: 28vh; }
   .mode-dashboard #go-again { 
     padding-top: 1vh;
-    height: 20vh; }
+    height: 20vh; 
+  }
   /* There's 10vh margin on the header */
   .mode-dashboard #map { 
     border-radius: 2vh;
     margin: 0 1vh;
-    height: 41vh; }
+    height: 41vh; 
+  }
   .mode-create #map { height: 42vh; }
   .mode-wait #map { display: none }
-@media all and (orientation:landscape) {
-#header { 
-  display: none 
-}
-  #white-box {
-    margin-top: 0; 
-    display: inline-block;
-    width: calc(1920/675 * 0.6 * 33.94vw);
-    height: calc(0.6 * 33.94vw);
+
+  @media all and (orientation:landscape) {
+    #header { 
+      display: none 
+    }
+    #white-box {
+      margin-top: 0; 
+      display: inline-block;
+      width: calc(1920/675 * 0.6 * 33.94vw);
+      height: calc(0.6 * 33.94vw);
+    }
   }
-}
 </style>
 </head>
 <body>
@@ -218,14 +223,13 @@ $state = $_SESSION['state'];
     </div>
 
     <div id=wait-pitch class='wait'>
-      <h2><big>Oliver</big> is the fastest and easiest way to get the word out.</h2>
-      <h3>
-        Free at CES<br>
-        <small>Advertising for Everyone</small>
-      </h3>
-      <h3>Come see us at the Amazon booth</h3>
+    We'll send you a text when it plays
+      <h2><big>Oliver</big> is the fastest and easiest way to get the word out.
+<small>Free at CES</small>
+</h2>
       <div class='footer'>
-        Created by <a href=https://waive.com>Waive</a>
+        Created by <a href=https://waive.com>Waive</a><br>
+        Visit us at the Amazon Booth
       </div>
     </div>
 
@@ -245,7 +249,6 @@ var load = {
   create: getCars,
   dashboard: getPath,
   wait: function () {
-    whiteit("Thanks, we'll send you a text when it plays.");
   }
 }
 function another() {
@@ -280,7 +283,7 @@ function getCars() {
 function addMessage() {
   var toPost = {};
   ['message','phone'].forEach(w => toPost[w] = document.getElementById(w).value);
-  console.log(toPost);
+
   fetch("/api/ces", {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -288,6 +291,7 @@ function addMessage() {
   })
   .then((response) => response.json())
   .then((data) => {
+    console.log(data);
     setMode('wait');
     console.log('Success:', data);
   })
@@ -382,13 +386,13 @@ function preview() {
 }
 
 window.onload = function() {
-  setMode('create');
+  setMode('wait');
   self._map = map({
     selectFirst: false,
     draw: false,
     resize: false
   });
-  setMode('<?=$state?>');
+  //setMode('<?=$state?>');
   ['preview', 'message'].forEach(row => Dom[row] = document.getElementById(row));
   preview();
 }
