@@ -173,7 +173,7 @@ if (array_key_exists('campaign_id', $_SESSION)) {
   #go-again button {
     margin: 1vh 0;
   }
-  .mode-dashboard #header { height: 28vh; }
+  .mode-dashboard #header { height: 24vh; }
   .mode-dashboard #go-again { 
     padding-top: 1vh;
     height: 20vh; 
@@ -182,7 +182,7 @@ if (array_key_exists('campaign_id', $_SESSION)) {
   .mode-dashboard #map { 
     border-radius: 2vh;
     margin: 0 1vh;
-    height: 41vh; 
+    height: 45vh; 
   }
   .mode-create #map { height: 42vh; }
   .mode-wait #map { display: none }
@@ -392,12 +392,12 @@ function preview() {
 }
 
 window.onload = function() {
+  setMode('<?=$state?>');
   self._map = map({
     selectFirst: false,
     draw: false,
     resize: false
   });
-  setMode('<?=$state?>');
   ['preview', 'message'].forEach(row => Dom[row] = document.getElementById(row));
   preview();
 }
