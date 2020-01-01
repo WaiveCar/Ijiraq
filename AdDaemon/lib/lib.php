@@ -1067,7 +1067,7 @@ function circle($lng = -118.390412, $lat = 33.999819, $radius = 3500) {
 }
 
 function campaign_ces_create($data) {
-  global $PLAYTIME;
+  global $PLAYTIME, $DAY;
 
   // we should have message and phone
   $props = [];
@@ -1083,7 +1083,7 @@ function campaign_ces_create($data) {
     [
       'project' => db_string('CES'),
       'start_time' => db_date(time()),
-      'duration_seconds' => $PLAYTIME * 50,
+      'duration_seconds' => $PLAYTIME * 200,
       'end_time' => db_date(time() + $DAY * 3),
       'is_approved' => true,
       'asset' => ["http://waivescreen.com/Products/ces/ces_oliver.php?id=$ces_id"]
