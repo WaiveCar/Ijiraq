@@ -18,7 +18,7 @@ include_once($mypath . 'db.php');
 
 $PORT_OFFSET = 7000;
 $DAY = 24 * 60 * 60;
-$PROJECT_LIST = ['LA', 'NY', 'REEF'];
+$PROJECT_LIST = ['LA', 'NY', 'REEF', 'CES'];
 $DEFAULT_CAMPAIGN_MAP = [
   'none' => 1,
   'LA' => 1,
@@ -1061,6 +1061,44 @@ function campaign_create_ces($number, $message) {
   text_rando($number, "Thanks for trying oliver, free exclusively at CES. Your message will be shown on the streets of Vegas shortly. We'll text you after with a link so you can see where it played!");
 }
 
+function campaign_ces_create($data) {
+  global $PLAYTIME;
+
+  // we should have message and phone
+  $props = [];
+  foreach(['message','phone'] as $key) {
+    $props[$key] = db_string($data[$key]);
+  }
+
+  // this will give us a ces id which we can use
+  // for the campaign creation
+  $ces_id = db_insert('ces', $props);
+
+  $props = array_merge(circle( -115.033, 35.083, 410000 ),
+    [
+      'project' => db_string('CES'),
+      'start_time' => db_date(time()),
+      'duration_seconds' => $PLAYTIME * 50,
+      'end_time' => db_date(time() + $DAY * 3),
+      'is_approved' => true,
+      'asset' => ["http://waivescreen.com/Products/ces/ces_oliver.php?id=$ces_id"]
+    ],
+  );
+
+  $campaign_id = db_insert( 'campaign', $props );
+
+  db_update('ces', $ces_id, ['campaign_id' => $campaign_id]);
+
+  $_SESSION['campaign_id'] = $campaign_id;
+  $_SESSION['ces_id'] = $ces_id;
+  $_SESSION['phone'] = $data['phone'];
+
+  return [
+    'campaign_id' => $campaign_id,
+    'ces_id' => $ces_id
+  ];
+}
+
 // This is the first entry point ... I know naming and caching
 // are the hardest things.
 //
@@ -1109,8 +1147,6 @@ function campaign_create($data, $fileList, $user = false) {
     return doSuccess(Get::campaign($campaign_id));
   }
 
-  error_log(json_encode($data));
-  error_log(json_encode($fileList));
   foreach($fileList as $file) {
     $props['asset'][] = upload_s3($file);
   }

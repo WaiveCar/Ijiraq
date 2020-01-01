@@ -174,6 +174,7 @@ $SCHEMA = [
     'id'          => 'integer primary key autoincrement',
     'phone'       => 'text',
     'message'     => 'text',
+    'campaign_id' => 'integer',
     'created_at'  => 'datetime default current_timestamp',
   ],
 
