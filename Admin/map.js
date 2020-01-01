@@ -161,8 +161,8 @@ window.map = function(opts) {
         feature.setStyle(
           new Style({
             stroke: new Stroke({
-              color: '#7777ff99',
-              width: 5
+              color: '#7777ffff',
+              width: 6
             })
           })
         );
@@ -176,6 +176,8 @@ window.map = function(opts) {
               color: '#9999eebb', //getGradient()
             }),
             stroke: new Stroke({
+              lineCap: 'butt',
+              lineJoin: 'bevel',
               color: '#7777ff99',
               width: 2
             })
