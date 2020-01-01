@@ -1012,15 +1012,16 @@ function path($data) {
 
   foreach($heatmap as $x) {
     if($x[0] !== $path_sig[0] || $x[1] !== $path_sig[1]) {
-      if(count($path) > 0) {
+      if(count($path) > 1) {
         $nodup[] = $path;
       }
       $path = [];
+      $path_sig = $x;
       $last = $x;
     } else if($x[2] === $last[2] && $x[3] === $last[3]) {
       continue;
     }
-    $path[] = $x;
+    $path[] = array_slice($x, 2);
     $last = $x;
   }
   return $nodup;
