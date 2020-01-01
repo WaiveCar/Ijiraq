@@ -312,7 +312,7 @@ function getPath() {
     .then(response => response.json())
     .then(points => {
       _map.clear();
-      _map.load([["Line", points]]);
+      _map.load(points.map(row => ["Line", row]));
       _map.fit();
     });
 }
