@@ -25,10 +25,10 @@ body {
 margin: 0;
 font-size: 6.45vw;
 background: white;
- color: #514aff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+color: #514aff;
+display: flex;
+align-items: center;
+justify-content: center;
 }
 blockquote {
 margin: 0 0 0 1.3vw;
