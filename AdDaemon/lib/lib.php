@@ -1004,21 +1004,29 @@ function campaigns_list($opts = []) {
 }
 
 function path($data) {
-  $heatmap = heatmap($data);
+  $heatmap = heatmap($data, 'job_id,screen_id,lng,lat');
   $nodup = [];
-  $last = [0,0];
+  $path = [];
+  $last = [0,0,0,0];
+  $path_sig = [0,0];
 
   foreach($heatmap as $x) {
-    if($x[0] === $last[0] && $x[1] === $last[1]) {
+    if($x[0] !== $path_sig[0] || $x[1] !== $path_sig[1]) {
+      if(count($path) > 0) {
+        $nodup[] = $path;
+      }
+      $path = [];
+      $last = $x;
+    } else if($x[2] === $last[2] && $x[3] === $last[3]) {
       continue;
     }
-    $nodup[] = $x;
+    $path[] = $x;
     $last = $x;
   }
   return $nodup;
 }
 
-function heatmap($data) {
+function heatmap($data, $fields = 'lng,lat') {
   $campaign = Get::campaign($data);
 
   if($campaign) {
@@ -1032,7 +1040,7 @@ function heatmap($data) {
 
   return array_map(function ($n) { 
     return array_values($n);
-  }, Many::location_history(['campaign_id' => $campaignId], 'lng,lat'));
+  }, Many::location_history(['campaign_id' => $campaignId], $fields));
 }
 
 function campaign_history($data) {
