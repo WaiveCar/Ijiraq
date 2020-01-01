@@ -9,7 +9,6 @@ if (array_key_exists('campaign_id', $_SESSION)) {
 } else {
   $state = 'create';
 }
-var_dump($_SESSION);
 ?>
 <!doctype html5>
 <head>
@@ -404,3 +403,4 @@ window.onload = function() {
 }
   </script>
 </html>
+<!-- <?  var_dump($_SESSION); ?> -->
