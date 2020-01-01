@@ -205,7 +205,7 @@ var_dump($_SESSION);
 
   <div id="header">
     <img id="logo" src=oliver_logo_path.svg>
-    <h1 class=dashboard id=header-message>your message just played!</h1>
+    <h1 class=dashboard id=header-message>Here's where it played</h1>
   </div>
 
   <div id='white-box-parent'>
