@@ -1,9 +1,15 @@
 <?
 session_start();
-if (!array_key_exists('state', $_SESSION)) {
-  $_SESSION['state'] = 'create';
+$campaign_id = 0;
+$ces_id = 1;
+if (array_key_exists('campaign_id', $_SESSION)) {
+  $campaign_id = $_SESSION['campaign_id'];
+  $ces_id = $_SESSION['ces_id'];
+  $state = 'dashboard';
+} else {
+  $state = 'create';
 }
-$state = $_SESSION['state'];
+var_dump($_SESSION);
 ?>
 <!doctype html5>
 <head>
@@ -204,7 +210,7 @@ $state = $_SESSION['state'];
 
   <div id='white-box-parent'>
     <div id='white-box'>
-      <iframe id=preview src="ces_oliver.php?id=1"></iframe>
+      <iframe id=preview src="ces_oliver.php?id=<?=$ces_id?>"></iframe>
     </div>
   </div>
 
@@ -223,10 +229,11 @@ $state = $_SESSION['state'];
     </div>
 
     <div id=wait-pitch class='wait'>
-    We'll send you a text when it plays
-      <h2><big>Oliver</big> is the fastest and easiest way to get the word out.
-<small>Free at CES</small>
-</h2>
+      We'll send you a text when it plays
+      <h2>
+        <big>Oliver</big> is the fastest and easiest way to get the word out.
+        <small>Free at CES</small>
+      </h2>
       <div class='footer'>
         Created by <a href=https://waive.com>Waive</a><br>
         Visit us at the Amazon Booth
@@ -243,7 +250,7 @@ $state = $_SESSION['state'];
 </body>
   <script src=map.js></script>
   <script>
-var id = 56;
+var id = <?= $campaign_id ?>;
 var Dom = {};
 var load = {
   create: getCars,
@@ -284,7 +291,7 @@ function addMessage() {
   var toPost = {};
   ['message','phone'].forEach(w => toPost[w] = document.getElementById(w).value);
 
-  fetch("/api/ces", {
+  fetch("/api/campaign_ces_create", {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(toPost)
@@ -386,13 +393,12 @@ function preview() {
 }
 
 window.onload = function() {
-  setMode('wait');
   self._map = map({
     selectFirst: false,
     draw: false,
     resize: false
   });
-  //setMode('<?=$state?>');
+  setMode('<?=$state?>');
   ['preview', 'message'].forEach(row => Dom[row] = document.getElementById(row));
   preview();
 }
