@@ -98,6 +98,7 @@ try {
   else if(array_search($func, [
     'active_campaigns', 
     'campaign_history', 
+    'campaign_ces_create',
     'heatmap',
     'path',
     'car_history', 

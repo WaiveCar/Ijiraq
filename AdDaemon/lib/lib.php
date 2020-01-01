@@ -1057,10 +1057,6 @@ function circle($lng = -118.390412, $lat = 33.999819, $radius = 3500) {
   ];
 }
 
-function campaign_create_ces($number, $message) {
-  text_rando($number, "Thanks for trying oliver, free exclusively at CES. Your message will be shown on the streets of Vegas shortly. We'll text you after with a link so you can see where it played!");
-}
-
 function campaign_ces_create($data) {
   global $PLAYTIME;
 
@@ -1093,6 +1089,7 @@ function campaign_ces_create($data) {
   $_SESSION['ces_id'] = $ces_id;
   $_SESSION['phone'] = $data['phone'];
 
+  //text_rando($number, "Thanks for trying oliver, free exclusively at CES. Your message will be shown on the streets of Vegas shortly. We'll text you after with a link so you can see where it played!");
   return [
     'campaign_id' => $campaign_id,
     'ces_id' => $ces_id
