@@ -312,15 +312,17 @@ function addMessage() {
 }
 
 function getPath() {
-  ival.push(setInterval() {
-    fetch(`/api/path?id=${id}`)
-      .then(response => response.json())
-      .then(points => {
-        _map.clear();
-        _map.load(points.map(row => ["Line", row]));
-        _map.fit();
-      });
-  }, 10 * 1000);
+  ival.push(
+    setInterval(function(){
+      fetch(`/api/path?id=${id}`)
+        .then(response => response.json())
+        .then(points => {
+          _map.clear();
+          _map.load(points.map(row => ["Line", row]));
+          _map.fit();
+        });
+    }, 10 * 1000)
+  );
 }
 /*
 var ajaxInput = (function(){
