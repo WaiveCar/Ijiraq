@@ -258,6 +258,7 @@ var load = {
   }
 }
 function another() {
+  Dom.preview.src = "ces_oliver.php?id=1";
   setMode('create');
 }
 function whiteit(what) {
