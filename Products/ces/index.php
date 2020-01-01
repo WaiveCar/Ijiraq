@@ -250,6 +250,7 @@ if (array_key_exists('campaign_id', $_SESSION)) {
   <script src=map.js></script>
   <script>
 var id = <?= $campaign_id ?>;
+var ival = [];
 var Dom = {};
 var load = {
   create: getCars,
@@ -269,6 +270,9 @@ function setMode(what) {
   document.body.className = 'mode-' + what;
   if(load[what]) {
     load[what]();
+  }
+  while(ival.length) {
+    clearInterval(ival.pop());
   }
 }
 
@@ -308,13 +312,15 @@ function addMessage() {
 }
 
 function getPath() {
-  fetch(`/api/path?id=${id}`)
-    .then(response => response.json())
-    .then(points => {
-      _map.clear();
-      _map.load(points.map(row => ["Line", row]));
-      _map.fit();
-    });
+  ival.push(setInterval() {
+    fetch(`/api/path?id=${id}`)
+      .then(response => response.json())
+      .then(points => {
+        _map.clear();
+        _map.load(points.map(row => ["Line", row]));
+        _map.fit();
+      });
+  }, 10 * 1000);
 }
 /*
 var ajaxInput = (function(){
