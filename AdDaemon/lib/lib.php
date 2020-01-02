@@ -651,17 +651,11 @@ function inject_priority($job, $screen, $campaign) {
 
 function sow($payload) {
   global $SCHEMA;
-  $lat = false;
-  $lng = false;
-  if(isset($payload['uid'])) {
-    $screen = upsert_screen($payload['uid'], $payload);
-  } else {
+  if(!isset($payload['uid'])) {
     return doError("UID needs to be set before continuing");
-  }
+  } 
+  $screen = upsert_screen($payload['uid'], $payload);
 
-  if($payload['uid'] == 'jff6S9NbIGqv6cM3pA0gA') {
-    error_log(json_encode($payload));
-  }
   $jobList = aget($payload, 'jobs', []);
   $campaignsToUpdateList = [];
 
@@ -687,8 +681,6 @@ function sow($payload) {
           $row['created_at'] = db_string($row['t']);
           unset($row['t']);
           db_insert('location_history', $row);
-          $lat = $row['lat'];
-          $lng = $row['lng'];
         }
       }
 
@@ -726,7 +718,7 @@ function sow($payload) {
     // If we didn't get lat/lng from the sensor then we just 
     // fallback to the default
     $test = [floatval($payload['lng']), floatval($payload['lat'])];
-    $campaignList = array_filter(active_campaigns(), function($campaign) use ($test) {
+    $campaignList = array_filter(active_campaigns($screen), function($campaign) use ($test) {
       if(!empty($campaign['shape_list'])) {
         $isMatch = false;
         // This is important because if we have a polygon definition
@@ -970,12 +962,13 @@ function make_infinite($campaign_id) {
   ]);
 }
 
-function active_campaigns() {
+function active_campaigns($screen) {
   //  end_time > current_timestamp     and 
   //return [];
   return show('campaign', "where 
-    is_default = 0                   and
-    completed_seconds < duration_seconds 
+          is_default = 0 
+    and   completed_seconds < duration_seconds 
+    and   project = '${screen['project']}'
     order by start_time desc");
 }
 
