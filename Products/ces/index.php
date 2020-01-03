@@ -268,11 +268,11 @@ function whiteit(what) {
 // either create wait pitch or dashboard
 function setMode(what) {
   document.body.className = 'mode-' + what;
-  if(load[what]) {
-    load[what]();
-  }
   while(ival.length) {
     clearInterval(ival.pop());
+  }
+  if(load[what]) {
+    load[what]();
   }
 }
 
@@ -303,6 +303,7 @@ function addMessage() {
   .then((response) => response.json())
   .then((data) => {
     console.log(data);
+    id = data.campaign_id;
     setMode('wait');
     console.log('Success:', data);
   })
@@ -312,17 +313,29 @@ function addMessage() {
 }
 
 function getPath() {
-  ival.push(
-    setInterval(function(){
-      fetch(`/api/path?id=${id}`)
-        .then(response => response.json())
-        .then(points => {
-          _map.clear();
-          _map.load(points.map(row => ["Line", row]));
+  let isFirst = true;
+  function getMap() {
+    fetch(`/api/campaigns?id=${id}`)
+      .then(response => response.json())
+      .then(stats => {
+        let playtimes = stats[0].completed_seconds / 7.5;
+        Dom['header-message'].innerHTML = `It's played ${playtimes} times.`; 
+      });
+
+    fetch(`/api/path?id=${id}`)
+      .then(response => response.json())
+      .then(points => {
+        _map.clear();
+        _map.load(points.map(row => ["Line", row]));
+        if(isFirst) {
           _map.fit();
-        });
-    }, 10 * 1000)
-  );
+          isFirst = false;
+        }
+      });
+  }
+  var iv = setInterval(getMap, 7.5 * 1000);
+  ival.push(iv);
+  getMap();
 }
 /*
 var ajaxInput = (function(){
@@ -407,7 +420,7 @@ window.onload = function() {
     draw: false,
     resize: false
   });
-  ['preview', 'message'].forEach(row => Dom[row] = document.getElementById(row));
+  ['header-message', 'preview', 'message'].forEach(row => Dom[row] = document.getElementById(row));
   preview();
 }
   </script>
