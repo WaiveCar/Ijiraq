@@ -17,6 +17,22 @@ $JSON = [
 $RULES = [
   'campaign' => [ 
     'shape_list' => $JSON,
+    'asset_meta' => [
+      'pre' => $JSON['pre'],
+      'post' => function($v) {
+         $v = json_decode($v, true);
+         if(!is_array($v)) {
+           $v = [ $v ];
+         }
+
+         return array_map(function($m) {
+           if(strpos($m['url'], 'http') === false) {
+             $m['url'] = 'http://waivecar-prod.s3.amazonaws.com/' . $m['url'];
+           } 
+           return $m;
+         }, $v);
+      }
+    ],
     'asset' => [
       'pre' => $JSON['pre'],
       'post' => function($v) {
@@ -192,10 +208,33 @@ $SCHEMA = [
     'brand_id'    => 'integer',
     'organization_id'    => 'integer',
     'order_id'    => 'integer',
+
     'asset'       => 'text not null',
-    'duration_seconds' => 'integer',
+    //
+    // ^^ This will eventually be deprecated in favor of VV this
+    //    The form below is {url: <text>, duration: <number>, ... }
+    //
+    //    For now (2020-01-02) both will be defined until we do a
+    //    release and everything is off the above format.
+    //
+    //    This is necessary to be able to facilitate dynamically 
+    //    different durations.
+    //
+    'asset_meta' => 'text',
+
+    // This is the goal number of seconds for the entire campaign, 
+    // historically referred as duration seconds, which has since 
+    // been repuprosed to mean the total duration of the playing
+    // of all the assets.  This means that we can do
+    //
+    // goal_seconds / duration_seconds = number of target plays.
+    //
+    'goal_seconds' => 'integer',
     'completed_seconds' => 'integer default 0',
     'project'     => 'text default "dev"',
+
+    // TODO: 2020-01-02
+    'duration_seconds' => 'integer',
 
     // 
     // This is a cheap classification system
@@ -543,10 +582,10 @@ function get_column_list($table_name) {
 }
 
 function get_campaign_remaining($id) {
-  $res = (db_connect())->querySingle("select duration_seconds - completed_seconds as remaining from campaign where campaign.id = $id");
+  $res = (db_connect())->querySingle("select goal_seconds - completed_seconds as remaining from campaign where campaign.id = $id");
 
   if($res === null) {
-    return (db_connect())->querySingle("select duration_seconds from campaign where id=$id");
+    return (db_connect())->querySingle("select goal_seconds from campaign where id=$id");
   }
   return $res;
 }

@@ -957,7 +957,7 @@ function create($table, $payload) {
 
 function make_infinite($campaign_id) {
   db_update('campaign', $campaign_id, [
-    'duration_seconds' => pow(2,31),
+    'goal_seconds' => pow(2,31),
     'end_time' => '2100-01-01 00:00:00'
   ]);
 }
@@ -967,7 +967,7 @@ function active_campaigns($screen) {
   //return [];
   return show('campaign', "where 
           is_default = 0 
-    and   completed_seconds < duration_seconds 
+    and   completed_seconds < goal_seconds 
     and   project = '${screen['project']}'
     order by start_time desc");
 }
@@ -1076,7 +1076,7 @@ function campaign_ces_create($data) {
     [
       'project' => db_string('CES'),
       'start_time' => db_date(time()),
-      'duration_seconds' => $PLAYTIME * 200,
+      'goal_seconds' => $PLAYTIME * 200,
       'end_time' => db_date(time() + $DAY * 3),
       'is_approved' => true,
       'asset' => ["http://waivescreen.com/Products/ces/ces_oliver.php?id=$ces_id"]
@@ -1110,7 +1110,7 @@ function campaign_create($data, $fileList, $user = false) {
     [
       'project' => db_string('LA'),
       'start_time' => db_date(time()),
-      'duration_seconds' => 240,
+      'goal_seconds' => 240,
       'end_time' => db_date(time() + $DAY * 7),
       'asset' => [],
     ],
@@ -1163,7 +1163,7 @@ function campaign_update($data, $fileList, $user = false) {
   if(!$fileList) {
     $obj = [];
     foreach($data as $k => $v) {
-      if (in_array($k, ['duration_seconds','active','lat','lng','radius'])) {
+      if (in_array($k, ['goal_seconds','active','lat','lng','radius'])) {
         $obj[$k] = db_string($v);
       }
     }
