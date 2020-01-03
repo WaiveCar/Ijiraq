@@ -212,7 +212,10 @@ $SCHEMA = [
     'asset'       => 'text not null',
     //
     // ^^ This will eventually be deprecated in favor of VV this
+    //
     //    The form below is {url: <text>, duration: <number>, ... }
+    //    The engine already gets things in this format because of
+    //    the cache system
     //
     //    For now (2020-01-02) both will be defined until we do a
     //    release and everything is off the above format.
@@ -550,6 +553,7 @@ function db_string($what) {
   }
   return $what;
 }
+
 function db_date($what) {
  return "datetime($what,'unixepoch')";
 }
