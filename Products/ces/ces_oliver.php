@@ -86,7 +86,7 @@ h3 { font-weight: 400; font-size: 1.10em}
 <?= $message ?>
 </div>
 <div id='bottom'>
-  <img id=logo src=oliver_logo_ad.svg><span id=bar></span><span id='user'>olvr.io</span>
+  <img id=logo src=oliver_logo_thicker.svg><span id=bar></span><span id='user'>olvr.io</span>
 </div>
 <script>
 window.onload = function() {
