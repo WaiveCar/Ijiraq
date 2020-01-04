@@ -29,6 +29,7 @@ color: #514aff;
 display: flex;
 align-items: center;
 justify-content: center;
+flex-direction: column;
 }
 blockquote {
 margin: 0 0 0 1.3vw;
@@ -63,6 +64,7 @@ padding: 0;
 i,em{font-family: 'Lora', serif; font-weight: bold}
 a { color: #248 }
 img { display: none }
+img#logo { display: inline-block; }
 h1,h2,h3,h4,h5,h6 { margin: 0 }
 h1 { font-weight: 900; font-size: 1.35em}
 h2 { font-weight: 600; font-size: 1.20em}
@@ -71,6 +73,7 @@ h3 { font-weight: 400; font-size: 1.10em}
 <div id=message>
 <?= $message ?>
 </div>
+<img id=logo src=oliver_logo_ad.svg>
 <script>
 window.onload = function() {
   var 
@@ -84,5 +87,7 @@ window.onload = function() {
 
   document.body.style.background = 'hsl(' + [base, '20%', bg].join(',') + ')';
   document.body.style.color = 'hsl(' + [text, fg, fg].join(',') + ')';
+  let rgb = document.body.style.color.match(/\d+/g).map(x => (256 + parseInt(x, 10)).toString(16).slice(1)).join('');
+  document.getElementById('logo').src= 'magic-logo.php?h=' + rgb;
 };
 </script>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg398"
+   version="1.1"
+   viewBox="0 0 157.79735 43.667969"
+   height="43.667969pt"
+   width="157.79735pt"
+   sodipodi:docname="oliver_logo_thicker.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1820"
+     inkscape:window-height="951"
+     id="namedview91"
+     showgrid="false"
+     inkscape:zoom="1.78124"
+     inkscape:cx="-11.914157"
+     inkscape:cy="-116.08761"
+     inkscape:window-x="29"
+     inkscape:window-y="17"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg398" />
+  <metadata
+     id="metadata402">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs105">
+    <g
+       id="g98">
+      <symbol
+         style="overflow:visible"
+         id="glyph0-0"
+         overflow="visible">
+        <path
+           id="path2"
+           d="m 23.210938,0.824219 c 12.925781,0 21.667968,-9.019531 21.667968,-20.898438 0,-11.878906 -8.742187,-21.011719 -21.667968,-21.011719 -12.925782,0 -21.671876,9.132813 -21.671876,21.011719 0,11.878907 8.746094,20.898438 21.671876,20.898438 z m 0,-1.320313 c -6.65625,0 -9.132813,-8.195312 -9.132813,-19.578125 0,-11.386719 2.3125,-19.691406 9.132813,-19.691406 6.820312,0 9.128906,8.25 9.128906,19.691406 0,11.4375 -2.476563,19.578125 -9.128906,19.578125 z m 0,0"
+           style="stroke:none" />
+      </symbol>
+      <symbol
+         style="overflow:visible"
+         id="glyph0-1"
+         overflow="visible">
+        <path
+           id="path5"
+           d="M 1.925781,-0.109375 V 0 h 13.308594 v -0.109375 c -0.714844,-2.476563 -1.375,-4.621094 -1.375,-9.019531 V -42.84375 l -13.472656,3.296875 v 0.113281 c 2.308593,2.75 2.914062,5.277344 2.914062,9.570313 v 20.679687 c 0,4.617188 -0.660156,6.597656 -1.375,9.074219 z m 0,0"
+           style="stroke:none" />
+      </symbol>
+      <symbol
+         style="overflow:visible"
+         id="glyph0-2"
+         overflow="visible">
+        <path
+           id="path8"
+           d="m 13.089844,-35.914062 c 0,-2.914063 -2.53125,-5.445313 -5.664063,-5.445313 -3.082031,0 -5.390625,2.417969 -5.390625,5.445313 0,3.132812 2.363282,5.5 5.390625,5.5 3.132813,0 5.664063,-2.367188 5.664063,-5.5 z M 1.925781,-0.109375 V 0 h 13.308594 v -0.109375 c -0.714844,-2.476563 -1.375,-4.621094 -1.375,-9.019531 v -19.085938 l -13.472656,3.300782 v 0.109374 c 2.308593,2.75 2.914062,5.28125 2.914062,9.570313 v 6.050781 c 0,4.453125 -0.660156,6.597656 -1.375,9.074219 z m 0,0"
+           style="stroke:none" />
+      </symbol>
+      <symbol
+         style="overflow:visible"
+         id="glyph0-3"
+         overflow="visible">
+        <path
+           id="path11"
+           d="m 3.683594,-17.765625 7.425781,18.039063 h 2.75 l 7.976563,-18.09375 c 2.363281,-5.445313 3.738281,-6.875 5.664062,-9.128907 v -0.109375 h -7.371094 v 0.109375 c 0.882813,1.210938 2.199219,4.839844 0.277344,9.292969 l -2.972656,6.875 -2.695313,-6.820312 c -1.429687,-3.738282 -1.152343,-8.027344 0,-9.347657 v -0.109375 H -1.101562 v 0.109375 c 1.652343,1.757813 2.53125,3.847657 4.785156,9.183594 z m 0,0"
+           style="stroke:none" />
+      </symbol>
+      <symbol
+         style="overflow:visible"
+         id="glyph0-4"
+         overflow="visible">
+        <path
+           id="path14"
+           d="m 27.71875,-8.140625 -0.273438,-0.164063 c -0.550781,0.441407 -2.640624,2.089844 -6.710937,2.089844 -4.34375,0 -7.972656,-1.925781 -8.578125,-9.679687 l 15.671875,0.164062 c 0,-5.941406 -4.066406,-12.210937 -12.429687,-12.210937 -8.523438,0 -14.023438,6.328125 -14.023438,14.851562 0,7.753906 5.113281,13.914063 13.859375,13.914063 6.601563,0 10.945313,-3.464844 12.484375,-8.964844 z M 12.101562,-17.050781 V -17.875 c 0,-4.730469 0.988282,-9.074219 2.914063,-9.074219 1.539063,0 2.75,1.925781 2.75,6.984375 v 2.859375 z m 0,0"
+           style="stroke:none" />
+      </symbol>
+      <symbol
+         style="overflow:visible"
+         id="glyph0-5"
+         overflow="visible">
+        <path
+           id="path17"
+           d="m 1.980469,0 h 13.308593 v -0.109375 c -0.714843,-2.476563 -1.375,-4.621094 -1.375,-9.019531 v -11.222656 c 0.605469,-0.660157 1.210938,-1.152344 2.035157,-1.152344 1.484375,0 4.511719,1.703125 6.105469,4.070312 h 0.273437 l 1.488281,-10.507812 c -5.28125,-0.4375 -7.867187,3.796875 -10.066406,6.160156 l -0.05469,-0.05469 v -6.378906 l -13.253906,3.300782 v 0.109374 c 2.308594,2.75 2.914063,5.28125 2.914063,9.570313 v 6.050781 c 0,4.617188 -0.660157,6.597656 -1.375,9.074219 z m 0,0"
+           style="stroke:none" />
+      </symbol>
+      <symbol
+         style="overflow:visible"
+         id="glyph3-0"
+         overflow="visible">
+        <path
+           id="path92"
+           d=""
+           style="stroke:none" />
+      </symbol>
+    </g>
+  </defs>
+  <use
+     transform="translate(-109.45906,-27.15625)"
+     height="100%"
+     width="100%"
+     id="use137"
+     y="70"
+     x="107.92"
+     xlink:href="#glyph0-0"
+     style="fill:#FFFFFF;fill-opacity:1" />
+  <use
+     transform="translate(-109.45906,-27.15625)"
+     height="100%"
+     width="100%"
+     id="use139"
+     y="70"
+     x="154.34"
+     xlink:href="#glyph0-1"
+     style="fill:#FFFFFF;fill-opacity:1" />
+  <use
+     transform="translate(-109.45906,-27.15625)"
+     height="100%"
+     width="100%"
+     id="use141"
+     y="70"
+     x="171.22501"
+     xlink:href="#glyph0-2"
+     style="fill:#FFFFFF;fill-opacity:1" />
+  <use
+     transform="translate(-109.45906,-27.15625)"
+     height="100%"
+     width="100%"
+     id="use145"
+     y="70"
+     x="188.65999"
+     xlink:href="#glyph0-3"
+     style="fill:#FFFFFF;fill-opacity:1" />
+  <use
+     transform="translate(-109.45906,-27.15625)"
+     height="100%"
+     width="100%"
+     id="use149"
+     y="70"
+     x="213.95999"
+     xlink:href="#glyph0-4"
+     style="fill:#FFFFFF;fill-opacity:1" />
+  <use
+     transform="translate(-109.45906,-27.15625)"
+     height="100%"
+     width="100%"
+     id="use153"
+     y="70"
+     x="243.44"
+     xlink:href="#glyph0-5"
+     style="fill:#FFFFFF;fill-opacity:1" />
+</svg>
