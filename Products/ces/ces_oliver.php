@@ -22,10 +22,11 @@ $message = $Parsedown->text($message_md);
 <style>
 * { font-family: 'Heebo', sans-serif; }
 body {
+transition: all 0.5s ease;
 margin: 0;
 font-size: 6.45vw;
-background: white;
-color: #514aff;
+background: #000;
+color: #888;
 display: flex;
 align-items: center;
 justify-content: center;
