@@ -756,7 +756,8 @@ function sow($payload) {
         $job_res = array_merge([
           'job_id' => $job['id'],
           'campaign_id' => $campaign['id'],
-          'asset' => $campaign['asset']
+          'asset' => $campaign['asset'],
+          'asset_meta' => $campaign['asset_meta']
         ], $job);
         return inject_priority($job_res, $screen, $campaign);
       }
@@ -1085,9 +1086,9 @@ function campaign_ces_create($data) {
       'goal_seconds' => $PLAYTIME * 200,
       'end_time' => db_date(time() + $DAY * 3),
       'is_approved' => true,
-      'asset' => ["http://waivescreen.com/Products/ces/ces_oliver.php?id=$ces_id"]
+      'asset' => ["http://waivescreen.com/Products/ces/ces_oliver.php?id=$ces_id"],
       'asset_meta' => [
-        ['duration' =>  $PLAYTIME, 'url' => "http://waivescreen.com/Products/ces/ces_oliver.php?id=$ces_id"]
+        ['nocache' => true, 'duration' => $PLAYTIME, 'url' => "http://waivescreen.com/Products/ces/ces_oliver.php?id=$ces_id"]
       ]
     ],
   );
