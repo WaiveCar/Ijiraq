@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="53px" height="54px" viewBox="0 0 53 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.4.4 (17249) - http://www.bohemiancoding.com/sketch -->
+    <title>user location</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Core-Flow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="14.1-WaiveCar-not-available@2x-" sketch:type="MSArtboardGroup" transform="translate(-508.000000, -348.000000)" fill="#4E70F8">
+            <g id="MAP" sketch:type="MSLayerGroup" transform="translate(0.000000, 41.000000)">
+                <g id="user-location" transform="translate(508.218375, 307.644828)" sketch:type="MSShapeGroup">
+                    <ellipse id="Oval-6" cx="26.1910786" cy="26.1943966" rx="26.1910786" ry="26.1943966"></ellipse>
+                    <ellipse id="Oval-6-Copy" stroke="#FFFFFF" stroke-width="3" cx="26.1910786" cy="26.1943966" rx="16.7177097" ry="16.7198276"></ellipse>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
