@@ -64,7 +64,7 @@ if (array_key_exists('campaign_id', $_SESSION)) {
   }
   textarea {
     height: 15vh;
-    font-size: 1.5rem;
+    font-size: 6.45vw;
     display: flex;
     text-align: center;
     align-items: center;
