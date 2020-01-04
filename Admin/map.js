@@ -34,7 +34,11 @@ window.map = function(opts) {
     move: false,
   }, opts || {});
 
-  var _draw, _snap, _featureList = [], _select;
+  var _draw, 
+      _cb = { select: [] },
+      _snap, 
+      _featureList = [], 
+      _select;
   var source = {};
   var dom = document.getElementById(opts.target);
 	var styleCache = {};
@@ -296,6 +300,18 @@ window.map = function(opts) {
       _select, 
       new Translate({ features: _select.getFeatures() })
     ]);
+  } else if (opts.select) {
+    _select = new Select();
+    map_params.interactions =  defaultInteractions().extend([
+      _select
+    ]);
+  }
+
+
+  if(_select) {
+   _select.on('select', function(evt) {
+     _cb.select.forEach(row => row(evt));
+   });
   }
 
   var _map = new Map(map_params);
@@ -329,6 +345,10 @@ window.map = function(opts) {
     fit: () => _map.getView().fit(_layers[1].getSource().getExtent()),
     ll: function(a) {
       return a.length ? recurseFll(a) : recurseFll(Array.from(arguments))
+    },
+    on: function(what, fn) {
+      _cb[what].push(fn);
+      return _cb;
     },
     save: getShapes,
     add,
