@@ -1367,9 +1367,15 @@ function infer() {
   return $xref;
 }
 
-function location($all) {
-  error_log(json_encode($all));
+function eagerlocation($all) {
+  return db_update('screen', 
+    ['uid' => db_string($all['uid'])], [
+      'lat' => $all['lat'],
+      'lng' => $all['lng']
+    ]
+  );
 }
+
 function ignition_status($payload) {
   $car = aget($payload, 'name');
 

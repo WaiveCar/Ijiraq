@@ -27,6 +27,7 @@ margin: 0;
 font-size: 6.45vw;
 background: #000;
 color: #888;
+opacity: 0.1;
 display: flex;
 align-items: center;
 justify-content: center;
@@ -38,12 +39,12 @@ border-left: 1.3vw solid #ff4d7d;
 padding: 0 0 0 1.3vw;
 }
 #bottom {
-display: flex;
-align-items: center;
-justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: 'Heebo', sans-serif; 
-  font-size: 6vw;
-  margin-top:3rem; 
+  font-size: 4vw;
+  margin-top: 0;
   font-weight: 300;
 }
 ol,ul {
@@ -59,13 +60,17 @@ font-weight: 700;
 background: rgba(0,0,0,0.9); color: #aef;
 padding: 0 1.3vw;
 font-family: 'Heebo Mono', monospace; }
+#top {
+height: 75vh;
+display: flex;
+align-items: center;
+justify-content: center;
+}
 #message {
 text-align: center;
 display: block;
 font-weight: 600;
 margin: 0;
-height: 100%;
-padding: 1.3vw 3.9vw;
 }
 #message p {
 margin: 0;
@@ -75,16 +80,19 @@ i,em{font-family: 'Lora', serif; font-weight: bold}
 a { color: #248 }
 img { display: none }
 img#logo { 
-margin-bottom: 1rem;
+width: 13vw;
+margin-bottom: 1vw;
 display: inline-block;}
-#bar{ margin: 0 2rem;height: 4rem;display:inline-block;border-right: 2px solid  }
+#bar{ margin: 0 3vw;height: 5vw;display:inline-block;border-right: 0.15vw solid  }
 h1,h2,h3,h4,h5,h6 { margin: 0 }
 h1 { font-weight: 900; font-size: 1.35em}
-h2 { font-weight: 600; font-size: 1.20em}
-h3 { font-weight: 400; font-size: 1.10em}
+h2 { font-weight: 600; font-size: 1.20em;line-height:1em}
+h3 { font-weight: 400; font-size: 1.10em;line-height:1em}
 </style>
+<div id=top>
 <div id=message>
 <?= $message ?>
+</div>
 </div>
 <div id='bottom'>
   <img id=logo src=oliver_logo_thicker.svg><span id=bar></span><span id='user'>olvr.io</span>
@@ -102,6 +110,7 @@ window.onload = function() {
 
   document.body.style.background = 'hsl(' + [base, '20%', bg].join(',') + ')';
   document.body.style.color = 'hsl(' + [text, fg, fg].join(',') + ')';
+  document.body.style.opacity = 1;
   let rgb = document.body.style.color.match(/\d+/g).map(x => (256 + parseInt(x, 10)).toString(16).slice(1)).join('');
   document.getElementById('logo').src= 'magic-logo.php?h=' + rgb;
   document.getElementById('bar').borderColor = document.body.style.color;

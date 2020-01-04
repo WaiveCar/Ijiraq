@@ -32,7 +32,7 @@ try {
     emit_js();
   } else if($func == 'me') {
     jemit(doSuccess($_SESSION));
-  } else if($func == 'location') {
+  } else if($func == 'location' && $verb == 'GET') {
     echo(file_get_contents('http://basic.waivecar.com/location.php?' . http_build_query($all)) );
   } else if($func == 'feed') {
     jemit(json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "./reef-demo/APIWidget/widgetfiles/parsed_widget_data.json")));
@@ -106,7 +106,7 @@ try {
     'command', 
     'ignition_status',
     'kpi',
-    'location',
+    'eagerlocation',
     'login',
     'infer',
     'logout',
