@@ -1086,6 +1086,9 @@ function campaign_ces_create($data) {
       'end_time' => db_date(time() + $DAY * 3),
       'is_approved' => true,
       'asset' => ["http://waivescreen.com/Products/ces/ces_oliver.php?id=$ces_id"]
+      'asset_meta' => [
+        ['duration' =>  $PLAYTIME, 'url' => "http://waivescreen.com/Products/ces/ces_oliver.php?id=$ces_id"]
+      ]
     ],
   );
 
