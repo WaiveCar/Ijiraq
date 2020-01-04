@@ -38,6 +38,7 @@ window.map = function(opts) {
   var source = {};
   var dom = document.getElementById(opts.target);
 	var styleCache = {};
+  var isFirst = true;
 
   ['car','screen','bluedot'].forEach(row => {
     styleCache[row] = new Style({
@@ -139,9 +140,12 @@ window.map = function(opts) {
     return shapes;
   }
 
-  function drawShapes(list) {
+  function load(list) {
     clear();
-    var isFirst = true;
+    return add(list);
+  }
+
+  function add(list) {
     return list.map(shape => {
       var feature;
       // line is an array of points, [ [lat,lng], [lat,lng] ... ]
@@ -327,6 +331,7 @@ window.map = function(opts) {
       return a.length ? recurseFll(a) : recurseFll(Array.from(arguments))
     },
     save: getShapes,
-    load: drawShapes,
+    add,
+    load
   };
 }
