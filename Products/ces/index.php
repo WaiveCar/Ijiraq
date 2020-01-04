@@ -66,6 +66,7 @@ if (array_key_exists('campaign_id', $_SESSION)) {
     height: 15vh;
     font-size: 1.5rem;
     display: flex;
+    text-align: center;
     align-items: center;
     font-weight: 800;
     justify-content: center;
@@ -184,7 +185,12 @@ if (array_key_exists('campaign_id', $_SESSION)) {
     margin: 0 1vh;
     height: 45vh; 
   }
-  .mode-create #map { height: 42vh; }
+  .mode-create #white-box-parent { display: none }
+  .mode-create #header { padding-bottom: 1vh }
+
+  .mode-create #map { 
+    border-radius: 4vh 4vh 0 0;
+height: 51vh; }
   .mode-wait #map { display: none }
 
   @media all and (orientation:landscape) {
@@ -203,7 +209,7 @@ if (array_key_exists('campaign_id', $_SESSION)) {
 <body>
 
   <div id="header">
-    <img id="logo" src=oliver_logo_path.svg>
+    <img id="logo" src=oliver_logo_thicker.svg>
     <h1 class=dashboard id=header-message>Here's where it played</h1>
   </div>
 
@@ -223,7 +229,7 @@ if (array_key_exists('campaign_id', $_SESSION)) {
           <input checked type=checkbox required>
           I agree with terms & conditions
         </label>
-        <button onclick='addMessage()' class='full'>Continue</button>
+        <button onclick='addMessage()' class='full'>Go!</button>
       </div>
     </div>
 
@@ -250,6 +256,14 @@ if (array_key_exists('campaign_id', $_SESSION)) {
   <script src=map.js></script>
   <script>
 var id = <?= $campaign_id ?>;
+var colorList = [
+  ["fff", "504aff"],
+  ["fff", "8fffed"],
+  ["fff", "ffdd4d"],
+  ["fff", "ff4d7d"],
+  ["fff", "000"],
+  ["000", "fff"]
+];
 var ival = [];
 var Dom = {};
 var load = {

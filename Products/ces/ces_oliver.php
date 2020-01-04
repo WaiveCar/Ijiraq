@@ -51,7 +51,7 @@ font-family: 'Roboto Mono', monospace; }
 #message {
 text-align: center;
 display: block;
-font-weight: 400;
+font-weight: 600;
 margin: 0;
 height: 100%;
 padding: 1.3vw 3.9vw;
@@ -71,3 +71,18 @@ h3 { font-weight: 400; font-size: 1.10em}
 <div id=message>
 <?= $message ?>
 </div>
+<script>
+window.onload = function() {
+  var 
+    _dark = Math.random() < 0.5,
+    stack = [];
+
+  var bg = (_dark ? 10 : 45) + "%";
+  var fg = (_dark ? 85 : 100) + "%";
+  var base = (Math.random() * 360);
+  var text = (Math.random() * 360);
+
+  document.body.style.background = 'hsl(' + [base, '20%', bg].join(',') + ')';
+  document.body.style.color = 'hsl(' + [text, fg, fg].join(',') + ')';
+};
+</script>
