@@ -651,6 +651,7 @@ function inject_priority($job, $screen, $campaign) {
 
 function sow($payload) {
   global $SCHEMA;
+  $screen_dbg_id = 'jff6S9NbIGqv6cM3pA0gA';
   if(!isset($payload['uid'])) {
     return doError("UID needs to be set before continuing");
   } 
@@ -659,6 +660,9 @@ function sow($payload) {
   $jobList = aget($payload, 'jobs', []);
   $campaignsToUpdateList = [];
 
+  if($payload['uid'] == $screen_dbg_id) {
+    error_log(json_encode($payload));
+  }
   foreach($jobList as $job) {
 
     // this is the old system ... these machines
@@ -758,7 +762,9 @@ function sow($payload) {
       }
     }
   }, $campaignList);
-  //error_log(json_encode($server_response));
+  if($payload['uid'] == $screen_dbg_id) {
+    error_log("response >> " . json_encode($server_response));
+  }
   
   return $server_response; 
 }
