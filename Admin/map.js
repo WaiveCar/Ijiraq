@@ -37,18 +37,15 @@ window.map = function(opts) {
   var _draw, _snap, _featureList = [], _select;
   var source = {};
   var dom = document.getElementById(opts.target);
-	var styleCache = {
-    car: new Style({
+	var styleCache = {};
+
+  ['car','screen','bluedot'].forEach(row => {
+    styleCache[row] = new Style({
       image: new Icon({
-        src: 'car.png'
+        src: `${row}.png`
       })
-    }),
-    screen: new Style({
-      image: new Icon({
-        src: 'screen.png'
-      })
-    })
-  };
+    });
+  });
 
   var _layers = [ new TileLayer({ source: new OSM() }) ];
   var recurseFll = x => x[0].length ? x.map(y => y[0].length ? recurseFll(y) : fromLonLat(y) ) : fromLonLat(x);
@@ -150,10 +147,11 @@ window.map = function(opts) {
       // line is an array of points, [ [lat,lng], [lat,lng] ... ]
       // as the second argument.
       if(shape[0] === 'Point') {
-        feature = new Feature({ 
-          geometry: new Point(fromLonLat(shape[1])),
-        });
+        feature = new Feature({ geometry: new Point(fromLonLat(shape[1])) });
         feature.setStyle(styleCache.car);
+      } else if(shape[0] === 'Location') {
+        feature = new Feature({ geometry: new Point(fromLonLat(shape[1])) });
+        feature.setStyle(styleCache.bluedot);
       } else if(shape[0] === 'Line') {
         feature = new Feature({
           geometry: new MultiLineString(recurseFll(shape.slice(1)))
