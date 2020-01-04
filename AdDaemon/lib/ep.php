@@ -106,6 +106,7 @@ try {
     'command', 
     'ignition_status',
     'kpi',
+    'location',
     'login',
     'infer',
     'logout',

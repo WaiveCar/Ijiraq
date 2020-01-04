@@ -1367,6 +1367,9 @@ function infer() {
   return $xref;
 }
 
+function location($all) {
+  error_log(json_encode($all));
+}
 function ignition_status($payload) {
   $car = aget($payload, 'name');
 
