@@ -104,10 +104,9 @@ if (count($unaccounted_for_tables) > 0) {
 }
 
 
-/*
 foreach(db_all("select * from campaign", 'campaign') as $camp) {
   $up = [];
-  $up['goal_seconds'] = $camp['duration_seconds'];
+  //$up['goal_seconds'] = $camp['duration_seconds'];
   $ameta = [];
   foreach($camp['asset'] as $asset) {
     $ameta[] = [
@@ -119,4 +118,3 @@ foreach(db_all("select * from campaign", 'campaign') as $camp) {
   db_update('campaign', $camp['id'], $up);
 }
 
- */

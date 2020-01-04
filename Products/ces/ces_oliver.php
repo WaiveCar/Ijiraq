@@ -84,7 +84,7 @@ width: 13vw;
 margin-bottom: 1vw;
 display: inline-block;}
 #bar{ margin: 0 3vw;height: 5vw;display:inline-block;border-right: 0.15vw solid  }
-h1,h2,h3,h4,h5,h6 { margin: 0 }
+h1,h2,h3,h4,h5,h6 { margin: 0;line-height:1em }
 h1 { font-weight: 900; font-size: 1.35em}
 h2 { font-weight: 600; font-size: 1.20em;line-height:1em}
 h3 { font-weight: 400; font-size: 1.10em;line-height:1em}
