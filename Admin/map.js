@@ -152,14 +152,16 @@ window.map = function(opts) {
 
   function add(list) {
     return list.map(shape => {
-      var feature;
+      var feature, myid = false;
       // line is an array of points, [ [lat,lng], [lat,lng] ... ]
       // as the second argument.
       if(shape[0] === 'Point') {
         feature = new Feature({ geometry: new Point(fromLonLat(shape[1])) });
+        myid = shape[2];
         feature.setStyle(styleCache.car);
       } else if(shape[0] === 'Location') {
         feature = new Feature({ geometry: new Point(fromLonLat(shape[1])) });
+        myid = shape[2];
         feature.setStyle(styleCache.bluedot);
       } else if(shape[0] === 'Line') {
         feature = new Feature({
@@ -219,10 +221,10 @@ window.map = function(opts) {
       //   definition that went in ... (this can be used for searching
       //   and debugging)
       //
-      feature.setId(_id++);
-      _featureList.push([feature, shape]);
+      myid = myid || _id++;
+      feature.setId(myid);
+      _featureList.push([feature, shape, myid]);
       return feature;
-      
     });
   }
 
