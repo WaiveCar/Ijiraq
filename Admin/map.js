@@ -151,82 +151,85 @@ window.map = function(opts) {
   }
 
   function add(list) {
-    return list.map(shape => {
-      var feature, myid = false;
-      // line is an array of points, [ [lat,lng], [lat,lng] ... ]
-      // as the second argument.
-      if(shape[0] === 'Point') {
-        feature = new Feature({ geometry: new Point(fromLonLat(shape[1])) });
-        myid = shape[2];
-        feature.setStyle(styleCache.car);
-      } else if(shape[0] === 'Location') {
-        feature = new Feature({ geometry: new Point(fromLonLat(shape[1])) });
-        myid = shape[2];
-        feature.setStyle(styleCache.bluedot);
-      } else if(shape[0] === 'Line') {
-        feature = new Feature({
-          geometry: new MultiLineString(recurseFll(shape.slice(1)))
-        });
-        feature.setStyle(
-          new Style({
-            stroke: new Stroke({
-              color: '#7777ffff',
-              width: 6
-            })
-          })
-        );
-      } else if(shape[0] === 'Circle') {
-        feature = new Feature({
-          geometry: new Circle(fromLonLat(shape[1]), shape[2]),
-        });
-        feature.setStyle(
-          new Style({
-            fill: new Fill({
-              color: '#9999eebb', //getGradient()
-            }),
-            stroke: new Stroke({
-              lineCap: 'butt',
-              lineJoin: 'bevel',
-              color: '#7777ff99',
-              width: 2
-            })
-          })
-        );
-      } else if(shape[0] === 'Polygon') {
-        feature = new Feature({
-          geometry: new Polygon([shape[1].map(coor => fromLonLat(coor))]),
-        });
-      } else {
-        console.error("What the fuck is a " + shape[0] + "?");
-      }
-      draw.getSource().addFeature(feature);
-
-      if(opts.selectFirst && isFirst) {
-        _select.getFeatures().push(feature);
-        _select.on('select', function(evt) {
-          if(evt.selected.length == 0) {
-            _select.getFeatures().push(feature);
-          }
-        });
-        isFirst = false;
-      }
-      // the most common thing we'll want to do is 
-      // move the object. BUT WE CAN'T PASS LAT/LNG
-      // The batshit crazy syntax is something like
-      // mypoints[0].getGeometry().setCoordinates(_map.ll([-118.35,34.024]))
-      // which can honestly go to hell. so we just have one that requires
-      // more um ... accounting?
-      //
-      // V this is the features, followed by the actual shape
-      //   definition that went in ... (this can be used for searching
-      //   and debugging)
-      //
-      myid = myid || _id++;
-      feature.setId(myid);
-      _featureList.push([feature, shape, myid]);
-      return feature;
-    });
+    return list.map(addOne);
   }
+
+  function addOne(shape) {
+    var feature, myid = false;
+    // line is an array of points, [ [lat,lng], [lat,lng] ... ]
+    // as the second argument.
+    if(shape[0] === 'Point') {
+      feature = new Feature({ geometry: new Point(fromLonLat(shape[1])) });
+      myid = shape[2];
+      feature.setStyle(styleCache.car);
+    } else if(shape[0] === 'Location') {
+      feature = new Feature({ geometry: new Point(fromLonLat(shape[1])) });
+      myid = shape[2];
+      feature.setStyle(styleCache.bluedot);
+    } else if(shape[0] === 'Line') {
+      feature = new Feature({
+        geometry: new MultiLineString(recurseFll(shape.slice(1)))
+      });
+      feature.setStyle(
+        new Style({
+          stroke: new Stroke({
+            color: '#7777ffff',
+            width: 6
+          })
+        })
+      );
+    } else if(shape[0] === 'Circle') {
+      feature = new Feature({
+        geometry: new Circle(fromLonLat(shape[1]), shape[2]),
+      });
+      feature.setStyle(
+        new Style({
+          fill: new Fill({
+            color: '#9999eebb', //getGradient()
+          }),
+          stroke: new Stroke({
+            lineCap: 'butt',
+            lineJoin: 'bevel',
+            color: '#7777ff99',
+            width: 2
+          })
+        })
+      );
+    } else if(shape[0] === 'Polygon') {
+      feature = new Feature({
+        geometry: new Polygon([shape[1].map(coor => fromLonLat(coor))]),
+      });
+    } else {
+      console.error("What the fuck is a " + shape[0] + "?");
+    }
+    draw.getSource().addFeature(feature);
+
+    if(opts.selectFirst && isFirst) {
+      _select.getFeatures().push(feature);
+      _select.on('select', function(evt) {
+        if(evt.selected.length == 0) {
+          _select.getFeatures().push(feature);
+        }
+      });
+      isFirst = false;
+    }
+    // the most common thing we'll want to do is 
+    // move the object. BUT WE CAN'T PASS LAT/LNG
+    // The batshit crazy syntax is something like
+    // mypoints[0].getGeometry().setCoordinates(_map.ll([-118.35,34.024]))
+    // which can honestly go to hell. so we just have one that requires
+    // more um ... accounting?
+    //
+    // V this is the features, followed by the actual shape
+    //   definition that went in ... (this can be used for searching
+    //   and debugging)
+    //
+    myid = myid || _id++;
+    feature.setId(myid);
+    _featureList.push([feature, shape, myid]);
+    return feature;
+  }
+
 
   // this is the function with perhaps more accounting
   function move(index, lat, lng) {
@@ -358,6 +361,7 @@ window.map = function(opts) {
     },
     save: getShapes,
     add,
+    addOne,
     load
   };
 }
