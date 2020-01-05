@@ -1512,29 +1512,56 @@ function logout() {
 
 
 
+function slackie($where, $what) {
+  $payload = json_encode([
+    'channel' => $what,
+    'text' => $what
+  ]);
+  return curldo("https://hooks.slack.com/services/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", $payload, ['verb' => 'post', 'json' => true]);
+}
+
 // rideflow
 function maplink($what) {
   return $what;
 }
 
-function notify($what) {
-  // $what['car'] is reserved at maplink($what)
+function cancel($all) {
+  db_update('screen', $all['id'], ['guber_state' => 'available']); 
+  
+  slackie("#goober", "The impudent malcontent canceled the ride with ${all['car']}. [Here's the info](http://oliverces.com/ride/)");
 }
 
-function reserve($all) {
+function request($all) {
+  db_update('screen', $all['id'], ['guber_state' => 'reserved']); 
+
+  slackie("#goober", ":busstop: Some freeloading loafer wants to use ${all['car']}. [Here's the info](http://oliverces.com/ride/)");
 }
 
 function accept($all) {
+  db_update('screen', $all['id'], ['guber_state' => 'confirmed']); 
+
+  slackie("#rental-alerts", "The eager driver of ${all['car']} accepted the ride. [Here's the info](http://oliverces.com/ride/)");
 }
 
 function decline($all) {
-}
+  // a decline of a ride means the person probably can't do another
+  // ride either so we go to unavailable ... as a "smart" move
+  db_update('screen', $all['id'], ['guber_state' => 'unavailable']); 
 
-function cancel($all) {
+  slackie("#rental-alerts", "The overloaded driver of ${all['car']} declined the ride. [Here's the info](http://oliverces.com/ride/)");
 }
 
 function start($all) {
+  db_update('screen', $all['id'], ['guber_state' => 'driving']); 
+  slackie("#rental-alerts", "The goober in ${all['car']} is off! [Here's the info](http://oliverces.com/ride/)");
 }
 
-function setAvailability($all) {
+function available($all) {
+  db_update('screen', $all['id'], ['guber_state' => 'available']); 
+  slackie("#rental-alerts", ":person_doing_cartwheel: ${all['car']} is available for goobering!");
+}
+
+function unavailable($all) {
+  db_update('screen', $all['id'], ['guber_state' => 'unavailable']); 
+  slackie("#rental-alerts", ":slot_machine: ${all['car']} is no longer goobering...");
 }
