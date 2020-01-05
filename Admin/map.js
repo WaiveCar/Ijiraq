@@ -38,6 +38,7 @@ window.map = function(opts) {
       _cb = { select: [] },
       _snap, 
       _featureList = [], 
+      _id = 0,
       _select;
   var source = {};
   var dom = document.getElementById(opts.target);
@@ -218,6 +219,7 @@ window.map = function(opts) {
       //   definition that went in ... (this can be used for searching
       //   and debugging)
       //
+      feature.setId(_id++);
       _featureList.push([feature, shape]);
       return feature;
       
@@ -301,7 +303,9 @@ window.map = function(opts) {
       new Translate({ features: _select.getFeatures() })
     ]);
   } else if (opts.select) {
-    _select = new Select();
+    _select = new Select({
+      style: styleCache.screen
+    });
     map_params.interactions =  defaultInteractions().extend([
       _select
     ]);
