@@ -686,6 +686,15 @@ function process($table, $obj, $what) {
   return $obj;
 }
 
+function db_bottom($v) {
+  if($v === null) {
+    return "null";
+  } elseif($v === false) {
+    return "false";
+  }
+  return $v;
+}
+
 function db_update($table, $id, $kv) {
   $fields = [];
 
@@ -701,6 +710,7 @@ function db_update($table, $id, $kv) {
   }
 
   foreach($kv as $k => $v) {
+    $v = db_bottom($v);
     $fields[] = "$k=$v";
   } 
 

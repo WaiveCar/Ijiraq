@@ -1587,7 +1587,7 @@ function request($all) {
     slackie("#goober-flow", ":collision: Freakish shit happening with ${all['car']}, refusing to satisfy a request, car is not available.");
     return false;
   } else {
-    $id = db_create('goober', ['screen_id' => $all['id']]);
+    $id = db_insert('goober', ['screen_id' => $all['id']]);
 
     goober_up($all, 'reserved', ['goober_id' => $id]); 
 
