@@ -1545,16 +1545,18 @@ function logout() {
 
 
 function slackie($where, $what) {
-  $payload = json_encode([
-    'channel' => $what,
+  $payload = [
+    'channel' => $where,
     'text' => $what
-  ]);
-  return curldo("https://hooks.slack.com/services/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", $payload, ['verb' => 'post', 'json' => true]);
+  ];
+  $res = curldo("https://hooks.slack.com/services/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", $payload, ['log' => true, 'verb' => 'post', 'json' => true]);
+  error_log($res);
+  return $res; 
 }
 
 // rideflow
 function goober_link($which) {
-  return "[info](https://oliverces.com/driver/" . $which['id'] . ")";
+  return " <http://oliverces.com/driver.php?id=" . $which['id'] . "|Details>";
 }
 
 function goober_up($which, $what) {
@@ -1572,15 +1574,17 @@ function cancel($all) {
 }
 
 function request($all) {
+  error_log(json_encode($all));
   goober_up($all, 'reserved'); 
 
   slackie("#goober", ":busstop: Some freeloading loafer wants to use ${all['car']}." . goober_link($all));
+  slackie("#goober-flow", ":busstop: Some freeloading loafer wants to use ${all['car']}." . goober_link($all));
 }
 
 function accept($all) {
   goober_up($all, 'confirmed');
 
-  slackie("#rental-alerts", "The eager driver of ${all['car']} accepted the ride." . goober_link($all));
+  slackie("#goober-flow", ":runner: The eager driver of ${all['car']} accepted the ride." . goober_link($all));
 }
 
 function decline($all) {
@@ -1588,23 +1592,28 @@ function decline($all) {
   // ride either so we go to unavailable ... as a "smart" move
   goober_up($all, 'unavailable');
 
-  slackie("#rental-alerts", ":cold_sweat: The overloaded driver of ${all['car']} declined the ride." . goober_link($all)); 
+  slackie("#goober-flow", ":cold_sweat: The overloaded driver of ${all['car']} declined the ride." . goober_link($all)); 
 }
 
-function start($all) {
+function driving($all) {
   goober_up($all, 'driving');
 
-  slackie("#rental-alerts", ":carousel_horse: The goober in ${all['car']} is off!" . goober_link($all)); 
+  slackie("#goober-flow", ":carousel_horse: The goober in ${all['car']} is off!" . goober_link($all)); 
+}
+
+function finish($all) {
+  slackie("#goober-flow", ":checkered_flag: ${all['car']} finished the ride");
+  return available($all);
 }
 
 function available($all) {
   goober_up($all, 'available');
 
-  slackie("#rental-alerts", ":person_doing_cartwheel: ${all['car']} is available for goobering!");
+  slackie("#goober-flow", ":person_doing_cartwheel: ${all['car']} is available for goobering!");
 }
 
 function unavailable($all) {
   goober_up($all, 'unavailable');
 
-  slackie("#rental-alerts", ":slot_machine: ${all['car']} is no longer goobering...");
+  slackie("#goober-flow", ":slot_machine: ${all['car']} is no longer goobering...");
 }
