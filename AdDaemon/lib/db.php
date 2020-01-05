@@ -155,13 +155,12 @@ $SCHEMA = [
     //
     //  unavailable -> [ available ]
     //  
-    'guber_state'     => 'text default "unavailable"',
+    'goober_state'     => 'text default "unavailable"',
 
     'ignition_state'  => 'text',
     'ignition_time'   => 'datetime'
   ],
 
-    
   // revenue historicals
   'revenue_history' => [
     'id'            => 'integer primary key autoincrement',

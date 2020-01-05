@@ -151,6 +151,22 @@ function distance($pos1, $pos2) {
 }
 
 
+$_redis = false;
+function get_redis() {
+  global $_redis;
+  if(!$_redis) {
+    $_redis = new Redis();
+    $_redis->connect('127.0.0.1', 6379);
+  }
+  return $_redis;
+}
+
+
+function pub($what) {
+  $r = get_redis();
+  $r->publish('goober', json_encode($what));
+}
+
 function text_rando($number, $message) {
   global $TWIL;
   $client = new Client($TWIL['sid'], $TWIL['token']);
@@ -656,6 +672,13 @@ function sow($payload) {
     return doError("UID needs to be set before continuing");
   } 
   $screen = upsert_screen($payload['uid'], $payload);
+
+  pub([
+    'type' => 'car',
+    'car' => $screen['id'],
+    'lat' => $screen['lat'],
+    'lng' => $screen['lng']
+  ]);
 
   $jobList = aget($payload, 'jobs', []);
   $campaignsToUpdateList = [];
@@ -1372,6 +1395,15 @@ function infer() {
 }
 
 function eagerlocation($all) {
+  $screen = Get::screen(['uid' => $all['uid']]);
+
+  pub([
+    'car' => $screen['id'],
+    'type' => 'car',
+    'lat' => $all['lat'],
+    'lng' => $all['lng']
+  ]);
+
   return db_update('screen', 
     ['uid' => db_string($all['uid'])], [
       'lat' => $all['lat'],
@@ -1526,19 +1558,19 @@ function maplink($what) {
 }
 
 function cancel($all) {
-  db_update('screen', $all['id'], ['guber_state' => 'available']); 
+  db_update('screen', $all['id'], ['goober_state' => 'available']); 
   
   slackie("#goober", "The impudent malcontent canceled the ride with ${all['car']}. [Here's the info](http://oliverces.com/ride/)");
 }
 
 function request($all) {
-  db_update('screen', $all['id'], ['guber_state' => 'reserved']); 
+  db_update('screen', $all['id'], ['goober_state' => 'reserved']); 
 
   slackie("#goober", ":busstop: Some freeloading loafer wants to use ${all['car']}. [Here's the info](http://oliverces.com/ride/)");
 }
 
 function accept($all) {
-  db_update('screen', $all['id'], ['guber_state' => 'confirmed']); 
+  db_update('screen', $all['id'], ['goober_state' => 'confirmed']); 
 
   slackie("#rental-alerts", "The eager driver of ${all['car']} accepted the ride. [Here's the info](http://oliverces.com/ride/)");
 }
@@ -1546,22 +1578,22 @@ function accept($all) {
 function decline($all) {
   // a decline of a ride means the person probably can't do another
   // ride either so we go to unavailable ... as a "smart" move
-  db_update('screen', $all['id'], ['guber_state' => 'unavailable']); 
+  db_update('screen', $all['id'], ['goober_state' => 'unavailable']); 
 
   slackie("#rental-alerts", "The overloaded driver of ${all['car']} declined the ride. [Here's the info](http://oliverces.com/ride/)");
 }
 
 function start($all) {
-  db_update('screen', $all['id'], ['guber_state' => 'driving']); 
+  db_update('screen', $all['id'], ['goober_state' => 'driving']); 
   slackie("#rental-alerts", "The goober in ${all['car']} is off! [Here's the info](http://oliverces.com/ride/)");
 }
 
 function available($all) {
-  db_update('screen', $all['id'], ['guber_state' => 'available']); 
+  db_update('screen', $all['id'], ['goober_state' => 'available']); 
   slackie("#rental-alerts", ":person_doing_cartwheel: ${all['car']} is available for goobering!");
 }
 
 function unavailable($all) {
-  db_update('screen', $all['id'], ['guber_state' => 'unavailable']); 
+  db_update('screen', $all['id'], ['goober_state' => 'unavailable']); 
   slackie("#rental-alerts", ":slot_machine: ${all['car']} is no longer goobering...");
 }
