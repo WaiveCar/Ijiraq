@@ -420,6 +420,34 @@ $SCHEMA = [
     'created_at'  => 'datetime default current_timestamp',
   ],
 
+  'car' => [
+    'id'          => 'integer primary key autoincrement',
+    'name'        => 'text',
+    'lat'         => 'float default null',
+    'lng'         => 'float default null',
+    // The car is either 
+    //
+    //  available   -- can be picked up
+    //  reserved    -- someone intends to book it
+    //  confirmed   -- the driver is going
+    //  unavailable -- booked or out of commission
+    //
+    //                 passenger, driver
+    //  available -> [ reserved, unavailable ]
+    //
+    //                passenger cancel, driver accept, driver reject
+    //  reserved -> [ available, confirmed, unavailable (malfunction) ]
+    //
+    //                 passenger pickup/malfunction, passenger cancel
+    //  confirmed -> [ unavailable, available ]
+    //
+    //  unavailable -> [ available ]
+    //  
+    'state'       => 'text default "unavailable"',
+    'created_at'  => 'datetime default current_timestamp',
+    'last_seen'   => 'datetime',
+  ],
+
   'location_history' => [
     'id'          => 'integer primary key autoincrement',
     'job_id'      => 'integer',

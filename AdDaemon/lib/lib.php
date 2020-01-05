@@ -1510,3 +1510,31 @@ function logout() {
   session_destroy();
 }
 
+
+
+// rideflow
+function maplink($what) {
+  return $what;
+}
+
+function notify($what) {
+  // $what['car'] is reserved at maplink($what)
+}
+
+function reserve($all) {
+}
+
+function accept($all) {
+}
+
+function decline($all) {
+}
+
+function cancel($all) {
+}
+
+function start($all) {
+}
+
+function setAvailability($all) {
+}
