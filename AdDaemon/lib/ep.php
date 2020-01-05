@@ -120,7 +120,7 @@ try {
     'task_dump' 
   ]) !== false) { 
     post_return($func($all, $verb));
-  } else if(array_search($func, ['available', 'unavailable', 'start', 'decline', 'accept', 'request', 'cancel'])) {
+  } else if(array_search($func, ['available', 'unavailable', 'start', 'decline', 'accept', 'request', 'cancel']) !== false) {
     post_return($func(Get::screen($all['id']), $verb)); 
   } else {
     jemit([
