@@ -1553,8 +1553,8 @@ function slackie($where, $what) {
 }
 
 // rideflow
-function maplink($what) {
-  return $what;
+function goober_link($which) {
+  return "[info](https://oliverces.com/driver/" . $which['id'] . ")";
 }
 
 function goober_up($which, $what) {
@@ -1568,19 +1568,19 @@ function goober_up($which, $what) {
 function cancel($all) {
   goober_up($all, 'available'); 
   
-  slackie("#goober", "The impudent malcontent canceled the ride with ${all['car']}. [Here's the info](http://oliverces.com/ride/)");
+  slackie("#goober", ":broken_heart: The impudent malcontent canceled the ride with ${all['car']}." . goober_link($all));
 }
 
 function request($all) {
   goober_up($all, 'reserved'); 
 
-  slackie("#goober", ":busstop: Some freeloading loafer wants to use ${all['car']}. [Here's the info](http://oliverces.com/ride/)");
+  slackie("#goober", ":busstop: Some freeloading loafer wants to use ${all['car']}." . goober_link($all));
 }
 
 function accept($all) {
   goober_up($all, 'confirmed');
 
-  slackie("#rental-alerts", "The eager driver of ${all['car']} accepted the ride. [Here's the info](http://oliverces.com/ride/)");
+  slackie("#rental-alerts", "The eager driver of ${all['car']} accepted the ride." . goober_link($all));
 }
 
 function decline($all) {
@@ -1588,13 +1588,13 @@ function decline($all) {
   // ride either so we go to unavailable ... as a "smart" move
   goober_up($all, 'unavailable');
 
-  slackie("#rental-alerts", "The overloaded driver of ${all['car']} declined the ride. [Here's the info](http://oliverces.com/ride/)");
+  slackie("#rental-alerts", ":cold_sweat: The overloaded driver of ${all['car']} declined the ride." . goober_link($all)); 
 }
 
 function start($all) {
   goober_up($all, 'driving');
 
-  slackie("#rental-alerts", "The goober in ${all['car']} is off! [Here's the info](http://oliverces.com/ride/)");
+  slackie("#rental-alerts", ":carousel_horse: The goober in ${all['car']} is off!" . goober_link($all)); 
 }
 
 function available($all) {
