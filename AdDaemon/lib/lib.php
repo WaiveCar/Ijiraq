@@ -1558,7 +1558,7 @@ function goober_link($which) {
 }
 
 function goober_up($which, $what) {
-  db_update('screen', $which['id'], ['goober_state' => $what]); 
+  db_update('screen', $which['id'], ['goober_state' => db_string($what)]); 
   pub([
     'type' => 'update',
     'car' => $which['id'],
