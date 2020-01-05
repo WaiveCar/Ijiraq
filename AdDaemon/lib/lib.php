@@ -1548,17 +1548,9 @@ function slackie($where, $what) {
   $payload = [
     'channel' => $where,
     'text' => $what
-<<<<<<< Updated upstream
   ];
-  $res = curldo("https://hooks.slack.com/services/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", $payload, ['log' => true, 'verb' => 'post', 'json' => true]);
-  error_log($res);
-  return $res; 
-=======
-  ]);
   $res = curldo("https://hooks.slack.com/services/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", $payload, ['verb' => 'post', 'json' => true]);
-  error_log($res);
   return $res;
->>>>>>> Stashed changes
 }
 
 // rideflow
@@ -1566,8 +1558,14 @@ function goober_link($which) {
   return " <http://oliverces.com/driver.php?id=" . $which['id'] . "|Details>";
 }
 
-function goober_up($which, $what) {
-  db_update('screen', $which['id'], ['goober_state' => db_string($what)]); 
+function goober_up($which, $what, $postop = []) {
+  if($what === 'available') {
+    $postop['goober_id'] = null;
+  }
+  $surgery = array_merge($postop, ['goober_state' => db_string($what)]); 
+
+  db_update('screen', $which['id'], $surgery);
+
   pub([
     'type' => 'update',
     'car' => $which['id'],
@@ -1576,22 +1574,27 @@ function goober_up($which, $what) {
 }
 
 function goober_allowed($all, $list) {
+  return in_array($all['goober_state'], $list);
 }
 
 function cancel($all) {
   goober_up($all, 'available'); 
-  
   slackie("#goober", ":broken_heart: The impudent malcontent canceled the ride with ${all['car']}." . goober_link($all));
 }
 
 function request($all) {
-  error_log(json_encode($all));
-  if (goober_allowed($all, ['available'])) {
-  }
-  goober_up($all, 'reserved'); 
+  if (!goober_allowed($all, ['available'])) {
+    slackie("#goober-flow", ":collision: Freakish shit happening with ${all['car']}, refusing to satisfy a request, car is not available.");
+    return false;
+  } else {
+    $id = db_create('goober', ['screen_id' => $all['id']]);
 
-  slackie("#goober", ":busstop: Some freeloading loafer wants to use ${all['car']}." . goober_link($all));
-  slackie("#goober-flow", ":busstop: Some freeloading loafer wants to use ${all['car']}." . goober_link($all));
+    goober_up($all, 'reserved', ['goober_id' => $id]); 
+
+    slackie("#goober", ":busstop: Some freeloading loafer wants to use ${all['car']}." . goober_link($all));
+    slackie("#goober-flow", ":busstop: Some freeloading loafer wants to use ${all['car']}." . goober_link($all));
+  }
+  return $id;
 }
 
 function accept($all) {
