@@ -1398,8 +1398,8 @@ function eagerlocation($all) {
   $screen = Get::screen(['uid' => $all['uid']]);
 
   pub([
-    'car' => $screen['id'],
     'type' => 'car',
+    'car' => $screen['id'],
     'lat' => $all['lat'],
     'lng' => $all['lng']
   ]);
@@ -1557,20 +1557,28 @@ function maplink($what) {
   return $what;
 }
 
+function goober_up($which, $what) {
+  db_update('screen', $which['id'], ['goober_state' => $what]); 
+  pub([
+    'type' => 'update',
+    'car' => $which['id'],
+    'state' => $what
+  ]);
+}
 function cancel($all) {
-  db_update('screen', $all['id'], ['goober_state' => 'available']); 
+  goober_up($all, 'available'); 
   
   slackie("#goober", "The impudent malcontent canceled the ride with ${all['car']}. [Here's the info](http://oliverces.com/ride/)");
 }
 
 function request($all) {
-  db_update('screen', $all['id'], ['goober_state' => 'reserved']); 
+  goober_up($all, 'reserved'); 
 
   slackie("#goober", ":busstop: Some freeloading loafer wants to use ${all['car']}. [Here's the info](http://oliverces.com/ride/)");
 }
 
 function accept($all) {
-  db_update('screen', $all['id'], ['goober_state' => 'confirmed']); 
+  goober_up($all, 'confirmed');
 
   slackie("#rental-alerts", "The eager driver of ${all['car']} accepted the ride. [Here's the info](http://oliverces.com/ride/)");
 }
@@ -1578,22 +1586,25 @@ function accept($all) {
 function decline($all) {
   // a decline of a ride means the person probably can't do another
   // ride either so we go to unavailable ... as a "smart" move
-  db_update('screen', $all['id'], ['goober_state' => 'unavailable']); 
+  goober_up($all, 'unavailable');
 
   slackie("#rental-alerts", "The overloaded driver of ${all['car']} declined the ride. [Here's the info](http://oliverces.com/ride/)");
 }
 
 function start($all) {
-  db_update('screen', $all['id'], ['goober_state' => 'driving']); 
+  goober_up($all, 'driving');
+
   slackie("#rental-alerts", "The goober in ${all['car']} is off! [Here's the info](http://oliverces.com/ride/)");
 }
 
 function available($all) {
-  db_update('screen', $all['id'], ['goober_state' => 'available']); 
+  goober_up($all, 'available');
+
   slackie("#rental-alerts", ":person_doing_cartwheel: ${all['car']} is available for goobering!");
 }
 
 function unavailable($all) {
-  db_update('screen', $all['id'], ['goober_state' => 'unavailable']); 
+  goober_up($all, 'unavailable');
+
   slackie("#rental-alerts", ":slot_machine: ${all['car']} is no longer goobering...");
 }
