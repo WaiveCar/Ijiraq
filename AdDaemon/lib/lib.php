@@ -1548,10 +1548,17 @@ function slackie($where, $what) {
   $payload = [
     'channel' => $where,
     'text' => $what
+<<<<<<< Updated upstream
   ];
   $res = curldo("https://hooks.slack.com/services/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", $payload, ['log' => true, 'verb' => 'post', 'json' => true]);
   error_log($res);
   return $res; 
+=======
+  ]);
+  $res = curldo("https://hooks.slack.com/services/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", $payload, ['verb' => 'post', 'json' => true]);
+  error_log($res);
+  return $res;
+>>>>>>> Stashed changes
 }
 
 // rideflow
@@ -1567,6 +1574,10 @@ function goober_up($which, $what) {
     'state' => $what
   ]);
 }
+
+function goober_allowed($all, $list) {
+}
+
 function cancel($all) {
   goober_up($all, 'available'); 
   
@@ -1575,6 +1586,8 @@ function cancel($all) {
 
 function request($all) {
   error_log(json_encode($all));
+  if (goober_allowed($all, ['available'])) {
+  }
   goober_up($all, 'reserved'); 
 
   slackie("#goober", ":busstop: Some freeloading loafer wants to use ${all['car']}." . goober_link($all));

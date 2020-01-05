@@ -156,9 +156,20 @@ $SCHEMA = [
     //  unavailable -> [ available ]
     //  
     'goober_state'     => 'text default "unavailable"',
+    //
+    // This is to prevent the in-flight problem, which I was trying to avoid
+    // desperately trying to avoid but I think it's too severe to ignore.
+    //
+    'goober_id'        => 'integer',
 
     'ignition_state'  => 'text',
     'ignition_time'   => 'datetime'
+  ],
+
+  'goober' => [
+    'id'            => 'integer primary key autoincrement',
+    'screen_id'     => 'integer',
+    'created_at'    => 'datetime default current_timestamp',
   ],
 
   // revenue historicals
