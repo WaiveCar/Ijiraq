@@ -227,7 +227,7 @@ window.map = function(opts) {
     myid = myid || _id++;
     feature.setId(myid);
     _featureList.push([feature, shape, myid]);
-    return feature;
+    return { shape: feature, index: _featureList.length };
   }
 
 
