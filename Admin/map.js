@@ -132,7 +132,7 @@ window.map = function(opts) {
   // } points
 
   // drawlayer {
-  function getShapes() {
+  function save() {
     let shapes = draw.getSource().getFeatures().map(row => {
       var kind = row.getGeometry();
       if (kind instanceof Polygon) {
@@ -233,7 +233,6 @@ window.map = function(opts) {
 
   // this is the function with perhaps more accounting
   function move(index, lat, lng) {
-    console.debug("Moving ", _featureList[index][1], "to", lat, lng);
     _featureList[index][0].getGeometry().setCoordinates(recurseFll([lat, lng]));
   }
 
@@ -347,6 +346,7 @@ window.map = function(opts) {
     },
     _map,
     _layers,
+    _featureList,
     clear,
     removePoint,
     removeShape,
@@ -359,7 +359,7 @@ window.map = function(opts) {
       _cb[what].push(fn);
       return _cb;
     },
-    save: getShapes,
+    save,
     add,
     addOne,
     load
