@@ -227,13 +227,14 @@ window.map = function(opts) {
     myid = myid || _id++;
     feature.setId(myid);
     _featureList.push([feature, shape, myid]);
-    return { shape: feature, index: _featureList.length };
+    return { shape: feature, index: _featureList.length - 1 };
   }
 
 
   // this is the function with perhaps more accounting
   function move(index, lat, lng) {
-    _featureList[index][0].getGeometry().setCoordinates(recurseFll([lat, lng]));
+    console.log("moving lat/lng", index, lat, lng);
+    _featureList[index][0].getGeometry().setCoordinates(recurseFll([lng, lat]));
   }
 
   function clear() {
