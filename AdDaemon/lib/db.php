@@ -169,6 +169,7 @@ $SCHEMA = [
   'goober' => [
     'id'            => 'integer primary key autoincrement',
     'screen_id'     => 'integer',
+    'user_id'       => 'text',
     'created_at'    => 'datetime default current_timestamp',
   ],
 
