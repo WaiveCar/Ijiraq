@@ -18,12 +18,13 @@ include_once($mypath . 'db.php');
 
 $PORT_OFFSET = 7000;
 $DAY = 24 * 60 * 60;
-$PROJECT_LIST = ['LA', 'NY', 'REEF', 'CES'];
+$PROJECT_LIST = ['LA', 'NY', 'REEF', 'CES', 'Amazon'];
 $DEFAULT_CAMPAIGN_MAP = [
   'none' => 1,
   'LA' => 1,
   'NY' => 2,
   'dev' => 3,
+  'Amazon' => 61,
   'REEF' => 131
 ];
 
