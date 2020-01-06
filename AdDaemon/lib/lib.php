@@ -16,6 +16,7 @@ $TWIL = [
 $mypath = $_SERVER['DOCUMENT_ROOT'] . 'AdDaemon/lib/';
 include_once($mypath . 'db.php');
 
+$screen_dbg_id = 'SgQhKQlP5oIXZgHhkef6w';
 $PORT_OFFSET = 7000;
 $DAY = 24 * 60 * 60;
 $PROJECT_LIST = ['LA', 'NY', 'REEF', 'CES', 'Amazon'];
@@ -354,10 +355,13 @@ function command($payload) {
 }
 
 function default_campaign($screen) {
-  global $DEFAULT_CAMPAIGN_MAP;
+  global $DEFAULT_CAMPAIGN_MAP, $screen_dbg_id;
   $id = $DEFAULT_CAMPAIGN_MAP['none'];
   if($screen['project']) {
     $id = $DEFAULT_CAMPAIGN_MAP[$screen['project']];
+  }
+  if($screen['uid'] == $screen_dbg_id) {
+    error_log("Default campaign >> " . $id);
   }
   return Get::campaign($id);
 }
@@ -667,8 +671,8 @@ function inject_priority($job, $screen, $campaign) {
 }
 
 function sow($payload) {
-  global $SCHEMA;
-  $screen_dbg_id = 'jff6S9NbIGqv6cM3pA0gA';
+  global $SCHEMA, $screen_dbg_id;
+
   if(!isset($payload['uid'])) {
     return doError("UID needs to be set before continuing");
   } 
