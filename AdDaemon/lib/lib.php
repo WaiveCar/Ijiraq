@@ -361,7 +361,7 @@ function default_campaign($screen) {
     $id = $DEFAULT_CAMPAIGN_MAP[$screen['project']];
   }
   if($screen['uid'] == $screen_dbg_id) {
-    error_log("Default campaign >> " . $id);
+    error_log("Default campaign >> " . $screen['project'] . ' ' .$id);
   }
   return Get::campaign($id);
 }
