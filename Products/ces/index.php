@@ -155,7 +155,11 @@ function getPath() {
       .then(response => response.json())
       .then(stats => {
         let playtimes = stats[0].completed_seconds / 7.5;
-        Dom['header-message'].innerHTML = `It's played ${playtimes} times.`; 
+        if(stats[0].completed_seconds < 10) {
+          Dom['header-message'].innerHTML = `The screens are getting your message...`; 
+        } else {
+          Dom['header-message'].innerHTML = `It's played ${playtimes} times.`; 
+        }
       });
 
     fetch(`/api/path?id=${id}`)
