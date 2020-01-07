@@ -1632,7 +1632,10 @@ function finish($all) {
 }
 
 function available($all) {
-  goober_up($all, 'available');
+  goober_up($all, 'available', [], [
+    'lat' => $all['lat'],
+    'lng' => $all['lng']
+  ]);
 
   slackie("#goober-flow", ":person_doing_cartwheel: ${all['car']} is available for goobering!");
 }
