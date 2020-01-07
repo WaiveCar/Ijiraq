@@ -1,14 +1,27 @@
 <?
 session_start();
+function getces($id) {
+  $list = json_decode(file_get_contents('http://waivescreen.com/api/ces?id=' . $id), true);
+  if(count($list) > 0) {
+    return $list[0];
+  }
+}
+
+$state = 'create';
 $campaign_id = 0;
 $ces_id = 1;
-if (array_key_exists('campaign_id', $_SESSION)) {
+if(!empty($_GET['id'])) {
+  $ces_id = $_GET['id'];
+  $obj = getces($ces_id);
+  if($obj) {
+    $campaign_id = $obj['campaign_id'];
+    $state = 'dashboard';
+  }
+} else if (array_key_exists('campaign_id', $_SESSION)) {
   $campaign_id = $_SESSION['campaign_id'];
   $ces_id = $_SESSION['ces_id'];
   $state = 'dashboard';
-} else {
-  $state = 'create';
-}
+} 
 ?>
 <!doctype html5>
 <head>
@@ -108,7 +121,7 @@ function api(what) {
 
 function getCars() {
   document.getElementById('message').focus();
-  api("screens?project=dev&fields=lat,lng")
+  api("screens?project=CES&fields=lat,lng")
     .then(carList => {
       carList = carList.filter(x => x.lat).map(r => ['Point', [r.lng, r.lat]]);
       _map.load(carList);
