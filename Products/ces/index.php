@@ -140,9 +140,7 @@ function addMessage() {
   })
   .then((response) => response.json())
   .then((data) => {
-    console.log(data);
-    id = data.campaign_id;
-    setMode('wait');
+    window.location = "/?id=" + data.ces_id;
     console.log('Success:', data);
   })
   .catch((error) => {
