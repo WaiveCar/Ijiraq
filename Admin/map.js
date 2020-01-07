@@ -241,7 +241,7 @@ window.map = function(opts) {
     _featureMap[index][0].getGeometry().setCoordinates(recurseFll([lng, lat]));
   }
   function remove(index) {
-    draw.getSource().removeFeature(_featureMap[index]);
+    draw.getSource().removeFeature(_featureMap[index][0]);
     delete _featureMap[index];
   }
 
