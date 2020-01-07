@@ -249,7 +249,7 @@ window.map = function(opts) {
     for(var feature of draw.getSource().getFeatures()) {
       draw.getSource().removeFeature(feature);
     }
-    _featureList = [];
+    _featureMap = {};
   }
 
   function removeShape() {
@@ -344,7 +344,7 @@ window.map = function(opts) {
     },
     _map,
     _layers,
-    _featureList,
+    _featureMap,
     clear,
     removePoint,
     removeShape,
