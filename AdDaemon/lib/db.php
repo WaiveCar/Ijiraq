@@ -170,6 +170,9 @@ $SCHEMA = [
     'id'            => 'integer primary key autoincrement',
     'screen_id'     => 'integer',
     'user_id'       => 'text',
+    'lat'           => 'float default null',
+    'lng'           => 'float default null',
+    'phone'         => 'text',
     'created_at'    => 'datetime default current_timestamp',
   ],
 

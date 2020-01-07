@@ -121,7 +121,9 @@ try {
   ]) !== false) { 
     post_return($func($all, $verb));
   } else if(array_search($func, ['available', 'unavailable', 'driving', 'finish', 'decline', 'accept', 'request', 'cancel']) !== false) {
-    post_return($func(Get::screen($all['id']), $verb)); 
+    post_return(
+      $func(array_merge(Get::screen($all['id']), ['kv' => $all]), $verb)
+    ); 
   } else {
     jemit([
       'res' => false,

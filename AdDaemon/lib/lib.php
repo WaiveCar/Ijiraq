@@ -1593,14 +1593,21 @@ function request($all) {
     slackie("#goober-flow", ":collision: Freakish shit happening with ${all['car']}, refusing to satisfy a request, car is not available.");
     return false;
   } else {
+    error_log(json_encode($all));
+
     $id = db_insert('goober', [
-      'user_id' => db_string($all['user_id']),
+      'user_id' => db_string($all['kv']['user_id']),
+      'lat' => db_string($all['kv']['lat']),
+      'lng' => db_string($all['kv']['lng']),
       'screen_id' => $all['id']
     ]);
 
     goober_up($all, 'reserved', 
       ['goober_id' => $id], 
-      ['user_id' => $all['user_id']]); 
+      [ 'lat' => $all['kv']['lat'],
+        'lng' => $all['kv']['lng'],
+        'user_id' => $all['kv']['user_id']
+      ]); 
 
     slackie("#goober", ":busstop: Some freeloading loafer wants to use ${all['car']}." . goober_link($all));
     slackie("#goober-flow", ":busstop: Some freeloading loafer wants to use ${all['car']}." . goober_link($all));
