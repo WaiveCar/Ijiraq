@@ -1588,6 +1588,10 @@ function cancel($all) {
   slackie("#goober", ":broken_heart: The impudent malcontent canceled the ride with ${all['car']}." . goober_link($all));
 }
 
+function goobup($all) {
+  db_update('goober', $all['id'], ['phone' => db_string($all['number'])]);
+}
+
 function request($all) {
   if (!goober_allowed($all, ['available'])) {
     slackie("#goober-flow", ":collision: Freakish shit happening with ${all['car']}, refusing to satisfy a request, car is not available.");

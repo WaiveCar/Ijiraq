@@ -82,7 +82,7 @@ try {
     post_return(show('widget', array_merge(['type' => $type], $all)));
 
   } else if(array_search($func, [
-    'brands', 'ces', 'organizations', 'attributions', 'users', 'widgets',
+    'brands', 'goober', 'ces', 'organizations', 'attributions', 'users', 'widgets',
     'jobs', 'sensor_history', 'campaigns', 'screens', 'tasks']) !== false) {
     $table = $func;
     if($func !== 'ces') {
@@ -117,6 +117,7 @@ try {
     'signup',
     'sow', 
     'tag', 
+    'goobup',
     'task_dump' 
   ]) !== false) { 
     post_return($func($all, $verb));
