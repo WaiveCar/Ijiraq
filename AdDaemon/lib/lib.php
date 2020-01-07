@@ -1566,7 +1566,7 @@ function goober_link($which) {
 function goober_up($which, $what, $postop = [], $broadcast = []) {
   $poster = [
     'type' => 'update',
-    'car' => $which['id'],
+    'id' => $which['id'],
     'state' => $what
   ];
   if($what === 'available') {
