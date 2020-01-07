@@ -25,6 +25,7 @@ $DEFAULT_CAMPAIGN_MAP = [
   'LA' => 1,
   'NY' => 2,
   'dev' => 3,
+  'CES' => 62,
   'Amazon' => 61,
   'REEF' => 131
 ];
@@ -1185,7 +1186,9 @@ function campaign_create($data, $fileList, $user = false) {
   }
 
   foreach($fileList as $file) {
-    $props['asset'][] = upload_s3($file);
+    $name = upload_s3($file);
+    $props['asset'][] = $name;
+    $props['asset_meta'][] = ['url' => $name];
   }
 
   return db_insert('campaign', $props);
@@ -1193,6 +1196,7 @@ function campaign_create($data, $fileList, $user = false) {
 
 function campaign_update($data, $fileList, $user = false) {
   $assetList = [];
+  $assetMetaList = [];
   $campaign_id = aget($data,'campaign_id|id');
   if(empty($campaign_id)) {
     return doError("Need to set the campaign id");
@@ -1223,13 +1227,19 @@ function campaign_update($data, $fileList, $user = false) {
     if(aget($data, 'append')) {
       $campaign = Get::campaign($campaign_id);
       $assetList = $campaign['asset'];
+      $assetMetaList = $campaign['asset_meta'];
     }
 
     foreach($fileList as $file) {
-      $assetList[] = upload_s3($file);
+      $name = upload_s3($file);
+      $assetList[] = $name;
+      $assetMetaList[] = ['url' => $name];
     }
 
-    db_update('campaign', $campaign_id, ['asset' => db_string(json_encode($assetList))]);
+    db_update('campaign', $campaign_id, [
+      'asset' => db_string(json_encode($assetList)),
+      'asset_meta' => db_string(json_encode($assetMetaList))
+    ]);
   }
   return $campaign_id;
 }
@@ -1576,7 +1586,28 @@ function goober_up($which, $what, $postop = [], $broadcast = []) {
 
   db_update('screen', $which['id'], $surgery);
 
-  pub( array_merge($postop, $poster, $broadcast) );
+  $obj =  array_merge($postop, $poster, $broadcast);
+  $goober = false;
+  if(!empty($which['goober_id'])) {
+    error_log("I'm here because I have the id");
+    $goober = Get::goober($which['goober_id']);
+    error_log("Now I have the object");
+  }
+
+  /*
+  if(!$goober && !empty($obj['type']) && $obj['type'] == 'update' && !empty($obj['user_id'])) {
+    $goober = Get::goober($obj['id']);
+    $obj['user_id'] = $goober['user_id'];
+  }
+   */
+
+  if($goober) {
+    error_log("Now I'm populating the object");
+    $obj['user_id'] = $goober['user_id'];
+    $obj['goober_id'] = $goober['id'];
+  }
+
+  pub( $obj );
 }
 
 function goober_allowed($all, $list) {
@@ -1584,11 +1615,23 @@ function goober_allowed($all, $list) {
 }
 
 function cancel($all) {
+  $goober = Get::goober($all['goober_id']);
+  pub([
+    'type' => 'update',
+    'id' => $all['id'],
+    'goober_id' => $all['goober_id'],
+    'user_id' => $goober['user_id'],
+    'state' => 'canceled'
+  ]);
+
   goober_up($all, 'available'); 
   slackie("#goober", ":broken_heart: The impudent malcontent canceled the ride with ${all['car']}." . goober_link($all));
 }
 
 function goobup($all) {
+  $screen = Get::screen(['goober_id' => $all['id']]);
+  slackie("#goober", ":phone: The goober in ${screen['car']} should be called at ${all['number']}." );
+
   db_update('goober', $all['id'], ['phone' => db_string($all['number'])]);
 }
 
@@ -1640,6 +1683,14 @@ function driving($all) {
 }
 
 function finish($all) {
+  $goober = Get::goober($all['goober_id']);
+  pub([
+    'type' => 'update',
+    'id' => $all['id'],
+    'goober_id' => $all['goober_id'],
+    'user_id' => $goober['user_id'],
+    'state' => 'finished'
+  ]);
   slackie("#goober-flow", ":checkered_flag: ${all['car']} finished the ride");
   return available($all);
 }
