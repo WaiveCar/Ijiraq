@@ -188,7 +188,7 @@ function split($str) {
             <td data-search="<?= implode(' ',[$screen['port'], $screen['phone'], $screen['uid']]) ?>">
               <a href="#<?=$screen['id']?>" onclick='edit("<?=$screen['id']?>")' class=id><?= $screen['shortid'] ?></a>
             </td>
-            <td>
+            <td data-search="<?= $screen['project']; ?>">
               <select onchange=change(<?=$screen['id']?>,'project',this)>
                 <?foreach($PROJECT_LIST as $value => $project) { 
                   $selected = ($value === $screen['project']) ? 'selected' : '';
@@ -197,7 +197,7 @@ function split($str) {
                 <? } ?>
               </select>
             </td>
-            <td>
+            <td data-search="<?= $screen['model']; ?>">
               <select onchange=change(<?=$screen['id']?>,'model',this)>
                 <?foreach($MODEL_LIST as $value => $project) { 
                   $selected = ($value === $screen['model']) ? 'selected' : '';
