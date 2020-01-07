@@ -240,8 +240,9 @@ window.map = function(opts) {
     console.log("moving lat/lng", index, lat, lng);
     _featureList[index][0].getGeometry().setCoordinates(recurseFll([lng, lat]));
   }
-  function remove(index) {
-    draw.getSource().removeFeature(_featureList[index][0]);
+  function remove(feature) {
+    draw.getSource().removeFeature(feature);
+    //draw.getSource().removeFeature(_featureList[index][0]);
   }
 
   function clear() {
