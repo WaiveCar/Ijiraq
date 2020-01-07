@@ -742,6 +742,18 @@ function sql_kv($hash, $operator = '=', $quotes = "'", $intList = []) {
       $ret[] = "$key $operator $value";
     }
     else if ( is_string($value) ) {
+      $parts = explode($value, ',');
+      if(count($parts) > 1) {
+        $numbers = true;
+        foreach($parts as $el) {
+          $numbers &= is_numeric($el);
+        }
+        if($numbers) {
+          $ret[] = "$key in ($value)";
+          continue;
+        }
+      } 
+      
       if(in_array($key, $intList)) {
         $ret[] = "$key $operator $value";
       } else {
