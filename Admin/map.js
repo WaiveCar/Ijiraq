@@ -37,7 +37,7 @@ window.map = function(opts) {
   var _draw, 
       _cb = { select: [] },
       _snap, 
-      _featureList = [], 
+      _featureMap = {},
       _id = 0,
       _select;
   var source = {};
@@ -230,19 +230,19 @@ window.map = function(opts) {
     //
     myid = myid || _id++;
     feature.setId(myid);
-    _featureList.push([feature, shape, myid]);
-    return { shape: feature, index: _featureList.length - 1 };
+    _featureMap[myid] = [feature, shape];
+    return { shape: feature, index: myid };
   }
 
 
   // this is the function with perhaps more accounting
   function move(index, lat, lng) {
     console.log("moving lat/lng", index, lat, lng);
-    _featureList[index][0].getGeometry().setCoordinates(recurseFll([lng, lat]));
+    _featureMap[index][0].getGeometry().setCoordinates(recurseFll([lng, lat]));
   }
-  function remove(feature) {
-    draw.getSource().removeFeature(feature);
-    //draw.getSource().removeFeature(_featureList[index][0]);
+  function remove(index) {
+    draw.getSource().removeFeature(_featureMap[index]);
+    delete _featureMap[index];
   }
 
   function clear() {
