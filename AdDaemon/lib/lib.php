@@ -1598,7 +1598,9 @@ function request($all) {
       'screen_id' => $all['id']
     ]);
 
-    goober_up($all, 'reserved', ['goober_id' => $id], ['user_id' => $user_id]); 
+    goober_up($all, 'reserved', 
+      ['goober_id' => $id], 
+      ['user_id' => $all['user_id']]); 
 
     slackie("#goober", ":busstop: Some freeloading loafer wants to use ${all['car']}." . goober_link($all));
     slackie("#goober-flow", ":busstop: Some freeloading loafer wants to use ${all['car']}." . goober_link($all));
