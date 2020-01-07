@@ -45,7 +45,7 @@ window.map = function(opts) {
 	var styleCache = {};
   var isFirst = true;
 
-  ['car','screen','bluedot'].forEach(row => {
+  ['car','screen','bluedot','carpink'].forEach(row => {
     styleCache[row] = new Style({
       image: new Icon({
         src: `${row}.png`
@@ -63,6 +63,7 @@ window.map = function(opts) {
   dom.appendChild(css);
 
   // points {
+  /*
   if(opts.points) {
     var featureMap = opts.points.filter(row => row.lng).map(row => {
       return {
@@ -130,6 +131,7 @@ window.map = function(opts) {
     //_layers.push(points);
   }
   // } points
+  */
 
   // drawlayer {
   function save() {
@@ -159,9 +161,11 @@ window.map = function(opts) {
     // line is an array of points, [ [lat,lng], [lat,lng] ... ]
     // as the second argument.
     if(shape[0] === 'Point') {
-      feature = new Feature({ geometry: new Point(fromLonLat(shape[1])) });
+      feature = new Feature({ 
+        geometry: new Point(fromLonLat(shape[1])),
+      });
       myid = shape[2];
-      feature.setStyle(styleCache.car);
+      //feature.setStyle(styleCache.car);
     } else if(shape[0] === 'Location') {
       feature = new Feature({ geometry: new Point(fromLonLat(shape[1])) });
       myid = shape[2];
@@ -258,18 +262,7 @@ window.map = function(opts) {
   source.draw = new VectorSource();
   var draw = new VectorLayer({
     source: source.draw,
-    style: new Style({
-      stroke: new Stroke({
-        color: '#000000',
-        width: 10
-      }),
-      image: new CircleStyle({
-        radius: 2,
-        fill: new Fill({
-          color: '#ffcc33'
-        })
-      })
-    })
+    style: styleCache.car
   });
 
   if(opts.draw) {
@@ -309,7 +302,7 @@ window.map = function(opts) {
     ]);
   } else if (opts.select) {
     _select = new Select({
-      style: styleCache.screen
+      style: styleCache.carpink
     });
     map_params.interactions =  defaultInteractions().extend([
       _select

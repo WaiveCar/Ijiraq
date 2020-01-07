@@ -1560,7 +1560,7 @@ function slackie($where, $what) {
 
 // rideflow
 function goober_link($which) {
-  return " <http://oliverces.com/driver.php?id=" . $which['id'] . "|Details>";
+  return " <https://oliverces.com/driver.php?id=" . $which['id'] . "|Details>";
 }
 
 function goober_up($which, $what, $postop = [], $broadcast = []) {
