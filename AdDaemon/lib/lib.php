@@ -1112,7 +1112,7 @@ function campaign_ces_create($data) {
     [
       'project' => db_string('CES'),
       'start_time' => db_date(time()),
-      'goal_seconds' => $PLAYTIME * 200,
+      'goal_seconds' => $PLAYTIME * 500,
       'end_time' => db_date(time() + $DAY * 3),
       'is_approved' => true,
       'asset' => ["http://waivescreen.com/Products/ces/ces_oliver.php?id=$ces_id"],
@@ -1130,7 +1130,8 @@ function campaign_ces_create($data) {
   $_SESSION['ces_id'] = $ces_id;
   $_SESSION['phone'] = $data['phone'];
 
-  //text_rando($number, "Thanks for trying oliver, free exclusively at CES. Your message will be shown on the streets of Vegas shortly. We'll text you after with a link so you can see where it played!");
+  text_rando($number, "Thanks for using oliver, free exclusively at CES. Your message will be shown on the streets of Vegas shortly. You can see the progress at http://olvr.io/?id=$campaign_id");
+
   return [
     'campaign_id' => $campaign_id,
     'ces_id' => $ces_id
