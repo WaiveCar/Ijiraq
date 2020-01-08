@@ -1150,7 +1150,7 @@ function campaign_ces_create($data) {
   $_SESSION['phone'] = $candidate;
 
 
-  text_rando($candidate, "Thanks for using oliver, free exclusively at CES. Your message will be shown on the streets of Vegas shortly. You can see the progress at http://olvr.io/?id=$campaign_id");
+  text_rando($candidate, "Thanks for using oliver, free exclusively at CES. Your message will be shown on the streets of Vegas shortly. You can see the progress at http://olvr.io/?id=$ces_id");
 
   return [
     'campaign_id' => $campaign_id,
