@@ -80,28 +80,17 @@ if(!empty($_GET['id'])) {
   <script src=map.js></script>
   <script>
 var id = <?= $campaign_id ?>;
-var colorList = [
-  ["fff", "504aff"],
-  ["fff", "8fffed"],
-  ["fff", "ffdd4d"],
-  ["fff", "ff4d7d"],
-  ["fff", "000"],
-  ["000", "fff"]
-];
 var ival = [];
 var Dom = {};
 var load = {
   create: getCars,
   dashboard: getPath,
-  wait: function () {
-  }
+  wait: function () { }
 }
+
 function another() {
   Dom.preview.src = "ces_oliver.php?id=1";
   setMode('create');
-}
-function whiteit(what) {
-  document.querySelector('#white-box').innerHTML = what;
 }
 // either create wait pitch or dashboard
 function setMode(what) {
@@ -141,10 +130,9 @@ function addMessage() {
   .then((response) => response.json())
   .then((data) => {
     window.location = "/?id=" + data.ces_id;
-    console.log('Success:', data);
   })
-  .catch((error) => {
-    console.error('Error:', error);
+  .catch((err) => {
+    console.error('Error:', err);
   });
 }
 
@@ -177,67 +165,6 @@ function getPath() {
   ival.push(iv);
   getMap();
 }
-/*
-var ajaxInput = (function(){
-  var tMap = {}, ix = 0;
-
-  function handler(key) {
-    var
-      obj = tMap[key],
-      dom = obj.dom,
-      val = dom.value,
-      ix = obj.ix ++;
-
-    // if it's the same value that we sent before
-    // then we bail
-    if('last' in obj && obj.last === val) {
-      return;
-    }
-
-    // record the last value
-    obj.last = val;
-
-    obj.cb.forEach(what => what(val, ix));
-  }
-
-  return function(dom, cb) {
-    var key = ix++;
-
-    if(!tMap[key]) {
-      tMap[key] = {
-        dom: dom,
-        cb: [],
-        ix: 0,
-        last: '',
-        timeout: 300
-      };
-
-      tMap[key].poll= setInterval(function(){
-        if(!tMap[key].handler) {
-          handler(key);
-        }
-      }, tMap[key].timeout);
-
-      $(dom).on('keydown keyup', function(){
-        var obj = tMap[key];
-
-        if(obj.handler) {
-          clearTimeout(obj.handler);
-          delete obj.handler;
-        }
-
-        obj.handler = setTimeout(function(){
-          handler(key);
-          delete obj.handler;
-        }, obj.timeout);
-      });
-    }
-
-    tMap[key].cb.push(cb);
-  }
-
-})();
- */
 
 function preview() {
   let last = '';
@@ -265,4 +192,3 @@ window.onload = function() {
 }
   </script>
 </html>
-<!-- <?  var_dump($_SESSION); ?> -->
