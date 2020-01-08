@@ -70,9 +70,9 @@ if(!empty($_GET['id'])) {
     </div>
 
     <div id="go-again" class='dashboard'>
-      <div>
+  <!--    <div>
       <button class='white'>share</button>
-      </div>
+      </div>-->
       <button onclick="another()" class='primary'>make another</button>
     </div>
   </div>
