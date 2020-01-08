@@ -1126,11 +1126,31 @@ function campaign_ces_create($data) {
 
   db_update('ces', $ces_id, ['campaign_id' => $campaign_id]);
 
+  $ph = aget($data, 'phone', '');
+  if($ph[0] != '+') {
+    $digits_only = preg_replace('/[^\d]/', '', $ph);
+
+    // This looks like an american number.
+    if(strlen($digits_only) == 10) {
+      $candidate = "+1$ph";
+    // this looks like an american number with a leading 1.
+    } else if (strlen($digits_only) == 11 && $ph[0] == '1') {
+      $candidate = "+$ph";
+    } else {
+      // otherwise it may be an international - we actually do the same thing.
+      $candidate = "+$ph";
+    }
+  } else {
+    $candidate = $ph;
+  }
+  $phone = $candidate;
+
   $_SESSION['campaign_id'] = $campaign_id;
   $_SESSION['ces_id'] = $ces_id;
-  $_SESSION['phone'] = $data['phone'];
+  $_SESSION['phone'] = $candidate;
 
-  text_rando($number, "Thanks for using oliver, free exclusively at CES. Your message will be shown on the streets of Vegas shortly. You can see the progress at http://olvr.io/?id=$campaign_id");
+
+  text_rando($candidate, "Thanks for using oliver, free exclusively at CES. Your message will be shown on the streets of Vegas shortly. You can see the progress at http://olvr.io/?id=$campaign_id");
 
   return [
     'campaign_id' => $campaign_id,
