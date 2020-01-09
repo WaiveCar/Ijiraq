@@ -1595,7 +1595,8 @@ function video($all) {
     $r->set('video', $all['state'], ['nx', 'ex'=>10]);
   } else {
     $state = $r->get('video');
-    return $state ? $state : 'hide';
+    echo $state ? $state : 'no';
+    exit;
   }
 }
 
