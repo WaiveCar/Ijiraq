@@ -1,6 +1,5 @@
 <?
 require $_SERVER['DOCUMENT_ROOT'] .  'AdDaemon/vendor/autoload.php';
-session_start();
 
 use Aws\S3\S3Client;
 use Ramsey\Uuid\Uuid;
@@ -805,9 +804,6 @@ function curldo($url, $params = false, $opts = []) {
   $ch = curl_init();
 
   $header = [];
-  if(isset($_SESSION['token']) && strlen($_SESSION['token']) > 2) {
-    $header[] = "Authorization: ${_SESSION['token']}";
-  }
     
   if($verb !== 'GET') {
     if(!isset($opts['isFile'])) {
@@ -1144,11 +1140,6 @@ function campaign_ces_create($data) {
     $candidate = $ph;
   }
   $phone = $candidate;
-
-  $_SESSION['campaign_id'] = $campaign_id;
-  $_SESSION['ces_id'] = $ces_id;
-  $_SESSION['phone'] = $candidate;
-
 
   text_rando($candidate, "Thanks for using oliver, free exclusively at CES. Your message will be shown on the streets of Vegas shortly. You can see the progress at http://olvr.io/?id=$ces_id");
 
