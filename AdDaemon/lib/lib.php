@@ -1589,6 +1589,16 @@ function slackie($where, $what) {
   return $res;
 }
 
+function video($all) {
+  $r = get_redis();
+  if(!empty($all['state'])) {
+    $r->set('video', $all['state'], ['nx', 'ex'=>10]);
+  } else {
+    $state = $r->get('video');
+    return $state ? $state : 'hide';
+  }
+}
+
 // rideflow
 function goober_link($which) {
   return " <https://oliverces.com/driver.php?id=" . $which['id'] . "|Details>";

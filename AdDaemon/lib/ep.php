@@ -117,6 +117,7 @@ try {
     'signup',
     'sow', 
     'tag', 
+    'video',
     'goobup',
     'task_dump' 
   ]) !== false) { 
