@@ -118,6 +118,7 @@ try {
     'sow', 
     'tag', 
     'video',
+    'most_recent',
     'goobup',
     'task_dump' 
   ]) !== false) { 
