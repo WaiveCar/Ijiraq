@@ -2,7 +2,26 @@
 include('../AdDaemon/lib/lib.php');
 include('lib.php');
 
+$carMap = [];
 $screenList = get('screens', ['active' => 1]);
+$carList = get('most_recent');
+foreach($carList as $car) {
+  $carMap[strtolower($car['name'])] = $car;
+}
+
+function time2delta($what) {
+  $tmp = strtotime(str_replace(' ', 'T', $what . 'Z'));
+  $sec = time() - $tmp;
+  return sprintf("%dd %d:%02d:%02d", floor($sec / 60 / 60 / 24), floor($sec / 60 / 60) % 24, floor($sec/60) % 60, $sec %60);
+}
+
+function getcarlast($what) {
+  global $carMap;
+  $key = strtolower($what);
+  if(!isset($carMap[$key])) { return '??'; }
+  return time2delta($carMap[$what]['last']);
+}
+ 
 $addrList = get_addressList(array_map(function($row) { 
   if($row['lat'] && $row['lng']) {
     return [$row['lat'],$row['lng']]; 
@@ -30,7 +49,9 @@ for($ix = 0; $ix < count($screenList); $ix++){
     $screenList[$ix]['uptime'] = 'off';
   } 
 
-  $screenList[$ix]['last_local'] = sprintf("%dd %d:%02d:%02d", floor($sec / 60 / 60 / 24), floor($sec / 60 / 60) % 24, floor($sec/60) % 60, $sec %60);
+  $screenList[$ix]['last_local'] = "<span class=screen title=screen>" . time2delta($screenList[$ix]['last_seen']) . "</span>" . 
+    "<span class=car title=car>" . getcarlast($screenList[$ix]['car']) . "</span>";
+
   $screenList[$ix]['first_local'] = date("Y-m-d H:i:s", $screenList[$ix]['first_local']);
 
   if (isset( $screenList[$ix]['last_loc']) ) {
