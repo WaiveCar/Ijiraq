@@ -1,6 +1,7 @@
 <?
 include('../AdDaemon/lib/lib.php');
 include('lib.php');
+$DAY = 60 * 60 * 24;
 
 $carMap = [];
 $screenList = get('screens', ['active' => 1]);
@@ -10,16 +11,17 @@ foreach($carList as $car) {
 }
 
 function time2delta($what) {
+  global $DAY;
   $tmp = strtotime(str_replace(' ', 'T', $what . 'Z'));
   $sec = time() - $tmp;
-  return sprintf("%dd %d:%02d:%02d", floor($sec / 60 / 60 / 24), floor($sec / 60 / 60) % 24, floor($sec/60) % 60, $sec %60);
+  return [$sec, sprintf("%dd %d:%02d", floor($sec / $DAY), floor($sec / 60 / 60) % 24, floor($sec/60) % 60)];
 }
 
 function getcarlast($what) {
   global $carMap;
   $key = strtolower($what);
-  if(!isset($carMap[$key])) { return '??'; }
-  return time2delta($carMap[$what]['last']);
+  if(!isset($carMap[$key])) { return [0, '??']; }
+  return time2delta($carMap[$key]['last']);
 }
  
 $addrList = get_addressList(array_map(function($row) { 
@@ -34,7 +36,7 @@ for($ix = 0; $ix < count($screenList); $ix++){
   if($addrList[$ix]) {
     $screenList[$ix]['addr'] = "<a target=_blank href=//maps.google.com/?q={$screenList[$ix]['lat']},{$screenList[$ix]['lng']}>{$addrList[$ix]}</a>";
   } else if($screenList[$ix]['lat']) {
-    $screenList[$ix]['addr'] = "<a target=_blank href=//maps.google.com/?q={$screenList[$ix]['lat']},{$screenList[$ix]['lng']}>{$screenList[$ix]['lat']},{$screenList[$ix]['lng']}</a>";
+    $screenList[$ix]['addr'] = "<a target=_blank href=//maps.google.com/?q={$screenList[$ix]['lat']},{$screenList[$ix]['lng']}>{$screenList[$ix]['lat']}, {$screenList[$ix]['lng']}</a>";
   } else {
     $screenList[$ix]['addr'] = '<em>unknown</em>';
   }
@@ -49,15 +51,26 @@ for($ix = 0; $ix < count($screenList); $ix++){
     $screenList[$ix]['uptime'] = 'off';
   } 
 
-  $screenList[$ix]['last_local'] = "<span class=screen title=screen>" . time2delta($screenList[$ix]['last_seen']) . "</span>" . 
-    "<span class=car title=car>" . getcarlast($screenList[$ix]['car']) . "</span>";
+  $screen_last = time2delta($screenList[$ix]['last_seen']);
+  $car_last = getcarlast($screenList[$ix]['car']);
+  $screencolor = $carcolor = 'none';
+  if($car_last[0]) {
+    $color = "rgba(255,128,128," .  abs($screen_last[0] - $car_last[0]) / (7 * $DAY) . ")";
+    if($screen_last[0] > $car_last[0]) {
+      $screencolor = $color;
+    } else {
+      $carcolor = $color;
+    }
+  } 
+  $screenList[$ix]['last_local'] = "<span style=background:$screencolor class=screen-last title=screen>" . $screen_last[1] . "</span>" . 
+    "<span style=background:$carcolor class=car-last title='{$screenList[$ix]['car']}'>" . $car_last[1] . "</span>";
 
   $screenList[$ix]['first_local'] = date("Y-m-d H:i:s", $screenList[$ix]['first_local']);
 
   if (isset( $screenList[$ix]['last_loc']) ) {
     $tmp = strtotime(str_replace(' ', 'T', $screenList[$ix]["last_loc"] . 'Z'));
     $sec =  time() - $tmp;
-    $screenList[$ix]['diff_loc'] = sprintf("%dd %d:%02d:%02d", floor($sec / 60 / 60 / 24), floor($sec / 60 / 60) % 24, floor($sec/60) % 60, $sec %60);
+    $screenList[$ix]['diff_loc'] = sprintf("%dd %d:%02d:%02d", floor($sec / $DAY), floor($sec / 60 / 60) % 24, floor($sec/60) % 60, $sec %60);
     $screenList[$ix]['loc_sec'] = $sec;
   } else {
     $screenList[$ix]['loc_sec'] = 99999999999;
@@ -160,9 +173,12 @@ function split($str) {
     .edit { color: #999; cursor: pointer }
     .last { text-align: right }
     em { color: #555 }
+#commander {white-space: nowrap }
     .table td {padding: .75rem .2rem; }
     td.edit { white-space: nowrap; }
     .removed { opacity: 0.5;background:#ddd }
+.screen-last { display: block; white-space: nowrap; }
+.car-last { display: block;font-size: 80%;white-space: nowrap }
     .modal-body span {
       min-width: 7rem; 
       display: inline-block;
@@ -254,11 +270,13 @@ function split($str) {
         <? } ?>
       </tbody>
     </table>
+    <div id='commander'>
     <input size=4 id=field placeholder=field></input>
     <input id=value placeholder=value></input>
     <input id=command placeholder=command></input>
     <input id=args placeholder=args></input>
     <button onclick=scope_command()>do it</button>
+    </div>
    </div>
 
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
