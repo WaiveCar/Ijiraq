@@ -1318,6 +1318,9 @@ function kpi($opts) {
 function screen_history($param) {
   return db_all("select action,value,old,created_at from screen_history where screen_id=${param['id']} order by id desc");
 }
+function most_recent() {
+  return db_all("select name,max(created_at) from uptime_history where type='car' and action ='on' group by name;");
+}
   
 function infer() {
   $all = db_all("SELECT id,name,type,action,lat,lng,strftime('%s', created_at) as unix from uptime_history where action='on' order by id asc");
