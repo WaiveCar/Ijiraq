@@ -1582,10 +1582,14 @@ function slackie($where, $what) {
 
 function video($all) {
   $r = get_redis();
+  $state = $r->get('video');
   if(!empty($all['state'])) {
-    $r->set('video', $all['state'], ['nx', 'ex'=>10]);
+    $r->set('video', $all['state'], ['ex'=>15]);
+    if($state != $all['state']) {
+      error_log("Changing to " . $all['state']);
+    }
   } else {
-    $state = $r->get('video');
+    header("Content-Type: text");
     echo $state ? $state : 'no';
     exit;
   }
