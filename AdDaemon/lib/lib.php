@@ -1319,7 +1319,7 @@ function screen_history($param) {
   return db_all("select action,value,old,created_at from screen_history where screen_id=${param['id']} order by id desc");
 }
 function most_recent() {
-  return db_all("select name,max(created_at) as last from uptime_history where type='car' and action ='on' group by name;");
+  return db_all("select name,max(created_at) as last from uptime_history where type='car' group by name;");
 }
   
 function infer() {
