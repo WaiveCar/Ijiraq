@@ -163,9 +163,6 @@
     cb();
   };
 
-  self.clearmap = () => _map.clear();
-  self.removeShape = () => _map.removeShape();
-
   function geosave() {
     var coords = _map.save();
     // If we click on the map again we should show the updated coords
@@ -284,7 +281,7 @@
           <canvas id="triptych-edit" width="${640 * scale}" height="${225 * scale}">
         </div>
         <div class="d-flex justify-content-end mt-2">
-          <div class='date-chooose'>
+          <div class='date-choose'>
             <label for="start-date" class="mr-2">Start on</label><input class="ad-date start-date" id="start-date" type="date">
           </div>
           <div class="color-input">

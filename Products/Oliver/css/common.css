@@ -878,7 +878,6 @@ select.form-control:focus,
 .ad-date {
   border: 0;
   border-radius: 25px;
-  width: 30%;
   margin: 0rem 0.2rem;
 }
 
@@ -1072,8 +1071,9 @@ h4 {
   .subtitle {
     width: 80vw;
   }
-  .ad-date {
-    width: 40%;
+  .date-choose label {
+    margin-bottom: 0;
+    text-indent: .4rem;
   }
   .layout-options {
     display: block;
