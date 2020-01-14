@@ -155,8 +155,7 @@
     var center = currentSelection ? currentSelection[1] : [-118.33, 34.09];
     self._map = map({
       selectFirst: true,
-      draw: false,
-      resize: false,
+      move: true,
       zoom: 12.5,
       center,
     });
