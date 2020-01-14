@@ -23,15 +23,24 @@ window.map = function(opts) {
   //  
 
   opts = Object.assign({}, {
-    target: 'map',
-    center: [-118.3, 34.02],
+    // should objects be selectable?
     select: false,
+    // should the first object added be automatically selected?
     selectFirst: false,
-    zoom: 13,
-    typeSelect: 'type',
+    // can we draw on the map?
     draw: false,
+    // where we select the shapes from
+    typeSelect: 'type',
+    // can we resize the objects on the map?
     resize: false,
+    // can we move objects on the map?
     move: false,
+    // the dom id to attach the map to
+    target: 'map',
+    // the default center point
+    center: [-118.3, 34.02],
+    // the default zoom level
+    zoom: 13,
   }, opts || {});
 
   var _draw, 
@@ -39,14 +48,16 @@ window.map = function(opts) {
       _snap, 
       _featureMap = {},
       _id = 0,
-      _select;
+      _select,
+      _isFrst = true,
+      _map,
+      _map_params,
+	    _styleCache = {};
   var source = {};
   var dom = document.getElementById(opts.target);
-	var styleCache = {};
-  var isFirst = true;
 
   ['car','screen','bluedot','carpink'].forEach(row => {
-    styleCache[row] = new Style({
+    _styleCache[row] = new Style({
       image: new Icon({
         src: `${row}.png`
       })
@@ -100,7 +111,7 @@ window.map = function(opts) {
         var features = obj.get('features');
    			var size = features.length;
         if(size > 1) {
-          var style = styleCache[size];
+          var style = _styleCache[size];
           if (!style) {
             style = new Style({
               image: new CircleStyle({
@@ -116,11 +127,11 @@ window.map = function(opts) {
                 })
               })
             });
-            styleCache[size] = style;
+            _styleCache[size] = style;
           }
           return style;
         } else {
-          return styleCache[features[0].getProperties().icon];
+          return _styleCache[features[0].getProperties().icon];
         }
       }
 		});
@@ -165,11 +176,11 @@ window.map = function(opts) {
         geometry: new Point(fromLonLat(shape[1])),
       });
       myid = shape[2];
-      //feature.setStyle(styleCache.car);
+      //feature.setStyle(_styleCache.car);
     } else if(shape[0] === 'Location') {
       feature = new Feature({ geometry: new Point(fromLonLat(shape[1])) });
       myid = shape[2];
-      feature.setStyle(styleCache.bluedot);
+      feature.setStyle(_styleCache.bluedot);
     } else if(shape[0] === 'Line') {
       feature = new Feature({
         geometry: new MultiLineString(recurseFll(shape.slice(1)))
@@ -208,14 +219,14 @@ window.map = function(opts) {
     }
     draw.getSource().addFeature(feature);
 
-    if(opts.selectFirst && isFirst) {
+    if(opts.selectFirst && _isFirst) {
       _select.getFeatures().push(feature);
       _select.on('select', function(evt) {
         if(evt.selected.length == 0) {
           _select.getFeatures().push(feature);
         }
       });
-      isFirst = false;
+      _isFirst = false;
     }
     // the most common thing we'll want to do is 
     // move the object. BUT WE CAN'T PASS LAT/LNG
@@ -266,7 +277,7 @@ window.map = function(opts) {
   source.draw = new VectorSource();
   var draw = new VectorLayer({
     source: source.draw,
-    style: styleCache.car
+    style: _styleCache.car
   });
 
   if(opts.draw) {
@@ -288,7 +299,7 @@ window.map = function(opts) {
   _layers.push(draw);
 
   // eventually use geoip
-  var map_params =  {
+  _map_params =  {
     layers: _layers,
     target: opts.target,
     view: new View({
@@ -300,15 +311,15 @@ window.map = function(opts) {
   if(opts.move) {
     _select = new Select();
 
-    map_params.interactions =  defaultInteractions().extend([
+    _map_params.interactions =  defaultInteractions().extend([
       _select, 
       new Translate({ features: _select.getFeatures() })
     ]);
   } else if (opts.select) {
     _select = new Select({
-      style: styleCache.carpink
+      style: _styleCache.carpink
     });
-    map_params.interactions =  defaultInteractions().extend([
+    _map_params.interactions =  defaultInteractions().extend([
       _select
     ]);
   }
@@ -320,7 +331,7 @@ window.map = function(opts) {
    });
   }
 
-  var _map = new Map(map_params);
+  _map = new Map(_map_params);
 
   if(opts.draw) {
     _draw = new Draw({
@@ -342,14 +353,6 @@ window.map = function(opts) {
         _map.getView().setZoom(zoom);
       }
     },
-    _map,
-    _layers,
-    _featureMap,
-    clear,
-    removePoint,
-    removeShape,
-    remove,
-    move,
     fit: () => _map.getView().fit(_layers[1].getSource().getExtent()),
     ll: function(a) {
       return a.length ? recurseFll(a) : recurseFll(Array.from(arguments))
@@ -358,6 +361,14 @@ window.map = function(opts) {
       _cb[what].push(fn);
       return _cb;
     },
+    _map,
+    _layers,
+    _featureMap,
+    clear,
+    removePoint,
+    removeShape,
+    remove,
+    move,
     save,
     add,
     addOne,
