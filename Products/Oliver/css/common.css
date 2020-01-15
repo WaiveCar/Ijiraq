@@ -1071,6 +1071,9 @@ h4 {
   .subtitle {
     width: 80vw;
   }
+  .offset-top {
+    margin-top: 90px;
+  }
   .date-choose label {
     margin-bottom: 0;
     text-indent: .4rem;
