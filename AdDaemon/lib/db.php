@@ -562,6 +562,7 @@ $SCHEMA = [
 
  */
 $_db = false;
+$_pdo = false;
 function db_connect() {
   global $_db, $DBPATH;
   if(!$_db) {
@@ -575,6 +576,32 @@ function db_connect() {
     $_db->exec('PRAGMA journal_mode = wal;');
   }
   return $_db;
+}
+
+function pdo_connect() {
+  global $_pdo;
+  if(!$_pdo) {
+    $db_params = parse_ini_file('../secrets/db.ini');
+    $db_host = $db_params['host'];
+    $db   = 'yt';
+    $user = $db_params['user'];
+    $pass = $db_params['password'];
+    $charset = 'utf8mb4';
+
+    $dsn = "mysql:host=$db_host;dbname=$db;charset=utf8";//$charset";
+    $options = [
+      PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+      PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+      PDO::ATTR_EMULATE_PREPARES   => false,
+      PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8" 
+    ];
+    try {
+      $_pdo = new PDO($dsn, $user, $pass, $options);
+    } catch (\PDOException $e) {
+      throw new \PDOException($e->getMessage(), (int)$e->getCode());
+    }
+  }
+  return $_pdo;
 }
 
 function db_int($what) {
