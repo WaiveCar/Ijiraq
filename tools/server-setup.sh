@@ -9,6 +9,7 @@ OWNER=www-data
 deps() {
   sudo apt install -y apache2 curl zip unzip sqlite3\
     php$PHP php$PHP-xml php$PHP-sqlite3 php$PHP-mbstring php-curl php-intl\
+    php-redis redis-server \
     mariadb-server mariadb-client
 }
 dirs() {
