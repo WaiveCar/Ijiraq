@@ -869,6 +869,9 @@ function upload_s3($file) {
 
   $parts = explode('/',$file['type']);
   $ext = array_pop($parts);
+  if(!$ext || !strlen($ext)) {
+    $ext = 'png';
+  }
   $name = implode('.', [Uuid::uuid4()->toString(), $ext]);
 
   $s3 = new Aws\S3\S3Client([
