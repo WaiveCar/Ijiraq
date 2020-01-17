@@ -581,14 +581,9 @@ function db_connect() {
 function pdo_connect() {
   global $_pdo;
   if(!$_pdo) {
-    $db_params = parse_ini_file('../secrets/db.ini');
-    $db_host = $db_params['host'];
-    $db   = 'yt';
-    $user = $db_params['user'];
-    $pass = $db_params['password'];
     $charset = 'utf8mb4';
 
-    $dsn = "mysql:host=$db_host;dbname=$db;charset=utf8";//$charset";
+    $dsn = "mysql:host=localhost;dbname=ws;charset=utf8";
     $options = [
       PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
       PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -596,8 +591,9 @@ function pdo_connect() {
       PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8" 
     ];
     try {
-      $_pdo = new PDO($dsn, $user, $pass, $options);
+      $_pdo = new PDO($dsn, 'www-data', false, $options);
     } catch (\PDOException $e) {
+      error_log($e->getMessage() . (int)$e->getCode());
       throw new \PDOException($e->getMessage(), (int)$e->getCode());
     }
   }
