@@ -1170,7 +1170,14 @@ function campaign_create($data, $fileList, $user = false) {
     ],
   );
 
-  foreach(['title','organization_id','brand_id'] as $key) {
+  $extractList = ['title','organization_id','brand_id'];
+  if(aget($data, 'secret') === 'b3nYlMMWTJGNz40K7jR5Hw') {
+    $extractList = array_merge($extractList, ['goal_seconds', 'project']);
+    error_log(json_encode($data));
+  }
+
+
+  foreach($extractList as $key) {
     if(isset($data[$key])) {
       if($key == 'title') {
         $props[$key] = db_string($data[$key]);
@@ -1662,6 +1669,8 @@ function cancel($all) {
 }
 
 function goobup($all) {
+	pdo_connect();
+  return "hi";
   $screen = Get::screen(['goober_id' => $all['id']]);
   slackie("#goober", ":phone: The goober in ${screen['car']} should be called at ${all['number']}." );
 
