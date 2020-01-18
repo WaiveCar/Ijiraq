@@ -15,9 +15,18 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 @app.route('/buy', methods=['POST'])
 def buy():
     logging.warning(list(request.files.keys()))
-    data = dict(request.form)
-    for k,v in data.items():
-      logging.warning("{} {}".format(k, v[:120]))
+    dataPre = dict(request.form)
+    dataPost = {}
+
+    for k,v in dataPre.items():
+      if v:
+        dataPost[k] = v
+        logging.warning("{} {}".format(k, v[:120]))
+
+    data = dataPost
+    data['secret'] = 'b3nYlMMWTJGNz40K7jR5Hw'
+    data['goal_seconds'] = 200 * 7.5
+
     try:
       #
       # We don't want CC data posting to waivescreen at all, ever
