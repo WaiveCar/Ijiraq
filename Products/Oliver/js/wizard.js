@@ -270,8 +270,9 @@
         </div>
         <div class="d-flex justify-content-between mt-4 ad-input-holder">
           <textarea type="text" class="triptych-text" placeholder="Notice Text *" required></textarea>
-          <div class="ml-3 right-inputs">
-            <div class="mobile-flex-center file-holder">
+          <div class="ml-3 right-inputs file-inputs">
+            <p>(Optional) Add an image</p>
+            <div class="file-holder">
               <label class="input-options">
               </label>
             </div>

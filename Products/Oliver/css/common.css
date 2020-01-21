@@ -981,6 +981,16 @@ input:focus, textarea:focus {
 .right-inputs {
   width: 35%;
 }
+.file-inputs p {
+  margin-bottom: 0;
+  display: inline-block;
+}
+.file-inputs .file-holder {
+  display: inline-block;
+}
+.ad-input-holder {
+  margin-bottom: 1rem;
+}
 
 .info-holder {
   width: 100%;
@@ -1062,8 +1072,8 @@ h4 {
     display: flex;
     justify-content: center;
   }
-  .input-options {
-    width: 50%;
+  .ad-input-holder {
+    margin-bottom: 0.25rem;
   }
   .wizard-title {
     margin-top: 1rem;
