@@ -14,10 +14,19 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 @app.route('/buy', methods=['POST'])
 def buy():
-    data = request.form
     logging.warning(list(request.files.keys()))
-    for k,v in data.items():
-      logging.warning("{} {}".format(k, v[:20]))
+    dataPre = dict(request.form)
+    dataPost = {}
+
+    for k,v in dataPre.items():
+      if v:
+        dataPost[k] = v
+        logging.warning("{} {}".format(k, v[:120]))
+
+    data = dataPost
+    data['secret'] = 'b3nYlMMWTJGNz40K7jR5Hw'
+    data['goal_seconds'] = 200 * 7.5
+
     try:
       #
       # We don't want CC data posting to waivescreen at all, ever
@@ -44,8 +53,10 @@ def buy():
       # location is boost zone
       ad_id = post (
         'http://staging.waivescreen.com/api/campaign',
-        data=data
+        data=data,
+        files=request.files
       )
+      logging.debug(ad_id)
       logging.debug(ad_id.text)
 
       """
@@ -70,8 +81,8 @@ def buy():
       return jsonify({'ad_id': ad_id.text})
       
       return jsonify({
-          'ad_id': ad_id,
-          'email': receipt
+        'ad_id': ad_id,
+        'email': receipt
       })
 
     except Exception as e:

@@ -4,7 +4,7 @@
   let categories = ['promo', 'notice', 'other'];
   let initialState = {
     category: categories[0],
-    selectedLayout: 0,
+    selectedLayout: 1,
     backgroundColor: 'white',
     foregroundColor: 'black',
     preferredContact: 'email',
@@ -15,7 +15,7 @@
     canvasText: '',
     keywords: [],
     imageSrc: null,
-    sampleImageUsed: true,
+    sampleImageUsed: false,
     finalImageSrc: null,
     businessName: '',
     businessStreet: '',
@@ -39,6 +39,16 @@
     Object.assign(state, updateObj);
     localStorage.setItem('savedState', JSON.stringify(state));
   };
+  window.mod = function(key, value) {
+    var params = JSON.parse(localStorage['savedState']);
+    if(arguments.length == 1) {
+      delete params[key];
+    } else if(arguments.length == 2) {
+      params[key] = value;
+    }
+    localStorage.setItem('savedState', JSON.stringify(params));
+    console.log(params);
+  }
 
   window.selectCategory = function(category) {
     document
@@ -270,8 +280,9 @@
         </div>
         <div class="d-flex justify-content-between mt-4 ad-input-holder">
           <textarea type="text" class="triptych-text" placeholder="Notice Text *" required></textarea>
-          <div class="ml-3 right-inputs">
-            <div class="mobile-flex-center file-holder">
+          <div class="ml-3 right-inputs file-inputs">
+            <p class='removal'>(Optional) Add an image</p>
+            <div class="file-holder">
               <label class="input-options">
               </label>
             </div>

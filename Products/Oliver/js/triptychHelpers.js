@@ -77,6 +77,7 @@ function redraw() {
 function reset() {
   localStorage.removeItem('savedState');
   console.log(localStorage);
+  window.location = "https://olvr.io/notices/wizard/0";
 }
 function drawImage(e, state, isInit) {
   let layout = adTypes[state.category].layouts[state.selectedLayout];
@@ -191,7 +192,11 @@ function handleFileInput(layout, state) {
         reRenderText();
       };
       image.src = URL.createObjectURL(this.files[0]);
-      setState({imageSrc: image.src, sampleImageUsed: false});
+      setState({
+        selectedLayout: 0,
+        imageSrc: image.src, 
+        sampleImageUsed: false
+      });
     };
     let label = document.querySelector('.input-options');
     label.style.visibility = 'visible';
