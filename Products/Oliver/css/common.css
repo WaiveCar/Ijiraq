@@ -26,6 +26,9 @@ p b {
   color: #222;
 }
 
+button {
+  white-space: nowrap;
+}
 .color-input button.disabled {
   color: #aaa;
   background: rgba(194,194,194,0.1);
