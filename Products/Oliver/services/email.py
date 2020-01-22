@@ -1,6 +1,7 @@
 import os
 import requests
 from urllib.error import HTTPError
+from flask import render_template
 
 config = {
     'sender': 'Waive <support@waive.com>',
@@ -13,6 +14,18 @@ config = {
     'transport_name': 'mailgun',
     'domain': 'waive.com',
     'api_key': 'key-2804ba511f20c47a3c2dedcd36e87c92'
+  }
+
+def parser(which, user):
+  # first render the template
+  rendered = {}
+  for what in ['_header', '_footer', which]:
+    rendered[what] = render_template('templates/email/{}.html'.format(what), user=user)
+
+  return { 
+    'sms': rendered[which][0],
+    'subject': rendered[which][1],
+    'email': rendered['_header'] + rendered[which][2:] + rendered['_footer']
   }
 
 def send_message(recipient, subject, body):
@@ -31,41 +44,4 @@ def send_message(recipient, subject, body):
   except requests.exceptions.HTTPError as e: 
       raise e
   return response
-
-def send_receipt(recipient, ad_id):
-  return send_message(
-      recipient, 
-      "Your notice is scheduled, here's your receipt",
-      """
-        <div>
-          Ad: {}
-          Content to be added to email later
-        </div>
-      """.format(ad_id)
-  )
-
-def send_approval(recipient, ad_id):
-  return send_message(
-      recipient, 
-      'Your Oliver Posting Has Been Approved!', 
-      """
-        <div>
-          Ad: {}
-          Content to be added to email later
-        </div>
-      """.format(ad_id)
-  )
-  
-
-def send_rejection(recipient, ad_id):
-  return send_message(
-      recipient, 
-      'Your Oliver Posting Has Been Rejected.', 
-      """
-        <div>
-          Ad: {}
-          Content to be added to email later
-        </div>
-      """.format(ad_id)
-  )
 
