@@ -1,4 +1,13 @@
 <?
+
+
+// goober
+/*
+  } else if(array_search($func, ['available', 'unavailable', 'driving', 'finish', 'decline', 'accept', 'request', 'cancel']) !== false) {
+    post_return(
+      $func(array_merge(Get::screen($all['id']), ['kv' => $all]), $verb)
+    ); 
+ */
 function campaign_ces_create($data) {
   global $PLAYTIME, $DAY;
 

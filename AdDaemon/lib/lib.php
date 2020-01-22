@@ -5,7 +5,6 @@ use Aws\S3\S3Client;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use Twilio\Rest\Client;
-include("unused.php");
 
 $TWIL = [
   'num'  => '+18559248355',
@@ -1401,19 +1400,16 @@ function ignition_status($payload) {
   if(strpos(strtolower($car), 'csul') !== false) {
     return [];
   }
-  if(isset($payload['ignitionOn'])) {
-    $state = $payload['ignitionOn'];
-  } else {
+  if(!isset($payload['ignitionOn'])) {
     return error_log("Unable to find 'ignitionOn' in payload: " . json_encode($payload));
-  }
-  $state = db_string($state ? 'on' : 'off');
+  } 
+  $state = db_string($payload['ignitionOn'] ? 'on' : 'off');
 
-  if($car) {
-    $qstr = "select * from screen where car like '$car'";
-    $res = (db_connect())->querySingle($qstr, true);
-  } else {
+  if(!$car) {
     return error_log("Unable to find 'name' in payload: " . json_encode($payload));
   }
+  $qstr = "select * from screen where car like '$car'";
+  $res = (db_connect())->querySingle($qstr, true);
 
   db_insert('uptime_history', [
     'name' => db_string($car),
@@ -1423,66 +1419,19 @@ function ignition_status($payload) {
     'action' => $state
   ]);
 
-  if($res) {
-    $uid = aget($res, 'uid');
-  } else {
+  if(!$res) {
     return false;//error_log("Unable to find screen for $car");
   }
+  $uid = aget($res, 'uid');
 
   if($uid) {
     return db_update('screen', ['uid' => db_string($uid)], [
       'ignition_state' => $state,
       'ignition_time' => 'current_timestamp'
     ]);
-  } else {
-    return error_log("Could not find a uid in the result of ignition_status for $car: ($qstr) " . json_encode($res) );
   }
+  return error_log("Could not find a uid in the result of ignition_status for $car: ($qstr) " . json_encode($res) );
 }
-
-function getUser() {
-  if(isset($_SESSION['user_id'])) {
-    return Get::user($_SESSION['user_id']);
-  }
-}
-
-function me() {
-  if(isset($_SESSION['user'])) {
-    return $_SESSION['user'];
-  }
-}
-function signup($all) {
-  $organization = aget($all, 'organization');
-  $org_id = create('organization', ['name' => $organization]);
-  $all['organization_id'] = $org_id;
-  $all['role'] = 'Manager';
-  $user_id = create('user', $all);
-  if($user_id) {
-    $_SESSION['user'] = Get::user($user_id);
-  }
-  return $user_id;
-}
-
-function login($all) {
-  $who = aget($all, 'email');
-  if($who) {
-    $user = Get::user(['email' => $who]);
-    if ($user) {
-      if( password_verify($all['password'], $user['password'])) {
-        $_SESSION['user'] = $user;
-        return doSuccess($user);
-      } else {
-        return doError("Wrong password");
-      }
-    }
-  }
-  return doError("User $who not found");
-}
-
-function logout() {
-  session_destroy();
-}
-
-
 
 function slackie($where, $what) {
   $payload = [

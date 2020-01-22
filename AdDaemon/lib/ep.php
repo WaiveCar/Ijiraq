@@ -1,5 +1,6 @@
 <?
 include('lib.php');
+$handlerList = [];
 
 $func = $_REQUEST['_VxiXw3BaQ4WAQClBoAsNTg_func'];
 unset($_REQUEST['_VxiXw3BaQ4WAQClBoAsNTg_func']);
@@ -82,12 +83,9 @@ try {
     post_return(show('widget', array_merge(['type' => $type], $all)));
 
   } else if(array_search($func, [
-    'brands', 'goober', 'ces', 'organizations', 'attributions', 'users', 'widgets',
+    'brands', 'organizations', 'attributions', 'users', 'widgets',
     'jobs', 'sensor_history', 'campaigns', 'screens', 'tasks']) !== false) {
     $table = $func;
-    if($func !== 'ces') {
-      $table = rtrim($func, 's');
-    }
     $action = 'show';
 
     if($verb == 'POST' || $verb == 'PUT') {
@@ -98,7 +96,6 @@ try {
   else if(array_search($func, [
     'active_campaigns', 
     'campaign_history', 
-    'campaign_ces_create',
     'heatmap',
     'path',
     'car_history', 
@@ -119,20 +116,24 @@ try {
     'tag', 
     'video',
     'most_recent',
-    'goobup',
     'task_dump' 
   ]) !== false) { 
     post_return($func($all, $verb));
-  } else if(array_search($func, ['available', 'unavailable', 'driving', 'finish', 'decline', 'accept', 'request', 'cancel']) !== false) {
-    post_return(
-      $func(array_merge(Get::screen($all['id']), ['kv' => $all]), $verb)
-    ); 
   } else {
-    jemit([
-      'res' => false,
-      'data' => "$func not found"
-    ]);
-    error_log("$func called, does not exist");
+    $success = false;
+    foreach($handlerList as $handler) {
+      if($handler($func, $all, $verb)) {
+        $success = true;
+        break;
+      }
+    }
+    if(!$success) {
+      jemit([
+        'res' => false,
+        'data' => "$func not found"
+      ]);
+      error_log("$func called, does not exist");
+    }
   }
 } catch(Exception $ex) {
   jemit([
