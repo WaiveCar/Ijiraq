@@ -1,6 +1,6 @@
 <?
 
-function getUser() {
+function get_user() {
   if(isset($_SESSION['user_id'])) {
     return Get::user($_SESSION['user_id']);
   }
@@ -36,6 +36,12 @@ function login($all) {
     }
   }
   return doError("User $who not found");
+}
+
+function add_service($user, $service_obj) {
+}
+
+function get_service($user, $service_string) {
 }
 
 function logout() {

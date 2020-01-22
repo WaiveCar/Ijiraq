@@ -425,7 +425,7 @@ $SCHEMA = [
     'lng'        => 'float'
   ],
 
-  'social' => [
+  'service' => [
     'id'         => 'integer primary key autoincrement',
     'user_id'    => 'integer',
     'service'    => 'text',
