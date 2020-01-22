@@ -166,16 +166,6 @@ $SCHEMA = [
     'ignition_time'   => 'datetime'
   ],
 
-  'goober' => [
-    'id'            => 'integer primary key autoincrement',
-    'screen_id'     => 'integer',
-    'user_id'       => 'text',
-    'lat'           => 'float default null',
-    'lng'           => 'float default null',
-    'phone'         => 'text',
-    'created_at'    => 'datetime default current_timestamp',
-  ],
-
   // revenue historicals
   'revenue_history' => [
     'id'            => 'integer primary key autoincrement',
@@ -184,58 +174,10 @@ $SCHEMA = [
     'created_at'    => 'datetime default current_timestamp',
   ],
 
-  'social' => [
-    'id'         => 'integer primary key autoincrement',
-    'brand_id'   => 'integer',
-    'service'    => 'text',
-    'name'       => 'text',
-    'token'      => 'text',
-    'created_at' => 'datetime default current_timestamp',
-  ],
-
-  // there's a more generic way to do this that
-  // we should totally implement when the time comes.
-  'contact' => [
-    'id'         => 'integer primary key autoincrement',
-    'name'       => 'text',
-    'twitter'    => 'text',
-    'instagram'  => 'text',
-    'facebook'   => 'text',
-    'email'      => 'text',
-    'website'    => 'text',
-    'phone'      => 'text',
-    'location'   => 'text',
-    'lat'        => 'float',
-    'lng'        => 'float'
-  ],
-
-  'user' => [
-    'id'         => 'integer primary key autoincrement',
-    'name'       => 'text',
-    'password'   => 'text',
-    'image'      => 'text',
-    'contact_id' => 'integer',
-    'auto_approve' => 'boolean default false',
-    'title'      => 'text',
-    'organization_id'     => 'integer',
-    'brand_id'   => 'integer',
-    'role'       => 'text', // either admin/manager/viewer
-    'created_at' => 'datetime default current_timestamp',
-  ],
-
-  'ces' =>  [
-    'id'          => 'integer primary key autoincrement',
-    'phone'       => 'text',
-    'message'     => 'text',
-    'campaign_id' => 'integer',
-    'created_at'  => 'datetime default current_timestamp',
-  ],
-
   //
   // consider: potentially create a second table for "staging" campaigns
   // that aren't active as opposed to relying on a boolean
   // in this table below
-  //
   //
   'campaign' => [
     'id'          => 'integer primary key autoincrement',
@@ -243,6 +185,7 @@ $SCHEMA = [
     'ref_id'      => 'text',
     'contact_id'  => 'integer',
     'brand_id'    => 'integer',
+    'user_id'     => 'integer',
     'organization_id'    => 'integer',
     'order_id'    => 'integer',
 
@@ -466,9 +409,77 @@ $SCHEMA = [
     'lng'         => 'float default null',
     'created_at'  => 'datetime default current_timestamp',
   ],
+
+  // accounting, to be moved later.
+  'contact' => [
+    'id'         => 'integer primary key autoincrement',
+    'name'       => 'text',
+    'twitter'    => 'text',
+    'instagram'  => 'text',
+    'facebook'   => 'text',
+    'email'      => 'text',
+    'website'    => 'text',
+    'phone'      => 'text',
+    'location'   => 'text',
+    'lat'        => 'float',
+    'lng'        => 'float'
+  ],
+
+  'social' => [
+    'id'         => 'integer primary key autoincrement',
+    'user_id'    => 'integer',
+    'service'    => 'text',
+    'username'   => 'text',
+    'token'      => 'text',
+    'created_at' => 'datetime default current_timestamp',
+  ],
+
+  'user' => [
+    'id'         => 'integer primary key autoincrement',
+    'uuid'       => 'text',
+    'name'       => 'text',
+    'password'   => 'text',
+    'image'      => 'text',
+    'contact_id' => 'integer',
+    'auto_approve' => 'boolean default false',
+    'title'      => 'text',
+    'organization_id'     => 'integer',
+    'brand_id'   => 'integer',
+    'role'       => 'text', // either admin/manager/viewer
+    'created_at' => 'datetime default current_timestamp',
+  ],
+
+  'order' => [
+    'id'         => 'integer primary key autoincrement',
+    'user_id'    => 'integer',
+    'campaign_id'=> 'integer',
+    'charge_id'  => 'text',
+    'status'     => 'text',
+    'amount'     => 'integer',
+    'refunded'   => 'boolean default false',
+    'ref_id'     => 'integer',
+    'created_at' => 'datetime default current_timestamp',
+  ],
 ];
 /*
+
+  'goober' => [
+    'id'            => 'integer primary key autoincrement',
+    'screen_id'     => 'integer',
+    'user_id'       => 'text',
+    'lat'           => 'float default null',
+    'lng'           => 'float default null',
+    'phone'         => 'text',
+    'created_at'    => 'datetime default current_timestamp',
+  ],
  
+  'ces' =>  [
+    'id'          => 'integer primary key autoincrement',
+    'phone'       => 'text',
+    'message'     => 'text',
+    'campaign_id' => 'integer',
+    'created_at'  => 'datetime default current_timestamp',
+  ],
  // adcast related
   'attribution' => [
     'id'         => 'integer primary key autoincrement',
@@ -579,11 +590,12 @@ function db_connect() {
 }
 
 function pdo_connect() {
-  global $_pdo;
+  global $_pdo, $DBPATH;
   if(!$_pdo) {
     $charset = 'utf8mb4';
 
-    $dsn = "mysql:host=localhost;dbname=ws;charset=utf8";
+    //$dsn = "mysql:host=localhost;dbname=ws;charset=utf8";
+    $dsn = "sqlite:$DBPATH";
     $options = [
       PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
       PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
