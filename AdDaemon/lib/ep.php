@@ -75,6 +75,7 @@ try {
     jemit(screen_edit($all));
   } else if(array_search($func, ['users', 'jobs', 'sensor_history', 'campaigns', 'screens', 'tasks']) !== false) {
     $table = $func;
+    $table = rtrim($func, 's');
     $action = 'show';
 
     if($verb == 'POST' || $verb == 'PUT') {
