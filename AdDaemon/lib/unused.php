@@ -1,6 +1,14 @@
 <?
 
 
+// widget
+/*
+  } else if($func == 'feed') {
+    jemit(json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "./reef-demo/APIWidget/widgetfiles/parsed_widget_data.json")));
+  } else if(array_search($func, [ 'apps', 'tickers' ]) !== false ) {
+    $type = rtrim($func, 's');
+    post_return(show('widget', array_merge(['type' => $type], $all)));
+
 // goober
 /*
   } else if(array_search($func, ['available', 'unavailable', 'driving', 'finish', 'decline', 'accept', 'request', 'cancel']) !== false) {

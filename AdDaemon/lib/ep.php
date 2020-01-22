@@ -17,9 +17,8 @@ function post_return($res) {
   if(isset($_GET['next'])) {
     header('Location: ' . $_GET['next']);
     exit;
-  } else {
-    jemit($res);
-  }
+  } 
+  jemit($res);
 }
 
 try {
@@ -35,8 +34,6 @@ try {
     jemit(doSuccess($_SESSION));
   } else if($func == 'location' && $verb == 'GET') {
     echo(file_get_contents('http://basic.waivecar.com/location.php?' . http_build_query($all)) );
-  } else if($func == 'feed') {
-    jemit(json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "./reef-demo/APIWidget/widgetfiles/parsed_widget_data.json")));
   } else if($func == 'instagram') {
     if(isset($all['code'])) {
       $token = curldo('https://api.instagram.com/oauth/access_token', [
@@ -78,13 +75,7 @@ try {
   }
   else if($func == 'screens' && ($verb == 'POST' || $verb == 'PUT')) {
     jemit(screen_edit($all));
-  } else if(array_search($func, [ 'apps', 'tickers' ]) !== false ) {
-    $type = rtrim($func, 's');
-    post_return(show('widget', array_merge(['type' => $type], $all)));
-
-  } else if(array_search($func, [
-    'brands', 'organizations', 'attributions', 'users', 'widgets',
-    'jobs', 'sensor_history', 'campaigns', 'screens', 'tasks']) !== false) {
+  } else if(array_search($func, ['users', 'jobs', 'sensor_history', 'campaigns', 'screens', 'tasks']) !== false) {
     $table = $func;
     $action = 'show';
 
