@@ -42,6 +42,7 @@ def send_message(recipient, subject, body):
   try:
     response.raise_for_status()
   except requests.exceptions.HTTPError as e: 
-      raise e
+    raise e
   return response
+
 
