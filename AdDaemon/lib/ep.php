@@ -1,6 +1,8 @@
 <?
-include('lib.php');
 $handlerList = [];
+
+include('lib.php');
+include('accounting.php');
 
 $func = $_REQUEST['_VxiXw3BaQ4WAQClBoAsNTg_func'];
 unset($_REQUEST['_VxiXw3BaQ4WAQClBoAsNTg_func']);
@@ -26,10 +28,6 @@ try {
     $list = array_values($_FILES);
     move_uploaded_file(aget($list, '0.tmp_name'), "/var/states/" . aget($list, '0.name'));
     jemit(doSuccess('uploaded'));
-  } else if($func == 'me.css') {
-    emit_css();
-  } else if($func == 'me.js') {
-    emit_js();
   } else if($func == 'me') {
     jemit(doSuccess($_SESSION));
   } else if($func == 'location' && $verb == 'GET') {
@@ -105,7 +103,6 @@ try {
     'signup',
     'sow', 
     'tag', 
-    'video',
     'most_recent',
     'task_dump' 
   ]) !== false) { 

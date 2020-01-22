@@ -16,6 +16,21 @@
       $func(array_merge(Get::screen($all['id']), ['kv' => $all]), $verb)
     ); 
  */
+// this was used for CES
+function video($all) {
+  $r = get_redis();
+  $state = $r->get('video');
+  if(!empty($all['state'])) {
+    $r->set('video', $all['state'], ['ex'=>15]);
+    if($state != $all['state']) {
+      error_log("Changing to " . $all['state']);
+    }
+  } else {
+    header("Content-Type: text");
+    echo $state ? $state : 'no';
+    exit;
+  }
+}
 function campaign_ces_create($data) {
   global $PLAYTIME, $DAY;
 

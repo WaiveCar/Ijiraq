@@ -15,8 +15,6 @@ function me() {
 function signup($all) {
   $organization = aget($all, 'organization');
   $org_id = create('organization', ['name' => $organization]);
-  $all['organization_id'] = $org_id;
-  $all['role'] = 'Manager';
   $user_id = create('user', $all);
   if($user_id) {
     $_SESSION['user'] = Get::user($user_id);

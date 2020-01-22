@@ -1434,26 +1434,9 @@ function ignition_status($payload) {
 }
 
 function slackie($where, $what) {
-  $payload = [
-    'channel' => $where,
-    'text' => $what
-  ];
-  $res = curldo("https://hooks.slack.com/services/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", $payload, ['verb' => 'post', 'json' => true]);
-  return $res;
-}
-
-function video($all) {
-  $r = get_redis();
-  $state = $r->get('video');
-  if(!empty($all['state'])) {
-    $r->set('video', $all['state'], ['ex'=>15]);
-    if($state != $all['state']) {
-      error_log("Changing to " . $all['state']);
-    }
-  } else {
-    header("Content-Type: text");
-    echo $state ? $state : 'no';
-    exit;
-  }
+  return curldo("https://hooks.slack.com/services/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", 
+    ['channel' => $where, 'text' => $what],
+    ['verb' => 'post', 'json' => true]
+  );
 }
 
