@@ -630,12 +630,10 @@ function create_job($campaignId, $screenId) {
 }
 
 function update_job($jobId, $completed_seconds) {
-  if($jobId) {
-    return db_update('job', $jobId, [
-      'completed_seconds' => $completed_seconds,
-      'job_end' => 'current_timestamp'
-    ]);
-  } 
+  return db_update('job', $jobId, [
+    'completed_seconds' => $completed_seconds,
+    'job_end' => 'current_timestamp'
+  ]);
 }
 
 function task_master($screen) {
@@ -737,7 +735,7 @@ function inject_priority($job, $screen, $campaign) {
 }
 
 function sow($payload) {
-  global $SCHEMA, $screen_dbg_id;
+  global $screen_dbg_id;
 
   if(!isset($payload['uid'])) {
     return doError("UID needs to be set before continuing");
@@ -758,14 +756,9 @@ function sow($payload) {
     error_log(json_encode($payload));
   }
   foreach($jobList as $job) {
-
-    // this is the old system ... these machines
-    // should just upgrade.
     $job_id = aget($job, 'job');
     // error_log(implode(' ', array_keys($job)));
-    if(aget($job, 'id')) {
-      // error_log("need to upgrade: {$payload['uid']}");
-    } else if($job_id) {
+    if($job_id) {
       if (! update_job($job_id, $job['done']) ) {
         error_log("could not process job: " . json_encode($job));
       } else if(array_key_exists('location', $job)) {
