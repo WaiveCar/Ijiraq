@@ -13,3 +13,7 @@ Variables defined:
   $play_count     : how many times the ad played (aggregate)
   $date_start     : human readable start of campaign
   $date_end       : human readable end of campaign
+
+  $order          : Their full order record
+  $user           : Their full user record
+  $campaign       : Their full campaign record

@@ -1,0 +1,3 @@
+Your campaign just played in your boost zone. That puts your total play count at $play_count. Check your dashboard to see the stats! <?= $campaign_link ?>
+Your campaign just played in your boost zone. 
+That puts your total play count at <?= $play_count ?>. Check your dashboard to see the stats! <?= $campaign_link ?>

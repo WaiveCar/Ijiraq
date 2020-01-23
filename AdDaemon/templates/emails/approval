@@ -1,3 +1,3 @@
 Our professional reviewers found no additional improvements. Your notice is ready to go live!
 Our professional reviewers found no additional improvements. Your notice is ready to go live!
-Thanks again for using olvr. Your notice will start playing on $start_date.
+Thanks again for using olvr. Your notice will start playing on <?= $start_date ?>.
