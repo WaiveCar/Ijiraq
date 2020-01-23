@@ -726,7 +726,7 @@ function update_campaign_completed($id) {
         select sum(completed_seconds) from job where campaign_id=$id
       ) where id=$id and is_default=0");
   }
-  error_log("Not updating an invalid campaign: $id");
+  error_log("Not updating an invalid campaign.");
 }
   
 function inject_priority($job, $screen, $campaign) {
@@ -788,11 +788,7 @@ function sow($payload) {
   // Make sure we update our grand totals on a per campaign basis when it comes in.
   $uniqueCampaignList = array_unique($campaignsToUpdateList);
   foreach($uniqueCampaignList as $campaign_id) {
-    if($campaign_id) {
-      update_campaign_completed($campaign_id);
-    } else {
-      error_log("Couldn't update campaign");
-    }
+    update_campaign_completed($campaign_id);
   }
   
   // --------
@@ -1067,6 +1063,8 @@ function circle($lng = -118.390412, $lat = 33.999819, $radius = 3500) {
 function campaign_create($data, $fileList, $user = false) {
   global $DAY, $PLAYTIME;
 
+  $duration_seconds = 0;
+
   $props = array_merge(circle(),
     [
       'project' => db_string('LA'),
@@ -1099,26 +1097,23 @@ function campaign_create($data, $fileList, $user = false) {
     $ref_id = db_string(aget($data, 'ref_id'));
 
     if($ref_id) {
-      $campaign = Get::campaign(['ref_id' => $ref_id]);
+      $asset = aget($data, 'asset');
       $props['ref_id'] = $ref_id;
-      $props['asset'] = [aget($data, 'asset')];
+      $props['asset'] = [$asset];
+      $props['asset_meta'][] = ['duration' => $PLAYTIME, 'url' => $name];
+      $duration_seconds += $PLAYTIME;
     }
 
-    if(!$campaign) {
-      $campaign_id = db_insert( 'campaign', $props );
-    } else {
-      error_log("Don't know how to proceed");
-      //$campaign_id = $campaign['id'];
-      //db_update('campaign', $campaign_id, ['asset' => $asset]);
-    }
-    return doSuccess(Get::campaign($campaign_id));
-  }
+  } else {
 
-  foreach($fileList as $file) {
-    $name = upload_s3($file);
-    $props['asset'][] = $name;
-    $props['asset_meta'][] = ['url' => $name];
+    foreach($fileList as $file) {
+      $name = upload_s3($file);
+      $props['asset'][] = $name;
+      $props['asset_meta'][] = ['duration' => $PLAYTIME, 'url' => $name];
+      $duration_seconds += $PLAYTIME;
+    }
   }
+  $props['duration_seconds'] = $duration_seconds;
 
   return db_insert('campaign', $props);
 }

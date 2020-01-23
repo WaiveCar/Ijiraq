@@ -219,7 +219,6 @@ $SCHEMA = [
 
     // TODO: 2020-01-02
     'duration_seconds' => 'integer',
-    'play_count' => 'integer default 0',
 
     // 
     // This is a cheap classification system
