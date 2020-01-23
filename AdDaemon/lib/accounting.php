@@ -1,4 +1,13 @@
 <?
+$TWIL = [
+  'num'  => '+18559248355',
+  'sid'  => 'ACa061f336122514af845ea65fb1e6c2bb',
+  'token'=> 'b39d95c162c1e9ad1893acbb61af8bb4'
+];
+
+require $_SERVER['DOCUMENT_ROOT'] .  'AdDaemon/vendor/autoload.php';
+use Twilio\Rest\Client;
+include_once("lib.php");
 
 function get_user() {
   if(isset($_SESSION['user_id'])) {
@@ -48,40 +57,68 @@ function logout() {
   session_destroy();
 }
 
-$EMAIL= [
-  'sender' => 'Waive <support@waive.com>',
-  'domain' => 'waive.com',
-  'api_key'=> 'key-2804ba511f20c47a3c2dedcd36e87c92'
-]
+function text_rando($number, $message) {
+  global $TWIL;
+  $client = new Client($TWIL['sid'], $TWIL['token']);
+  try {
+    $client->messages->create($number, [ 
+      'from' => $TWIL['num'], 
+      'body' => $message
+    ]);
+  } catch(Exception  $e) {
+    error_log($e);
+  }
+}
 
-def parser(which, user):
-  # first render the template
-  rendered = {}
-  for what in ['_header', '_footer', which]:
-    rendered[what] = render_template('templates/email/{}.html'.format(what), user=user)
+function render($M5YFgsLGQian24eTfLEQIA_template, $opts) {
+  extract($opts);
+  ob_start();
+    include("{$_SERVER['DOCUMENT_ROOT']}AdDaemon/templates/email/$M5YFgsLGQian24eTfLEQIA_template.html");
+    $M5YFgsLGQian24eTfLEQIA_res = trim(ob_get_contents());
+  ob_end_clean();
+  return $M5YFgsLGQian24eTfLEQIA_res;
+}
 
-  return { 
-    'sms': rendered[which][0],
-    'subject': rendered[which][1],
-    'email': rendered['_header'] + rendered[which][2:] + rendered['_footer']
+function parser($user, $template) {
+  $rendered = [];
+
+  foreach(['_header', '_footer', $template] as $what) {
+    $rendered[$what] = render($what, $user);
   }
 
-def send_message(recipient, subject, body):
-  response = requests.post(
-    'https://api.mailgun.net/v3/{}/messages'.format(config['domain']),
-    auth=("api", config['api_key']),
-    data={
-      'from': config['sender'],
-      'to': [config['recipient'] if 'recipient' in config else recipient],
-      'subject': subject,
-      'html': body
-    }
-  )
-  try:
-    response.raise_for_status()
-  except requests.exceptions.HTTPError as e: 
-    raise e
-  return response
+  $rendered[$template] = explode('\n', $rendered[$template]);
+
+  return [
+    'sms'     => $rendered[$template][0],
+    'subject' => $rendered[$template][1],
+    'email'   => $rendered['_header'] + array_slice($rendered[$template], 2) + $rendered['_footer']
+  ];
+}
+
+function send_message($user, $template) {
+  $EMAIL= [
+    'sender' => 'Waive <support@waive.com>',
+    'api_key'=> 'key-2804ba511f20c47a3c2dedcd36e87c92'
+  ];
+
+  $stuff = parser($user, $template);
+  text_rando($user['number'], $stuff['sms']);
+
+  $res = curldo(
+    'https://api.mailgun.net/v3/waive.com/messages', [
+      'from'    => $EMAIL['sender']
+      'to'      => $user['email'],
+      'subject' => $stuff['subject'],
+      'html'    => $stuff['email']
+    ], [
+      'auth' => [
+        'user' => 'api', 
+        'password' => $EMAIL['api_key']
+      ],
+      'verb' => 'post', 
+      'json' => true
+    ]
+  );
 
 
 

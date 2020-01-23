@@ -4,13 +4,6 @@ require $_SERVER['DOCUMENT_ROOT'] .  'AdDaemon/vendor/autoload.php';
 use Aws\S3\S3Client;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
-use Twilio\Rest\Client;
-
-$TWIL = [
-  'num'  => '+18559248355',
-  'sid'  => 'ACa061f336122514af845ea65fb1e6c2bb',
-  'token'=> 'b39d95c162c1e9ad1893acbb61af8bb4'
-];
 
 $mypath = $_SERVER['DOCUMENT_ROOT'] . 'AdDaemon/lib/';
 include_once($mypath . 'db.php');
@@ -167,19 +160,6 @@ function get_redis() {
 function pub($what) {
   $r = get_redis();
   $r->publish('goober', json_encode($what));
-}
-
-function text_rando($number, $message) {
-  global $TWIL;
-  $client = new Client($TWIL['sid'], $TWIL['token']);
-  try {
-    $client->messages->create($number, [ 
-      'from' => $TWIL['num'], 
-      'body' => $message
-    ]);
-  } catch(Exception  $e) {
-    error_log($e);
-  }
 }
 
 function create_screen($uid, $data = []) {
@@ -825,6 +805,10 @@ function curldo($url, $params = false, $opts = []) {
 
   if($verb === 'POST') {
     curl_setopt($ch, CURLOPT_POST, 1);
+  }
+
+  if(isset($opts['auth'])) {
+    curl_setopt($ch, CURLOPT_USERPWD, implode(':', [aget($opts, 'auth.user'), aget($opts, 'auth.password')]));
   }
 
   curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
