@@ -614,6 +614,17 @@ function pdo_connect() {
   return $_pdo;
 }
 
+$_redis = false;
+function get_redis() {
+  global $_redis;
+  if(!$_redis) {
+    $_redis = new Redis();
+    $_redis->connect('127.0.0.1', 6379);
+  }
+  return $_redis;
+}
+
+
 function db_int($what) {
   return intval($what);
 }

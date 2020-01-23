@@ -25,6 +25,104 @@ $DEFAULT_CAMPAIGN_MAP = [
 // Play time in seconds of one ad.
 $PLAYTIME = 7.5;
 
+function curldo($url, $params = false, $opts = []) {
+  $verb = strtoupper(isset($opts['verb']) ? $opts['verb'] : 'GET');
+
+  $ch = curl_init();
+
+  $header = [];
+    
+  if($verb !== 'GET') {
+    if(!isset($opts['isFile'])) {
+      if(!$params) {
+        $params = [];
+      }
+      if(isset($opts['json'])) {
+        $params = json_encode($params);
+        $header[] = 'Content-Type: application/json';
+      } else {
+        $params = http_build_query($params);
+      }
+    } else {
+      $header[] = 'Content-Type: multipart/form-data';
+    }
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $params);  
+    // $header[] = 'Content-Length: ' . strlen($data_string);
+  }
+
+  if($verb === 'POST') {
+    curl_setopt($ch, CURLOPT_POST, 1);
+  }
+
+  if(isset($opts['auth'])) {
+    curl_setopt($ch, CURLOPT_USERPWD, implode(':', [aget($opts, 'auth.user'), aget($opts, 'auth.password')]));
+  }
+
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $verb);  
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+  $res = curl_exec($ch);
+  
+  if(isset($opts['log'])) {
+    $tolog = json_encode([
+      'verb' => $verb,
+      'header' => $header,
+      'url' => $url,
+      'params' => $params,
+      'res' => $res
+    ]);
+    //var_dump(['>>>', curl_getinfo ($ch), json_decode($tolog, true)]);
+
+    error_log($tolog);
+  }
+
+  if(isset($opts['raw'])) {
+    return $res;
+  }
+  $resJSON = @json_decode($res, true);
+  if($resJSON) {
+    return $resJSON;
+  }
+  return $res;
+}
+function upload_s3($file) {
+  // lol we deploy this line of code with every screen. what awesome.
+  $credentials = new Aws\Credentials\Credentials('AKIAIL6YHEU5IWFSHELQ', 'q7Opcl3BSveH8TU9MR1W27pWuczhy16DqRg3asAd');
+
+  // this means there was an error uploading the file
+  // currently we'll let this routine fail and then hit
+  // the error log
+  if(empty($file['tmp_name'])) {}
+
+  $parts = explode('/',$file['type']);
+  $ext = array_pop($parts);
+  if(!$ext || !strlen($ext)) {
+    $ext = 'png';
+  }
+  $name = implode('.', [Uuid::uuid4()->toString(), $ext]);
+
+  $s3 = new Aws\S3\S3Client([
+    'version'     => 'latest',
+    'region'      => 'us-east-1',
+    'credentials' => $credentials
+  ]);
+  try {
+    $res = $s3->putObject([
+      'Bucket' => 'waivecar-prod',
+      'Key'    => $name,
+      'Body'   => fopen($file['tmp_name'], 'r'),
+      'ACL'    => 'public-read',
+    ]);
+  } catch (Aws\S3\Exception\S3Exception $e) {
+    throw new Exception("$file failed to upload");
+  }
+  // see https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-s3-2006-03-01.html#putobject
+  return $name;
+}
+
 function mapBy($obj, $key) {
   $res = [];
   foreach($obj as $row) {
@@ -143,17 +241,6 @@ function distance($pos1, $pos2) {
   $dist = rad2deg($dist);
   // meters
   return $dist * 60 * 1397.60312636;
-}
-
-
-$_redis = false;
-function get_redis() {
-  global $_redis;
-  if(!$_redis) {
-    $_redis = new Redis();
-    $_redis->connect('127.0.0.1', 6379);
-  }
-  return $_redis;
 }
 
 
@@ -293,15 +380,14 @@ function command($payload) {
   $value_raw = aget($payload, 'value');
   $command = aget($payload, 'command');
 
-  if (in_array($field_raw, $scope_whitelist)) {
-    $value = db_string($value_raw);
-    $idList = array_map(
-      function($row) { return $row['id']; }, 
-      db_all("select id from screen where $field_raw = $value and active = true")
-    );
-  } else {
+  if (!in_array($field_raw, $scope_whitelist)) {
     return doError("Scope is wrong. Try: " . implode(', ', $scope_whitelist));
   }
+  $value = db_string($value_raw);
+  $idList = array_map(
+    function($row) { return $row['id']; }, 
+    db_all("select id from screen where $field_raw = $value and active = true")
+  );
 
   if(count($idList) == 0) {
     return doError("No screens match query");
@@ -778,104 +864,6 @@ function sow($payload) {
   return $server_response; 
 }
 
-function curldo($url, $params = false, $opts = []) {
-  $verb = strtoupper(isset($opts['verb']) ? $opts['verb'] : 'GET');
-
-  $ch = curl_init();
-
-  $header = [];
-    
-  if($verb !== 'GET') {
-    if(!isset($opts['isFile'])) {
-      if(!$params) {
-        $params = [];
-      }
-      if(isset($opts['json'])) {
-        $params = json_encode($params);
-        $header[] = 'Content-Type: application/json';
-      } else {
-        $params = http_build_query($params);
-      }
-    } else {
-      $header[] = 'Content-Type: multipart/form-data';
-    }
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $params);  
-    // $header[] = 'Content-Length: ' . strlen($data_string);
-  }
-
-  if($verb === 'POST') {
-    curl_setopt($ch, CURLOPT_POST, 1);
-  }
-
-  if(isset($opts['auth'])) {
-    curl_setopt($ch, CURLOPT_USERPWD, implode(':', [aget($opts, 'auth.user'), aget($opts, 'auth.password')]));
-  }
-
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $verb);  
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-  $res = curl_exec($ch);
-  
-  if(isset($opts['log'])) {
-    $tolog = json_encode([
-      'verb' => $verb,
-      'header' => $header,
-      'url' => $url,
-      'params' => $params,
-      'res' => $res
-    ]);
-    //var_dump(['>>>', curl_getinfo ($ch), json_decode($tolog, true)]);
-
-    error_log($tolog);
-  }
-
-  if(isset($opts['raw'])) {
-    return $res;
-  }
-  $resJSON = @json_decode($res, true);
-  if($resJSON) {
-    return $resJSON;
-  }
-  return $res;
-}
-
-function upload_s3($file) {
-  // lol we deploy this line of code with every screen. what awesome.
-  $credentials = new Aws\Credentials\Credentials('AKIAIL6YHEU5IWFSHELQ', 'q7Opcl3BSveH8TU9MR1W27pWuczhy16DqRg3asAd');
-
-  // this means there was an error uploading the file
-  // currently we'll let this routine fail and then hit
-  // the error log
-  if(empty($file['tmp_name'])) {}
-
-  $parts = explode('/',$file['type']);
-  $ext = array_pop($parts);
-  if(!$ext || !strlen($ext)) {
-    $ext = 'png';
-  }
-  $name = implode('.', [Uuid::uuid4()->toString(), $ext]);
-
-  $s3 = new Aws\S3\S3Client([
-    'version'     => 'latest',
-    'region'      => 'us-east-1',
-    'credentials' => $credentials
-  ]);
-  try {
-    $res = $s3->putObject([
-      'Bucket' => 'waivecar-prod',
-      'Key'    => $name,
-      'Body'   => fopen($file['tmp_name'], 'r'),
-      'ACL'    => 'public-read',
-    ]);
-  } catch (Aws\S3\Exception\S3Exception $e) {
-    throw new Exception("$file failed to upload");
-  }
-  // see https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-s3-2006-03-01.html#putobject
-  return $name;
-}
 
 function feature_diff_recurse($a1, $a2, $key_prepend='') {
   $r = [];
