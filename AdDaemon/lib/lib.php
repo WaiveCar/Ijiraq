@@ -1067,55 +1067,38 @@ function campaign_create($data, $fileList, $user = false) {
 
   $props = array_merge(circle(),
     [
-      'project' => db_string('LA'),
+      'project' => 'LA',
       'start_time' => db_date(time()),
       'goal_seconds' => 240,
-      'end_time' => db_date(time() + $DAY * 7),
-      'asset' => [],
+      'end_time' => db_date(time() + $DAY * 4),
+      'asset_meta' => [],
     ],
   );
 
-  $extractList = ['title','organization_id','brand_id'];
-  if(aget($data, 'secret') === 'b3nYlMMWTJGNz40K7jR5Hw') {
-    $extractList = array_merge($extractList, ['goal_seconds', 'project']);
-    error_log(json_encode($data));
-  }
-
+  $extractList = [
+    'start_time','end_time',
+    'ref_id','title','organization_id','brand_id','goal_seconds','project'];
 
   foreach($extractList as $key) {
     if(isset($data[$key])) {
-      if($key == 'title') {
-        $props[$key] = db_string($data[$key]);
-      } else {
-        $props[$key] = $data[$key];
-      }
+      $props[$key] = $data[$key];
     }
   }
 
-  # This means we do #141
-  if(aget($data, 'secret') === 'b3nYlMMWTJGNz40K7jR5Hw') {
-    $ref_id = db_string(aget($data, 'ref_id'));
+  foreach(aget($data, 'asset', []) as $asset) {
+    $asset['duration'] = aget($asset, 'duration', $PLAYTIME);
+    $props['asset_meta'][] = $asset;
+    $duration_seconds += $asset['duration'];
+  }
 
-    if($ref_id) {
-      $asset = aget($data, 'asset');
-      $props['ref_id'] = $ref_id;
-      $props['asset'] = [$asset];
-      $props['asset_meta'][] = ['duration' => $PLAYTIME, 'url' => $name];
-      $duration_seconds += $PLAYTIME;
-    }
-
-  } else {
-
-    foreach($fileList as $file) {
-      $name = upload_s3($file);
-      $props['asset'][] = $name;
-      $props['asset_meta'][] = ['duration' => $PLAYTIME, 'url' => $name];
-      $duration_seconds += $PLAYTIME;
-    }
+  foreach($fileList as $file) {
+    $name = upload_s3($file);
+    $props['asset_meta'][] = ['duration' => $PLAYTIME, 'url' => $name];
+    $duration_seconds += $PLAYTIME;
   }
   $props['duration_seconds'] = $duration_seconds;
 
-  return db_insert('campaign', $props);
+  return pdo_insert('campaign', $props);
 }
 
 function campaign_update($data, $fileList, $user = false) {

@@ -3,12 +3,12 @@ date_default_timezone_set('UTC');
 
 $DBPATH = "/var/db/waivescreen/main.db";
 $JSON = [
-  'pre' => function($v) { 
+  'pre' => function($v, $ignore, $type) { 
     if ($v === null) { return $v; } 
     if (!is_string($v)) { $v = json_encode($v); }
-    return db_string($v); 
+    return $type === 'pdo' ? $v : db_string($v); 
   },
-  'post' => function($v) { 
+  'post' => function($v, $type) { 
     if (!$v) { return $v; } 
     return json_decode($v, true); 
   }
@@ -642,6 +642,15 @@ function db_date($what) {
  return "datetime($what,'unixepoch')";
 }
 
+function _pdo_query($qstr, $values, $func='execute') {
+  $pdo = pdo_connect();
+  try {
+    return $pdo->prepare($qstr)->execute($values);
+  } catch (\PDOException $e) {
+    error_log($e->getMessage() . (int)$e->getCode());
+  }
+}
+
 function _query($qstr, $func='exec') {
   $db = db_connect();
   try {
@@ -725,12 +734,12 @@ class Many extends Get {
   }
 };
 
-function process($table, $obj, $what) {
+function process($table, $obj, $what, $type) {
   global $RULES;
   if($obj && $table && isset($RULES[$table])) {
     foreach($RULES[$table] as $key => $processor) {
       if(isset($obj[$key]) && isset($processor[$what])) {
-        $obj[$key] = $processor[$what]($obj[$key], $obj);
+        $obj[$key] = $processor[$what]($obj[$key], $obj, $type);
       }
     }
   }
@@ -875,6 +884,23 @@ function db_insert_many($table, $kvList) {
     return $db->lastInsertRowID();
   }
   return null;
+}
+
+function pdo_insert($table, $kv) {
+  $values = [];
+
+  $kv = process($table, $kv, 'pre', 'pdo');
+  foreach($kv as $k => $v) {
+    $values[] = db_bottom($v);
+  } 
+
+  $pdo_values = implode(',', array_fill(0, len($values), '?'));
+  $fields = implode(',', array_keys($kv));
+
+  $qstr = "insert into $table($fields) values($pdo_values)";
+
+  _pdo_query($qstr, $values);
+  return PDO::lastInsertId();
 }
 
 function db_insert($table, $kv) {
