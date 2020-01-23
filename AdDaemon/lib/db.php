@@ -183,6 +183,7 @@ $SCHEMA = [
     'id'          => 'integer primary key autoincrement',
     'title'       => 'text',
     'ref_id'      => 'text',
+    'uuid'        => 'text',
     'contact_id'  => 'integer',
     'brand_id'    => 'integer',
     'user_id'     => 'integer',
@@ -218,6 +219,7 @@ $SCHEMA = [
 
     // TODO: 2020-01-02
     'duration_seconds' => 'integer',
+    'play_count' => 'integer default 0',
 
     // 
     // This is a cheap classification system

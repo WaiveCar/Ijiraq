@@ -79,46 +79,55 @@ function render($M5YFgsLGQian24eTfLEQIA_template, $opts) {
   return $M5YFgsLGQian24eTfLEQIA_res;
 }
 
-function parser($user, $template) {
-  $rendered = [];
+function parser($template, $opts) {
+  $head = render('_header', $opts);
+  $stuff = render($template, $opts);
+  $foot = render('_footer', $opts);
 
-  foreach(['_header', '_footer', $template] as $what) {
-    $rendered[$what] = render($what, $user);
-  }
-
-  $rendered[$template] = explode('\n', $rendered[$template]);
+  $stuff = explode('\n', $stuff);
+  $body = implode('\n', array_slice($stuff, 2));
 
   return [
-    'sms'     => $rendered[$template][0],
-    'subject' => $rendered[$template][1],
-    'email'   => $rendered['_header'] + array_slice($rendered[$template], 2) + $rendered['_footer']
+    'sms'     => $stuff[0],
+    'subject' => $stuff[1],
+    'email'   => $head + $body + $foot
   ];
 }
 
-function send_message($user, $template) {
-  $EMAIL= [
-    'sender' => 'Waive <support@waive.com>',
-    'api_key'=> 'key-2804ba511f20c47a3c2dedcd36e87c92'
-  ];
+function send_message($template, $campaign, $user = false, $order = false) {
+  $user = $user ?: Get::user($campaign['user_id']);
+  $order = $order ?: Get::order($campaign['order_id']);
 
-  $stuff = parser($user, $template);
+  $params = [
+    'date_start' => $campaign['start_time'],
+    'date_end'  => $campaign['end_time'],
+    'campaign_link' => 'https://olvr.io/v/' . $campaign['uuid'],
+    'play_count'=> $campaign['play_count'],
+    'name'      => $user['name'],
+
+    'campaign'  => $campaign,
+    'user'      => $user,
+    'order'     => $order
+  ]
+
+  $stuff = parser($template, $params);
+
   text_rando($user['number'], $stuff['sms']);
 
-  $res = curldo(
+  return curldo(
     'https://api.mailgun.net/v3/waive.com/messages', [
-      'from'    => $EMAIL['sender']
+      'from'    => 'Waive <support@waive.com>',
       'to'      => $user['email'],
       'subject' => $stuff['subject'],
       'html'    => $stuff['email']
     ], [
       'auth' => [
         'user' => 'api', 
-        'password' => $EMAIL['api_key']
+        'password' => 'key-2804ba511f20c47a3c2dedcd36e87c92'
       ],
       'verb' => 'post', 
       'json' => true
     ]
   );
-
-
+}
 
