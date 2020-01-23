@@ -17,6 +17,7 @@ $JSON = [
 $RULES = [
   'campaign' => [ 
     'shape_list' => $JSON,
+    'flags' => $JSON,
     'asset_meta' => [
       'pre' => $JSON['pre'],
       'post' => function($v) {
@@ -286,6 +287,8 @@ $SCHEMA = [
 
     'priority'    => 'integer default 0',
     'impression_count' => 'integer',
+
+    'flags' => 'text',
 
     // The start_time and end_time are the bounds to do the 
     // campaign. It doesn't need to be exactly timebound by
@@ -642,6 +645,25 @@ function db_date($what) {
  return "datetime($what,'unixepoch')";
 }
 
+function is_flagged($campaign, $what) {
+  $flags = aget($campaign, 'flags', []);
+  return aget($flags, $what);
+}
+
+function flag($campaign, $what, $value = 1) {
+  $flags = aget($campaign, 'flags', []);
+  $flags[$what] = $value;
+  return pdo_update('campaign', $campaign['id'], ['flags' => $flags]);
+}
+
+function unflag($campaign, $what);
+  $flags = aget($campaign, 'flags', []);
+  if(isset($flags[$what])) {
+    unset($flags[$what]);
+  }
+  return pdo_update('campaign', $campaign['id'], ['flags' => $flags]);
+}
+
 function _pdo_query($qstr, $values, $func='execute') {
   $pdo = pdo_connect();
   try {
@@ -753,6 +775,32 @@ function db_bottom($v) {
     return "false";
   }
   return $v;
+}
+
+function pdo_update($table, $id, $kv) {
+  $values = [];
+  $fields = [];
+
+  $kv = process($table, $kv, 'pre', 'pdo');
+  
+  foreach($kv as $k => $v) {
+    $values[] = db_bottom($v);
+    $fields[] = "$k=?";
+  } 
+
+  if(is_array($id)) {
+    $parts = array_keys($id);
+    $key = $parts[0];
+    $values[] = $id[$key];
+  } else {
+    $key = 'id';
+    $values[] = $id;
+  }
+
+  $fields = implode(',', $fields);
+
+  $qstr = "update $table set $fields where $key = ?";
+  return _pdo_query($qstr, $values);
 }
 
 function db_update($table, $id, $kv) {
