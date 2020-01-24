@@ -98,7 +98,7 @@ foreach($SCHEMA as $table_name => $table_schema) {
 $table_list = array_map(function($n) { return $n['name']; }, db_all("SELECT name FROM sqlite_master WHERE type='table'"));
 $unaccounted_for_tables = array_filter( array_diff($table_list, array_keys($SCHEMA)), function($n) { return $n != 'sqlite_sequence'; });
 if (count($unaccounted_for_tables) > 0) {
-  echo "Tables in the db that aren't in the schema:\n";
+  echo "\n---\nTables in the db that aren't in the schema:\n";
   echo "  " . implode(' ', $unaccounted_for_tables);
   echo "\n";
 }
