@@ -218,7 +218,6 @@ $SCHEMA = [
     'completed_seconds' => 'integer default 0',
     'project'     => 'text default "dev"',
 
-    // TODO: 2020-01-02
     'duration_seconds' => 'integer',
 
     // 
@@ -669,7 +668,7 @@ function _pdo_query($qstr, $values, $func='execute') {
   try {
     return $pdo->prepare($qstr)->execute($values);
   } catch (\PDOException $e) {
-    error_log($e->getMessage() . (int)$e->getCode());
+    error_log($qstr . ' ' . $e->getMessage() . (int)$e->getCode());
   }
 }
 
@@ -715,7 +714,9 @@ class Get {
     return process($table, $res, 'post');
   }
 
-  public static function __callStatic($name, $argList) {
+  public static _cache = [];
+
+  public static function __callStatic($name, $argList, $cache = false) {
     $arg = $argList[0];
     $key = 'id';
     if(!is_array($arg)) {
@@ -723,6 +724,12 @@ class Get {
         $arg = ['id' => $arg];
       } else {
         return null;
+      }
+    }
+    if($key === 'id' && $cache === true) {
+      $cache_key = "$name:$arg";
+      if (array_key_exists(static::_cache[$cache_key])) { 
+        return static::_cache[$cache_key];
       }
     }
 
@@ -746,7 +753,13 @@ class Get {
     $kvstr = implode(' and ', $kvargs);
 
     $qstr = "select $fields from $name where $kvstr";
-    return static::doquery($qstr, $name);
+    $res = static::doquery($qstr, $name);
+
+    if($key === 'id' && $cache === true) {
+      static::_cache[$cache_key] = $res;
+    }
+
+    return $res;
   }
 };
 
