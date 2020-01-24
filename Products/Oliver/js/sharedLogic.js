@@ -35,7 +35,7 @@ function calcItems() {
 }
 
 (() => {
-  $('#schedule').jqs();
+  /*$('#schedule').jqs();
   document
     .getElementById('campaign-budget')
     .addEventListener('change', calcItems);
@@ -45,6 +45,7 @@ function calcItems() {
   document
     .querySelector('.jqs-table tbody')
     .addEventListener('mouseup', calcItems);
+    */
 })();
 
 function create_campaign(obj) {
