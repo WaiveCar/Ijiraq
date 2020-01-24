@@ -3,7 +3,6 @@ import logging
 from flask import Flask, send_from_directory, render_template, request, jsonify
 from requests import post
 from services.payments import charge_for_notice
-from services.email import send_receipt
 import json
 import os
 import random
@@ -115,5 +114,7 @@ def root():
   return serve('/')
 
 if __name__ == '__main__':
-  from waitress import serve
-  serve(app, host="0.0.0.0", port=5000)
+  app.config['TEMPLATES_AUTO_RELOAD'] = True
+  app.run()
+  #from waitress import serve
+  #serve(app, host="0.0.0.0", port=5000)

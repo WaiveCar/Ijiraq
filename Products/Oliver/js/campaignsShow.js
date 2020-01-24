@@ -1,3 +1,4 @@
+let server = 'staging.waivescreen.com';
 function renderCampaign(campaign) {
   document.querySelector('.campaign-show-title').textContent =
     campaign.project[0].toUpperCase() + campaign.project.slice(1);
@@ -54,7 +55,6 @@ function changeSelected(newIdx) {
 }
 
 (() => {
-  console.log('href', window.location.href);
   document.querySelector('#campaign-url').innerHTML = `URL: ${window.location.href}`;
   topBarRight.innerHTML = [
     'Overview',
@@ -79,9 +79,8 @@ function changeSelected(newIdx) {
     window.scrollTo(window.scrollX, window.scrollY - 50);
   });
 
-  $('#schedule').jqs();
   const id = new URL(location.href).searchParams.get('id');
-  fetch(`http://adcast/api/campaigns?id=${id}`)
+  fetch(`http://${server}/api/campaigns?id=${id}`)
     .then(response => response.json())
     .then(json => {
       self.j = json;
