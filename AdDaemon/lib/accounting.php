@@ -134,7 +134,7 @@ function send_message($campaign, $template, $user = false, $order = false) {
     'campaign'  => $campaign,
     'user'      => $user,
     'order'     => $order
-  ]
+  ];
 
   $stuff = parser($template, $params);
 
