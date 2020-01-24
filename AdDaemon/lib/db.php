@@ -189,7 +189,7 @@ $SCHEMA = [
     'brand_id'    => 'integer',
     'user_id'     => 'integer',
     'organization_id'    => 'integer',
-    'order_id'    => 'integer',
+    'purchase_id'    => 'integer',
 
     'asset'       => 'text not null',
     //
@@ -452,7 +452,7 @@ $SCHEMA = [
     'created_at' => 'datetime default current_timestamp',
   ],
 
-  'order' => [
+  'purchase' => [
     'id'         => 'integer primary key autoincrement',
     'user_id'    => 'integer',
     'campaign_id'=> 'integer',
@@ -655,7 +655,7 @@ function flag($campaign, $what, $value = 1) {
   return pdo_update('campaign', $campaign['id'], ['flags' => $flags]);
 }
 
-function unflag($campaign, $what);
+function unflag($campaign, $what) {
   $flags = aget($campaign, 'flags', []);
   if(isset($flags[$what])) {
     unset($flags[$what]);
@@ -709,15 +709,18 @@ function get_campaign_remaining($id) {
 }
 
 class Get {
+  private static $_cache = [];
+  
   public static function doquery($qstr, $table) {
     $res = _query($qstr, 'querySingle');
     return process($table, $res, 'post');
   }
 
-  public static _cache = [];
-
-  public static function __callStatic($name, $argList, $cache = false) {
+  public static function __callStatic($name, $argList) {
     $arg = $argList[0];
+    if(count($argList) > 1) {
+      $cache = true;
+    }
     $key = 'id';
     if(!is_array($arg)) {
       if((is_string($arg) || is_numeric($arg)) && !empty($arg)) {
@@ -728,8 +731,8 @@ class Get {
     }
     if($key === 'id' && $cache === true) {
       $cache_key = "$name:$arg";
-      if (array_key_exists(static::_cache[$cache_key])) { 
-        return static::_cache[$cache_key];
+      if (array_key_exists(static::$_cache[$cache_key])) { 
+        return static::$_cache[$cache_key];
       }
     }
 
@@ -756,7 +759,7 @@ class Get {
     $res = static::doquery($qstr, $name);
 
     if($key === 'id' && $cache === true) {
-      static::_cache[$cache_key] = $res;
+      static::$_cache[$cache_key] = $res;
     }
 
     return $res;
@@ -769,7 +772,7 @@ class Many extends Get {
   }
 };
 
-function process($table, $obj, $what, $type) {
+function process($table, $obj, $what, $type='none') {
   global $RULES;
   if($obj && $table && isset($RULES[$table])) {
     foreach($RULES[$table] as $key => $processor) {
