@@ -5,7 +5,7 @@ $TWIL = [
   'token'=> 'b39d95c162c1e9ad1893acbb61af8bb4'
 ];
 
-require $_SERVER['DOCUMENT_ROOT'] .  'AdDaemon/vendor/autoload.php';
+require $_SERVER['DOCUMENT_ROOT'] . 'AdDaemon/vendor/autoload.php';
 use Twilio\Rest\Client;
 include_once("lib.php");
 
@@ -70,6 +70,25 @@ function text_rando($number, $message) {
   }
 }
 
+function notification_sweep() {
+  global $PLAYTIME;
+  // This will just go through and basically get all the things that need to be notified.
+  // I want everything that has started and has not ended in the past day.
+  $all = db_all("select * from campaign where start_date < date('now') and end_date > date('now', '-1 day')");
+
+  foreach($all as $campaign) {
+    $duration = $campaign['duration_seconds'] ?: $PLAYTIME;
+    $plays = floor($campaign['completed_seconds'] / $duration);
+
+    if($campaign['completed_seconds'] > 0) { notify_if_needed($campaign, 'campaign_start'); }
+    if($plays > 50)   { notify_if_needed($campaign, 'plays_50'); }
+    if($plays > 200)  { notify_if_needed($campaign, 'plays_200'); }
+    // TODO: boost
+    // TODO: extension offer
+    // TODO: complete
+  } 
+}
+
 function render($M5YFgsLGQian24eTfLEQIA_template, $opts) {
   extract($opts);
   ob_start();
@@ -94,9 +113,16 @@ function parser($template, $opts) {
   ];
 }
 
-function send_message($template, $campaign, $user = false, $order = false) {
-  $user = $user ?: Get::user($campaign['user_id']);
-  $order = $order ?: Get::order($campaign['order_id']);
+function notify_if_needed($campaign, $event) {
+  if(!is_flagged($campaign, $event)) {
+    flag($campaign, $event);
+    send_message($campaign, $event);
+  }
+}
+
+function send_message($campaign, $template, $user = false, $order = false) {
+  $user = $user ?: Get::user($campaign['user_id'], true);
+  $order = $order ?: Get::order($campaign['order_id'], true);
 
   $params = [
     'date_start' => $campaign['start_time'],
