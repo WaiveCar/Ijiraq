@@ -95,5 +95,16 @@ function changeSelected(newIdx) {
       handleUploads(json[0].asset)
     })
     .catch(e => console.log('error fetching screens', e));
+
+  console.log(document.getElementById('locationmap'));
+  self._map = map({ target: 'locationmap' });
+  fetch(`http://${server}/api/path?id=${id}`)
+    .then(response => response.json())
+    .then(points => {
+      _map.clear();
+      _map.load(points.map(row => ["Line", row]));
+      _map.fit();
+      
+    });
 })();
 

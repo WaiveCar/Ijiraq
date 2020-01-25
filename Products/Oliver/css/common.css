@@ -419,7 +419,7 @@ button {
 }
 
 #campaign-preview {
-  height: calc(35.1vw - 4.75rem);
+  height: calc(35.1vw);/* - 4.75rem);*/
 }
 
 .campaign-show-sub {
