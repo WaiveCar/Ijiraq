@@ -10,6 +10,7 @@ import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import Polygon from 'ol/geom/Polygon';
 import Circle from 'ol/geom/Circle';
+import Stamen from 'ol/source/Stamen';
 import MultiLineString from 'ol/geom/MultiLineString';
 
 window.map = function(opts) {
@@ -41,9 +42,12 @@ window.map = function(opts) {
     center: [-118.3, 34.02],
     // the default zoom level
     zoom: 13,
+    // could be osm or stamen.{anything from https://stamen.com/opensource/}
+    tiles: 'osm'
   }, opts || {});
 
   var _draw, 
+      _drawLayer,
       _cb = { select: [] },
       _snap, 
       _featureMap = {},
@@ -52,9 +56,10 @@ window.map = function(opts) {
       _isFrst = true,
       _map,
       _map_params,
+      _source,
+      _layers = [],
+      _dom = document.getElementById(opts.target),
 	    _styleCache = {};
-  var source = {};
-  var dom = document.getElementById(opts.target);
 
   ['car','screen','bluedot','carpink'].forEach(row => {
     _styleCache[row] = new Style({
@@ -64,14 +69,21 @@ window.map = function(opts) {
     });
   });
 
-  var _layers = [ new TileLayer({ source: new OSM() }) ];
   var recurseFll = x => x[0].length ? x.map(y => y[0].length ? recurseFll(y) : fromLonLat(y) ) : fromLonLat(x);
 
-  var css = document.createElement('style');
-  css.innerHTML = `
-  .ol-overlaycontainer-stopevent { display: none }
-  `;
-  dom.appendChild(css);
+  (() => {
+    let css = document.createElement('style');
+    let tiles;
+    if(opts.tiles === 'osm') {
+      tiles = new OSM(); 
+    } else {
+      tiles = new Stamen({ layer: opts.tiles.split('.').pop() });
+    }
+
+    _layers.push([ new TileLayer({ source: tiles }) ]);
+    css.innerHTML = `.ol-overlaycontainer-stopevent { display: none }`;
+    _dom.appendChild(css);
+  })();
 
   // points {
   /*
@@ -274,15 +286,15 @@ window.map = function(opts) {
     _draw.removeLastPoint();
   }
 
-  source.draw = new VectorSource();
-  var draw = new VectorLayer({
-    source: source.draw,
+  _source.draw = new VectorSource();
+  _drawLayer = new VectorLayer({
+    source: _source.draw,
     style: _styleCache.car
   });
 
   if(opts.draw) {
     var typeSelect = document.getElementById(opts.typeSelect);
-    dom.onkeyup = function(e) {
+    _dom.onkeyup = function(e) {
       if(e.key === 'Delete') { removePoint(); }
       if(e.key === 'Backspace') { removeShape(); }
     }
@@ -296,7 +308,7 @@ window.map = function(opts) {
   }
   // } drawlayer
 
-  _layers.push(draw);
+  _layers.push(_drawLayer);
 
   // eventually use geoip
   _map_params =  {
@@ -335,14 +347,14 @@ window.map = function(opts) {
 
   if(opts.draw) {
     _draw = new Draw({
-      source: source.draw,
+      source: _source.draw,
       type: typeSelect.value
     });
     _map.addInteraction(_draw);
-    _snap = new Snap({source: source.draw});
+    _snap = new Snap({source: _source.draw});
     _map.addInteraction(_snap);
     if(opts.resize) {
-      _map.addInteraction(new Modify({source: source.draw}));
+      _map.addInteraction(new Modify({source: _source.draw}));
     }
   }
 

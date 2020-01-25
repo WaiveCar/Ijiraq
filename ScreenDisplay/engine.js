@@ -54,7 +54,7 @@ var Engine = function(opts){
       isNetUp: true,
       current: false,
       firstRun: false,
-      fallback: false,
+      fallbackJob: false,
       maxPriority: 0,
     };
 
@@ -771,7 +771,7 @@ var Engine = function(opts){
       return _res.NextJob();
     } 
 
-    console.log(_.current);
+    //console.log(_.current);
     _.current.shown = _.current.assetList[_.current.position];
     _.current.shown.run( function() {
       if(_res.slowCPU && prev) {
@@ -938,11 +938,11 @@ var Engine = function(opts){
       if(!current) {
         // This means we've really fucked up somehow
         doReplace = true;
-        if(!_.fallback) {
+        if(!_.fallbackJob) {
           console.warn(_id, "I'm at a nextJob but have no assets or fallbacks");
           return;
         }
-        setNextJob(_.fallback);
+        setNextJob(_.fallbackJob);
 
         // Force the topics off for now.
         render(true);
@@ -1066,13 +1066,13 @@ var Engine = function(opts){
         // If there's nothing we have to show then we fallback to our default asset
         if( range <= 0 ) {
 
-          if(!_.fallback) {
+          if(!_.fallbackJob) {
             // woops what do we do now?! 
             // I guess we just try this again?!
             return _timeout(_res.NextJob, 1500, 'nextJob');
           }
 
-          setNextJob(_.fallback);
+          setNextJob(_.fallbackJob);
 
           if(!_.firstRun && activeList.length == 0 && Object.values(_res.db) > 1) {
             // If we just haven't loaded the assets then
@@ -1107,18 +1107,14 @@ var Engine = function(opts){
     };
   });
 
-  function SetFallback (url, force) {
-    _res.fallbackURL = _res.fallbackURL || url;
-
-    if(!_res.server) {
-      return event('system', {});
-    }
+  function SetFallback (assetList, force) {
+    _res.fallback = _res.fallback || assetList;
 
     // We look for a system default
-    if(force || !_res.fallbackURL) {
+    if(_res.server && (force || !_res.fallback)) {
       // If we have a server we can get it from there
       return get('/default', function(res) {
-        _.fallback = makeJob(res.data.campaign);
+        _.fallbackJob = makeJob(res.data.campaign);
 
         if(_res.data.topicList) {
           Strategy.Oliver.setTopicList(_res.data.topicList);
@@ -1138,7 +1134,10 @@ var Engine = function(opts){
       });
 
     } 
-    _.fallback = makeJob({url: _res.fallbackURL, duration: .1});
+    if(_res.fallback) {
+      _.fallbackJob = makeJob(_res.fallback);
+    }
+    event('system', {});
   }
 
   // A repository of engines
