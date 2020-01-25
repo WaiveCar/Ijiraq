@@ -39,6 +39,7 @@ window.map = function(opts) {
 
   var _cb = { select: [] },
       _draw, 
+      _drawSource,
       _drawLayer,
       _dom = document.getElementById(opts.target),
       _featureMap = {},
@@ -49,7 +50,6 @@ window.map = function(opts) {
       _map_params,
       _select,
       _snap, 
-      _source,
 	    _styleCache = {};
 
   ['car','screen','bluedot','carpink'].forEach(row => {
@@ -70,14 +70,14 @@ window.map = function(opts) {
       tiles = new Stamen({ layer: opts.tiles.split('.').pop() });
     }
 
-    _layers.push([ new TileLayer({ source: tiles }) ]);
+    _layers.push( new TileLayer({ source: tiles }));
     css.innerHTML = `.ol-overlaycontainer-stopevent { display: none }`;
     _dom.appendChild(css);
   })();
 
   // drawlayer {
   function save() {
-    let shapes = draw.getSource().getFeatures().map(row => {
+    let shapes = _drawSource.getFeatures().map(row => {
       var kind = row.getGeometry();
       if (kind instanceof Polygon) {
         return ['Polygon', kind.getCoordinates()[0].map(coor => toLonLat(coor))];
@@ -143,7 +143,7 @@ window.map = function(opts) {
     } else {
       console.error("What the fuck is a " + shape[0] + "?");
     }
-    draw.getSource().addFeature(feature);
+    _drawSource.addFeature(feature);
 
     if(opts.selectFirst && _isFirst) {
       _select.getFeatures().push(feature);
@@ -178,21 +178,21 @@ window.map = function(opts) {
     _featureMap[index][0].getGeometry().setCoordinates(recurseFll([lng, lat]));
   }
   function remove(index) {
-    draw.getSource().removeFeature(_featureMap[index][0]);
+    _drawSource.removeFeature(_featureMap[index][0]);
     delete _featureMap[index];
   }
 
   function clear() {
-    for(var feature of draw.getSource().getFeatures()) {
-      draw.getSource().removeFeature(feature);
+    for(var feature of _drawSource.getFeatures()) {
+      _drawSource.removeFeature(feature);
     }
     _featureMap = {};
   }
 
   function removeShape() {
-    let shapeList = draw.getSource().getFeatures();
+    let shapeList = _drawSource.getFeatures();
     if(shapeList) {
-      draw.getSource().removeFeature(shapeList.slice(-1)[0]);
+      _drawSource.removeFeature(shapeList.slice(-1)[0]);
     }
   }
 
@@ -200,9 +200,9 @@ window.map = function(opts) {
     _draw.removeLastPoint();
   }
 
-  _source.draw = new VectorSource();
-  _drawLayer = new VectorLayer({
-    source: _source.draw,
+  _drawSource = new VectorSource();
+  _drawLayer = new VectorLayer({ 
+    source: _drawSource 
     style: _styleCache.car
   });
 
@@ -249,7 +249,6 @@ window.map = function(opts) {
     ]);
   }
 
-
   if(_select) {
    _select.on('select', function(evt) {
      _cb.select.forEach(row => row(evt));
@@ -260,14 +259,14 @@ window.map = function(opts) {
 
   if(opts.draw) {
     _draw = new Draw({
-      source: _source.draw,
+      source: _drawSource,
       type: typeSelect.value
     });
     _map.addInteraction(_draw);
-    _snap = new Snap({source: _source.draw});
+    _snap = new Snap({source: _drawSource});
     _map.addInteraction(_snap);
     if(opts.resize) {
-      _map.addInteraction(new Modify({source: _source.draw}));
+      _map.addInteraction(new Modify({source: _drawSource}));
     }
   }
 
