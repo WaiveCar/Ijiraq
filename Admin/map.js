@@ -34,7 +34,8 @@ window.map = function(opts) {
     // the default zoom level
     zoom: 13,
     // could be osm or stamen.{anything from https://stamen.com/opensource/}
-    tiles: 'osm'
+    tiles: 'osm',
+    opacity: 1
   }, opts || {});
 
   var _cb = { select: [] },
@@ -70,7 +71,7 @@ window.map = function(opts) {
       tiles = new Stamen({ layer: opts.tiles.split('.').pop() });
     }
 
-    _layers.push( new TileLayer({ source: tiles }));
+    _layers.push( new TileLayer({ opacity: opts.opacity, source: tiles }));
     css.innerHTML = `.ol-overlaycontainer-stopevent { display: none }`;
     _dom.appendChild(css);
   })();
@@ -202,7 +203,7 @@ window.map = function(opts) {
 
   _drawSource = new VectorSource();
   _drawLayer = new VectorLayer({ 
-    source: _drawSource 
+    source: _drawSource,
     style: _styleCache.car
   });
 

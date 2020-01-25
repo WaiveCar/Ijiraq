@@ -75174,7 +75174,8 @@ window.map = function (opts) {
     // the default zoom level
     zoom: 13,
     // could be osm or stamen.{anything from https://stamen.com/opensource/}
-    tiles: 'osm'
+    tiles: 'osm',
+    opacity: 1
   }, opts || {});
 
   var _cb = {
@@ -75221,6 +75222,7 @@ window.map = function (opts) {
     }
 
     _layers.push(new _layer.Tile({
+      opacity: opts.opacity,
       source: tiles
     }));
 
@@ -75397,7 +75399,8 @@ window.map = function (opts) {
 
   _drawSource = new _source.Vector();
   _drawLayer = new _layer.Vector({
-    source: _drawSource
+    source: _drawSource,
+    style: _styleCache.car
   });
 
   if (opts.draw) {
