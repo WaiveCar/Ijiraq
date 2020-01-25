@@ -709,7 +709,7 @@ function get_campaign_remaining($id) {
 }
 
 class Get {
-  private static $_cache = [];
+  protected static $_cache = [];
   
   public static function doquery($qstr, $table) {
     $res = _query($qstr, 'querySingle');
@@ -718,9 +718,7 @@ class Get {
 
   public static function __callStatic($name, $argList) {
     $arg = $argList[0];
-    if(count($argList) > 1) {
-      $cache = true;
-    }
+    $cache = count($argList) > 1;
     $key = 'id';
     if(!is_array($arg)) {
       if((is_string($arg) || is_numeric($arg)) && !empty($arg)) {
