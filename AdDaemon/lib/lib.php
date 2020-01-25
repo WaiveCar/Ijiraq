@@ -993,6 +993,10 @@ function campaigns_list($opts = []) {
 }
 
 function path($data) {
+  if(!$data) {
+    return db_all('select count(*) as records, campaign_id from location_history group by campaign_id order by records desc');
+  }
+
   $heatmap = heatmap($data, 'job_id,screen_id,lng,lat');
   $nodup = [];
   $path = [];
