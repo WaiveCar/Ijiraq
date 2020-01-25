@@ -1,4 +1,5 @@
 let server = 'staging.waivescreen.com';
+let maps = {};
 function renderCampaign(campaign) {
   /*
   document.querySelector('.campaign-show-title').textContent =
@@ -73,7 +74,7 @@ function changeSelected(newIdx) {
     </a>
   `,
     )
-    .concat(['<div class="top-bar-link update-campaign-btn p-manager">Update</div>'])
+    //.concat(['<div class="top-bar-link update-campaign-btn p-manager">Update</div>'])
     .join('');
   topBarRight.children[selectedLinkIdx].classList.add('top-bar-selected');
 
@@ -82,29 +83,38 @@ function changeSelected(newIdx) {
   });
 
   const id = new URL(location.href).searchParams.get('id');
+  map.location = map({ 
+    opacity: 0.7,
+    tiles: 'stamen.toner',
+    target: 'location-map' });
+  fetch(`http://${server}/api/path?id=${id}`)
+    .then(response => response.json())
+    .then(points => {
+      map.location.clear();
+      map.location.load(points.map(row => ["Line", row]));
+      map.location.fit();
+      
+    });
+  map.boost = map({ 
+    target: 'boost-map',
+    opacity: 0.7,
+    tiles: 'stamen.toner',
+  });
   fetch(`http://${server}/api/campaigns?id=${id}`)
     .then(response => response.json())
     .then(json => {
-      self.j = json;
       campaign = json[0];
       Engine({
         container: document.querySelector('#campaign-preview'),
         fallback: json[0]
       }).Start();
-      renderCampaign(json[0]);
+      self.c = campaign;
+      renderCampaign(campaign);
+      map.boost.load(campaign.shape_list);
+      map.boost.fit();
       handleUploads(json[0].asset)
     })
     .catch(e => console.log('error fetching screens', e));
 
-  console.log(document.getElementById('locationmap'));
-  self._map = map({ target: 'locationmap' });
-  fetch(`http://${server}/api/path?id=${id}`)
-    .then(response => response.json())
-    .then(points => {
-      _map.clear();
-      _map.load(points.map(row => ["Line", row]));
-      _map.fit();
-      
-    });
 })();
 
