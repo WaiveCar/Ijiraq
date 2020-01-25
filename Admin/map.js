@@ -14,15 +14,6 @@ import Stamen from 'ol/source/Stamen';
 import MultiLineString from 'ol/geom/MultiLineString';
 
 window.map = function(opts) {
-  //
-  // opts:
-  //  target: the dom id to draw the map to.
-  //  center: the center of the map in lon/lat
-  //
-  // func:
-  //  clear() - remove all the shapes
-  //  
-
   opts = Object.assign({}, {
     // should objects be selectable?
     select: false,
@@ -46,19 +37,19 @@ window.map = function(opts) {
     tiles: 'osm'
   }, opts || {});
 
-  var _draw, 
+  var _cb = { select: [] },
+      _draw, 
       _drawLayer,
-      _cb = { select: [] },
-      _snap, 
+      _dom = document.getElementById(opts.target),
       _featureMap = {},
       _id = 0,
-      _select,
       _isFrst = true,
+      _layers = [],
       _map,
       _map_params,
+      _select,
+      _snap, 
       _source,
-      _layers = [],
-      _dom = document.getElementById(opts.target),
 	    _styleCache = {};
 
   ['car','screen','bluedot','carpink'].forEach(row => {
@@ -72,8 +63,7 @@ window.map = function(opts) {
   var recurseFll = x => x[0].length ? x.map(y => y[0].length ? recurseFll(y) : fromLonLat(y) ) : fromLonLat(x);
 
   (() => {
-    let css = document.createElement('style');
-    let tiles;
+    let tiles, css = document.createElement('style');
     if(opts.tiles === 'osm') {
       tiles = new OSM(); 
     } else {
@@ -85,86 +75,14 @@ window.map = function(opts) {
     _dom.appendChild(css);
   })();
 
-  // points {
-  /*
-  if(opts.points) {
-    var featureMap = opts.points.filter(row => row.lng).map(row => {
-      return {
-        type: "Feature",
-        properties: {
-          icon: row.is_fake ? 'screen' : 'car'
-        },
-        geometry: {
-          type: "Point",
-          coordinates: fromLonLat([row.lng, row.lat])
-        }
-      };
-    });
-    featureMap = {type: "FeatureCollection", features: featureMap};
-
-    source.screen = new VectorSource({
-      format: new GeoJSON(),
-      loader: function() {
-        source.screen.addFeatures(
-          source.screen.getFormat().readFeatures(JSON.stringify(featureMap))
-        );
-      }
-    });
-
-    // clustering {
-    var clusterSource = new Cluster({
-      distance: 55,
-      source: source.screen
-    });
-
-    var clusters = new VectorLayer({
-      source: clusterSource,
-      style: function(obj) {
-        var features = obj.get('features');
-   			var size = features.length;
-        if(size > 1) {
-          var style = _styleCache[size];
-          if (!style) {
-            style = new Style({
-              image: new CircleStyle({
-                radius: 14,
-                fill: new Fill({
-                  color: '#000'
-                })
-              }),
-              text: new Text({
-                text: size.toString(),
-                fill: new Fill({
-                  color: '#fff'
-                })
-              })
-            });
-            _styleCache[size] = style;
-          }
-          return style;
-        } else {
-          return _styleCache[features[0].getProperties().icon];
-        }
-      }
-		});
-	
-    _layers.push(clusters);
-    // } clustering
-
-    //_layers.push(points);
-  }
-  // } points
-  */
-
   // drawlayer {
   function save() {
     let shapes = draw.getSource().getFeatures().map(row => {
       var kind = row.getGeometry();
       if (kind instanceof Polygon) {
         return ['Polygon', kind.getCoordinates()[0].map(coor => toLonLat(coor))];
-      } else {
-        return ['Circle', toLonLat(kind.getCenter()), kind.getRadius()];
       }
+      return ['Circle', toLonLat(kind.getCenter()), kind.getRadius()];
     });
 
     return shapes;
@@ -191,12 +109,10 @@ window.map = function(opts) {
       //feature.setStyle(_styleCache.car);
     } else if(shape[0] === 'Location') {
       feature = new Feature({ geometry: new Point(fromLonLat(shape[1])) });
-      myid = shape[2];
       feature.setStyle(_styleCache.bluedot);
+      myid = shape[2];
     } else if(shape[0] === 'Line') {
-      feature = new Feature({
-        geometry: new MultiLineString(recurseFll(shape.slice(1)))
-      });
+      feature = new Feature({ geometry: new MultiLineString(recurseFll(shape.slice(1))) });
       feature.setStyle(
         new Style({
           stroke: new Stroke({
@@ -206,9 +122,7 @@ window.map = function(opts) {
         })
       );
     } else if(shape[0] === 'Circle') {
-      feature = new Feature({
-        geometry: new Circle(fromLonLat(shape[1]), shape[2]),
-      });
+      feature = new Feature({ geometry: new Circle(fromLonLat(shape[1]), shape[2]), });
       feature.setStyle(
         new Style({
           fill: new Fill({
@@ -304,7 +218,6 @@ window.map = function(opts) {
       _map.removeInteraction(_snap);
       addInteractions();
     };
-
   }
   // } drawlayer
 
