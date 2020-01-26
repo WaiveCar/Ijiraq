@@ -108,6 +108,17 @@ function changeSelected(newIdx) {
         container: document.querySelector('#campaign-preview'),
         fallback: json[0]
       }).Start();
+      campaign.duration_seconds = campaign.duration_seconds || 7.5;
+
+      // this means the campaign lapsed over 1 day ago.
+      if(+new Date(campaign.end_time) + 60*60*24*1000 < +new Date()) {
+        document.querySelector('#extend').innerHTML = "Renew";
+      }
+      
+      document.querySelector('.stat .start').innerHTML = campaign.start_time.split(' ')[0];
+      document.querySelector('.stat .end').innerHTML = campaign.end_time.split(' ')[0];
+      document.querySelector('.boost.count').innerHTML = Math.floor(campaign.completed_seconds / campaign.duration_seconds);
+      document.querySelector('.play.count').innerHTML = Math.floor(campaign.completed_seconds / campaign.duration_seconds);
       self.c = campaign;
       renderCampaign(campaign);
       map.boost.load(campaign.shape_list);

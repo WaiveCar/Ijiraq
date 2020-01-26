@@ -530,24 +530,29 @@ select.form-control:focus,
   border-radius: 0 !important;
 }
 
-.performance-download {
+.stat {
   width: 11rem;
   text-align: center;
 }
 
-.performance-download .btn {
+.stat .btn {
   border-radius: 25px !important;
   padding: 0.3rem 2.5rem !important;
   font-weight: 900;
 }
 
-.plate-count {
+.stat .date {
+  color: black;
+  font-size: 22px;
+}
+.stat .count {
   color: black;
   font-size: 30px;
 }
 
-.plate-title {
+.stat .title {
   font-size: 14px;
+  margin-bottom: -.25rem;
 }
 
 .btn-primary {
@@ -572,6 +577,10 @@ select.form-control:focus,
   color: black;
 }
 
+.btn.disabled {
+  background: #eee;
+  opacity: .5
+}
 .up-right {
   color: green;
 }
