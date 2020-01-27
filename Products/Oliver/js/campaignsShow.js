@@ -123,7 +123,6 @@ function changeSelected(newIdx) {
       renderCampaign(campaign);
       map.boost.load(campaign.shape_list);
       map.boost.fit();
-      handleUploads(json[0].asset)
     })
     .catch(e => console.log('error fetching screens', e));
 

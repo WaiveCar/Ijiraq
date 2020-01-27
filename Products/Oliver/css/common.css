@@ -65,6 +65,9 @@ button {
 .map {
   border: 0.1vw solid black;
 }
+.table {
+  font-size: 4vmin;
+}
 .table,
 .table a {
   color: black;
@@ -425,7 +428,7 @@ button {
 }
 
 #campaign-preview {
-  height: calc(35.1vw);/* - 4.75rem);*/
+  height: calc(.351 * (100vw - 3rem) );
 }
 
 .campaign-show-sub {
@@ -516,6 +519,9 @@ select.form-control:focus,
 .card-title {
   color: #000;
 }
+.card-title {
+  font-size: 6vmin;
+}
 
 @media (max-width: 768px) {
   .chart-contain {
@@ -531,10 +537,16 @@ select.form-control:focus,
 }
 
 .stat {
-  width: 11rem;
+  width: 40vmin;
   text-align: center;
 }
 
+.mbv-8 {
+  margin-bottom: 8vmin;
+}
+.btn { 
+  font-size: 4.5vmin;
+}
 .stat .btn {
   border-radius: 25px !important;
   padding: 0.3rem 2.5rem !important;
@@ -543,16 +555,16 @@ select.form-control:focus,
 
 .stat .date {
   color: black;
-  font-size: 22px;
+  font-size: 5vmin;
 }
 .stat .count {
   color: black;
-  font-size: 30px;
+  font-size: 8vmin;
 }
 
 .stat .title {
-  font-size: 14px;
-  margin-bottom: -.25rem;
+  font-size: 4vmin;
+  margin-bottom: -1vmin;
 }
 
 .btn-primary {
