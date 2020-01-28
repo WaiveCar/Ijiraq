@@ -207,6 +207,7 @@ $SCHEMA = [
     //
     'asset_meta' => 'text',
 
+    //  
     // This is the goal number of seconds for the entire campaign, 
     // historically referred as duration seconds, which has since 
     // been repuprosed to mean the total duration of the playing
@@ -216,6 +217,16 @@ $SCHEMA = [
     //
     'goal_seconds' => 'integer',
     'completed_seconds' => 'integer default 0',
+
+    // 
+    // Total seconds things played is
+    //
+    //  boost_seconds + completed_seconds
+    //
+    // Because for now (2020-01-27), boost seconds 
+    // is additional. 
+    //
+    'boost_seconds' => 'integer default 0',
     'project'     => 'text default "dev"',
 
     'duration_seconds' => 'integer',
@@ -256,7 +267,9 @@ $SCHEMA = [
     'end_minute'  => 'integer default null',
     'is_approved' => 'boolean default false',
     'is_default'  => 'boolean default false',
-    // essentially this one of 
+
+    // 
+    // Essentially this is one of 
     //
     //  active, approved, pending, completed, or rejected
     //
@@ -289,10 +302,12 @@ $SCHEMA = [
 
     'flags' => 'text',
 
+    //
     // The start_time and end_time are the bounds to do the 
     // campaign. It doesn't need to be exactly timebound by
     // these and can bleed over in either direction if it 
     // gets to that.
+    //
     'start_time'  => 'datetime default current_timestamp',
     'end_time'    => 'datetime'
   ],
@@ -303,7 +318,17 @@ $SCHEMA = [
     'screen_id'   => 'integer',
     'goal'        => 'integer',
     'completed_seconds' => 'integer default 0',
+
+    //
+    // We are very likely to increase the fidelity of
+    // this in the future to something more sophisticated
+    // but for now let's make it easy.
+    //
+    'is_boost'    => 'boolean default false',
+
+    // TODO: VV this can be used for re-allocation.
     'last_update' => 'datetime',
+
     'job_start'   => 'datetime',
     'job_end'     => 'datetime'
   ],

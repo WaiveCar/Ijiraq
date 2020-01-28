@@ -275,10 +275,13 @@ function create_screen($uid, $data = []) {
   return Get::screen($screen_id);
 }
 
-function find_unfinished_job($campaignId, $screenId) {
+function find_unfinished_job($campaignId, $screenId, $is_boost) {
   return Many::job([
     'campaign_id' => $campaignId,
     'screen_id' => $screenId,
+    // we want a clean separation of whether we 
+    // are in a boost campaign or not.
+    'is_boost' => $is_boost,
     'completed_seconds < goal'
   ]);
 }
@@ -607,7 +610,7 @@ function ping($payload) {
   return task_inject($screen, $res);
 }
 
-function create_job($campaignId, $screenId) {
+function create_job($campaignId, $screenId, $boost_mode) {
   global $WORKSIZE;
   $job_id = false;
   $ttl = get_campaign_remaining($campaignId);
@@ -624,6 +627,7 @@ function create_job($campaignId, $screenId) {
       'job', [
         'campaign_id' => db_int($campaignId),
         'screen_id' => $screenId,
+        'boost_mode' => db_int($boost_mode),
         'job_start' => 'current_timestamp',
         'job_end' => db_string($campaign['end_time']),
         'last_update' => 'current_timestamp',
@@ -736,11 +740,6 @@ function update_campaign_completed($id) {
   error_log("Not updating an invalid campaign.");
 }
   
-function inject_priority($job, $screen, $campaign) {
-  $job['priority'] = aget($campaign, 'priority');
-  return $job;
-}
-
 function sow($payload) {
   global $screen_dbg_id;
 
@@ -802,57 +801,131 @@ function sow($payload) {
   // New Task Assignment
   // --------
 
+  //
+  // By the time we are done with this block we should know exactly
+  // what candidate campaigns to show
+  // {
+  $boost_mode = false;
+  
   // If we are told to run specific campaigns
   // then we do that.
-  $campaignList = show('screen_campaign', ['screen_id' => $screen['id']]);
+  $candidate_campaigns = show('screen_campaign', ['screen_id' => $screen['id']]);
 
-  // If we have no campaigns to show then we 
-  // start with all active campaigns.
-  if(empty($campaignList) && $payload['lat']) {
-    // If we didn't get lat/lng from the sensor then we just 
-    // fallback to the default
-    $test = [floatval($payload['lng']), floatval($payload['lat'])];
-    $campaignList = array_filter(active_campaigns($screen), function($campaign) use ($test) {
-      if(!empty($campaign['shape_list'])) {
-        $isMatch = false;
+  if(empty($candidate_campaigns)) {
+    // If we have no campaigns to show then we 
+    // start with all active campaigns.
+    $candidate_campaigns = active_campaigns($screen);
+
+    // If we know where we are then we can see if some are more
+    // important than others.
+    if($payload['lat']) {
+      $test = [floatval($payload['lng']), floatval($payload['lat'])];
+
+      $inside_campaigns = array_filter($candidate_campaigns, function($campaign) use ($test) {
         // This is important because if we have a polygon definition
         // then we actually don't want to show the ad outside that 
         // polygon.
         foreach($campaign['shape_list'] as $polygon) {
-          if($polygon[0] === 'Polygon') {
-            $isMatch |= inside_polygon($test, $polygon[1]); 
-          } else if ($polygon[0] === 'Circle') {
-            $isMatch |= distance($test, $polygon[1]) < $polygon[2];
-          }
-          if($isMatch) {
+          if(
+              ($polygon[0] === 'Polygon' && inside_polygon($test, $polygon[1])) || 
+              ($polygon[0] === 'Circle'  &&       distance($test, $polygon[1]) < $polygon[2])
+          ) {
             return true;
           }
         }
+      });
+      if(!empty($inside_campaigns)) {
+        // this means we are showing a subset and we should be 
+        // in the "boost mode"
+        $boost_mode = true;
+        $candidate_campaigns = $inside_campaigns;
       }
-    });
-    // so if we have existing outstanding jobs with the
-    // screen id and campaign then we can just re-use them.
+    }
   }
+
+  // if we aren't in boost mode then we should *probably* try to spread out the completion over
+  // the time allotted. The current method of doing this is through thresholds.
+  if(!$boost_mode) {
+    $campaigns_to_play = array_filter($candidate_campaigns, $function($campaign) {
+
+      $start = strtotime($campaign['start_time']);
+      $end   = strtotime($campaign['end_time']);
+
+      $percent_lapsed = (time() - $start) / 
+                        ($end   - $start);
+
+      // This probably will be an eventual consideration.
+      // global $WORKSIZE;
+      // $smallest_job_unit = max($WORKSIZE, aget($campaign, 'duration_seconds', 0));
+
+      $percent_shown =  $campaign['completed_seconds'] / $campaign['goal_seconds'];
+
+      //
+      // Essentially we don't want the percentage_shown to run too far ahead of 
+      // the time_complete BUT we also want the entire campaign to show. So there's
+      // minimum discrete units that need to be satisfied everywhere in this statement.
+      //
+      // For now however, we'll just be generous and do gross estimates so we don't have 
+      // to deal with it. We can revisit this in the future and make things better.
+      //
+
+      //
+      // So wherever we are in percentage_shown, we pretend we are some delta less.
+      // For instance, if we use 10% on a 3 day campaign it means that our campaign 
+      // will finish 7.2 hours early ... this is of course wrong, but it's better
+      // than blowing through the entire quota on campaign day 1.
+      //
+      $delta = 0.1;
+
+      $percent_lapsed += $delta;
+
+      //
+      // Now here's the crucial determinant and doing things this way will still
+      // result in "chunking" - as in, when the condition is met, a number of jobs
+      // will be sent out to screens before hearing back, so instead of doing a smooth
+      // drip over the campaign, there will be these globs when the condition is met,
+      // passing us well into the met parameters leading to a silent period, then a loop.
+      //
+      // More accounting (especially outstanding jobs) would have to be done in order
+      // to get to a smooth drip with the current model.  Again, we can do all that
+      // later. *commences voodoo handwaving*
+      //
+      // The simple stuff. If we're 'falling behind' and need to "catch up" and show the
+      // ad more. So that condition is if the time lapsed > where we should be.
+      return $percent_lapsed > $percent_shown;
+    });
+
+    $candidate_campaigns = $campaigns_to_play;
+  }
+  // }
+  //
+ 
   $server_response = task_inject($screen, ['res' => true]);
 
-  $server_response['data'] = array_map(function($campaign) use ($screen) {
-    $jobList = find_unfinished_job($campaign['id'], $screen['id']);
-    //error_log(json_encode($jobList));
+  $server_response['data'] = array_map(function($campaign) use ($screen, $boost_mode) {
+    //
+    // If we have existing outstanding jobs with the
+    // screen id and campaign then we can just re-use them.
+    //
+    $jobList = find_unfinished_job($campaign['id'], $screen['id'], $boost_mode);
+
+    // error_log(json_encode($jobList));
+    
+    // We're ok with just the first job being sent.
+    
     if(!$jobList) {
-      $jobList = [ create_job($campaign['id'], $screen['id']) ];
+      $job = create_job($campaign['id'], $screen['id'], $boost_mode);
+    } else {
+      $job = $jobList[0];
     }
-    foreach($jobList as $job) {
-      if(isset($job['id'])) {
-        $job_res = array_merge([
-          'job_id' => $job['id'],
-          'campaign_id' => $campaign['id'],
-          'asset' => $campaign['asset'],
-          'asset_meta' => $campaign['asset_meta']
-        ], $job);
-        return inject_priority($job_res, $screen, $campaign);
-      }
-    }
-  }, $campaignList);
+
+    return array_merge($job, {
+      'asset_meta' => $campaign['asset_meta'],
+      'priority'   => $campaign['priority']
+    });
+
+  }, $candidate_campaigns);
+
   if($payload['uid'] == $screen_dbg_id) {
     error_log("response >> " . json_encode($server_response));
   }
