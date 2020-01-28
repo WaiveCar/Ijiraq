@@ -75,7 +75,7 @@ $height = $width * 675 / 1920;
                   <div class="progress">
                     <div class="progress-bar" role="progressbar" style="width: <?= $done ?>%" aria-valuenow="<?= $done ?>" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <p><?= $campaign['completed_seconds'] ?>/<a href=# onclick="change_time(<?=$campaign['id']?>,<?= $campaign['goal_seconds'] ?>)"><?= $campaign['goal_seconds'] ?></a><br/>
+                  <p><?= $campaign['id'] ?> <?= $campaign['completed_seconds'] ?>/<a href=# onclick="change_time(<?=$campaign['id']?>,<?= $campaign['goal_seconds'] ?>)"><?= $campaign['goal_seconds'] ?></a><br/>
                   Start: <?= $campaign['start_time'] ?><br>
                   End: <?= $campaign['end_time'] ?>
                 <? } else { ?>
