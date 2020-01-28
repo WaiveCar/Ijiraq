@@ -699,13 +699,14 @@ function screen_edit($data) {
   return Get::screen($data['id']);
 }
 
-
-// we need to find out if the screen has tasks we need
+//
+// We need to find out if the screen has tasks we need
 // to inject and then do so
 //
 // Why are we calling by reference like a weirdo? 
 // We want the key to be empty if there's nothing
 // that satisfies it.
+// 
 function task_inject($screen, $res) {
   $taskList = task_master($screen);
   if(count($taskList) > 0) {
@@ -763,7 +764,6 @@ function sow($payload) {
   }
   foreach($jobList as $job) {
     $job_id = aget($job, 'job');
-    // error_log(implode(' ', array_keys($job)));
     if($job_id) {
       if (! update_job($job_id, $job['done']) ) {
         error_log("could not process job: " . json_encode($job));
@@ -919,7 +919,7 @@ function sow($payload) {
       $job = $jobList[0];
     }
 
-    error_log($job);
+    // error_log(json_encode($job));
     if(!$job) {
       return false;
     }
