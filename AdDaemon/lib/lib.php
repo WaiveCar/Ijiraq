@@ -11,6 +11,11 @@ include_once($mypath . 'db.php');
 $screen_dbg_id = 'SgQhKQlP5oIXZgHhkef6w';
 $PORT_OFFSET = 7000;
 $DAY = 24 * 60 * 60;
+
+// Every job strives for this many seconds of playtime.
+// The override here is the campaign's duration_seconds
+$WORKSIZE = 30;
+
 $PROJECT_LIST = ['LA', 'NY', 'REEF', 'CES', 'Amazon'];
 $DEFAULT_CAMPAIGN_MAP = [
   'none' => 1,
@@ -603,6 +608,7 @@ function ping($payload) {
 }
 
 function create_job($campaignId, $screenId) {
+  global $WORKSIZE;
   $job_id = false;
   $ttl = get_campaign_remaining($campaignId);
   if($ttl < 0) {
@@ -611,7 +617,8 @@ function create_job($campaignId, $screenId) {
   $campaign = Get::campaign($campaignId);
 
   if($campaign) {
-    $goal = min($ttl, 60 * 4);
+    $goal = min($ttl, $WORKSIZE);
+    $goal = max($goal, aget($campaign, 'duration_seconds', 0));
 
     $job_id = db_insert(
       'job', [
