@@ -732,10 +732,10 @@ function task_inject($screen, $res) {
 function update_campaign_completed($id) {
   if($id) {
     // only update campaign totals that aren't our defaults
-    return _query("update campaign 
-      set completed_seconds=(
-        select sum(completed_seconds) from job where campaign_id=$id
-      ) where id=$id and is_default=0");
+    return _query("update campaign set 
+            boost_seconds = (select sum(completed_seconds) from job where campaign_id=$id and is_boost=1),
+        completed_seconds = (select sum(completed_seconds) from job where campaign_id=$id and is_boost=0) 
+      where id=$id and is_default=0");
   }
   error_log("Not updating an invalid campaign.");
 }
@@ -843,10 +843,10 @@ function sow($payload) {
     }
   }
 
-  // if we aren't in boost mode then we should *probably* try to spread out the completion over
+  // If we aren't in boost mode then we should *probably* try to spread out the completion over
   // the time allotted. The current method of doing this is through thresholds.
   if(!$boost_mode) {
-    $campaigns_to_play = array_filter($candidate_campaigns, $function($campaign) {
+    $campaigns_to_play = array_filter($candidate_campaigns, function($campaign) {
 
       $start = strtotime($campaign['start_time']);
       $end   = strtotime($campaign['end_time']);
@@ -919,10 +919,10 @@ function sow($payload) {
       $job = $jobList[0];
     }
 
-    return array_merge($job, {
+    return array_merge($job, [
       'asset_meta' => $campaign['asset_meta'],
       'priority'   => $campaign['priority']
-    });
+    ]);
 
   }, $candidate_campaigns);
 
