@@ -627,7 +627,7 @@ function create_job($campaignId, $screenId, $boost_mode) {
       'job', [
         'campaign_id' => db_int($campaignId),
         'screen_id' => $screenId,
-        'boost_mode' => db_int($boost_mode),
+        'is_boost' => db_int($boost_mode),
         'job_start' => 'current_timestamp',
         'job_end' => db_string($campaign['end_time']),
         'last_update' => 'current_timestamp',
@@ -919,12 +919,18 @@ function sow($payload) {
       $job = $jobList[0];
     }
 
+    error_log($job);
+    if(!$job) {
+      return false;
+    }
     return array_merge($job, [
       'asset_meta' => $campaign['asset_meta'],
       'priority'   => $campaign['priority']
     ]);
 
   }, $candidate_campaigns);
+
+  $candidate_campaigns = array_filter($candidate_campaigns, function($m) { return $m; });
 
   if($payload['uid'] == $screen_dbg_id) {
     error_log("response >> " . json_encode($server_response));
