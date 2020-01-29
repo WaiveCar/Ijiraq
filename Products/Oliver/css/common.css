@@ -545,6 +545,9 @@ select.form-control:focus,
   margin-bottom: 8vmin;
 }
 .btn { 
+  font-size: 16px;
+}
+.btn.size{ 
   font-size: 4.5vmin;
 }
 .stat .btn {

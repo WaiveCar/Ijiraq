@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 {% block topbar %}
-<span class="top-bar-right mt-2 with-links hidable-top-bar">
-</span>
 {% endblock %}
 {% block content %}
 <style>
+.top-bar { position: relative }
 #content-wrapper span { color: #000 }
 .id,.version { font-family: monospace }
 .edit { color: #999; cursor: pointer }
@@ -128,10 +127,10 @@ td.edit { white-space: nowrap; }
 
   <div class="row mb-2">
     <div class="col-8">
-      <button id='extend' class="btn btn-lg btn-block control-btn">Extend</button>
+      <button id='extend' class="btn size btn-lg btn-block control-btn">Extend</button>
     </div>
     <div class="col-4">
-      <button class="btn btn-lg btn-block control-btn">Create</button>
+      <button class="btn size btn-lg btn-block control-btn">Create</button>
     </div>
   </div>
   <div class="row mb-3">
