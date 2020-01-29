@@ -59,30 +59,9 @@ function changeSelected(newIdx) {
 
 (() => {
   document.querySelector('#campaign-url').innerHTML = `URL: ${window.location.href}`;
-  topBarRight.innerHTML = [
-    'Overview',
-    'Locations',
-    'Boost Zone',
-    'Billing',
-  ]
-    .map(
-      (item, i) => `
-    <a href="#${item}">
-      <div class="top-bar-link" onclick="changeSelected(${i})">
-        ${item}
-      </div>
-    </a>
-  `,
-    )
-    //.concat(['<div class="top-bar-link update-campaign-btn p-manager">Update</div>'])
-    .join('');
-  topBarRight.children[selectedLinkIdx].classList.add('top-bar-selected');
-
-  window.addEventListener('hashchange', function() {
-    window.scrollTo(window.scrollX, window.scrollY - 50);
-  });
 
   const id = new URL(location.href).searchParams.get('id');
+  if(!id) { return }
   map.location = map({ 
     opacity: 0.7,
     tiles: 'stamen.toner',
@@ -100,6 +79,12 @@ function changeSelected(newIdx) {
     opacity: 0.7,
     tiles: 'stamen.toner',
   });
+  fetch(`http://${server}/api/purchases?campaign_id=${id}`)
+    .then(response => response.json())
+    .then(json => {
+      console.log(json);
+    });
+
   fetch(`http://${server}/api/campaigns?id=${id}`)
     .then(response => response.json())
     .then(json => {

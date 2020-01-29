@@ -3,7 +3,7 @@
 {% endblock %}
 {% block content %}
 <style>
-.top-bar { position: relative }
+.top-bar { position: relative; display: block; margin-bottom: 2vmin;}
 #content-wrapper span { color: #000 }
 .id,.version { font-family: monospace }
 .edit { color: #999; cursor: pointer }
@@ -24,7 +24,7 @@ td.edit { white-space: nowrap; }
 .show {
   display: block;
 }
-.editor {
+.billing, .editor {
   display: none;
 }
 #schedule {
@@ -96,6 +96,23 @@ td.edit { white-space: nowrap; }
   justify-content: center;
   flex-direction: column;
   overflow: hidden;
+}
+.top-bar-left {
+  min-width: 0;
+  width: 35vmin;
+}
+.offset-top { margin-top: 0 }
+@media(max-width: 768px) {
+  .top-bar {
+    margin-bottom: 2vmin;
+  }
+}
+@media(max-width: 1100px) {
+  .top-bar-left {
+    margin: 1rem 1rem 0;
+  }
+  .offset-top { margin-top: 0 }
+
 }
 </style>
 <div class="container-fluid">
@@ -364,7 +381,7 @@ td.edit { white-space: nowrap; }
   </div>
 
   -->
-  <div class="row mb-4">
+  <div class="row mb-4 billing">
     <a name="Billing"></a>
     <div class="col-lg-12">
       <div class="card">
@@ -380,27 +397,7 @@ td.edit { white-space: nowrap; }
                   <th></th>
                 </tr>
               </thead>
-              <tbody id="screen-table-body">
-                <tr>
-                  <td>4</td>
-                  <td>9/22/2019</td>
-                  <td>$894.15</td>
-                  <!--
-                  <td class="center"><input type="checkbox" checked></td>
-                  <td class="center"><button class="btn btn-primary rounded-btn">download</button></td>
-                  -->
-                </tr>
-                <tr>
-                  <td>15</td>
-                  <td>10/1/2019</td>
-                  <td>$577.92</td>
-                  <!--
-                  <td class="center"><input type="checkbox"></td>
-                  <td class="center"><button class="btn btn-primary rounded-btn">download</button></td>
-                  -->
-                </tr>
-                </tr>
-              </tbody>
+              <tbody id="billing-data"></tbody>
             </table>
           </div>
         </div>

@@ -98,11 +98,6 @@ button {
   padding: 0;
 }
 
-#screen-table-body .rounded-btn {
-  border-radius: 25px !important;
-  border: 1px solid;
-}
-
 .choice {
   background-color: #efefef;
   border-radius: 25px;
