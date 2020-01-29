@@ -73,7 +73,7 @@ try {
   }
   else if($func == 'screens' && ($verb == 'POST' || $verb == 'PUT')) {
     jemit(screen_edit($all));
-  } else if(array_search($func, ['users', 'jobs', 'sensor_history', 'campaigns', 'screens', 'tasks']) !== false) {
+  } else if(array_search($func, ['purchases', 'users', 'jobs', 'sensor_history', 'campaigns', 'screens', 'tasks']) !== false) {
     $table = $func;
     $table = rtrim($func, 's');
     $action = 'show';
