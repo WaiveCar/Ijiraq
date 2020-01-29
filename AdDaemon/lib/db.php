@@ -227,8 +227,10 @@ $SCHEMA = [
     // is additional. 
     //
     'boost_seconds' => 'integer default 0',
-    'project'     => 'text default "dev"',
 
+    // 
+    // How long 1 play of this campaign lasts.
+    //
     'duration_seconds' => 'integer',
 
     // 
@@ -237,6 +239,7 @@ $SCHEMA = [
     // change.
     //
     'topic'       => 'text',
+    'project'     => 'text default "dev"',
 
     //
     // For now, until we get a geo db system
