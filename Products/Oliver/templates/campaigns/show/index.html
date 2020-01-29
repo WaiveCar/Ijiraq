@@ -97,10 +97,32 @@ td.edit { white-space: nowrap; }
   flex-direction: column;
   overflow: hidden;
 }
+.account-tl {
+  float:right;
+  display: block;
+  font-size: 4.5vmin;
+}
+.account-tl span {
+  margin-left: 1vmin;
+}
+.container-fluid {
+  padding-left: 3vmin;
+  padding-right: 3vmin;
+}
+
 .top-bar-left {
+  display: flex;
+  justify-content: space-between;
+  vertical-align: middle;
+  align-items: flex-end;
   min-width: 0;
+  width: auto;
+  margin: 5vmin 3vmin;
+}
+#logo {
   width: 35vmin;
 }
+.title { text-transform: uppercase }
 .offset-top { margin-top: 0 }
 @media(max-width: 768px) {
   .top-bar {
@@ -109,7 +131,7 @@ td.edit { white-space: nowrap; }
 }
 @media(max-width: 1100px) {
   .top-bar-left {
-    margin: 1rem 1rem 0;
+  margin: 5vmin 3vmin;
   }
   .offset-top { margin-top: 0 }
 
@@ -147,7 +169,9 @@ td.edit { white-space: nowrap; }
       <button id='extend' class="btn size btn-lg btn-block control-btn">Extend</button>
     </div>
     <div class="col-4">
+      <a href='/notices/wizard/0'>
       <button class="btn size btn-lg btn-block control-btn">Create</button>
+      </a>
     </div>
   </div>
   <div class="row mb-3">
