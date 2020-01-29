@@ -1,6 +1,5 @@
 let form = document.querySelector('form');
 
-
 function signup() {
   let data = new FormData(form);
   let object = {};
@@ -12,10 +11,8 @@ function signup() {
 
 (() => {
   document.querySelector('.form-fields').innerHTML = [
-    'name',
     'email',
     'password',
-    'organization',
   ]
     .map(
       field => `
