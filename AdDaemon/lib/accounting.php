@@ -153,26 +153,12 @@ function parser($template, $opts) {
 function notify_if_needed($campaign, $event) {
   if(!is_flagged($campaign, $event)) {
     flag($campaign, $event);
-    send_message($campaign, $event);
+    send_campaign_message($campaign, $event);
   }
 }
 
-function send_message($campaign, $template, $user = false, $order = false) {
-  $user = $user ?: Get::user($campaign['user_id'], true);
-  $order = $order ?: Get::order($campaign['order_id'], true);
-
-  $params = [
-    'date_start' => $campaign['start_time'],
-    'date_end'  => $campaign['end_time'],
-    'campaign_link' => 'https://olvr.io/v/' . $campaign['uuid'],
-    'play_count'=> $campaign['play_count'],
-    'name'      => $user['name'],
-
-    'campaign'  => $campaign,
-    'user'      => $user,
-    'order'     => $order
-  ];
-
+function send_message($user, $template, $params) {
+  $params['user'] = $params['user'] ?: $user;
   $stuff = parser($template, $params);
 
   text_rando($user['number'], $stuff['sms']);
@@ -192,5 +178,23 @@ function send_message($campaign, $template, $user = false, $order = false) {
       'json' => true
     ]
   );
+}
+
+function send_campaign_message($campaign, $template, $user = false, $order = false) {
+  $user = $user ?: Get::user($campaign['user_id'], true);
+  $order = $order ?: Get::order($campaign['order_id'], true);
+
+  $params = [
+    'date_start' => $campaign['start_time'],
+    'date_end'  => $campaign['end_time'],
+    'campaign_link' => 'https://olvr.io/v/' . $campaign['uuid'],
+    'play_count'=> $campaign['play_count'],
+    'name'      => $user['name'],
+
+    'campaign'  => $campaign,
+    'user'      => $user,
+    'order'     => $order
+  ];
+  return send_message($user, $template, $params);
 }
 
