@@ -1006,37 +1006,6 @@ function show($what, $clause = []) {
   return db_all("select $fields from $what $clause", $what);
 }
 
-function create($table, $payload) {
-  // TODO: whitelist the tables
-  global $SCHEMA;
-  foreach($payload as $k => $v) {
-    $typeRaw = aget($SCHEMA, "$table.$k");
-    if($typeRaw) {
-      $parts = explode(' ', $typeRaw);
-      $type = $parts[0];
-      if($k === 'password') {
-        $v = password_hash($v, PASSWORD_BCRYPT);
-      }
-      if($type == 'text') {
-        $payload[$k] = db_string($v);
-      }
-      if(empty($payload[$k])) {
-        unset($payload[$k]);
-      }
-    } else {
-      unset($payload[$k]);
-    }
-  }
-
-  $id = aget($payload, 'id');
-  if($id) {
-    return db_update($table, $id, $payload);
-  } 
-
-  return db_insert($table, $payload);
-}
-
-
 function make_infinite($campaign_id) {
   db_update('campaign', $campaign_id, [
     'goal_seconds' => pow(2,31),
