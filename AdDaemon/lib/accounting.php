@@ -9,36 +9,6 @@ require $_SERVER['DOCUMENT_ROOT'] . 'AdDaemon/vendor/autoload.php';
 use Twilio\Rest\Client;
 include_once("lib.php");
 
-function create($table, $payload) {
-  // TODO: whitelist the tables
-  global $SCHEMA;
-  foreach($payload as $k => $v) {
-    $typeRaw = aget($SCHEMA, "$table.$k");
-    if($typeRaw) {
-      $parts = explode(' ', $typeRaw);
-      $type = $parts[0];
-      if($k === 'password') {
-        $v = password_hash($v, PASSWORD_BCRYPT);
-      }
-      if($type == 'text') {
-        $payload[$k] = db_string($v);
-      }
-      if(empty($payload[$k])) {
-        unset($payload[$k]);
-      }
-    } else {
-      unset($payload[$k]);
-    }
-  }
-
-  $id = aget($payload, 'id');
-  if($id) {
-    return db_update($table, $id, $payload);
-  } 
-
-  return db_insert($table, $payload);
-}
-
 function get_user() {
   if(isset($_SESSION['user_id'])) {
     return Get::user($_SESSION['user_id']);
@@ -50,6 +20,45 @@ function me() {
     return $_SESSION['user'];
   }
 }
+
+function do_oth($oth) {
+  $stuff = onetimehash($oth);
+  if($stuff) {
+    if($stuff['action'] == 'confirm') {
+      pdo_update('user', ['id' => $stuff['data']], ['is_verified' => true]);
+    }
+    return true;
+  }
+}
+
+function create($table, $payload) {
+  // TODO: whitelist the tables
+  global $SCHEMA;
+  foreach($payload as $k => $v) {
+    $typeRaw = aget($SCHEMA, "$table.$k");
+    if($typeRaw) {
+      $parts = explode(' ', $typeRaw);
+      $type = $parts[0];
+      if($k === 'password') {
+        $v = password_hash($v, PASSWORD_BCRYPT);
+      } else if(empty($payload[$k])) {
+        unset($payload[$k]);
+      } else {
+        $payload[$k] = $v;
+      }
+    } else {
+      unset($payload[$k]);
+    }
+  }
+
+  $id = aget($payload, 'id');
+  if($id) {
+    return pdo_update($table, $id, $payload);
+  } 
+
+  return pdo_insert($table, $payload);
+}
+
 
 function signup($all) {
   $who = aget($all, 'email');

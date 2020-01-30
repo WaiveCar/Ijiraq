@@ -1,5 +1,6 @@
 <?php
 date_default_timezone_set('UTC');
+use Ramsey\Uuid\Uuid;
 
 $DBPATH = "/var/db/waivescreen/main.db";
 $JSON = [
@@ -472,6 +473,7 @@ $SCHEMA = [
     'password'   => 'text',
     'image'      => 'text',
     'contact_id' => 'integer',
+    'is_verfied' => 'boolean default false',
     'auto_approve' => 'boolean default false',
     'title'      => 'text',
     'organization_id'     => 'integer',
@@ -1018,4 +1020,20 @@ function db_insert($table, $kv) {
     return $db->lastInsertRowID();
   }
   return null;
+}
+
+function onetimehash($payload, $expire_hours = 72) {
+  $r = get_redis();
+
+  if(is_string($payload)) {
+    $stuff = $r->get("OTH:$payload");
+    if($stuff) { 
+      return json_decode($stuff, true);
+    }
+  }
+  $hash = Uuid::uuid4()->toString();
+  $r->set("OTH:$hash", json_encode($payload));
+  $r->expire("OTH:$hash", $expire_hours * 3600);
+  return $hash;
+  
 }
