@@ -161,7 +161,9 @@ function send_message($user, $template, $params) {
   $params['user'] = $params['user'] ?: $user;
   $stuff = parser($template, $params);
 
-  text_rando($user['number'], $stuff['sms']);
+  if($user['number'])) {
+    text_rando($user['number'], $stuff['sms']); 
+  }
 
   return curldo(
     'https://api.mailgun.net/v3/waive.com/messages', [
