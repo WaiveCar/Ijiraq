@@ -535,10 +535,13 @@ select.form-control:focus,
 }
 
 .stat {
-  width: 40vmin;
+  width: 41vmin;
   text-align: center;
 }
 
+.mbv-2 {
+  margin-bottom: 2vmin;
+}
 .mbv-8 {
   margin-bottom: 8vmin;
 }
