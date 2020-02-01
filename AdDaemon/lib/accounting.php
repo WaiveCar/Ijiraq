@@ -84,12 +84,6 @@ function signup($all) {
   return doSuccess($_SESSION['user']);
 }
 
-function add_service($user, $service_obj) {
-}
-
-function get_service($user, $service_string) {
-}
-
 function logout() {
   session_destroy();
 }
@@ -198,5 +192,11 @@ function send_campaign_message($campaign, $template, $user = false, $order = fal
     'order'     => $order
   ];
   return send_message($user, $template, $params);
+}
+
+function add_service($user, $service_obj) {
+}
+
+function get_service($user, $service_string) {
 }
 
