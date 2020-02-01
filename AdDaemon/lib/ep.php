@@ -105,7 +105,8 @@ try {
     'sow', 
     'tag', 
     'most_recent',
-    'task_dump' 
+    'task_dump',
+    'me'
   ]) !== false) { 
     post_return($func($all, $verb));
   } else {
