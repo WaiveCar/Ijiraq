@@ -472,6 +472,7 @@ $SCHEMA = [
     'name'       => 'text',
     'password'   => 'text',
     'image'      => 'text',
+    'credit'     => 'integer default 0',
     'contact_id' => 'integer',
     'is_verfied' => 'boolean default false',
     'auto_approve' => 'boolean default false',
@@ -488,8 +489,17 @@ $SCHEMA = [
     'campaign_id'=> 'integer',
     'charge_id'  => 'text',
     'status'     => 'text',
+
     'amount'     => 'integer',
-    'refunded'   => 'boolean default false',
+    // ^ This is always filled.
+    // if credit is charged then this V is filled
+    'credit'     => 'integer default 0',
+
+    // This means you can do amount - credit = amount paid.
+    // Also this means that refunds can re-appear as
+    // credit.
+    'refunded'   => 'integer default 0',
+
     'ref_id'     => 'integer',
     'created_at' => 'datetime default current_timestamp',
   ],
