@@ -2,7 +2,7 @@
 include('../AdDaemon/lib/lib.php');
 include('lib.php');
 
-$campaignList = get('campaigns');
+$campaignList = get('campaigns', $_GET);
 $addrList = get_addressList(array_map(function($row) { 
   return [$row['lat'],$row['lng']]; 
 }, $campaignList));
