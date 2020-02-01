@@ -451,11 +451,6 @@
       -->
         <div class="payment-holder mt-3">
           <div class="inner-payment">
-          <!--
-            <h4>
-              Contact
-            </h4>
-          -->
             ${formFields(
               [
                 ['name', 'Name', false],
@@ -503,6 +498,7 @@
       -->
           </div>
         </div>
+      <!--
         <div>
           <h4 class="text-center mt-4 black-title">
             Does your notice contain any of the following?
@@ -532,7 +528,6 @@
             </div>
           </div>
         </div>
-      <!--
         <div class="mt-3 d-flex justify-content-center">
           <textarea class="description triptych-text"
             placeholder="Notice Description *"
