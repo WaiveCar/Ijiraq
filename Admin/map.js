@@ -45,7 +45,7 @@ window.map = function(opts) {
       _dom = document.getElementById(opts.target),
       _featureMap = {},
       _id = 0,
-      _isFrst = true,
+      _isFirst = true,
       _layers = [],
       _map,
       _map_params,
