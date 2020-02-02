@@ -79,14 +79,14 @@ td.edit { white-space: nowrap; }
 .preview-holder {
   width: 100%;
 }
- .controls { 
-   padding: 10px;
-   background: #334;
-   padding-bottom: 3px;
-   margin-bottom: 1.5rem;
-   border-radius: 0 0 6px 6px;
- }
- .asset-container {
+.controls { 
+  padding: 10px;
+  background: #334;
+  padding-bottom: 3px;
+  margin-bottom: 1.5rem;
+  border-radius: 0 0 6px 6px;
+}
+.asset-container {
   position: absolute;
   top: 0;
   left: 0;
@@ -409,25 +409,25 @@ td.edit { white-space: nowrap; }
     </div>
   </div>
 </div>
-    <div class="modal fade" id="share-modal" tabindex="-1" role="dialog" aria-labelledby="share-modal-label" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Share This Campaign</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div id="campaign-url"></div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Add Password Protection</button>
-          </div>
+  <div class="modal fade" id="share-modal" tabindex="-1" role="dialog" aria-labelledby="share-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Share This Campaign</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="campaign-url"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Add Password Protection</button>
         </div>
       </div>
     </div>
+  </div>
 {% endblock %}
 {% block additionalScripts %}
   <script src="/js/map.js"></script>
