@@ -75,7 +75,7 @@ def buy():
       charge = dict(charge)
       """
       charge = {}
-      receipt = send_receipt(data.get('email'), ad_id)
+      #receipt = send_receipt(data.get('email'), ad_id)
       logging.warning(ad_id)
       return jsonify({'ad_id': ad_id.text})
       

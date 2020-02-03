@@ -996,7 +996,7 @@ function pdo_insert($table, $kv) {
     $values[] = db_bottom($v);
   } 
 
-  $pdo_values = implode(',', array_fill(0, len($values), '?'));
+  $pdo_values = implode(',', array_fill(0, count($values), '?'));
   $fields = implode(',', array_keys($kv));
 
   $qstr = "insert into $table($fields) values($pdo_values)";
