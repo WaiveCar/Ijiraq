@@ -155,7 +155,7 @@ function send_message($user, $template, $params) {
   $params['user'] = $params['user'] ?: $user;
   $stuff = parser($template, $params);
 
-  if($user['number'])) {
+  if($user['number']) {
     text_rando($user['number'], $stuff['sms']); 
   }
 
