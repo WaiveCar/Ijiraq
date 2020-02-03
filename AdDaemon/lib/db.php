@@ -1002,7 +1002,7 @@ function pdo_insert($table, $kv) {
   $qstr = "insert into $table($fields) values($pdo_values)";
 
   _pdo_query($qstr, $values);
-  return PDO::lastInsertId();
+  return pdo_connect()->lastInsertId();
 }
 
 function db_insert($table, $kv) {
