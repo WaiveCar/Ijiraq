@@ -42,6 +42,9 @@ $RULES = [
     'asset' => [
       'pre' => $JSON['pre'],
       'post' => function($v) {
+         if(is_array($v)) {
+           error_log(json_encode(debug_backtrace()));
+         }
          $v = json_decode($v, true);
          if(!is_array($v)) {
            $v = [ $v ];
