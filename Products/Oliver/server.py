@@ -58,6 +58,20 @@ def buy():
       logging.debug(ad_id)
       logging.debug(ad_id.text)
 
+      # Todo: 
+      #
+      # (1) we need to make sure that the ad was
+      #     successfully created before doing the processing
+      #
+      # (2) we need to notify human beings when this process
+      #     has failed, with the contact information of
+      #     the customer it has failed on so that we can
+      #     contact them IMMEDIATELY to apologize and 
+      #     correct the problem.
+      #
+      # (3) we need to *fully log* the post data so we
+      #     can replay a failed creation in order to
+      #     be able to diagnose the problem
       """
       # Everything is flat priced right now
       amount = 399
