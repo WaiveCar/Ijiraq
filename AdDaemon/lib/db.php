@@ -28,13 +28,16 @@ $RULES = [
          }
          // temporary. we are reconstructing the legacy
          // asset interface until all the cars ignore this.
-         $obj['asset'] = [];
+         $asset = [];
 
          foreach($v as &$row) {
            if(strpos($row['url'], 'http') === false) {
              $row['url'] = 'http://waivecar-prod.s3.amazonaws.com/' . $row['url'];
            } 
-           $obj['asset'][] = $row['url'];
+           $asset = $row['url'];
+         }
+         if(!$obj['asset'])) {
+           $obj['asset'] = json_encode($asset);
          }
          return $v;
       }
