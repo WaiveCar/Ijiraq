@@ -1130,6 +1130,11 @@ function campaign_create($data, $fileList, $user = false) {
       'start_time' => db_date(time()),
       'goal_seconds' => 240,
       'end_time' => db_date(time() + $DAY * 4),
+      // for the time being we are going to give
+      // the legacy "asset" just an empty array
+      // to satisfy our null condition and make 
+      // sure that legacy installs don't crash
+      'asset' => [],
       'asset_meta' => [],
     ],
   );

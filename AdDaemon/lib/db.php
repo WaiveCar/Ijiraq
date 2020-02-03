@@ -21,18 +21,22 @@ $RULES = [
     'flags' => $JSON,
     'asset_meta' => [
       'pre' => $JSON['pre'],
-      'post' => function($v) {
+      'post' => function($v, &$obj) {
          $v = json_decode($v, true);
          if(!is_array($v)) {
            $v = [ $v ];
          }
+         // temporary. we are reconstructing the legacy
+         // asset interface until all the cars ignore this.
+         $obj['asset'] = [];
 
-         return array_map(function($m) {
-           if(strpos($m['url'], 'http') === false) {
-             $m['url'] = 'http://waivecar-prod.s3.amazonaws.com/' . $m['url'];
+         foreach($v as &$row) {
+           if(strpos($row['url'], 'http') === false) {
+             $row['url'] = 'http://waivecar-prod.s3.amazonaws.com/' . $row['url'];
            } 
-           return $m;
-         }, $v);
+           $obj['asset'][] = $row['url'];
+         }
+         return $v;
       }
     ],
     'asset' => [
