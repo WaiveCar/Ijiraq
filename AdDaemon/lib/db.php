@@ -36,7 +36,7 @@ $RULES = [
            } 
            $asset = $row['url'];
          }
-         if(!$obj['asset'])) {
+         if(!$obj['asset']) {
            $obj['asset'] = json_encode($asset);
          }
          return $v;
