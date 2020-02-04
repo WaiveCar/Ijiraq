@@ -20,7 +20,6 @@ var Engine = function(opts){
 
       pause: false,
 
-      slowCPU: false,
       doScroll: true,
       doOliver: true,
 
@@ -659,8 +658,8 @@ var Engine = function(opts){
       }
     },
     ticker: function(feed) {
-      var amount =_res.slowCPU ? 3 : 1.4,
-          delay = _res.slowCPU ? 70 : 30;
+      var amount = 1.4,
+          delay =  30;
       if(arguments.length === 0) {
         return;
       }
@@ -706,7 +705,7 @@ var Engine = function(opts){
         dom  = obj.dom,
         goal = obj.goal,
         time = obj.duration || _res.duration * 1000;
-        period = 1000 / (_res.slowCPU ? 14 : 40),
+        period = 1000 / 40,
         rounds = time / period,
         step = goal / rounds,
         ix = 0;
@@ -788,9 +787,6 @@ var Engine = function(opts){
     //console.log(_.current);
     _.current.shown = _.current.assetList[_.current.position];
     _.current.shown.run( function() {
-      if(_res.slowCPU && prev) {
-        _box.ad.removeChild(prev);
-      }
       _box.ad.appendChild(_.current.shown.container);
       if(_.current.shown.type == 'image') {
         scrollIfNeeded();
@@ -803,29 +799,18 @@ var Engine = function(opts){
       // redefined.
       prev = _last_container;
       if(prev) {
-        if(!_res.slowCPU) {
-          prev.classList.add(_key('fadeOut'));
-          _timeout(function() {
-            prev.classList.remove(_key('fadeOut'));
-            _box.ad.removeChild(prev);
-          }, _res.fadeMs, 'assetFade');
-        } else {
-          //dbg("removeChild {");
-          //_box.ad.removeChild(prev);
-          //dbg("} removeChild");
-          // we don't have to worry about the re-pointing
-          // because we aren't in the timeout
-          _.current.shown.rewind();
-        }
+        prev.classList.add(_key('fadeOut'));
+        _timeout(function() {
+          prev.classList.remove(_key('fadeOut'));
+          _box.ad.removeChild(prev);
+        }, _res.fadeMs, 'assetFade');
         doFade = true;
       }
     }
     _last_uniq = _.current.shown.uniq;
     _last_container = _.current.shown.container;
 
-    if(!_res.slowCPU) {
-      _.current.shown.container.classList[doFade ? 'add' : 'remove' ](_key('fadeIn'));
-    }
+    _.current.shown.container.classList[doFade ? 'add' : 'remove' ](_key('fadeIn'));
 
     //console.log(new Date() - _start, _playCount, "Job #" + _current.id, "Asset #" + _current.position, "Duration " + _current.shown.duration, _current.shown.url, _current.shown.cycles);
 
@@ -836,10 +821,7 @@ var Engine = function(opts){
     // when we come back around
     _.current.position ++;
 
-    timeoutDuration = _.current.shown.duration * 1000; 
-    if(!_res.slowCPU) {
-      timeoutDuration -= _res.fadeMs / 2;
-    }
+    timeoutDuration -= _res.fadeMs / 2;
 
     _timeout(nextAsset, Math.max(timeoutDuration, 1000), 'nextAsset');
   }
