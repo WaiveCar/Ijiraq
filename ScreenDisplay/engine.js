@@ -617,28 +617,26 @@ var Engine = function(opts){
     // be transitioning away from a previous job
     //
     // so this is when we do the reporting.
-    if(_.current.position === 0) {
+    if(_.current.position === 0 && _.last) {
 
       // If this exists then it'd be set at the last asset
       // previous job.
-      if(_.last) {
-        // We can state that we've shown all the assets that
-        // we plan to show
-        _.last.completed_seconds += _.last.duration;
+      // We can state that we've shown all the assets that
+      // we plan to show
+      _.last.completed_seconds += _.last.duration;
 
-        // and report it up to the server
-        sow({
-          start_time: _.last_sow[0],
-          end_time: _.last_sow[1],
-          job_id: _.last.job_id,
-          campaign_id: _.last.campaign_id, 
-          completed_seconds: _.last.completed_seconds
-        });
+      // and report it up to the server
+      sow({
+        start_time: _.last_sow[0],
+        end_time: _.last_sow[1],
+        job_id: _.last.job_id,
+        campaign_id: _.last.campaign_id, 
+        completed_seconds: _.last.completed_seconds
+      });
 
-        if(_.last.job_id !== _.current.job_id) {
-          // we reset the downweight -- it can come back
-          _.last.downweight = 1;
-        }
+      if(_.last.job_id !== _.current.job_id) {
+        // we reset the downweight -- it can come back
+        _.last.downweight = 1;
       }
     }
 
@@ -651,7 +649,9 @@ var Engine = function(opts){
 
     _.current.shown = _.current.assetList[_.current.position];
     _.current.shown.run( function() {
-      _box.ad.appendChild(_.current.shown.container);
+      if(_.current.shown.container.parentNode !== _box.ad || _.current.shown.forceReload) {
+        _box.ad.appendChild(_.current.shown.container);
+      }
       if(_.current.shown.type == 'image') {
         scrollIfNeeded();
       }
@@ -1016,7 +1016,7 @@ var Engine = function(opts){
   // variables start with lower case letters,
   // function start with upper case.
   return Object.assign(_res, {
-    Strategy, Widget, SetFallback, on,
+    Strategy, SetFallback, on, _,
 
     Play: function() {
       _res.pause = false;
