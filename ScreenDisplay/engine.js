@@ -373,16 +373,20 @@ var Engine = function(opts){
     return asset.url.match('(' + ext.join('|') + ')');
   }
 
-  function urlToAsset(url, obj) {
+  // Similar to makeJob, we intend to come out of this
+  // with {url: <str>, duration: <int>, ... } AND the
+  // actual DOM object that will sit on the screen.
+  function urlToAsset(row, obj) {
+    var asset = isString(row) ? {url: url} : row;
+
     var container = document.createElement('div');
-    var asset = isString(url) ? {url: url} : url;
     container.classList.add(_key('container'));
 
     if(assetTest(asset, 'image', ['png','jpg','jpeg'])) {
       asset = image(asset, obj);
     } else if(assetTest(asset, 'video', ['mp4', 'avi', 'mov', 'ogv'])) {
       asset = video(asset, obj);
-      container.className += " hasvideo";
+      container.classList.add("hasvideo");
     } else {
       asset = iframe(asset, obj);
     }
@@ -397,7 +401,27 @@ var Engine = function(opts){
   //  run() - for videos it resets the time and starts the video
   //  duration - how long the asset should be displayed.
   //
+  // Essentially the obj has the properties:
+  //
+  //  {
+  //    asset_meta:  [
+  //      { 
+  //        url:
+  //        duration:
+  //      } ...
+  //    ]
+  //  }
+  //
+  // If we pass something in with asset_meta, that's fine.
+  // If we pass in a string, then it's the url of one asset
+  // If we pass in {url: blah} then it becomes 1 asset.
+  //
   function makeJob(obj) {
+    if( isString(obj) ) {
+      obj = {asset_meta: [{ url: obj }] };
+    } else if('url' in obj) {
+      obj.asset_meta = [{ url: obj.url }];
+    }
     obj = Object.assign({
       downweight: 1,
       completed_seconds: 0,
@@ -412,17 +436,7 @@ var Engine = function(opts){
       id: _jobId++,
     }, obj);
     
-    if( ! ('url' in obj) && ('asset' in obj) ) {
-      obj.url = obj.asset;
-    }
-
-    if( isString(obj.url) ) {
-      obj.url = [ obj.url ];
-    }
-
-    if( obj.url ) {
-      obj.assetList = obj.url.map(row => urlToAsset(row, obj));
-    }
+    obj.assetList = obj.asset_meta.map(row => urlToAsset(row, obj));
 
     obj.remove = function(what) {
       obj.assetList = obj.assetList.filter(row => row.uniq != what.uniq );
@@ -445,7 +459,7 @@ var Engine = function(opts){
       // This acts as the instantiation. 
       // the merging of the rest of the data
       // will come below.
-      _res.db[job.campaign_id] = makeJob({ url: job.asset });
+      _res.db[job.campaign_id] = makeJob(job);
     }
 
     // This places in things like the goal
@@ -691,7 +705,7 @@ var Engine = function(opts){
         anchor  = dim == 'vertical' ? 'marginTop' : 'marginLeft',
         dom  = obj.dom,
         goal = obj.goal,
-        time = obj.duration || 7500,
+        time = obj.duration || _res.duration * 1000;
         period = 1000 / (_res.slowCPU ? 14 : 40),
         rounds = time / period,
         step = goal / rounds,
