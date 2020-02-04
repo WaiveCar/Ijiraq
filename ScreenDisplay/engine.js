@@ -266,7 +266,6 @@ var Engine = function(opts){
     }
     asset.run = function(cb) {
       mycb = cb;
-      console.log("starting", src.src);
       vid.currentTime = 0;
       vid.volume = 0;
       var now = new Date();
@@ -347,19 +346,21 @@ var Engine = function(opts){
     vid.addEventListener('play', function() {
       if(mycb) {
         mycb();
-        console.log("running", src.src);
+        // console.log("running", src.src);
       }
       mylock = false;
     });
 
-     var m = ["emptied","ended","loadeddata","play","playing","progress","seeked","seeking","pause"];
-     for(var ix = 0; ix < m.length; ix++) {
+    /*
+    var m = ["emptied","ended","loadeddata","play","playing","progress","seeked","seeking","pause"];
+    for(var ix = 0; ix < m.length; ix++) {
       (function(row) {
         vid.addEventListener(row, function() {
           console.log(+new Date(), asset.uniq, row, JSON.stringify(Array.prototype.slice.call(arguments))); 
         });
       })(m[ix]);
-     }
+    }
+    */
 
     asset.type = 'video';
     return asset;
@@ -380,21 +381,22 @@ var Engine = function(opts){
   // actual DOM object that will sit on the screen.
   function urlToAsset(row, obj) {
     var asset = isString(row) ? {url: url} : row;
+    if(!asset.container){ 
+      var container = document.createElement('div');
+      container.classList.add(_key('container'));
 
-    var container = document.createElement('div');
-    container.classList.add(_key('container'));
-
-    if(assetTest(asset, 'image', ['png','jpg','jpeg'])) {
-      asset = image(asset, obj);
-    } else if(assetTest(asset, 'video', ['mp4', 'avi', 'mov', 'ogv'])) {
-      asset = video(asset, obj);
-      container.classList.add("hasvideo");
-    } else {
-      asset = iframe(asset, obj);
+      if(assetTest(asset, 'image', ['png','jpg','jpeg'])) {
+        asset = image(asset, obj);
+      } else if(assetTest(asset, 'video', ['mp4', 'avi', 'mov', 'ogv'])) {
+        asset = video(asset, obj);
+        container.classList.add("hasvideo");
+      } else {
+        asset = iframe(asset, obj);
+      }
+      asset.uniq = _uniq++;
+      asset.container = container;
+      asset.container.appendChild(asset.dom);
     }
-    asset.uniq = _uniq++;
-    asset.container = container;
-    asset.container.appendChild(asset.dom);
     return asset;
   }
 
@@ -748,7 +750,7 @@ var Engine = function(opts){
     var didRun = false;
     var doFade = false;
 
-    console.log(new Error().stack);
+    //console.log(new Error().stack);
     if(_res.pause) {
       return;
     }
@@ -951,7 +953,7 @@ var Engine = function(opts){
 
         // nextAsset is at the bottom
       } else {
-        console.log(topicMap, current, jobIx, topicList);
+        // console.log(topicMap, current, jobIx, topicList);
         
         if(jobIx === current.length) {
           nextTopic();
