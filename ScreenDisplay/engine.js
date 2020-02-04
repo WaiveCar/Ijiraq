@@ -33,7 +33,7 @@ var Engine = function(opts){
     // This is the actual breakdown of the content on
     // the screen into different partitions
     Strategy = {},
-    _id = Engine.list.length,
+    _id = Engine._length,
     _box = {},
     _start = new Date(),
     _uniq = 0,
@@ -277,6 +277,7 @@ var Engine = function(opts){
         .catch(function(e) {
           // console.log(new Date() - _start, "setting " + asset.url + " to unplayable", e);
           console.log('unplayable', e.message, e.name);
+          debugger;
           if(new Date() - now < 100) {
             // if we were interrupted in some normal interval, maybe it will just work
             // if we try again ... might as well - don't reset the clock though.
@@ -351,16 +352,14 @@ var Engine = function(opts){
       mylock = false;
     });
 
-    /*
      var m = ["emptied","ended","loadeddata","play","playing","progress","seeked","seeking","pause"];
      for(var ix = 0; ix < m.length; ix++) {
       (function(row) {
         vid.addEventListener(row, function() {
-          console.log(src.src, ' > ' + row + ' ' + JSON.stringify(Array.prototype.slice.call(arguments))); 
+          console.log(+new Date(), asset.uniq, row, JSON.stringify(Array.prototype.slice.call(arguments))); 
         });
       })(m[ix]);
      }
-     */
 
     asset.type = 'video';
     return asset;
@@ -1144,7 +1143,7 @@ var Engine = function(opts){
   }
 
   // A repository of engines
-  Engine.list.push(_res);
+  Engine[Engine._length++] = _res;
 
   // This makes sure the _box references are valid before
   // running Start().
@@ -1225,4 +1224,4 @@ var Engine = function(opts){
   });
 };
 
-Engine.list = [];
+Engine._length = 0;
