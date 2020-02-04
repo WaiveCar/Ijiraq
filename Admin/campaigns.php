@@ -162,7 +162,6 @@ $height = $width * 675 / 1920;
     </div>
     <script>
       var Data=<?=json_encode($campaignList);?>,width=<?=$width?>,height=<?=$height?>;
-      var Screens=<?=json_encode($screenList);?>;
     </script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/engine.js"></script>
