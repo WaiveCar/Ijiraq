@@ -261,10 +261,12 @@ var Engine = function(opts){
     asset.pause = vid.pause;
     asset.play = vid.play;
     asset.rewind = function() {
+      console.log("rewinding", src.src);
       vid.currentTime = 0;
     }
     asset.run = function(cb) {
       mycb = cb;
+      console.log("starting", src.src);
       vid.currentTime = 0;
       vid.volume = 0;
       var now = new Date();
@@ -274,7 +276,7 @@ var Engine = function(opts){
         playPromise.then(_nop)
         .catch(function(e) {
           // console.log(new Date() - _start, "setting " + asset.url + " to unplayable", e);
-          console.log(e.message, e.name);
+          console.log('unplayable', e.message, e.name);
           if(new Date() - now < 100) {
             // if we were interrupted in some normal interval, maybe it will just work
             // if we try again ... might as well - don't reset the clock though.
@@ -341,22 +343,24 @@ var Engine = function(opts){
       assetError(asset, e);
     }
 
-    vid.addEventListener('seeked', function() {
+    vid.addEventListener('play', function() {
       if(mycb) {
         mycb();
-        dbg("running");
+        console.log("running", src.src);
       }
       mylock = false;
     });
 
-    // var m = ["emptied","ended","loadeddata","play","playing","progress","seeked","seeking","pause"];
-    // for(var ix = 0; ix < m.length; ix++) {
-    //  (function(row) {
-    //    vid.addEventListener(row, function() {
-    //      dbg(' > ' + row + ' ' + JSON.stringify(Array.prototype.slice.call(arguments))); 
-    //    });
-    //  })(m[ix]);
-    // }
+    /*
+     var m = ["emptied","ended","loadeddata","play","playing","progress","seeked","seeking","pause"];
+     for(var ix = 0; ix < m.length; ix++) {
+      (function(row) {
+        vid.addEventListener(row, function() {
+          console.log(src.src, ' > ' + row + ' ' + JSON.stringify(Array.prototype.slice.call(arguments))); 
+        });
+      })(m[ix]);
+     }
+     */
 
     asset.type = 'video';
     return asset;
@@ -742,8 +746,10 @@ var Engine = function(opts){
   function nextAsset() {
     var prev;
     var timeoutDuration = 0;
+    var didRun = false;
     var doFade = false;
 
+    console.log(new Error().stack);
     if(_res.pause) {
       return;
     }
@@ -784,29 +790,30 @@ var Engine = function(opts){
       return _res.NextJob();
     } 
 
-    //console.log(_.current);
     _.current.shown = _.current.assetList[_.current.position];
     _.current.shown.run( function() {
       _box.ad.appendChild(_.current.shown.container);
       if(_.current.shown.type == 'image') {
         scrollIfNeeded();
       }
+      didRun = true;
     });
 
-    if(_.current.shown.uniq != _last_uniq) {
+    if(_last_container && _.current.shown.uniq != _last_uniq) {
       // This is NEEDED because by the time 
       // we come back around, _last.shown will be 
       // redefined.
       prev = _last_container;
-      if(prev) {
-        prev.classList.add(_key('fadeOut'));
-        _timeout(function() {
+      prev.classList.add(_key('fadeOut'));
+      _timeout(function() {
+        if(didRun) {
           prev.classList.remove(_key('fadeOut'));
           _box.ad.removeChild(prev);
-        }, _res.fadeMs, 'assetFade');
-        doFade = true;
-      }
+        }
+      }, _res.fadeMs, 'assetFade');
+      doFade = true;
     }
+
     _last_uniq = _.current.shown.uniq;
     _last_container = _.current.shown.container;
 
@@ -821,9 +828,9 @@ var Engine = function(opts){
     // when we come back around
     _.current.position ++;
 
-    timeoutDuration -= _res.fadeMs / 2;
+    timeoutDuration = Math.max(_.current.shown.duration * 1000 - _res.fadeMs / 2, 1000);
 
-    _timeout(nextAsset, Math.max(timeoutDuration, 1000), 'nextAsset');
+    _timeout(nextAsset, timeoutDuration, 'nextAsset');
   }
 
   function setNextJob(job) {
@@ -924,7 +931,7 @@ var Engine = function(opts){
         current = topicMap[null];
       }
 
-      console.log(_id, current, activeList, topicMap, _res.db);
+      //console.log(_id, current, activeList, topicMap, _res.db);
 
       render();
       nextJob();
