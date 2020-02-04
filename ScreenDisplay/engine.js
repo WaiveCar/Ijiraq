@@ -954,7 +954,7 @@ var Engine = function(opts){
         doReplace = true;
         if(!_.fallbackJob) {
           console.warn(_id, "I'm at a nextJob but have no assets or fallbacks");
-          return;
+          return _timeout(_res.NextJob, 1500, 'nextJob');
         }
         setNextJob(_.fallbackJob);
 
