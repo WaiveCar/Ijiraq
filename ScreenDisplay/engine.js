@@ -237,7 +237,7 @@ var Engine = function(opts){
     asset.rewind = asset.pause = asset.play = _nop;
     asset.run = _passthru;
     asset.active = true;
-    asset.duration = asset.duration || 100 * _res.duration;
+    asset.duration = asset.duration || 1000 * _res.duration;
     obj.duration += asset.duration;
     obj.active = true;
     asset.type = 'iframe';
