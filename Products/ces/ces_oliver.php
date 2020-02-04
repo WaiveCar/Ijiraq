@@ -17,7 +17,6 @@ if(array_key_exists('message', $_GET)) {
 $message = $Parsedown->text($message_md);
 ?>
 <link href="https://fonts.googleapis.com/css?family=Heebo:300,700,900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Heebo+Mono:400,700,900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700i&display=swap" rel="stylesheet"> 
 <style>
 * { font-family: 'Heebo', sans-serif; }

@@ -35,6 +35,7 @@ $height = $width * 675 / 1920;
     <title>Campaign admin</title>
     <style>
     form { float: right }
+    .id { font-family: pre }
     #content-wrapper h4 { color: #000 }
     .form-control-file { display: none }
     .asset-container { width: <?= $width; ?>px; position: relative; height: <?= $height; ?>px; }
@@ -75,11 +76,11 @@ $height = $width * 675 / 1920;
                   <div class="progress">
                     <div class="progress-bar" role="progressbar" style="width: <?= $done ?>%" aria-valuenow="<?= $done ?>" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <p><?= $campaign['id'] ?> <?= $campaign['completed_seconds'] ?>/<a href=# onclick="change_time(<?=$campaign['id']?>,<?= $campaign['goal_seconds'] ?>)"><?= $campaign['goal_seconds'] ?></a><br/>
+                  <p><span class='id'><?= $campaign['id'] ?></span> <?= $campaign['completed_seconds'] ?>/<a href=# onclick="change_time(<?=$campaign['id']?>,<?= $campaign['goal_seconds'] ?>)"><?= $campaign['goal_seconds'] ?></a><br/>
                   Start: <?= $campaign['start_time'] ?><br>
                   End: <?= $campaign['end_time'] ?>
                 <? } else { ?>
-                  <h4>Default advertisement</h4>
+                 <h4><span class='id'><?= $campaign['id'] ?></span> Default advertisement</h4>
                 <? } ?>
 
                 <p class="card-text"></p>
