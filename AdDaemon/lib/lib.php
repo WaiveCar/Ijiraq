@@ -1127,9 +1127,9 @@ function campaign_create($data, $fileList, $user = false) {
   $props = array_merge(circle(),
     [
       'project' => 'LA',
-      'start_time' => db_date(time()),
+      'start_time' => time(),
       'goal_seconds' => 240,
-      'end_time' => db_date(time() + $DAY * 4),
+      'end_time' => time() + $DAY * 4,
       // for the time being we are going to give
       // the legacy "asset" just an empty array
       // to satisfy our null condition and make 
