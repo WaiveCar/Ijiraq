@@ -196,11 +196,13 @@ $SCHEMA = [
     'title'       => 'text',
     'ref_id'      => 'text',
     'uuid'        => 'text',
+    /*
     'contact_id'  => 'integer',
     'brand_id'    => 'integer',
-    'user_id'     => 'integer',
     'organization_id'    => 'integer',
-    'purchase_id'    => 'integer',
+     */
+    'user_id'     => 'integer',
+    'purchase_id' => 'integer',
 
     'asset'       => 'text not null',
     //

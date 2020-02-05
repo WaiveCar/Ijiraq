@@ -1141,7 +1141,10 @@ function campaign_create($data, $fileList, $user = false) {
 
   $extractList = [
     'start_time','end_time',
-    'ref_id','title','organization_id','brand_id','goal_seconds','project'];
+    'ref_id','title',
+    'organization_id','brand_id',
+    'goal_seconds','project'
+  ];
 
   foreach($extractList as $key) {
     if(isset($data[$key])) {
@@ -1161,6 +1164,12 @@ function campaign_create($data, $fileList, $user = false) {
     $duration_seconds += $PLAYTIME;
   }
   $props['duration_seconds'] = $duration_seconds;
+
+  // See if we can extract a user out of this.
+  $user = upsert_user($data);
+  if($user) {
+    $props['user_id'] = $user['id'];
+  }
 
   return pdo_insert('campaign', $props);
 }

@@ -59,6 +59,18 @@ function create($table, $payload) {
   return pdo_insert($table, $payload);
 }
 
+function upsert_user($all) {
+  $who = aget($all, 'email');
+  if(!$who) {
+    return false;
+  }
+  $user = Get::user(['email' => $who]);
+  if ($user) {
+    return $user;
+  }
+  $user_id = create('user', $all);
+  return Get::user($user_id);
+}
 
 function signup($all) {
   $who = aget($all, 'email');
@@ -70,7 +82,7 @@ function signup($all) {
   $user = Get::user(['email' => $who]);
 
   if ($user) {
-    if( password_verify($all['password'], $user['password'])) {
+    if( !$all['password'] || password_verify($all['password'], $user['password'])) {
       $_SESSION['user'] = $user;
       return doSuccess($user);
     } 
