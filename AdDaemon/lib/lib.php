@@ -1171,7 +1171,13 @@ function campaign_create($data, $fileList, $user = false) {
     $props['user_id'] = $user['id'];
   }
 
-  return pdo_insert('campaign', $props);
+  $campaign_id = pdo_insert('campaign', $props);
+
+  if($campaign_id) {
+    notify_if_needed(Get::campaign($campaign_id), 'receipt');
+  }
+
+  return $campaign_id;
 }
 
 function campaign_update($data, $fileList, $user = false) {
