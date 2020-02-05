@@ -129,7 +129,9 @@ var Engine = function(opts){
   }
 
   function event(what, data) {
-    console.log(">>> event[" + _id + "]", what, data);
+    if(_.debug) {
+      console.log(">>> event[" + _id + "]", what, data);
+    }
     _res.data[what] = data;
     if(_res.listeners[what]) {
       _res.listeners[what].forEach(cb => cb(data))
@@ -274,9 +276,7 @@ var Engine = function(opts){
       if (playPromise !== undefined) {
         playPromise.then(_nop)
         .catch(function(e) {
-          // console.log(new Date() - _start, "setting " + asset.url + " to unplayable", e);
           console.log('unplayable', _id, asset.uniq, e.message, e.name, asset, vid.duration, vid.currentTime);
-          debugger;
           if(new Date() - now < 100) {
             // if we were interrupted in some normal interval, maybe it will just work
             // if we try again ... might as well - don't reset the clock though.
@@ -322,7 +322,7 @@ var Engine = function(opts){
         } else {
           vid.style.height = '100%';
         }
-          /*
+        /*
           var maxHeight = _res.target.width * vid.videoHeight / vid.videoWidth;
           vid.style.height =  Math.min(_res.target.height, maxHeight * 1.2) + "px";
           vid.style.width = _res.target.width + "px";
@@ -350,7 +350,7 @@ var Engine = function(opts){
       mylock = false;
     });
 
- 
+    /* 
     var m = ["emptied","ended","loadeddata","play","playing","progress","seeked","seeking","pause"];
     for(var ix = 0; ix < m.length; ix++) {
       (function(row) {
@@ -360,7 +360,7 @@ var Engine = function(opts){
         });
       })(m[ix]);
     }
-
+    */
 
     asset.type = 'video';
     return asset;
