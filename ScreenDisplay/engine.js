@@ -37,8 +37,6 @@ var Engine = function(opts){
     _box = {},
     _start = new Date(),
     _uniq = 0,
-    _last_uniq = false,
-    _last_container = false,
     _jobId = 0,
     _downweight = 0.7,
     _nop = () => {},
@@ -50,6 +48,9 @@ var Engine = function(opts){
       debug: false,
       last: false,
       last_sow: [+_start, +_start],
+      last_uniq: false,
+      last_container: false,
+      last_shown: false,
       isNetUp: true,
       current: false,
       firstRun: false,
@@ -274,7 +275,7 @@ var Engine = function(opts){
         playPromise.then(_nop)
         .catch(function(e) {
           // console.log(new Date() - _start, "setting " + asset.url + " to unplayable", e);
-          console.log('unplayable', e.message, e.name);
+          console.log('unplayable', _id, asset.uniq, e.message, e.name, asset, vid.duration, vid.currentTime);
           debugger;
           if(new Date() - now < 100) {
             // if we were interrupted in some normal interval, maybe it will just work
@@ -345,21 +346,21 @@ var Engine = function(opts){
     vid.addEventListener('play', function() {
       if(mycb) {
         mycb();
-        // console.log("running", src.src);
       }
       mylock = false;
     });
 
-    /*
+ 
     var m = ["emptied","ended","loadeddata","play","playing","progress","seeked","seeking","pause"];
     for(var ix = 0; ix < m.length; ix++) {
       (function(row) {
         vid.addEventListener(row, function() {
-          console.log(+new Date(), asset.uniq, row, JSON.stringify(Array.prototype.slice.call(arguments))); 
+          self.vid = vid;
+          console.log(+new Date(), _id, asset.uniq, row, vid.duration, vid.currentTime);
         });
       })(m[ix]);
     }
-    */
+
 
     asset.type = 'video';
     return asset;
@@ -603,10 +604,7 @@ var Engine = function(opts){
   // to do that work ... when nextAsset has no more assets for a particular job
   // it calls NextJob again.
   function nextAsset() {
-    var prev;
-    var timeoutDuration = 0;
-    var didRun = false;
-    var doFade = false;
+    var prev, timeoutDuration = 0, didRun = false, doFade = false;
 
     //console.log(new Error().stack);
     if(_res.pause) {
@@ -658,11 +656,11 @@ var Engine = function(opts){
       didRun = true;
     });
 
-    if(_last_container && _.current.shown.uniq != _last_uniq) {
+    if(_.last_container && _.current.shown.uniq != _.last_uniq) {
       // This is NEEDED because by the time 
-      // we come back around, _last.shown will be 
+      // we come back around, _.last.shown will be 
       // redefined.
-      prev = _last_container;
+      prev = _.last_container;
       prev.classList.add(_key('fadeOut'));
       _timeout(function() {
         if(didRun) {
@@ -673,12 +671,11 @@ var Engine = function(opts){
       doFade = true;
     }
 
-    _last_uniq = _.current.shown.uniq;
-    _last_container = _.current.shown.container;
+    _.last_uniq = _.current.shown.uniq;
+    _.last_container = _.current.shown.container;
+    _.last_shown = _.current.shown;
 
     _.current.shown.container.classList[doFade ? 'add' : 'remove' ](_key('fadeIn'));
-
-    //console.log(new Date() - _start, _playCount, "Job #" + _current.id, "Asset #" + _current.position, "Duration " + _current.shown.duration, _current.shown.url, _current.shown.cycles);
 
     // These will EQUAL each other EXCEPT when the position is 0.
     _.last = _.current;
