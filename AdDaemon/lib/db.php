@@ -690,8 +690,11 @@ function db_string($what) {
   return $what;
 }
 
+function pdo_date($what) {
+  return date("Y-m-d H:i:s", $what);
+}
 function db_date($what) {
- return "datetime($what,'unixepoch')";
+  return "datetime($what,'unixepoch')";
 }
 
 function is_flagged($campaign, $what) {
