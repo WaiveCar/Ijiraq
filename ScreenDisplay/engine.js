@@ -663,7 +663,9 @@ var Engine = function(opts){
       prev = _.last_container;
       prev.classList.add(_key('fadeOut'));
       _timeout(function() {
-        if(didRun) {
+        // the second part is there because this bug is still
+        // somehow around. We really need to squash it.
+        if(didRun && prev.parentNode === _box.ad) {
           prev.classList.remove(_key('fadeOut'));
           _box.ad.removeChild(prev);
         }
