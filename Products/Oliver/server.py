@@ -44,6 +44,20 @@ def buy():
       # group.
       #
 
+      # Everything is flat priced right now
+      amount = 399
+      charge = charge_for_notice(
+        data.get('email'), {
+          'card_number': data.get('number'),
+          'exp_month': data.get('expMonth'),
+          'exp_year': data.get('expYear'),
+          'cvc': data.get('cvc'),
+        },
+        data.get('amount'),
+        '123', #ad_id,
+      )
+      charge = dict(charge)
+      logging.warning(charge)
       # canvasText is the message 
       # backgroundColor is an HSL
       # foregroundColor is an HSL
@@ -72,23 +86,10 @@ def buy():
       # (3) we need to *fully log* the post data so we
       #     can replay a failed creation in order to
       #     be able to diagnose the problem
-      """
-      # Everything is flat priced right now
-      amount = 399
-      charge = charge_for_notice(
-         data.get('email'),
-         {
-              'card_number': data.get('number'),
-              'exp_month': data.get('expMonth'),
-              'exp_year': data.get('expYear'),
-              'cvc': data.get('cvc'),
-         },
-         data.get('amount'),
-         ad_id,
-      )
-      charge = dict(charge)
-      """
-      charge = {}
+      #
+      # (4) We can do 2-stage payment processing
+      #
+
       #receipt = send_receipt(data.get('email'), ad_id)
       logging.warning(ad_id)
       return jsonify({'ad_id': ad_id.text})
