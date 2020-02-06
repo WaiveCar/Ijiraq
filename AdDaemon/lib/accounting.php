@@ -135,7 +135,7 @@ function notification_sweep() {
 function render($M5YFgsLGQian24eTfLEQIA_template, $opts) {
   extract($opts);
   ob_start();
-    include("{$_SERVER['DOCUMENT_ROOT']}AdDaemon/templates/email/$M5YFgsLGQian24eTfLEQIA_template.html");
+    include("{$_SERVER['DOCUMENT_ROOT']}AdDaemon/templates/$M5YFgsLGQian24eTfLEQIA_template");
     $M5YFgsLGQian24eTfLEQIA_res = trim(ob_get_contents());
   ob_end_clean();
   return $M5YFgsLGQian24eTfLEQIA_res;
@@ -171,6 +171,8 @@ function send_message($user, $template, $params) {
     text_rando($user['number'], $stuff['sms']); 
   }
 
+  error_log(json_decode($stuff));
+  return true;
   return curldo(
     'https://api.mailgun.net/v3/waive.com/messages', [
       'from'    => 'Waive <support@waive.com>',
