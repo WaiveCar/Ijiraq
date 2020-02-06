@@ -785,8 +785,8 @@ class Get {
       }
     }
     if($key === 'id' && $cache === true) {
-      $cache_key = "$name:$arg";
-      if (array_key_exists(static::$_cache[$cache_key])) { 
+      $cache_key = implode(':', [$name, json_encode($arg)]);
+      if (array_key_exists($cache_key, static::$_cache)) { 
         return static::$_cache[$cache_key];
       }
     }

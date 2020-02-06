@@ -133,6 +133,7 @@ function notification_sweep() {
 }
 
 function render($M5YFgsLGQian24eTfLEQIA_template, $opts) {
+  error_log(json_encode($opts));
   extract($opts);
   ob_start();
     include("{$_SERVER['DOCUMENT_ROOT']}AdDaemon/templates/$M5YFgsLGQian24eTfLEQIA_template");
@@ -146,13 +147,14 @@ function parser($template, $opts) {
   $stuff = render($template, $opts);
   $foot = render('_footer', $opts);
 
-  $stuff = explode('\n', $stuff);
+  $stuff = preg_split('/\n/m', $stuff);
+  error_log($stuff[1]);
   $body = implode('\n', array_slice($stuff, 2));
 
   return [
     'sms'     => $stuff[0],
     'subject' => $stuff[1],
-    'email'   => $head + $body + $foot
+    'email'   => $head . $body . $foot
   ];
 }
 
@@ -168,10 +170,10 @@ function send_message($user, $template, $params) {
   $stuff = parser($template, $params);
 
   if($user['number']) {
-    text_rando($user['number'], $stuff['sms']); 
+    // text_rando($user['number'], $stuff['sms']); 
   }
 
-  error_log(json_decode($stuff));
+  error_log(json_encode($stuff));
   return true;
   return curldo(
     'https://api.mailgun.net/v3/waive.com/messages', [
@@ -191,8 +193,8 @@ function send_message($user, $template, $params) {
 }
 
 function send_campaign_message($campaign, $template, $user = false, $order = false) {
-  $user = $user ?: Get::user($campaign['user_id'], true);
-  $order = $order ?: Get::order($campaign['order_id'], true);
+  $user = $user ?: Get::user($campaign['user_id']);
+  $order = $order ?: Get::order($campaign['purchase_id'], true);
 
   $params = [
     'date_start' => $campaign['start_time'],
