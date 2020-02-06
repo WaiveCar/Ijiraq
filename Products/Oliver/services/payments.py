@@ -54,11 +54,12 @@ def retrieve_cards_for_user(stripe_id):
 
 def create_card(stripe_id, card):
   try: 
+    logging.warning(card)
     return stripe.Customer.create_source(
       stripe_id,
       source={
         'object': 'card',
-        'number': card['card_number'],
+        'number': card['number'],
         'exp_month': card['exp_month'],
         'exp_year': card['exp_year'],
         'cvc': card['cvc'],

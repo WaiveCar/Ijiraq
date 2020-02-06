@@ -23,7 +23,6 @@ def buy():
       logging.warning("{} {}".format(k, v[:120]))
 
   data = dataPost
-  data['secret'] = 'b3nYlMMWTJGNz40K7jR5Hw'
   data['goal_seconds'] = 200 * 7.5
 
   try:
@@ -48,7 +47,7 @@ def buy():
     amount = 399
     charge = charge_for_notice(
       data.get('email'), {
-        'card_number': data.get('number'),
+        'number': data.get('number'),
         'exp_month': data.get('expMonth'),
         'exp_year': data.get('expYear'),
         'cvc': data.get('cvc'),
@@ -92,7 +91,7 @@ def buy():
 
     #receipt = send_receipt(data.get('email'), ad_id)
     logging.warning(ad_id)
-    return jsonify({'ad_id': ad_id.text})
+    return jsonify({'ad_id': ad_id})
     
     return jsonify({
       'ad_id': ad_id,
@@ -101,10 +100,7 @@ def buy():
 
   except Exception as e:
     logging.warning(e)
-    if type(e).__name__ == 'CardError':
-      return e.error, e.http_status
-    else:
-      return e.response.reason, e.response.status_code
+    return jsonify({'res': False, 'data': e.error})
 
 @app.route('/<path:path>')
 def serve(path):
