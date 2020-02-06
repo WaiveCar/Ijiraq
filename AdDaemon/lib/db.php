@@ -17,59 +17,76 @@ $JSON = [
 
 $RULES = [
   'campaign' => [ 
-    'shape_list' => $JSON,
-    'flags' => $JSON,
-    'asset_meta' => [
-      'pre' => $JSON['pre'],
-      'post' => function($v, &$obj) {
-         $v = json_decode($v, true);
-         if(!is_array($v)) {
-           $v = [ $v ];
-         }
-         // temporary. we are reconstructing the legacy
-         // asset interface until all the cars ignore this.
-         $asset = [];
-
-         foreach($v as &$row) {
-           if(strpos($row['url'], 'http') === false) {
-             $row['url'] = 'http://waivecar-prod.s3.amazonaws.com/' . $row['url'];
-           } 
-           $asset = $row['url'];
-         }
-         if(!$obj['asset']) {
-           $obj['asset'] = json_encode($asset);
-         }
-         return $v;
+    'table' => [
+      'pre' => function($obj) {
+        if(!isset($obj['uuid'])) {
+          $obj['uuid'] = Uuid::uuid4()->toString();
+        }
+        return $obj;
+      },
+      'post' => function($obj) {
+        $obj['play_count'] = ($obj['completed_seconds'] + $obj['boost_seconds']) / max(7.5, $obj['duration_seconds']);
+        return $obj;
       }
     ],
-    'asset' => [
-      'pre' => $JSON['pre'],
-      'post' => function($v) {
-         if(is_array($v)) {
-           error_log(json_encode(debug_backtrace()));
-         }
-         $v = json_decode($v, true);
-         if(!is_array($v)) {
-           $v = [ $v ];
-         }
+    'columns' => [
+      'shape_list' => $JSON,
+      'flags' => $JSON,
+      'asset_meta' => [
+        'pre' => $JSON['pre'],
+        'post' => function($v, &$obj) {
+           $v = json_decode($v, true);
+           if(!is_array($v)) {
+             $v = [ $v ];
+           }
+           // temporary. we are reconstructing the legacy
+           // asset interface until all the cars ignore this.
+           $asset = [];
 
-         return array_map(function($m) {
-           if(strpos($m, 'http') === false) {
-             return 'http://waivecar-prod.s3.amazonaws.com/' . $m;
-           } 
-           return $m;
-         }, $v);
-      }
+           foreach($v as &$row) {
+             if(strpos($row['url'], 'http') === false) {
+               $row['url'] = 'http://waivecar-prod.s3.amazonaws.com/' . $row['url'];
+             } 
+             $asset = $row['url'];
+           }
+           if(!$obj['asset']) {
+             $obj['asset'] = json_encode($asset);
+           }
+           return $v;
+        }
+      ],
+      'asset' => [
+        'pre' => $JSON['pre'],
+        'post' => function($v) {
+           if(is_array($v)) {
+             error_log(json_encode(debug_backtrace()));
+           }
+           $v = json_decode($v, true);
+           if(!is_array($v)) {
+             $v = [ $v ];
+           }
+
+           return array_map(function($m) {
+             if(strpos($m, 'http') === false) {
+               return 'http://waivecar-prod.s3.amazonaws.com/' . $m;
+             } 
+             return $m;
+           }, $v);
+        }
+      ]
     ]
   ],
   'screen' => [
-    'features' => $JSON,
-    'panels' => $JSON,
-    'location' => $JSON,
-    'last_uptime' => $JSON,
-    'last_task_result' => $JSON
+    'columns' => [
+      'features' => $JSON,
+      'panels' => $JSON,
+      'location' => $JSON,
+      'last_uptime' => $JSON,
+      'last_task_result' => $JSON
+    ]
   ]
 ];
+
 
 // 
 // Screens 
@@ -196,11 +213,13 @@ $SCHEMA = [
     'title'       => 'text',
     'ref_id'      => 'text',
     'uuid'        => 'text',
+    /*
     'contact_id'  => 'integer',
     'brand_id'    => 'integer',
-    'user_id'     => 'integer',
     'organization_id'    => 'integer',
-    'purchase_id'    => 'integer',
+     */
+    'user_id'     => 'integer',
+    'purchase_id' => 'integer',
 
     'asset'       => 'text not null',
     //
@@ -480,6 +499,8 @@ $SCHEMA = [
     'id'         => 'integer primary key autoincrement',
     'uuid'       => 'text',
     'name'       => 'text',
+    'number'     => 'text',
+    'email'      => 'text',
     'password'   => 'text',
     'image'      => 'text',
     'credit'     => 'integer default 0',
@@ -487,8 +508,8 @@ $SCHEMA = [
     'is_verfied' => 'boolean default false',
     'auto_approve' => 'boolean default false',
     'title'      => 'text',
-    'organization_id'     => 'integer',
-    'brand_id'   => 'integer',
+    //'organization_id'     => 'integer',
+    //'brand_id'   => 'integer',
     'role'       => 'text', // either admin/manager/viewer
     'created_at' => 'datetime default current_timestamp',
   ],
@@ -690,8 +711,11 @@ function db_string($what) {
   return $what;
 }
 
+function pdo_date($what) {
+  return date("Y-m-d H:i:s", $what);
+}
 function db_date($what) {
- return "datetime($what,'unixepoch')";
+  return "datetime($what,'unixepoch')";
 }
 
 function is_flagged($campaign, $what) {
@@ -778,8 +802,8 @@ class Get {
       }
     }
     if($key === 'id' && $cache === true) {
-      $cache_key = "$name:$arg";
-      if (array_key_exists(static::$_cache[$cache_key])) { 
+      $cache_key = implode(':', [$name, json_encode($arg)]);
+      if (array_key_exists($cache_key, static::$_cache)) { 
         return static::$_cache[$cache_key];
       }
     }
@@ -823,9 +847,17 @@ class Many extends Get {
 function process($table, $obj, $what, $type='none') {
   global $RULES;
   if($obj && $table && isset($RULES[$table])) {
-    foreach($RULES[$table] as $key => $processor) {
-      if(isset($obj[$key]) && isset($processor[$what])) {
-        $obj[$key] = $processor[$what]($obj[$key], $obj, $type);
+    $ref = $RULES[$table];
+    if(isset($ref['columns'])) {
+      foreach($ref['columns'] as $key => $processor) {
+        if(isset($obj[$key]) && isset($processor[$what])) {
+          $obj[$key] = $processor[$what]($obj[$key], $obj, $type);
+        }
+      }
+    }
+    if(isset($ref['table'])) {
+      if(isset($ref['table'][$what])) {
+        $obj = $ref['table'][$what]($obj);
       }
     }
   }

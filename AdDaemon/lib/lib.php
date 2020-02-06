@@ -1127,9 +1127,9 @@ function campaign_create($data, $fileList, $user = false) {
   $props = array_merge(circle(),
     [
       'project' => 'LA',
-      'start_time' => time(),
+      'start_time' => pdo_date(time()),
       'goal_seconds' => 240,
-      'end_time' => time() + $DAY * 4,
+      'end_time' => pdo_date(time() + $DAY * 4),
       // for the time being we are going to give
       // the legacy "asset" just an empty array
       // to satisfy our null condition and make 
@@ -1141,7 +1141,10 @@ function campaign_create($data, $fileList, $user = false) {
 
   $extractList = [
     'start_time','end_time',
-    'ref_id','title','organization_id','brand_id','goal_seconds','project'];
+    'ref_id','title',
+    'organization_id','brand_id',
+    'goal_seconds','project'
+  ];
 
   foreach($extractList as $key) {
     if(isset($data[$key])) {
@@ -1162,7 +1165,19 @@ function campaign_create($data, $fileList, $user = false) {
   }
   $props['duration_seconds'] = $duration_seconds;
 
-  return pdo_insert('campaign', $props);
+  // See if we can extract a user out of this.
+  $user = upsert_user($data);
+  if($user) {
+    $props['user_id'] = $user['id'];
+  }
+
+  $campaign_id = pdo_insert('campaign', $props);
+
+  if($campaign_id) {
+    notify_if_needed(Get::campaign($campaign_id), 'receipt');
+  }
+
+  return $campaign_id;
 }
 
 function campaign_update($data, $fileList, $user = false) {
