@@ -1,4 +1,4 @@
-Thanks for using Oliver. The dashboard for your campaign is always available at <?= $campaign_link ?>
+Thanks for using Oliver. The dashboard for your campaign is always available at <?= $campaign_link ?>.
 Thanks for using Oliver. Here's your receipt for you recent campaign
 <p>
   Thanks <?= $name ?> for using the most economical advertising solution. Here's your receipt:
@@ -25,7 +25,7 @@ Thanks for using Oliver. Here's your receipt for you recent campaign
       </tr>
     </tbody>
   </table>
-  <p> Here's what's next!  </p>
+  <p> Here's what's next!</p>
   <ul>
     <li> You can view your dashboard of where your ads played and when at <?= $campaign_link ?>.
     <li> We'll send you a status report via email for your records during and after the campaign is complete. </li>
