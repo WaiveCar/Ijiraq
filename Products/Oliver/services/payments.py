@@ -17,7 +17,6 @@ stripe.api_key = config['secret']
 # I am going to add an outline of additional logic that will need to be here once 
 # this code is incorporated into the server
 def charge_for_notice(email, card, amount, ad_id):
-  logging.warning(config)
   try:
     # First, a user will be checked for a stripe_id. If no stripe_id is present,
     # create_customer will need to be called

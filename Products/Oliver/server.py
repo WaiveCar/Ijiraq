@@ -55,8 +55,17 @@ def buy():
       data.get('amount'),
       '123', #ad_id,
     )
-    charge = dict(charge)
-    logging.warning(charge)
+
+    if charge['charge'].status != 'succeeded':
+      logging.warning(charge)
+      return jsonify({'res': False})
+
+    data['charge'] = {
+      'who': charge['who'].id,
+      'card': charge['card'].id,
+      'charge': charge['charge'].id,
+    }
+
     # canvasText is the message 
     # backgroundColor is an HSL
     # foregroundColor is an HSL
@@ -68,8 +77,6 @@ def buy():
       data=data,
       files=request.files
     )
-    logging.debug(ad_id)
-    logging.debug(ad_id.text)
 
     # Todo: 
     #
@@ -91,16 +98,15 @@ def buy():
 
     #receipt = send_receipt(data.get('email'), ad_id)
     logging.warning(ad_id)
-    return jsonify({'ad_id': ad_id})
+    return jsonify({'res': True, 'ad_id': json.loads(ad_id.text)})
     
-    return jsonify({
-      'ad_id': ad_id,
-      'email': receipt
-    })
-
   except Exception as e:
-    logging.warning(e)
-    return jsonify({'res': False, 'data': e.error})
+    if hasattr(e, 'error'):
+      return jsonify({'res': False, 'data': e.error})
+    elif hasattr(e, 'response'):
+      return jsonify({'res': False, 'data': e.response.reason, 'code': e.response.status_code})
+    else:
+      raise e
 
 @app.route('/<path:path>')
 def serve(path):
