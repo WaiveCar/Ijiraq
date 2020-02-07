@@ -60,7 +60,7 @@ function changeSelected(newIdx) {
 (() => {
   document.querySelector('#campaign-url').innerHTML = `URL: ${window.location.href}`;
 
-  const id = new URL(location.href).searchParams.get('id');
+  const id = location.href.split('/').pop();
   if(!id) { return }
   map.location = map({ 
     opacity: 0.7,
