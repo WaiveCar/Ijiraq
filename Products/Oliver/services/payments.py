@@ -27,7 +27,7 @@ def charge_for_notice(email, card, amount, ad_id):
     card = create_card(customer.id, card)
     # Lastly, we will need to charge the user for their purchase
     return {
-      'who': customer, 
+      'user': customer, 
       'card': card, 
       'charge': stripe.Charge.create(
         amount=amount, 
@@ -61,7 +61,7 @@ def create_card(stripe_id, card):
         'number': card['number'],
         'exp_month': card['exp_month'],
         'exp_year': card['exp_year'],
-        'cvc': card['cvc'],
+        'cvc': card['cvv'],
         'currency': 'usd',
       },  
     )

@@ -50,7 +50,7 @@ def buy():
         'number': data.get('number'),
         'exp_month': data.get('expMonth'),
         'exp_year': data.get('expYear'),
-        'cvc': data.get('cvc'),
+        'cvv': data.get('cvv'),
       },
       data.get('amount'),
       '123', #ad_id,
@@ -60,11 +60,12 @@ def buy():
       logging.warning(charge)
       return jsonify({'res': False})
 
-    data['charge'] = {
-      'who': charge['who'].id,
-      'card': charge['card'].id,
-      'charge': charge['charge'].id,
-    }
+    data['user_id'] = charge['user'].id
+    data['card_id'] = charge['card'].id
+    data['charge_id'] = charge['charge'].id
+
+    for i in ['number', 'expMonth', 'expYear', 'cvv']:
+      del data[i]
 
     # canvasText is the message 
     # backgroundColor is an HSL
