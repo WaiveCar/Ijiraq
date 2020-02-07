@@ -42,7 +42,7 @@ function curldo($url, $params = false, $opts = []) {
       if(!$params) {
         $params = [];
       }
-      if(isset($opts['json'])) {
+      if(!empty($opts['json'])) {
         $params = json_encode($params);
         $header[] = 'Content-Type: application/json';
       } else {
@@ -1114,6 +1114,14 @@ function circle($lng = -118.390412, $lat = 33.999819, $radius = 3500) {
   ];
 }
 
+function get_fields($what, $which) {
+  $res = [];
+  foreach($which as $key) {
+    $res[$key] = $what[$key];
+  }
+  return $res;
+}
+
 // This is the first entry point ... I know naming and caching
 // are the hardest things.
 //
@@ -1165,16 +1173,41 @@ function campaign_create($data, $fileList, $user = false) {
   }
   $props['duration_seconds'] = $duration_seconds;
 
+  $ph = aget($data, 'phone', '');
+  if($ph[0] != '+') {
+    $digits_only = preg_replace('/[^\d]/', '', $ph);
+
+    // This looks like an american number.
+    if(strlen($digits_only) == 10) {
+      $candidate = "+1$ph";
+    // this looks like an american number with a leading 1.
+    } else if (strlen($digits_only) == 11 && $ph[0] == '1') {
+      $candidate = "+$ph";
+    } else {
+      // otherwise it may be an international - we actually do the same thing.
+      $candidate = "+$ph";
+    }
+  } else {
+    $candidate = $ph;
+  }
+  $data['phone'] = $candidate;
+
   // See if we can extract a user out of this.
-  $user = upsert_user($data);
+  $user = upsert_user(get_fields($data, ['name','email','phone']));
   if($user) {
     $props['user_id'] = $user['id'];
   }
 
+  $purchase_id = pdo_insert('purchase', get_fields($data, ['card_id','user_id','charge_id','amount']));
+
+  $props['purchase_id'] = $purchase_id;
+
   $campaign_id = pdo_insert('campaign', $props);
 
   if($campaign_id) {
-    notify_if_needed(Get::campaign($campaign_id), 'receipt');
+    pdo_update('purchase', $purchase_id, ['campaign_id' => $campaign_id]);
+    $res = notify_if_needed(Get::campaign($campaign_id), 'receipt');
+    error_log(json_encode($res, JSON_PRETTY_PRINT));
   }
 
   return $campaign_id;

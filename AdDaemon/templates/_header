@@ -1,18 +1,12 @@
-<div>
 <style>
-  body, * {
-    font-family: 'Roboto', 'Helvetica', 'sans-serif';
-  }}
-  .header {{
-    width: 100%;
-  }}
-  .header img {{
-    width: 100%;
-    height: auto;
-  }}
-  .main {{
-    padding: 20px;
-  }}
+  body, * { font-family: 'Roboto', 'Helvetica', 'sans-serif'; }
+  table { margin: 20px 0 }
+  th { border-bottom: 1px solid black; text-align: center}
+  th, td { padding: 4px 8px }
+  .topic { line-height: 1.4rem; text-align: center }
+  .total { border-top: 3px double black }
+  .receipt { display: table-cell; border-spacing: 20px; border: 1px dotted #000; }
+  .receipt > div { display: table-cell; margin: 1rem }
 </style>
 <div class="main">
 Hi <?= $name ?>,

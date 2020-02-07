@@ -25,7 +25,7 @@ function do_oth($oth) {
   $stuff = onetimehash($oth);
   if($stuff) {
     if($stuff['action'] == 'confirm') {
-      pdo_update('user', ['id' => $stuff['data']], ['is_verified' => true]);
+      pdo_update('user', ['id' => $stuff['data']], ['is_erified' => true]);
     }
     return true;
   }
@@ -66,9 +66,11 @@ function upsert_user($all) {
   }
   $user = Get::user(['email' => $who]);
   if ($user) {
-    return $user;
+    $user_id = $user['id'];
+    pdo_update('user', $user_id, $all, true);
+  } else {
+    $user_id = create('user', $all);
   }
-  $user_id = create('user', $all);
   return Get::user($user_id);
 }
 
@@ -133,7 +135,6 @@ function notification_sweep() {
 }
 
 function render($M5YFgsLGQian24eTfLEQIA_template, $opts) {
-  error_log(json_encode($opts));
   extract($opts);
   ob_start();
     include("{$_SERVER['DOCUMENT_ROOT']}AdDaemon/templates/$M5YFgsLGQian24eTfLEQIA_template");
@@ -148,8 +149,7 @@ function parser($template, $opts) {
   $foot = render('_footer', $opts);
 
   $stuff = preg_split('/\n/m', $stuff);
-  error_log($stuff[1]);
-  $body = implode('\n', array_slice($stuff, 2));
+  $body = implode("\n", array_slice($stuff, 2));
 
   return [
     'sms'     => $stuff[0],
@@ -161,7 +161,7 @@ function parser($template, $opts) {
 function notify_if_needed($campaign, $event) {
   if(!is_flagged($campaign, $event)) {
     flag($campaign, $event);
-    send_campaign_message($campaign, $event);
+    return send_campaign_message($campaign, $event);
   }
 }
 
@@ -169,13 +169,12 @@ function send_message($user, $template, $params) {
   $params['user'] = $params['user'] ?: $user;
   $stuff = parser($template, $params);
 
-  if($user['number']) {
-    // text_rando($user['number'], $stuff['sms']); 
+  $res = [];
+  if($user['phone']) {
+    $res['text'] = text_rando($user['phone'], $stuff['sms']); 
   }
 
-  error_log(json_encode($stuff));
-  return true;
-  return curldo(
+  $res['email'] = curldo(
     'https://api.mailgun.net/v3/waive.com/messages', [
       'from'    => 'Waive <support@waive.com>',
       'to'      => $user['email'],
@@ -187,14 +186,17 @@ function send_message($user, $template, $params) {
         'password' => 'key-2804ba511f20c47a3c2dedcd36e87c92'
       ],
       'verb' => 'post', 
-      'json' => true
+      'json' => false,
+      'log' => true
     ]
   );
+
+  return $res;
 }
 
 function send_campaign_message($campaign, $template, $user = false, $order = false) {
   $user = $user ?: Get::user($campaign['user_id']);
-  $order = $order ?: Get::order($campaign['purchase_id'], true);
+  $order = $order ?: Get::purchase($campaign['purchase_id']);
 
   $params = [
     'date_start' => $campaign['start_time'],
@@ -202,6 +204,7 @@ function send_campaign_message($campaign, $template, $user = false, $order = fal
     'campaign_link' => 'https://olvr.io/v/' . $campaign['id'],
     'play_count'=> $campaign['play_count'],
     'name'      => $user['name'],
+    'amount'    => sprintf("$%.2f", $order['amount'] / 100),
 
     'campaign'  => $campaign,
     'user'      => $user,

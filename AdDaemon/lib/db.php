@@ -499,7 +499,7 @@ $SCHEMA = [
     'id'         => 'integer primary key autoincrement',
     'uuid'       => 'text',
     'name'       => 'text',
-    'number'     => 'text',
+    'phone'      => 'text',
     'email'      => 'text',
     'password'   => 'text',
     'image'      => 'text',
@@ -518,6 +518,7 @@ $SCHEMA = [
     'id'         => 'integer primary key autoincrement',
     'user_id'    => 'integer',
     'campaign_id'=> 'integer',
+    'card_id'    => 'text',
     'charge_id'  => 'text',
     'status'     => 'text',
 
