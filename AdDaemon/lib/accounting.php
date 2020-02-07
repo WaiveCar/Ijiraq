@@ -168,13 +168,12 @@ function send_message($user, $template, $params) {
   $params['user'] = $params['user'] ?: $user;
   $stuff = parser($template, $params);
 
+  $res = [];
   if($user['number']) {
-    // text_rando($user['number'], $stuff['sms']); 
+    $res['text'] = text_rando($user['number'], $stuff['sms']); 
   }
 
-  error_log(json_encode($stuff));
-  return true;
-  return curldo(
+  $res['email'] = curldo(
     'https://api.mailgun.net/v3/waive.com/messages', [
       'from'    => 'Waive <support@waive.com>',
       'to'      => $user['email'],
@@ -189,6 +188,8 @@ function send_message($user, $template, $params) {
       'json' => true
     ]
   );
+
+  return $res;
 }
 
 function send_campaign_message($campaign, $template, $user = false, $order = false) {
