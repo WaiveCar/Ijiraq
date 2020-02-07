@@ -106,7 +106,6 @@ function text_rando($number, $message) {
   global $TWIL;
   $client = new Client($TWIL['sid'], $TWIL['token']);
   try {
-    error_log($number);
     $client->messages->create($number, [ 
       'from' => $TWIL['num'], 
       'body' => $message
@@ -136,7 +135,6 @@ function notification_sweep() {
 }
 
 function render($M5YFgsLGQian24eTfLEQIA_template, $opts) {
-  error_log(json_encode($opts, JSON_PRETTY_PRINT));
   extract($opts);
   ob_start();
     include("{$_SERVER['DOCUMENT_ROOT']}AdDaemon/templates/$M5YFgsLGQian24eTfLEQIA_template");
@@ -163,7 +161,7 @@ function parser($template, $opts) {
 function notify_if_needed($campaign, $event) {
   if(!is_flagged($campaign, $event)) {
     flag($campaign, $event);
-    send_campaign_message($campaign, $event);
+    return send_campaign_message($campaign, $event);
   }
 }
 
@@ -173,11 +171,12 @@ function send_message($user, $template, $params) {
 
   $res = [];
   if($user['phone']) {
-    $res['text'] = text_rando($user['phone'], $stuff['sms']); 
+    //$res['text'] = text_rando($user['phone'], $stuff['sms']); 
   }
 
   $res['email'] = curldo(
-    'https://api.mailgun.net/v3/waive.com/messages', [
+    'https://api.mailgun.net/v3/waive.com/messages', 
+    [
       'from'    => 'Waive <support@waive.com>',
       'to'      => $user['email'],
       'subject' => $stuff['subject'],
@@ -188,7 +187,8 @@ function send_message($user, $template, $params) {
         'password' => 'key-2804ba511f20c47a3c2dedcd36e87c92'
       ],
       'verb' => 'post', 
-      'json' => true
+      'json' => false,
+      'log' => true
     ]
   );
 

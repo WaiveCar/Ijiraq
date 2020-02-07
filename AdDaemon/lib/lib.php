@@ -42,7 +42,7 @@ function curldo($url, $params = false, $opts = []) {
       if(!$params) {
         $params = [];
       }
-      if(isset($opts['json'])) {
+      if(!empty($opts['json'])) {
         $params = json_encode($params);
         $header[] = 'Content-Type: application/json';
       } else {
