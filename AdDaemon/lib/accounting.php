@@ -25,7 +25,7 @@ function do_oth($oth) {
   $stuff = onetimehash($oth);
   if($stuff) {
     if($stuff['action'] == 'confirm') {
-      pdo_update('user', ['id' => $stuff['data']], ['is_verified' => true]);
+      pdo_update('user', ['id' => $stuff['data']], ['is_erified' => true]);
     }
     return true;
   }
@@ -66,9 +66,11 @@ function upsert_user($all) {
   }
   $user = Get::user(['email' => $who]);
   if ($user) {
-    return $user;
+    $user_id = $user['id'];
+    pdo_update('user', $user_id, $all, true);
+  } else {
+    $user_id = create('user', $all);
   }
-  $user_id = create('user', $all);
   return Get::user($user_id);
 }
 
@@ -104,6 +106,7 @@ function text_rando($number, $message) {
   global $TWIL;
   $client = new Client($TWIL['sid'], $TWIL['token']);
   try {
+    error_log($number);
     $client->messages->create($number, [ 
       'from' => $TWIL['num'], 
       'body' => $message
@@ -169,8 +172,8 @@ function send_message($user, $template, $params) {
   $stuff = parser($template, $params);
 
   $res = [];
-  if($user['number']) {
-    $res['text'] = text_rando($user['number'], $stuff['sms']); 
+  if($user['phone']) {
+    $res['text'] = text_rando($user['phone'], $stuff['sms']); 
   }
 
   $res['email'] = curldo(
