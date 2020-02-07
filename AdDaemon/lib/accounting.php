@@ -133,7 +133,7 @@ function notification_sweep() {
 }
 
 function render($M5YFgsLGQian24eTfLEQIA_template, $opts) {
-  error_log(json_encode($opts));
+  error_log(json_encode($opts, JSON_PRETTY_PRINT));
   extract($opts);
   ob_start();
     include("{$_SERVER['DOCUMENT_ROOT']}AdDaemon/templates/$M5YFgsLGQian24eTfLEQIA_template");
@@ -148,7 +148,6 @@ function parser($template, $opts) {
   $foot = render('_footer', $opts);
 
   $stuff = preg_split('/\n/m', $stuff);
-  error_log($stuff[1]);
   $body = implode('\n', array_slice($stuff, 2));
 
   return [
@@ -194,7 +193,7 @@ function send_message($user, $template, $params) {
 
 function send_campaign_message($campaign, $template, $user = false, $order = false) {
   $user = $user ?: Get::user($campaign['user_id']);
-  $order = $order ?: Get::order($campaign['purchase_id'], true);
+  $order = $order ?: Get::purchase($campaign['purchase_id']);
 
   $params = [
     'date_start' => $campaign['start_time'],

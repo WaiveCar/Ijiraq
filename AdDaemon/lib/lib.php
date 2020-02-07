@@ -1146,6 +1146,7 @@ function campaign_create($data, $fileList, $user = false) {
     'goal_seconds','project'
   ];
 
+  error_log(json_encode($data, JSON_PRETTY_PRINT));
   foreach($extractList as $key) {
     if(isset($data[$key])) {
       $props[$key] = $data[$key];
@@ -1171,9 +1172,18 @@ function campaign_create($data, $fileList, $user = false) {
     $props['user_id'] = $user['id'];
   }
 
+  $purchase = [];
+  foreach(['card_id','user_id','charge_id','amount'] as $key) {
+    $purchase[$key] = $data[$key];
+  }
+  $purchase_id = pdo_insert('purchase', $purchase);
+
+  $props['purchase_id'] = $purchase_id;
+
   $campaign_id = pdo_insert('campaign', $props);
 
   if($campaign_id) {
+    pdo_update('purchase', $purchase_id, ['campaign_id' => $campaign_id]);
     notify_if_needed(Get::campaign($campaign_id), 'receipt');
   }
 
