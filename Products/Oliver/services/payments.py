@@ -1,13 +1,16 @@
 import stripe
-import os
+import os, logging
 
 config = {
     'secret': 'sk_test_n9MTqk5eeeQeqwN19XVnTjhN',
     'key': 'pk_test_zO3lYXra7dNIcI4JyFBitshk',
+    'env': 'test'
   } if 'ENV' not in os.environ or os.environ['ENV'] != 'production' else {
     'secret': 'sk_live_cJmUPQAyZcQG67pnUEH81Bi5',
     'key': 'pk_live_aT8u3UGOje5ryCk1Q0R9rleK',
+    'env': 'prod'
   }
+
 stripe.api_key = config['secret']
 
 # The function below will be what is used to actually charge users for an ad. 
@@ -23,11 +26,16 @@ def charge_for_notice(email, card, amount, ad_id):
     # as below
     card = create_card(customer.id, card)
     # Lastly, we will need to charge the user for their purchase
-    return create_charge(
-        customer.id, 
-        amount, 
-        'Charge for Oliver ad #{} for user with email {}'.format(ad_id, email)
-    )
+    return {
+      'user': customer, 
+      'card': card, 
+      'charge': stripe.Charge.create(
+        amount=amount, 
+        currency='usd', 
+        customer=customer.id, 
+        description='Charge for Oliver ad #{} for user with email {}'.format(ad_id, email)
+      )
+    }
   except Exception as e:
     raise e
 
@@ -45,14 +53,15 @@ def retrieve_cards_for_user(stripe_id):
 
 def create_card(stripe_id, card):
   try: 
+    logging.warning(card)
     return stripe.Customer.create_source(
       stripe_id,
       source={
         'object': 'card',
-        'number': card['card_number'],
+        'number': card['number'],
         'exp_month': card['exp_month'],
         'exp_year': card['exp_year'],
-        'cvc': card['cvc'],
+        'cvc': card['cvv'],
         'currency': 'usd',
       },  
     )
@@ -74,17 +83,6 @@ def delete_card(stripe_id, card_id):
     return stripe.Customer.delete_source(
       stripe_id,
       card_id,
-    )
-  except stripe.error.CardError as e:
-    raise e
-
-def create_charge(customer_id, amount, description):
-  try: 
-    return stripe.Charge.create(
-        amount=amount, 
-        currency='usd', 
-        customer=customer_id, 
-        description=description,
     )
   except stripe.error.CardError as e:
     raise e
