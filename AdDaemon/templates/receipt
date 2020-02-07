@@ -1,33 +1,42 @@
-Thanks for using Oliver. The dashboard for your campaign is always available at <?= $campaign_link ?>.
+Thanks for using Oliver. The dashboard for your campaign is always available at <?= $campaign_link ?>  
 Thanks for using Oliver. Here's your receipt for you recent campaign
 <p>
-  Thanks <?= $name ?> for using the most economical advertising solution. Here's your receipt:
+  Thanks for using the most economical advertising solution. Here's your receipt:
 </p>
-<p> Order #<?= $order['id'] ?>. Date: <?= $order['created_at'] ?></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Item</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Digital Billboard</td>
-        <td><?= $order['amount'] ?></td>
-        <td>1</td>
-        <td align=right><?= $order['amount'] ?></td>
-      </tr>
-      <tr>
-        <td colspan=4 align=right><b><?= $order['amount'] ?>
-      </tr>
-    </tbody>
-  </table>
+<div class=receipt>
+  <div>
+    <div class=topic>
+      <b>Oliver Digital Ad</b><br/>
+      Date: <?= $order['created_at'] ?><br/>
+      Order: #<?= $order['id'] ?>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Digital Billboard</td>
+          <td><?= $amount ?></td>
+          <td>1</td>
+          <td align=right><?= $amount ?></td>
+        </tr>
+        <tr>
+          <td colspan=3></td>
+          <td align=right class=total><b><?= $amount ?>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
   <p> Here's what's next!</p>
   <ul>
-    <li> You can view your dashboard of where your ads played and when at <?= $campaign_link ?>.
-    <li> We'll send you a status report via email for your records during and after the campaign is complete. </li>
+    <li> You can view your dashboard of where your ads played and when at <a href=<?= $campaign_link ?>><?= $campaign_link ?></a>.
+    <li> We'll send you a status report via email for your records during and after the campaign is complete.</li>
   </ul>
 </p>
