@@ -149,7 +149,7 @@ function parser($template, $opts) {
   $foot = render('_footer', $opts);
 
   $stuff = preg_split('/\n/m', $stuff);
-  $body = implode('\n', array_slice($stuff, 2));
+  $body = implode("\n", array_slice($stuff, 2));
 
   return [
     'sms'     => $stuff[0],
@@ -171,12 +171,11 @@ function send_message($user, $template, $params) {
 
   $res = [];
   if($user['phone']) {
-    //$res['text'] = text_rando($user['phone'], $stuff['sms']); 
+    $res['text'] = text_rando($user['phone'], $stuff['sms']); 
   }
 
   $res['email'] = curldo(
-    'https://api.mailgun.net/v3/waive.com/messages', 
-    [
+    'https://api.mailgun.net/v3/waive.com/messages', [
       'from'    => 'Waive <support@waive.com>',
       'to'      => $user['email'],
       'subject' => $stuff['subject'],
@@ -205,6 +204,7 @@ function send_campaign_message($campaign, $template, $user = false, $order = fal
     'campaign_link' => 'https://olvr.io/v/' . $campaign['id'],
     'play_count'=> $campaign['play_count'],
     'name'      => $user['name'],
+    'amount'    => sprintf("$%.2f", $order['amount'] / 100),
 
     'campaign'  => $campaign,
     'user'      => $user,
