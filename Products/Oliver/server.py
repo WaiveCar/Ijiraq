@@ -11,8 +11,10 @@ ROOT = os.path.dirname(os.path.realpath(__file__))
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
-@app.route('/buy', methods=['POST'])
+@app.route('/buy', methods=['GET','POST'])
 def buy():
+  return jsonify({'res': True})
+
   logging.warning(list(request.files.keys()))
   dataPre = dict(request.form)
   dataPost = {}
