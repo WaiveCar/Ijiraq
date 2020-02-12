@@ -21,7 +21,6 @@ $message = $Parsedown->text($message_md);
 <style>
 * { font-family: 'Heebo', sans-serif; }
 body {
-transition: all 0.5s ease;
 margin: 0;
 font-size: 6.45vw;
 background: #000;

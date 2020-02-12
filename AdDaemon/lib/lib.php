@@ -8,7 +8,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 $mypath = $_SERVER['DOCUMENT_ROOT'] . 'AdDaemon/lib/';
 include_once($mypath . 'db.php');
 
-$screen_dbg_id = 'SgQhKQlP5oIXZgHhkef6w';
+$screen_dbg_id = 'SgQhKQlP5oIXZgHhkef6waa';
 $PORT_OFFSET = 7000;
 $DAY = 24 * 60 * 60;
 
@@ -281,7 +281,7 @@ function find_unfinished_job($campaignId, $screenId, $is_boost) {
     'screen_id' => $screenId,
     // we want a clean separation of whether we 
     // are in a boost campaign or not.
-    'is_boost' => $is_boost,
+    'is_boost' => $is_boost ? 1 : 0,
     'completed_seconds < goal'
   ]);
 }

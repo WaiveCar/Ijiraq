@@ -13,7 +13,6 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 @app.route('/buy', methods=['GET','POST'])
 def buy():
-  return jsonify({'res': True})
 
   logging.warning(list(request.files.keys()))
   dataPre = dict(request.form)
@@ -54,7 +53,7 @@ def buy():
         'exp_year': data.get('expYear'),
         'cvv': data.get('cvv'),
       },
-      data.get('amount'),
+      '400',
       '123', #ad_id,
     )
 

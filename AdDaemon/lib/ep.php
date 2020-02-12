@@ -73,9 +73,11 @@ try {
   }
   else if($func == 'screens' && ($verb == 'POST' || $verb == 'PUT')) {
     jemit(screen_edit($all));
-  } else if(array_search($func, ['purchases', 'users', 'jobs', 'sensor_history', 'campaigns', 'screens', 'tasks']) !== false) {
+  } else if(array_search($func, ['ces', 'purchases', 'users', 'jobs', 'sensor_history', 'campaigns', 'screens', 'tasks']) !== false) {
     $table = $func;
-    $table = rtrim($func, 's');
+    if($func !== 'ces') {
+      $table = rtrim($func, 's');
+    }
     $action = 'show';
 
     if($verb == 'POST' || $verb == 'PUT') {
