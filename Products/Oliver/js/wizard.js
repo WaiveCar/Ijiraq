@@ -888,7 +888,7 @@
       },
     })
     .then(response => {
-      window.location = window.location.protocol + '//' + window.location.host + '/v/' + response.data.ad_id;
+      //window.location = window.location.protocol + '//' + window.location.host + '/v/' + response.data.ad_id;
     })
     .catch(e => {
       showErrorModal('Error Purchasing Notice', e.response.data.message);
