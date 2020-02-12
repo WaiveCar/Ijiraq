@@ -63,4 +63,4 @@ function curldo($url, $params = false, $opts = []) {
   return $res;
 }
 
-return curldo('http://localhost:5000/buy', $_POST);
+echo curldo('http://localhost:5000/buy', $_POST, ['raw' => true]);
