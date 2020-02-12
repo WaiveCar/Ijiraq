@@ -426,7 +426,12 @@ var Engine = function(opts){
     } else if('url' in obj) {
       obj.asset_meta = [{ url: obj.url }];
     }
-    obj = Object.assign({
+
+    // We want the object to actually take
+    // these values as references while also
+    // accepting overrides. so we are doing 
+    // it twice.
+    Object.assign(obj, {
       downweight: 1,
       completed_seconds: 0,
       // We need multi-asset support on a per-job
@@ -436,7 +441,7 @@ var Engine = function(opts){
       // This is the total duration of all the
       // assets included in this job.
       duration: 0,
-      asset_orig: JSON.parse(JSON.stringify(obj.asset_meta)),
+      asset: JSON.parse(JSON.stringify(obj.asset_meta)),
       assetList: [],
       id: _jobId++,
     }, obj);
