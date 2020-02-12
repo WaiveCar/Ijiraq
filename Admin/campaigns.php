@@ -98,7 +98,7 @@ $height = $width * 675 / 1920;
                       <a onclick="update_campaign({id:<?=$campaign['id']?>,state:'active'})" class="dropdown-item dark">Enable</a>
                     <? } ?>
                       <div class="dropdown-divider"></div>
-                      <a onclick="manual_show(<?=$campaign['id']?)" class="dropdown-item dark">Edit Raw</a>
+                      <a onclick="manual_show(<?=$campaign['id']?>)" class="dropdown-item dark">Edit Raw</a>
                       <label class="dropdown-item upload-button" for="image-upload-<?=$campaign['id']?>">Replace</label>
                       <label onclick="append()" class="dropdown-item upload-button" for="image-upload-<?=$campaign['id']?>">Append</label>
                       <div class="dropdown-divider"></div>
@@ -146,7 +146,7 @@ $height = $width * 675 / 1920;
           </div>
 
           <div class="modal-body">
-            <textarea style='width:100%;height:40vw' id='raw'></div>
+            <textarea style='width:100%;height:40vw' id='raw'></textarea>
           </div>
 
           <div class="modal-footer">
