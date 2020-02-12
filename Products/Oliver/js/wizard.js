@@ -165,6 +165,8 @@
     var center = currentSelection ? currentSelection[1] : [-118.33, 34.09];
     self._map = map({
       selectFirst: true,
+      opacity: 0.6,
+      tiles: 'stamen.toner',
       move: true,
       zoom: 12.5,
       center,
@@ -600,6 +602,7 @@
       mymap.style.height = mymap.clientWidth * 675/1920 + 'px';
       map({
         target: 'map-summary',
+        tiles: 'stamen.toner',
         draw: false,
         resize: false,
         move: false,
@@ -776,6 +779,7 @@
   let nextBtn = document.querySelector('#next-btn');
 
   window.showPage = function(pageNum, isNext) {
+    pageNum = pageNum || 0;
     if (!pages[pageNum]) {
       showPage(0);
     }
@@ -883,18 +887,12 @@
         headers: {'Content-Type': 'multipart/form-data'},
       },
     })
-      .then(response => {
-        setState(
-          Object.assign(initialState, {
-            adId: response.data.ad_id,
-            charge: response.data.charge,
-          }),
-        );
-        showPage(7);
-      })
-      .catch(e => {
-        showErrorModal('Error Purchasing Notice', e.response.data.message);
-      });
+    .then(response => {
+      window.location = window.location.protocol + '//' + window.location.host + '/v/' + response.data.ad_id;
+    })
+    .catch(e => {
+      showErrorModal('Error Purchasing Notice', e.response.data.message);
+    });
   }
 
   window.onpopstate = function() {
