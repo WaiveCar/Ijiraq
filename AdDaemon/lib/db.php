@@ -36,7 +36,7 @@ $RULES = [
         'pre' => $JSON['pre'],
         'post' => function($v, &$obj) {
            $v = json_decode($v, true);
-           if(!is_array($v)) {
+           if(!is_array($v) || array_key_exists('url', $v)) {
              $v = [ $v ];
            }
            // temporary. we are reconstructing the legacy
@@ -44,6 +44,12 @@ $RULES = [
            $asset = [];
 
            foreach($v as &$row) {
+             if(is_string($row)) {
+               $row = ['url' => $row];
+             }
+             if(!is_array($row)) {
+               error_log($row);
+             }
              if(strpos($row['url'], 'http') === false) {
                $row['url'] = 'http://waivecar-prod.s3.amazonaws.com/' . $row['url'];
              } 
@@ -535,6 +541,13 @@ $SCHEMA = [
     'ref_id'     => 'integer',
     'created_at' => 'datetime default current_timestamp',
   ],
+  'ces' =>  [
+    'id'          => 'integer primary key autoincrement',
+    'phone'       => 'text',
+    'message'     => 'text',
+    'campaign_id' => 'integer',
+    'created_at'  => 'datetime default current_timestamp',
+  ]
 ];
 /*
 
@@ -548,13 +561,6 @@ $SCHEMA = [
     'created_at'    => 'datetime default current_timestamp',
   ],
  
-  'ces' =>  [
-    'id'          => 'integer primary key autoincrement',
-    'phone'       => 'text',
-    'message'     => 'text',
-    'campaign_id' => 'integer',
-    'created_at'  => 'datetime default current_timestamp',
-  ],
  // adcast related
   'attribution' => [
     'id'         => 'integer primary key autoincrement',
