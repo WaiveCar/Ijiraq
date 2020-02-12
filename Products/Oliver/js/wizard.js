@@ -881,7 +881,7 @@
     }
     axios({
       method: 'post',
-      url: '/buy',
+      url: '/buy.php',
       data: formData,
       config: {
         headers: {'Content-Type': 'multipart/form-data'},
