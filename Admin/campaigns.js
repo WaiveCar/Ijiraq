@@ -64,6 +64,23 @@ function create_campaign() {
   });
 }
 
+function manual_save() {
+  var stuff = JSON.parse($("#raw").val());
+  if(stuff) {
+    post('campaign_update', {id: _id, asset_meta: stuff}, res => {
+      $("#rawModal").modal('hide');
+      show({data: 'Updated Campaign'}, 1000);
+    });
+  }
+}
+
+function manual_show(id) {
+  _id = id;
+  _campaign = get(_id);
+  $("#rawModal").modal();
+  $("#raw").val(JSON.stringify(_campaign['asset_meta'], false, 3));
+}
+
 function geosave() {
   var coords = _map.save();
   // If we click on the map again we should show the updated coords

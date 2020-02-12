@@ -99,6 +99,7 @@ $height = $width * 675 / 1920;
                       <a onclick="update_campaign({id:<?=$campaign['id']?>,state:'active'})" class="dropdown-item dark">Enable</a>
                     <? } ?>
                       <div class="dropdown-divider"></div>
+                      <a onclick="manual_show(<?=$campaign['id']?)" class="dropdown-item dark">Edit Raw</a>
                       <label class="dropdown-item upload-button" for="image-upload-<?=$campaign['id']?>">Replace</label>
                       <label onclick="append()" class="dropdown-item upload-button" for="image-upload-<?=$campaign['id']?>">Append</label>
                       <div class="dropdown-divider"></div>
@@ -131,6 +132,27 @@ $height = $width * 675 / 1920;
               </div>
             </div>
           <? } ?>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="rawModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ModalLabel">Edit Raw</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <textarea style='width:100%;height:40vw' id='raw'></div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm mr-auto" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-secondary" onclick=manual_save()>Update</button>
           </div>
         </div>
       </div>
