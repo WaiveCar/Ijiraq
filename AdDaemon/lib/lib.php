@@ -1224,7 +1224,7 @@ function campaign_update($data, $fileList, $user = false) {
   if(!$fileList) {
     $obj = [];
     foreach($data as $k => $v) {
-      if (in_array($k, ['goal_seconds','active','lat','lng','radius'])) {
+      if (in_array($k, ['project','goal_seconds','active','lat','lng','radius'])) {
         $obj[$k] = db_string($v);
       }
     }
