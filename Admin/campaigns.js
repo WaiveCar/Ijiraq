@@ -40,7 +40,7 @@ function removeShape() {
   _map.removeShape();
 }
 
-function change(what, id) {
+function change_param(what, id) {
   var campaign = get(id);
   var newVal = prompt("Change " + what, campaign[what]);
   if(!newVal) {
