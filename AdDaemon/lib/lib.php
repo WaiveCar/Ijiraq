@@ -16,15 +16,14 @@ $DAY = 24 * 60 * 60;
 // The override here is the campaign's duration_seconds
 $WORKSIZE = 30;
 
-$PROJECT_LIST = ['LA', 'NY', 'REEF', 'CES', 'Amazon'];
+$PROJECT_LIST = ['LA', 'NY', 'REEF', 'Oliver'];
 $DEFAULT_CAMPAIGN_MAP = [
   'none' => 1,
   'LA' => 1,
   'NY' => 2,
   'dev' => 3,
   'CES' => 62,
-  'Amazon' => 61,
-  'REEF' => 131
+  'Oliver' => 79
 ];
 
 // Play time in seconds of one ad.
@@ -497,7 +496,7 @@ function record_screen_on($screen, $payload) {
 
 function ping($payload) {
   global $VERSION, $LASTCOMMIT;
-  //error_log(json_encode($payload));
+  error_log(json_encode($payload));
 
   // features/modem/gps
   foreach([
