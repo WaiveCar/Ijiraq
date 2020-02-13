@@ -431,20 +431,27 @@ var Engine = function(opts){
     // these values as references while also
     // accepting overrides. so we are doing 
     // it twice.
-    Object.assign(obj, {
-      downweight: 1,
-      completed_seconds: 0,
-      // We need multi-asset support on a per-job
-      // basis which means we need to be able
-      // to track
-      position: 0,
-      // This is the total duration of all the
-      // assets included in this job.
-      duration: 0,
-      asset: JSON.parse(JSON.stringify(obj.asset_meta)),
-      assetList: [],
-      id: _jobId++,
-    }, obj);
+    //
+    // Now you may think that assign(a,{},a) will work
+    // BUT THERE YOU WOULD BE WRONG. It's probably a
+    // bug in chromium ... anyway.
+    //
+    Object.assign(obj, 
+      Object.assign({
+        downweight: 1,
+        completed_seconds: 0,
+        // We need multi-asset support on a per-job
+        // basis which means we need to be able
+        // to track
+        position: 0,
+        // This is the total duration of all the
+        // assets included in this job.
+        duration: 0,
+        asset: JSON.parse(JSON.stringify(obj.asset_meta)),
+        assetList: [],
+        id: _jobId++,
+      }, obj)
+    );
     
     obj.assetList = obj.asset_meta.map(row => urlToAsset(row, obj));
 
