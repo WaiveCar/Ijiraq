@@ -1228,6 +1228,12 @@ function campaign_update($data, $fileList, $user = false) {
         $obj[$k] = db_string($v);
       }
     }
+    foreach(['asset_meta'] as $k) {
+      if(isset($data[$k])) {
+        $obj[$k] = $data[$k];
+      }
+    }
+
     if(!empty($data['geofence'])) {
       // first we filter for circles to do lat/lng/radius
       foreach($data['geofence'] as $geo) {
