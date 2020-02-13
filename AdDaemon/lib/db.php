@@ -18,9 +18,12 @@ $JSON = [
 $RULES = [
   'campaign' => [ 
     'table' => [
-      'pre' => function($obj) {
+      'pre' => function($obj, $type) {
         if(!isset($obj['uuid'])) {
           $obj['uuid'] = Uuid::uuid4()->toString();
+          if($type !== 'pdo') {
+            $obj['uuid'] = db_string($obj['uuid']);
+          }
         }
         return $obj;
       },
@@ -864,7 +867,7 @@ function process($table, $obj, $what, $type='none') {
     }
     if(isset($ref['table'])) {
       if(isset($ref['table'][$what])) {
-        $obj = $ref['table'][$what]($obj);
+        $obj = $ref['table'][$what]($obj, $type);
       }
     }
   }
