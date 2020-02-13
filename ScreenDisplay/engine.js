@@ -447,7 +447,7 @@ var Engine = function(opts){
         // This is the total duration of all the
         // assets included in this job.
         duration: 0,
-        asset: JSON.parse(JSON.stringify(obj.asset_meta)),
+        asset_original: JSON.parse(JSON.stringify(obj.asset_meta)),
         assetList: [],
         id: _jobId++,
       }, obj)
