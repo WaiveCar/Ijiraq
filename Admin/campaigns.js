@@ -78,7 +78,7 @@ function manual_show(id) {
   _id = id;
   _campaign = get(_id);
   $("#rawModal").modal();
-  $("#raw").val(JSON.stringify(_campaign['asset_meta'], false, 3));
+  $("#raw").val(JSON.stringify(_campaign['asset_original'], false, 3));
 }
 
 function geosave() {
