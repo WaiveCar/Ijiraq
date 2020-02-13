@@ -40,6 +40,17 @@ function removeShape() {
   _map.removeShape();
 }
 
+function change(what, id) {
+  var campaign = get(id);
+  var newVal = prompt("Change " + what, campaign[what]);
+  if(!newVal) {
+    return show("Canceled");
+  }
+  post('campaign_update', {id: id, [what]: newVal}, res => {
+    show({data: `Updated ${what}`}, 1000));
+  });
+}
+
 function change_time(id, current) {
   var newValStr = prompt("Change to what value?", current), 
       newValNum;

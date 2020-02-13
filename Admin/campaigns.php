@@ -119,7 +119,7 @@ $height = $width * 675 / 1920;
                       }
                     } 
                     if(!$matched) {
-                      echo "<span class='badge badge-pill badge-dark'>${campaign['project']}</span>";
+                      echo "<span onclick=\"change('project',${campaign['id']})\" class='badge badge-pill badge-dark'>${campaign['project']}</span>";
                     }
                   ?>
                   </h3>
