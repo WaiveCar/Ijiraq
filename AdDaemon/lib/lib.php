@@ -509,6 +509,7 @@ function ping($payload) {
     'location', 'location.Lat', 'location.Lng',        // >v0.3-Chukwa-473-g725fa2c
     'last_uptime', 'last_task_result',                 // >v0.3-Chukwa-1316-g3b791be5-master
     'bootcount',
+    'modem.imsi', 'modem.icc'
   ] as $key) {
     $val = aget($payload, $key);
 

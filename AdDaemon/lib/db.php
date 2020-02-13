@@ -141,6 +141,8 @@ $SCHEMA = [
     # what it is that dissappeared so we can check
     'last_campaign_id' => 'integer',
     'imei'        => 'text',
+    'imsi'        => 'text',
+    'icc'         => 'text',
     'phone'       => 'text',
     'car'         => 'text',
     'project'     => 'text',
