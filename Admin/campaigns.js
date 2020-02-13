@@ -47,7 +47,7 @@ function change_param(what, id) {
     return show("Canceled");
   }
   post('campaign_update', {id: id, [what]: newVal}, res => {
-    show({data: `Updated ${what}`}, 1000));
+    show({data: `Updated ${what}`}, 1000);
   });
 }
 
