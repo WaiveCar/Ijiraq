@@ -16,7 +16,7 @@
     <div id="campaignPages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <? foreach(['pending','active','rejected','completed'] as $term) { ?>
-        <a class="collapse-item" href="/admin/campaigns?which=<?=$term?>"><?=ucfirst($term)?></a>
+        <a class="collapse-item" href="/admin/campaigns?status=<?=$term?>"><?=ucfirst($term)?></a>
         <? } ?>
       </div>
     </div>
