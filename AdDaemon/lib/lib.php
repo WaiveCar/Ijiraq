@@ -472,7 +472,7 @@ function record_screen_on($screen, $payload) {
         $opt['lat'] = $screen['lat'];
         $opt['lng'] = $screen['lng'];
       }
-      db_insert('uptime_history', $opt);
+      pdo_insert('uptime_history', $opt);
     } else {
       error_log("No records found for action on and name $uid");
     }
@@ -592,8 +592,8 @@ function ping($payload) {
 
   log_screen_changes($screen, $obj);
 
-  db_update('screen', $screen['id'], $obj);
-  db_insert('ping_history', ['screen_id' => $screen['id']]);
+  pdo_update('screen', $screen['id'], $obj);
+  pdo_insert('ping_history', ['screen_id' => $screen['id']]);
 
   // We return the definition for the default campaign
   // The latest version of the software
