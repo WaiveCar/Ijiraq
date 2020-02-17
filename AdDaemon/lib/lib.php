@@ -339,6 +339,7 @@ function upsert_screen($screen_uid, $payload) {
     'removed' => 0,
     'last_seen' => 'current_timestamp'
   ];
+
   $last = strtotime($screen['last_seen']);
   if(time() - $last > 150 && $screen['project'] != 'dev' && $screen['uptime'] == null) {
     //error_log($screen['uid'] . " " . time() . ' (' . (time() - $last) . ') ' );
@@ -350,7 +351,7 @@ function upsert_screen($screen_uid, $payload) {
     $data['last_loc'] = 'current_timestamp';
   }
 
-  db_update('screen', ['uid' => db_string($screen_uid)], $data);
+  pdo_update('screen', ['uid' => $screen_uid], $data);
 
   return array_merge($screen, $data);
 }
@@ -496,7 +497,7 @@ function record_screen_on($screen, $payload) {
 
 function ping($payload) {
   global $VERSION, $LASTCOMMIT;
-  error_log(json_encode($payload));
+  //error_log(json_encode($payload));
 
   // features/modem/gps
   foreach([
@@ -516,18 +517,12 @@ function ping($payload) {
     if($val) {
       $parts = explode('.', $key);
       $base = strtolower(array_pop($parts));
-      if(is_array($val)) {
-        $obj[$base] = $val;
-      } else {
-        $obj[$base] = db_string($val);
-      }
+      $obj[$base] = $val;
     }
   }
 
 
   if(isset($payload['uid'])) {
-    $uid = db_string($payload['uid']);
-
     $screen = Get::screen(['uid' => $payload['uid']]);
 
     if(!isset($payload['uptime'])) {
