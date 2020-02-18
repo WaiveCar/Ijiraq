@@ -29,6 +29,9 @@ Business owners want a known output for a known input. The output can be a set o
 as it's not odds of odds ... that is to say it can be 1 in 10, but not a 1 in 10 of being 1 in 10
 and a 2 in 10 of being a 3 in 10 and so on.
 
+Convergence is the *only* important number. If a method irritates 80% but has a 10% convergence and
+that's the best, then that method is the one to do.
+
 The objective is a virtuous cycle feedback machine that can generate clients + testimonials.
 
 There's two kinds of ads:
