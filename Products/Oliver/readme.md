@@ -56,11 +56,10 @@ Customer fears
   They want tools, not solutions, not consultants, not services.
   Shouldn't pretend to know an answer or to care or to listen, instead, be a hammer.
 
-  They hate yelp because the business model converts the tool into
-  a hustle
+  They hate yelp because the business model converts that tool into a hustle
 
   Success is tied too much to a specific service such as instagram. They don't like the reliance.
 
-  Different systems work for different kinds of systems. Followers don't always lead to sales.
+  Different systems work for different types of businesses. Followers don't always lead to sales.
 
   Business owners don't mind if their BUSINESS is on social media, just that they don't want to necessarily personally be.
