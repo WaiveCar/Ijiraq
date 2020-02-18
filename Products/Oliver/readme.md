@@ -1,3 +1,9 @@
+For small businesses
+who are dissatisfied with social media managemtn solutions
+Our product is a 
+Unlike
+Our product
+
 --- 
 Schedulers
   They suck because most content looks canned and unengaging
@@ -34,12 +40,13 @@ that's the best, then that method is the one to do.
 
 The objective is a virtuous cycle feedback machine that can generate clients + testimonials.
 
-There's two kinds of ads:
+kinds of ads:
 
-  * Introduction
-  * Reminder : After a sale, for referrals or return business.
+  * Introduction: Before a sale, before first buy
+  * Reminder: Before a sale, to steal customers ("we try harder")
+  * Reminder: After a sale, for referrals or return business.
 
-With both it should feel personal.
+With all it should feel personal.
 
 --
 Customer fears
