@@ -63,3 +63,32 @@ Customer fears
   Different systems work for different types of businesses. Followers don't always lead to sales.
 
   Business owners don't mind if their BUSINESS is on social media, just that they don't want to necessarily personally be.
+
+---
+Internally we should have different classes of objects, types, and satisfiability for them.
+
+This will surface as different services
+
+
+For instance
+
+  image   4x3 1x1 3x4 9x16 16x9 
+  video   ''
+  vector  ''
+  text    word and line count
+
+Then there's the purpose of each
+
+  logo, phone, email, social media, address, hours, etc.
+
+Then things are either "live" or not.
+
+For a user what they see is a set of layout/requirements along with satisfiability needs.
+
+The system is effectively a "meat grinder":
+
+  respiration cycle:
+    Inputs are scanned.
+    Layouts are generated.
+      Notifications are sent to the user
+    Outputs are sent to their CRUD/email places
