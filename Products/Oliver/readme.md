@@ -92,3 +92,8 @@ The system is effectively a "meat grinder":
     Layouts are generated.
       Notifications are sent to the user
     Outputs are sent to their CRUD/email places
+
+This leads to a separation of the platform and the media which addresses all the problems above. We don't care because
+it sovles the oversubscriber problem and we still get the money. The objective is to provide a kind of value where part
+of the product is seen as "free", this is only possible if there's an intrinsic abstract value where the user values the 
+system regardless of the material realities.
