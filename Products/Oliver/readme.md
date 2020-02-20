@@ -1,8 +1,5 @@
-For small businesses
-who are dissatisfied with social media managemtn solutions
-Our product is a 
-Unlike
-Our product
+For businesses with under 20 employees who are dissatisfied with the time, cost and expertise required to do social media and marketing management, Oliver is a content amplifier and distributor that uses existing presence as content sources. Unlike buffer, zoho or hootsuite,
+our product doesn't require anyone to be steering the ship.
 
 --- 
 Schedulers
@@ -60,6 +57,10 @@ Customer fears
 
   Success is tied too much to a specific service such as instagram. They don't like the reliance.
 
+  There's a "starve the beast" system. For google, each company in a market needs to stay in, at a loss, because if they pull out they
+  will lose more then if they stay in because it changes the pricing for the competitors and eventually customers will atrophy
+  and switch so they end up staying in as a form of necessity ... like some mandatory tax to do business.
+
   Different systems work for different types of businesses. Followers don't always lead to sales.
 
   Business owners don't mind if their BUSINESS is on social media, just that they don't want to necessarily personally be.
@@ -94,6 +95,6 @@ The system is effectively a "meat grinder":
     Outputs are sent to their CRUD/email places
 
 This leads to a separation of the platform and the media which addresses all the problems above. We don't care because
-it sovles the oversubscriber problem and we still get the money. The objective is to provide a kind of value where part
+it solves the oversubscriber problem and we still get the money. The objective is to provide a kind of value where part
 of the product is seen as "free", this is only possible if there's an intrinsic abstract value where the user values the 
 system regardless of the material realities.
