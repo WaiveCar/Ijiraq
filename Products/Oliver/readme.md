@@ -1,9 +1,7 @@
 Pitch
 ---
 
-For businesses with under 20 employees who are dissatisfied with the time, cost and expertise required to do social media and marketing management, Oliver is a content amplifier and distributor that uses existing presence as content sources. Unlike buffer, zoho or hootsuite,
-our product doesn't require anyone to be steering the ship.
-
+For small businesses dissatisfied with the costs and expertise needed for social media and marketing management, oliver is a content amplifier that repackages existing presence as new content. Unlike buffer or hootsuite, oliver doesn't require anyone to steer the ship.
 
 Background
 ---
