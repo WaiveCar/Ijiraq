@@ -61,6 +61,31 @@ The tool becomes a middleman instead of an endpoint but is still part of the flo
 
 The objective is a virtuous cycle feedback machine that can generate clients + testimonials.
 
+
+Similar efforts
+---
+
+At the advent of "web 2.0", the term "mashup" was developed to describe stringing APIs together.  Yahoo and Google Pipes, EMML, and
+a number of other efforts came out of this. 
+
+The survivors are Zapier and IFTTT, both of which are more "smart home" and IoT focused these days.
+
+The theory of why these didn't work as SMM alternatives is because 
+
+ 1. It wasn't their target market
+ 2. they don't seem to have a way to do curation, regulation, or mutation between the systems.
+
+For instance, you just "enable" "Take X and blanket cross-post to Y" and then use some kind of funnel system to centralize contact
+points.
+
+If the theory is that expanding the reach increases lead generation and then servicing of the leads is the most important thing,
+then this works. However
+
+ 1. blanket cross-posting dilutes quality and seems more impersonal
+ 2. thus there is a higher volume of poorer quality leads and a lower volume of higher quality ones
+
+The complaint I see is usually "more leads, fewer sales". This approach doesn't come with "sensible defaults"
+
 Product
 ---
 
