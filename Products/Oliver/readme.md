@@ -148,12 +148,24 @@ System
 
 This initial exploration is a sophisticated model which may be parred down:
 
-- screens have physical size and resolutions/ratios
-- layouts have components and compatible screens <-- user-surfaced
-- components have specifications
+- Screens have physical size and resolutions/ratios
+- Layouts have Components and compatible Screens <-- user-surfaced
+- Components have specifications
 
-- services have assets with specifications. <-- user-surfaced
-- a layout is satisfied when its components sepcifications can all be matched by available services.
-- a screen is accessible when a compatible layout is available.
+- Services have Assets with specifications. <-- user-surfaced
+- a Layout is satisfied when its Components specifications can all be matched by available Services.
+- a Screen is accessible when a compatible Layout is available.
 
+The Layouts can get Assets for their Components the following ways:
 
+  1. User-provided - They upload it/create it
+  2. Asset-specific - A specific Asset from pre-existing digital sources is used (such as an existing instagram image)
+  3. Condition-specific - This could be something like "most recent instagram upload" or "5 star review" etc.
+     Note: condition specific content can either go on "auto-pilot" or can be reviewed/approved.
+
+Notes: 
+
+ * The Layout can have mixes for their Components. For example, some Components can be user provided while other can be asset-specific.
+ * If content changes the actual instance of what showed where when needs to be saved, not just the notion of a stream.
+ * This isn't necessarily surfaced to the user initially, they can see an overview representing it as "condition specific" Component. They can do
+   a "deeper dive" and see more.
