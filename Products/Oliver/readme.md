@@ -141,3 +141,19 @@ This leads to a separation of the platform and the media which addresses all the
 it solves the oversubscriber problem and we still get the money. The objective is to provide a kind of value where part
 of the product is seen as "free", this is only possible if there's an intrinsic abstract value where the user values the 
 system regardless of the material realities.
+
+
+System
+---
+
+This initial exploration is a sophisticated model which may be parred down:
+
+- screens have physical size and resolutions/ratios
+- layouts have components and compatible screens <-- user-surfaced
+- components have specifications
+
+- services have assets with specifications. <-- user-surfaced
+- a layout is satisfied when its components sepcifications can all be matched by available services.
+- a screen is accessible when a compatible layout is available.
+
+
