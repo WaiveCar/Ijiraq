@@ -1,3 +1,5 @@
+Note: see [dooh.rst](dooh.rst) for an overview of the traditional approach and why it doesn't work.
+
 Pitch
 ---
 
