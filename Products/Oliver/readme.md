@@ -173,6 +173,16 @@ Notes:
    a "deeper dive" and see more.
 
 
+FE design
+---
+
+It will be a permutation of the Aviv design. Effectively the following things have to be met:
+ 
+ * what the user is getting should be prominantly featured during the process
+ * zapier style search for more things to connect to
+ * ^ the user should be given the opportunity to upgrade the experience
+
+"the more you add, the better it is"
 
 Layout Engine
 ---
