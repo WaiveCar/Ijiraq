@@ -171,3 +171,18 @@ Notes:
  * If content changes the actual instance of what showed where when needs to be saved, not just the notion of a stream.
  * This isn't necessarily surfaced to the user initially, they can see an overview representing it as "condition specific" Component. They can do
    a "deeper dive" and see more.
+
+
+
+Layout Engine
+---
+
+We're trying to re-invent *as little* as possible. The idea is there is say regular HTML/CSS and then by annotating some dom nodes, say by adding a class or an HTML5 `data-*` attribute we can identify what "object type" a particular dom node is.
+
+Then *probably* the rest of the stuff can be put into a URL structure.  For instance:
+
+    /layouts/<layout id>/<campaign id>
+
+Where `<campaign id>` will return "discrete" content from an API, such as an image or block of text along with say, a UUID.
+So in the Statement of Work, it could report `campaign id/uuid` to specify the exact combination of stuff that was shown. The UUID
+isn't necessarily a uuidv5 but it is someway to identify the actual assets that were displayed.
