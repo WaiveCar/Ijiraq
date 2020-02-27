@@ -196,3 +196,9 @@ Then *probably* the rest of the stuff can be put into a URL structure.  For inst
 Where `<campaign id>` will return "discrete" content from an API, such as an image or block of text along with say, a UUID.
 So in the Statement of Work, it could report `campaign id/uuid` to specify the exact combination of stuff that was shown. The UUID
 isn't necessarily a uuidv5 but it is someway to identify the actual assets that were displayed.
+
+
+Output design
+---
+
+There has to be a format pipeline that can take html/css/js and then generate static images, mp4s, pdf etc... for different sources - hopefully with appropriate SVG/raster and DPI separation.
