@@ -204,3 +204,9 @@ Output Engine
 There has to be a format pipeline that can take html/css/js and then generate static images, mp4s, pdf etc... for different sources - hopefully with appropriate SVG/raster and DPI separation. This can be a completely separate, generic thing - it might already exist.
 
 For now (2020-03) we are just going to focus on the html output
+
+
+1.0
+---
+
+The point of the 1.0 is to have a flexible framework where the BL can be pivoted over the lifecycle of the customer discovery and validation (see steve blank).  The previous instance was a one-off instagram running on the screen architecture. We need a better system of creation
