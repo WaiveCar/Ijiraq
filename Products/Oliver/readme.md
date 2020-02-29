@@ -133,7 +133,7 @@ respiration cycle:
 1. Inputs are scanned.
 2. Layouts are generated.
    a. Notifications are sent to the user
-3. Outputs are sent to their CRUD/email places
+3. Output Engine: Outputs are sent to their CRUD/email places 
 
 
 Value 
@@ -198,7 +198,9 @@ So in the Statement of Work, it could report `campaign id/uuid` to specify the e
 isn't necessarily a uuidv5 but it is someway to identify the actual assets that were displayed.
 
 
-Output design
+Output Engine
 ---
 
-There has to be a format pipeline that can take html/css/js and then generate static images, mp4s, pdf etc... for different sources - hopefully with appropriate SVG/raster and DPI separation.
+There has to be a format pipeline that can take html/css/js and then generate static images, mp4s, pdf etc... for different sources - hopefully with appropriate SVG/raster and DPI separation. This can be a completely separate, generic thing - it might already exist.
+
+For now (2020-03) we are just going to focus on the html output
