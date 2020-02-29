@@ -163,6 +163,7 @@ This initial exploration is a sophisticated model which may be parred down:
 - Layouts have Components and compatible Screens <-- user-surfaced
 - Components have specifications
 
+- User has many Services
 - Services have Assets with specifications. <-- user-surfaced
 - a Layout is satisfied when its Components specifications can all be matched by available Services.
 - a Screen is accessible when a compatible Layout is available.
@@ -220,3 +221,5 @@ For now (2020-03) we are just going to focus on the html output
 ---
 
 The point of the 1.0 is to have a flexible framework where the BL can be pivoted over the lifecycle of the customer discovery and validation (see steve blank).  The previous instance was a one-off instagram running on the screen architecture. We need a better system of creation
+
+
