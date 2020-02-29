@@ -78,7 +78,8 @@ The theory of why these didn't work as SMM alternatives is because
  2. they don't seem to have a way to do curation, regulation, or mutation between the systems.
 
 For instance, you just "enable" "Take X and blanket cross-post to Y" and then use some kind of funnel system to centralize contact
-points.
+points. Also after the API is "enabled" it takes a backseat. I don't really hear from it when it's on so if I decide that either I
+don't want the service any more or I want to exclude a specific post, there's no clear way to do this.
 
 If the theory is that expanding the reach increases lead generation and then servicing of the leads is the most important thing,
 then this works. However
@@ -86,7 +87,9 @@ then this works. However
  1. blanket cross-posting dilutes quality and seems more impersonal
  2. thus there is a higher volume of poorer quality leads and a lower volume of higher quality ones
 
-The complaint I see is usually "more leads, fewer sales". This approach doesn't come with "sensible defaults"
+The complaint I see is usually "more leads, fewer sales". This approach doesn't come with "sensible defaults" or what in SW design is
+
+"make easy things easy, hard things possible"
 
 Product
 ---
@@ -144,13 +147,19 @@ it solves the oversubscriber problem and we still get the money. The objective i
 of the product is seen as "free", this is only possible if there's an intrinsic abstract value where the user values the 
 system regardless of the material realities.
 
+This is important. If an airliner served complimentary michelin star meals, people could arguably take a $150 flight just
+for the food, considering the airplane ride as "free" since michelin meals can easily cost $150.  Someone else could consider
+the michelin meal as "free" for the opposite reason.
+
+A truly compelling product offering will contain some components which part of the target market will mistakenly call "free" because
+the product goes beyond the product's expected offerings.
 
 System
 ---
 
 This initial exploration is a sophisticated model which may be parred down:
 
-- Screens have physical size and resolutions/ratios
+- Screens have physical size and resolutions/ratios (see notes)
 - Layouts have Components and compatible Screens <-- user-surfaced
 - Components have specifications
 
@@ -171,6 +180,7 @@ Notes:
  * If content changes the actual instance of what showed where when needs to be saved, not just the notion of a stream.
  * This isn't necessarily surfaced to the user initially, they can see an overview representing it as "condition specific" Component. They can do
    a "deeper dive" and see more.
+ * Most DSP "supplier sides" have a homogeneous resolution as a function of necessity because the asset provided wasn't composite like we are intending.
 
 
 FE design
