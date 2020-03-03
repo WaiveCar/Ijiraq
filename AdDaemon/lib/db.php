@@ -885,6 +885,13 @@ function db_bottom($v) {
   return $v;
 }
 
+function pdo_upsert($table, $condition, $kv) {
+  $res = Get::$table($condition);
+  return $res ? 
+    pdo_update($table, $condition, $kv) : 
+    pdo_insert($table, $kv);
+}
+
 function pdo_update($table, $id, $kv) {
   $values = [];
   $fields = [];
