@@ -1,5 +1,10 @@
 <?
 
+function pub($what) {
+  $r = get_redis();
+  $r->publish('goober', json_encode($what));
+}
+
 
 // widget
 /*

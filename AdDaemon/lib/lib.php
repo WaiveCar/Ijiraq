@@ -246,12 +246,6 @@ function distance($pos1, $pos2) {
   return $dist * 60 * 1397.60312636;
 }
 
-
-function pub($what) {
-  $r = get_redis();
-  $r->publish('goober', json_encode($what));
-}
-
 function create_screen($uid, $data = []) {
   global $PORT_OFFSET;
   // we need to get the next available port number
@@ -743,12 +737,14 @@ function sow($payload) {
   } 
   $screen = upsert_screen($payload['uid'], $payload);
 
+  /*
   pub([
     'type' => 'car',
     'id' => $screen['id'],
     'lat' => $screen['lat'],
     'lng' => $screen['lng']
   ]);
+   */
 
   $jobList = aget($payload, 'jobs', []);
   $campaignsToUpdateList = [];
@@ -1432,12 +1428,14 @@ function infer() {
 function eagerlocation($all) {
   $screen = Get::screen(['uid' => $all['uid']]);
 
+  /*
   pub([
     'type' => 'car',
     'id' => $screen['id'],
     'lat' => $all['lat'],
     'lng' => $all['lng']
   ]);
+   */
 
   return db_update('screen', 
     ['uid' => db_string($all['uid'])], [
