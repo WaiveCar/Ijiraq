@@ -214,6 +214,15 @@ function send_campaign_message($campaign, $template, $user = false, $order = fal
 }
 
 function add_service($user, $service_obj) {
+  if(!$user) {
+    $user = get_user();
+  }
+  if($user) {
+    return pdo_upsert('service', array_merge(
+      $service_obj,
+      [ 'user_id' => $user['id'] ]
+    ));
+  }
 }
 
 function get_service($user, $service_string) {

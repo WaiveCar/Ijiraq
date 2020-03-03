@@ -48,10 +48,12 @@ try {
       header('Location: /campaigns/create');
     } else if(isset($all['info'])) {
       $token = aget($_SESSION, 'instagram.access_token');
+      add_service(false, ['service' => 'instagram', 'token' => $token]);
       if($token) {
         $info = [
           'posts' => json_decode(file_get_contents("https://api.instagram.com/v1/users/self/media/recent/?access_token=$token&count=18"), true)
         ];
+        var_dump($info);
         jemit(doSuccess($info['posts']));
       } else {
         jemit(doError("login needed"));
