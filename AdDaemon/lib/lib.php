@@ -1,5 +1,5 @@
 <?
-require $_SERVER['DOCUMENT_ROOT'] .  'AdDaemon/vendor/autoload.php';
+require $_SERVER['DOCUMENT_ROOT'] . 'AdDaemon/vendor/autoload.php';
 
 use Aws\S3\S3Client;
 use Ramsey\Uuid\Uuid;
@@ -302,11 +302,11 @@ function log_screen_changes($old, $new) {
     $compare_after = trim($compare_after, "'");
     if($compare_before !== $compare_after) {
       error_log("${old['id']}: '$compare_before' != '$compare_after'");
-      db_insert('screen_history', [
+      pdo_insert('screen_history', [
         'screen_id' => $old['id'],
-        'action' => db_string($delta),
-        'old' => db_string($old[$delta]),
-        'value' => db_string($new[$delta])
+        'action' => $delta,
+        'old' => $old[$delta],
+        'value' => $new[$delta]
       ]);
       if($delta == 'features'){
         slack_alert_feature_change($old, $new);
