@@ -16,13 +16,12 @@ $DAY = 24 * 60 * 60;
 // The override here is the campaign's duration_seconds
 $WORKSIZE = 30;
 
-$PROJECT_LIST = ['LA', 'NY', 'REEF', 'Oliver'];
+$PROJECT_LIST = ['LA', 'NY', 'Oliver'];
 $DEFAULT_CAMPAIGN_MAP = [
   'none' => 1,
   'LA' => 1,
   'NY' => 2,
   'dev' => 3,
-  'CES' => 62,
   'Oliver' => 79
 ];
 
@@ -1127,20 +1126,18 @@ function campaign_create($data, $fileList, $user = false) {
 
   $duration_seconds = 0;
 
-  $props = array_merge(circle(),
-    [
-      'project' => 'LA',
-      'start_time' => pdo_date(time()),
-      'goal_seconds' => 240,
-      'end_time' => pdo_date(time() + $DAY * 4),
-      // for the time being we are going to give
-      // the legacy "asset" just an empty array
-      // to satisfy our null condition and make 
-      // sure that legacy installs don't crash
-      'asset' => [],
-      'asset_meta' => [],
-    ],
-  );
+  $props = array_merge(circle(), [
+    'project' => 'LA',
+    'start_time' => pdo_date(time()),
+    'goal_seconds' => 240,
+    'end_time' => pdo_date(time() + $DAY * 4),
+    // for the time being we are going to give
+    // the legacy "asset" just an empty array
+    // to satisfy our null condition and make 
+    // sure that legacy installs don't crash
+    'asset' => [],
+    'asset_meta' => [],
+  ]);
 
   $extractList = [
     'start_time','end_time',
@@ -1446,8 +1443,7 @@ function eagerlocation($all) {
     ['uid' => db_string($all['uid'])], [
       'lat' => $all['lat'],
       'lng' => $all['lng']
-    ]
-  );
+    ]);
 }
 
 function ignition_status($payload) {
