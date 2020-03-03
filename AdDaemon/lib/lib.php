@@ -362,7 +362,7 @@ function response($payload) {
   $screen = Get::screen(['uid' => $payload['uid']]);
 
   if ($screen['last_task'] < $task_id) {
-    db_update('screen', $screen['id'], ['last_task' => $task_id]);
+    pdo_update('screen', $screen['id'], ['last_task' => $task_id]);
   }
 
   return db_insert('task_response', [
@@ -452,7 +452,7 @@ function record_screen_on($screen, $payload) {
       if(isset($screen['uptime'])) {
         $first = $list[0];
         if(!$first['uptime']) {
-          db_update('uptime_history', $first['id'], ['uptime' => $screen['uptime']]);
+          pdo_update('uptime_history', $first['id'], ['uptime' => $screen['uptime']]);
         }
         $str = intval(strtotime($first['created_at'])) + intval($screen['uptime']);
         $last = date('Y-m-d H:i:s', $str);
@@ -629,7 +629,7 @@ function create_job($campaignId, $screenId, $boost_mode) {
 }
 
 function update_job($jobId, $completed_seconds) {
-  return db_update('job', $jobId, [
+  return pdo_update('job', $jobId, [
     'completed_seconds' => $completed_seconds,
     'job_end' => 'current_timestamp'
   ]);
@@ -775,7 +775,7 @@ function sow($payload) {
         $job = Get::job($job_id);
       }
       if(isset( $job['campaign_id'] )) {
-        db_update('screen', $screen['id'], ['last_campaign_id' => $job['campaign_id']]);
+        pdo_update('screen', $screen['id'], ['last_campaign_id' => $job['campaign_id']]);
         $campaignsToUpdateList[] = $job['campaign_id'];
       }
     }
@@ -997,7 +997,7 @@ function show($what, $clause = []) {
 }
 
 function make_infinite($campaign_id) {
-  db_update('campaign', $campaign_id, [
+  pdo_update('campaign', $campaign_id, [
     'goal_seconds' => pow(2,31),
     'end_time' => '2100-01-01 00:00:00'
   ]);
@@ -1249,9 +1249,9 @@ function campaign_update($data, $fileList, $user = false) {
       $assetMetaList[] = ['url' => $name];
     }
 
-    db_update('campaign', $campaign_id, [
-      'asset' => db_string(json_encode($assetList)),
-      'asset_meta' => db_string(json_encode($assetMetaList))
+    pdo_update('campaign', $campaign_id, [
+      'asset' => json_encode($assetList),
+      'asset_meta' => json_encode($assetMetaList)
     ]);
   }
   return $campaign_id;
