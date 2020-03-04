@@ -1,1 +1,1 @@
-../../Admin/dist/map.js
+../../../Admin/dist/map.js
