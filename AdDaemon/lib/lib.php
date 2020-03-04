@@ -7,6 +7,8 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 $mypath = $_SERVER['DOCUMENT_ROOT'] . 'AdDaemon/lib/';
 include_once($mypath . 'db.php');
+$JEMIT_REQ = '';
+$JEMIT_EXT = '';
 
 $screen_dbg_id = 'SgQhKQlP5oIXZgHhkef6waa';
 $PORT_OFFSET = 7000;
@@ -165,6 +167,11 @@ function aget($source, $keyList, $default = null) {
 }
 
 function jemit($what) {
+  global $JEMIT_EXT, $JEMIT_REQ;
+  if (!empty($JEMIT_EXT)) {
+    echo "self._$JEMIT_REQ=";
+    $what = $what['data'];
+  }
   echo json_encode($what);
   exit;
 }

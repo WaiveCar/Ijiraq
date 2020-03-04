@@ -4,8 +4,10 @@ $handlerList = [];
 include('lib.php');
 include('accounting.php');
 
-$func = $_REQUEST['_VxiXw3BaQ4WAQClBoAsNTg_func'];
+$full_func = $_REQUEST['_VxiXw3BaQ4WAQClBoAsNTg_func'];
 unset($_REQUEST['_VxiXw3BaQ4WAQClBoAsNTg_func']);
+list($func, $JEMIT_EXT) = explode('.', $full_func);
+$JEMIT_REQ = $func;
 $verb = $_SERVER['REQUEST_METHOD'];
 $input_raw = file_get_contents('php://input');
 $json_payload = @json_decode($input_raw, true);
