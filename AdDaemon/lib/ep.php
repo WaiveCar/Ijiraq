@@ -30,8 +30,6 @@ try {
     $list = array_values($_FILES);
     move_uploaded_file(aget($list, '0.tmp_name'), "/var/states/" . aget($list, '0.name'));
     jemit(doSuccess('uploaded'));
-  } else if($func == 'me') {
-    jemit(doSuccess($_SESSION));
   } else if($func == 'location' && $verb == 'GET') {
     echo(file_get_contents('http://basic.waivecar.com/location.php?' . http_build_query($all)) );
   } else if($func == 'instagram') {
