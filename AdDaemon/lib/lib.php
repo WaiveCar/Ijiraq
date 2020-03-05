@@ -170,7 +170,6 @@ function jemit($what) {
   global $JEMIT_EXT, $JEMIT_REQ;
   if (!empty($JEMIT_EXT)) {
     echo "self._$JEMIT_REQ=";
-    $what = $what['data'];
   }
   echo json_encode($what);
   exit;
