@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block topbar %}
+<span class="top-bar-right ml-4 mt-2">
+</span>
+{% endblock %}
+{% block content %}
+<div class="container-fluid model-list">
+  <div id="anchor" class="wizard-page">
+  </div>
+  <div class="wizard-nav">
+    <button id="back-btn" class="btn btn-primary">Back</button>
+    <button id="next-btn" class="btn btn-primary">Next</button>
+  </div>
+</div>
+{% endblock %}
+{% block additionalScripts %}
+<script src="/js/triptychHelpers.js"></script>
+<script src="/js/wizard.js"></script>
+{% endblock %}
