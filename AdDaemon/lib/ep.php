@@ -38,7 +38,7 @@ try {
         'client_id' => 'c49374cafc69431b945521bce7601840',
         'client_secret' => '5f90ebdda3524895bfa9f636262c8a26',
         'grant_type' => 'authorization_code',
-        'redirect_uri' => 'http://ads.waivecar.com/api/instagram',
+        'redirect_uri' => 'http://staging.waivescreen.com/api/instagram',
         'code' => $all['code']
       ], 'POST');
       $_SESSION['instagram'] = $token;
