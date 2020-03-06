@@ -6,7 +6,15 @@ include('accounting.php');
 
 $full_func = $_REQUEST['_VxiXw3BaQ4WAQClBoAsNTg_func'];
 unset($_REQUEST['_VxiXw3BaQ4WAQClBoAsNTg_func']);
-list($func, $JEMIT_EXT) = explode('.', $full_func);
+
+$parts = explode('.', $full_func);
+$func = $parts[0];
+if(count($parts) > 1) {
+  $JEMIT_EXT = $parts[1];
+} else {
+  $JEMIT_EXT = false;
+}
+
 $JEMIT_REQ = $func;
 $verb = $_SERVER['REQUEST_METHOD'];
 $input_raw = file_get_contents('php://input');
