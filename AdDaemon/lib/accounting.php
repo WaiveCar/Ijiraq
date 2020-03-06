@@ -187,8 +187,7 @@ function send_message($user, $template, $params) {
         'password' => 'key-2804ba511f20c47a3c2dedcd36e87c92'
       ],
       'verb' => 'post', 
-      'json' => false,
-      'log' => true
+      'json' => false
     ]
   );
 
