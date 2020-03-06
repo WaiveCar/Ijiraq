@@ -19,6 +19,7 @@ function me() {
   if(isset($_SESSION['user'])) {
     return $_SESSION['user'];
   }
+  return [];
 }
 
 function do_oth($oth) {
