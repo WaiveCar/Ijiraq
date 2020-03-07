@@ -16,10 +16,16 @@ function get_user() {
 }
 
 function me() {
+  $res = [];
   if(isset($_SESSION['user'])) {
-    return $_SESSION['user'];
+    $res = $_SESSION['user'];
   }
-  return [];
+  foreach (['instagram'] as $k) {
+    if(isset($_SESSION[$k])) {
+      $res[$k] = $_SESSION[$k];
+    }
+  }
+  return $res;
 }
 
 function do_oth($oth) {
