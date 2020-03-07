@@ -1,6 +1,7 @@
 var 
   uploadInput,
   _preview,
+  _server_url = 'staging.waivescreen.com',
   _assetList = [];
 
 function calcItems() {
@@ -55,7 +56,7 @@ function create_campaign(obj) {
 
   return axios({
     method: 'post',
-    url: 'http://adcast/api/campaign',
+    url: `http://${_server_url}/api/campaign`,
     data: formData,
     config: {
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -91,7 +92,7 @@ function setRatio(container, what) {
 }
 
 function get(ep, cb) {
-  fetch(new Request(`http://adcast/api/${ep}`))
+  fetch(new Request(`http://${_server_url}/api/${ep}`))
     .then(res => {
       if (res.status === 200) {
         return res.json();
@@ -100,7 +101,7 @@ function get(ep, cb) {
 }
 
 function post(ep, body, cb) {
-  fetch(new Request(`http://adcast/api/${ep}`, {
+  fetch(new Request(`http://${_server_url}/api/${ep}`, {
     method: 'POST', 
     body: JSON.stringify(body)
   })).then(res => {
