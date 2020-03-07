@@ -41,6 +41,7 @@ try {
   } else if($func == 'location' && $verb == 'GET') {
     echo(file_get_contents('http://basic.waivecar.com/location.php?' . http_build_query($all)) );
   } else if($func == 'instagram') {
+    session_start();
     if(isset($all['code'])) {
       $token = curldo('https://api.instagram.com/oauth/access_token', [
         'client_id' => 'c49374cafc69431b945521bce7601840',
@@ -56,6 +57,8 @@ try {
       header('Location: /campaigns/create');
     } else if(isset($all['info'])) {
       $token = aget($_SESSION, 'instagram.access_token');
+    var_dump($token);
+    exit;
       add_service(false, ['service' => 'instagram', 'token' => $token]);
       if($token) {
         $info = [
@@ -83,7 +86,16 @@ try {
   }
   else if($func == 'screens' && ($verb == 'POST' || $verb == 'PUT')) {
     jemit(screen_edit($all));
-  } else if(array_search($func, ['ces', 'purchases', 'users', 'jobs', 'sensor_history', 'campaigns', 'screens', 'tasks']) !== false) {
+  } else if(array_search($func, [
+    'ces', 
+    'purchases', 
+    'users', 
+    'jobs', 
+    'sensor_history', 
+    'campaigns', 
+    'screens', 
+    'tasks'
+  ]) !== false) {
     $table = $func;
     if($func !== 'ces') {
       $table = rtrim($func, 's');
@@ -96,6 +108,14 @@ try {
     post_return($action($table, $all));
   }
   else if(array_search($func, [
+    'me',
+    'login',
+    'logout',
+    'signup',
+  ]) !== false) { 
+    session_start();
+    post_return($func($all, $verb));
+  } else if(array_search($func, [
     'active_campaigns', 
     'campaign_history', 
     'heatmap',
@@ -106,19 +126,15 @@ try {
     'ignition_status',
     'kpi',
     'eagerlocation',
-    'login',
     'infer',
-    'logout',
     'ping', 
     'response',
     'screen_tag', 
     'schema',
-    'signup',
     'sow', 
     'tag', 
     'most_recent',
     'task_dump',
-    'me'
   ]) !== false) { 
     post_return($func($all, $verb));
   } else {
