@@ -49,7 +49,7 @@ try {
         'grant_type' => 'authorization_code',
         'redirect_uri' => 'http://staging.waivescreen.com/api/instagram',
         'code' => $all['code']
-      ], 'POST');
+      ], ['verb' => 'POST', 'log' => true]);
       $_SESSION['instagram'] = $token;
       header('Location: /campaigns/create');
     } else if(isset($all['logout'])) {
@@ -57,14 +57,11 @@ try {
       header('Location: /campaigns/create');
     } else if(isset($all['info'])) {
       $token = aget($_SESSION, 'instagram.access_token');
-    var_dump($token);
-    exit;
       add_service(false, ['service' => 'instagram', 'token' => $token]);
       if($token) {
         $info = [
           'posts' => json_decode(file_get_contents("https://api.instagram.com/v1/users/self/media/recent/?access_token=$token&count=18"), true)
         ];
-        var_dump($info);
         jemit(doSuccess($info['posts']));
       } else {
         jemit(doError("login needed"));
