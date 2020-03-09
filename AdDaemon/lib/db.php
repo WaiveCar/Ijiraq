@@ -503,6 +503,8 @@ $SCHEMA = [
     'service'    => 'text',
     'username'   => 'text',
     'token'      => 'text',
+    // most recent data
+    'data'       => 'text',
     'created_at' => 'datetime default current_timestamp',
   ],
 
