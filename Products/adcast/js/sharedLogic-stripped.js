@@ -136,7 +136,8 @@ function instaGet() {
       ix++;
       selected.push(row.dataset.standard);
     })
-    var param = selected.map(row => `images[]=${row}`).join('&');
+    var param = selected.map(row => `images[]=` + row.replace(/\?/,'%3F').replace(/\&/g, '%26')).join('&');
+    console.dir(param);
     $('.insta .preview').attr('src', `/insta.php?user=${user.username}&${param}`);
   }
   var selector = [];

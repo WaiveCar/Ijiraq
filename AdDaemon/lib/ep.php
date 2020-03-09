@@ -62,6 +62,7 @@ try {
         $info = [
           'posts' => json_decode(file_get_contents("https://api.instagram.com/v1/users/self/media/recent/?access_token=$token&count=18"), true)
         ];
+        $_SESSION['instagram.posts'] = $info;
         jemit(doSuccess($info['posts']));
       } else {
         jemit(doError("login needed"));

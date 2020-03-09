@@ -20,7 +20,7 @@ function me() {
   if(isset($_SESSION['user'])) {
     $res = $_SESSION['user'];
   }
-  foreach (['instagram'] as $k) {
+  foreach (['instagram', 'instagram.posts'] as $k) {
     if(isset($_SESSION[$k])) {
       $res[$k] = $_SESSION[$k];
     }
