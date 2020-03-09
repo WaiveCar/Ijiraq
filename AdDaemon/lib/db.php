@@ -505,6 +505,7 @@ $SCHEMA = [
     'token'      => 'text',
     // most recent data
     'data'       => 'text',
+    'data_time'  => 'datetime default current_timestamp',
     'created_at' => 'datetime default current_timestamp',
   ],
 
