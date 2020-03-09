@@ -552,7 +552,18 @@ $SCHEMA = [
     'message'     => 'text',
     'campaign_id' => 'integer',
     'created_at'  => 'datetime default current_timestamp',
+  ],
+  'template_config' => [
+    'id'          => 'integer primary key autoincrement',
+    'user_id'     => 'integer',
+    'params'      => 'text',
+    'created_at'  => 'datetime default current_timestamp',
+  ],
+  'template' => [
+    'id'          => 'integer primary key autoincrement',
+    'created_at'  => 'datetime default current_timestamp',
   ]
+    
 ];
 /*
 
