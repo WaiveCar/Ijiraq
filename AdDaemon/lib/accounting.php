@@ -38,7 +38,7 @@ function do_oth($oth) {
   }
 }
 
-function create($table, $payload) {
+function create($table, $payload = []) {
   // TODO: whitelist the tables
   global $SCHEMA;
   foreach($payload as $k => $v) {
@@ -244,12 +244,25 @@ function add_service($user, $service_obj) {
 function get_service($user, $service_string) {
 }
 
-
+// todo: we need to be able to have multiple users potentially connect
+// the same instagram account.
 function find_or_create_user($service_obj, $data) {
+  $user = get_user();
   $row = Get::service($service_obj);
-  if(!$row) {
+
+  if($row) {
+    $user_id = $user ? 
+      aget($user, 'id') : 
+      aget($row, 'user_id');
+  } else {
     $row = pdo_insert('service', $service_obj);
+    if(!$user) {
+      $user = create('user');
+    }
+    $user_id = $user['id'];
   }
-  return pdo_update('service', $row['id'], $data);
+  $data['user_id'] = $user_id;
+  pdo_update('service', $row['id'], $data);
+  return $user_id;
 }
 

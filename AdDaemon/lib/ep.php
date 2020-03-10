@@ -52,7 +52,7 @@ try {
       ], ['verb' => 'POST', 'log' => true]);
       $_SESSION['instagram'] = $token;
 
-      $user = find_or_create_user([
+      $user_id = find_or_create_user([
         'service' => 'instagram',
         'service_user_id' => aget($token, 'user.id'),
         'username' => aget($token, 'user.username')
@@ -63,17 +63,21 @@ try {
         ]
       ]);
 
+      login_as($user_id);
+
       header('Location: /campaigns/create');
     } else if(isset($all['logout'])) {
       unset( $_SESSION['instagram'] );
       header('Location: /campaigns/create');
     } else if(isset($all['info'])) {
       $token = aget($_SESSION, 'instagram.access_token');
-      add_service(false, ['service' => 'instagram', 'token' => $token]);
       if($token) {
         $info = [
           'posts' => json_decode(file_get_contents("https://api.instagram.com/v1/users/self/media/recent/?access_token=$token&count=18"), true)
         ];
+        $service = Get::service(['token' => $token]);
+        pdo_update('service', $service['id'], ['data' => $info]);
+
         $_SESSION['instagram.posts'] = $info;
         jemit(doSuccess($info['posts']));
       } else {
