@@ -81,6 +81,13 @@ function upsert_user($all) {
   return Get::user($user_id);
 }
 
+function login_as($user_id) {
+  if($user_id) {
+    $user = Get::user($user_id);
+    $_SESSION['user'] = $user;
+    return $user;
+  }
+}
 function signup($all) {
   $who = aget($all, 'email');
 
@@ -99,10 +106,7 @@ function signup($all) {
   }
 
   $user_id = create('user', $all);
-  if($user_id) {
-    $_SESSION['user'] = Get::user($user_id);
-  }
-  return doSuccess($_SESSION['user']);
+  return doSuccess(login_as($user_id));
 }
 
 function logout() {
@@ -231,6 +235,26 @@ function add_service($user, $service_obj) {
   }
 }
 
+// From notebook:
+// "If no user exists for a socnet account, we create an empty one"
 function get_service($user, $service_string) {
+}
+
+
+function find_or_create_user($service_obj) {
+  $row = Get::service($service_obj);
+  if(!$row) {
+    pdo_insert(
+  'service' => [
+    'id'         => 'integer primary key autoincrement',
+    'user_id'    => 'integer',
+    'service'    => 'text',
+    'username'   => 'text',
+    'token'      => 'text',
+    // most recent data
+    'data'       => 'text',
+    'data_time'  => 'datetime default current_timestamp',
+    'created_at' => 'datetime default current_timestamp',
+  ],
 }
 
