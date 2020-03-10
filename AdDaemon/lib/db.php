@@ -496,16 +496,25 @@ $SCHEMA = [
     'lat'        => 'float',
     'lng'        => 'float'
   ],
-
-  'service' => [
+  'purchase' => [
     'id'         => 'integer primary key autoincrement',
     'user_id'    => 'integer',
-    'service'    => 'text',
-    'username'   => 'text',
-    'token'      => 'text',
-    // most recent data
-    'data'       => 'text',
-    'data_time'  => 'datetime default current_timestamp',
+    'campaign_id'=> 'integer',
+    'card_id'    => 'text',
+    'charge_id'  => 'text',
+    'status'     => 'text',
+
+    'amount'     => 'integer',
+    // ^ This is always filled.
+    // if credit is charged then this V is filled
+    'credit'     => 'integer default 0',
+
+    // This means you can do amount - credit = amount paid.
+    // Also this means that refunds can re-appear as
+    // credit.
+    'refunded'   => 'integer default 0',
+
+    'ref_id'     => 'integer',
     'created_at' => 'datetime default current_timestamp',
   ],
 
@@ -528,33 +537,18 @@ $SCHEMA = [
     'created_at' => 'datetime default current_timestamp',
   ],
 
-  'purchase' => [
+  'service' => [
     'id'         => 'integer primary key autoincrement',
     'user_id'    => 'integer',
-    'campaign_id'=> 'integer',
-    'card_id'    => 'text',
-    'charge_id'  => 'text',
-    'status'     => 'text',
+    'service'    => 'text',
 
-    'amount'     => 'integer',
-    // ^ This is always filled.
-    // if credit is charged then this V is filled
-    'credit'     => 'integer default 0',
-
-    // This means you can do amount - credit = amount paid.
-    // Also this means that refunds can re-appear as
-    // credit.
-    'refunded'   => 'integer default 0',
-
-    'ref_id'     => 'integer',
+    'service_user_id' => 'text',
+    'username'   => 'text',
+    'token'      => 'text',
+    // most recent data
+    'data'       => 'text',
+    'data_time'  => 'datetime default current_timestamp',
     'created_at' => 'datetime default current_timestamp',
-  ],
-  'ces' =>  [
-    'id'          => 'integer primary key autoincrement',
-    'phone'       => 'text',
-    'message'     => 'text',
-    'campaign_id' => 'integer',
-    'created_at'  => 'datetime default current_timestamp',
   ],
   'template_config' => [
     'id'          => 'integer primary key autoincrement',
