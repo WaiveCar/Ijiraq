@@ -100,8 +100,7 @@ $RULES = [
           foreach(array_keys($v) as $k) {
             $v[$k]['_t'] = date('c');
           }
-          $v = json_encode(array_merge($start, $v));
-          return $type === 'pdo' ? $v : db_string($v); 
+          return json_encode(array_merge($start, $v));
         },
         'post' => $JSON['post']
       ]
@@ -1085,11 +1084,14 @@ function pdo_insert($table, $kv) {
   foreach($kv as $k => $v) {
     $values[] = db_bottom($v);
   } 
+  if(count($values) === 0) {
+    $qstr = "insert into $table default values";
+  } else {
+    $pdo_values = implode(',', array_fill(0, count($values), '?'));
+    $fields = implode(',', array_keys($kv));
 
-  $pdo_values = implode(',', array_fill(0, count($values), '?'));
-  $fields = implode(',', array_keys($kv));
-
-  $qstr = "insert into $table($fields) values($pdo_values)";
+    $qstr = "insert into $table($fields) values($pdo_values)";
+  }
 
   _pdo_query($qstr, $values);
   return pdo_connect()->lastInsertId();
