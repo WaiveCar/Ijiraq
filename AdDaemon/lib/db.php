@@ -92,7 +92,15 @@ $RULES = [
           // we are adding things on and
           // giving them dates in the service.data
           // row
+          //
+          // bugbug: this approach doesn't normally work
+          // unless we already have retrieved the record.
+          //
+          // We *could* retriece the record here but then we
+          // have a recursion problem unless we're supppper
+          // careful.
           $start = $obj['data'];
+
           if(!$start) {
             $start = [];
           }

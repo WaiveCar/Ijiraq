@@ -256,10 +256,10 @@ function find_or_create_user($service_obj, $data) {
       aget($row, 'user_id');
   } else {
     $row = pdo_insert('service', $service_obj);
-    if(!$user) {
-      $user = create('user');
-    }
-    $user_id = $user['id'];
+
+    $user_id = $user ? 
+      $user['id'] : 
+      create('user');
   }
   $data['user_id'] = $user_id;
   pdo_update('service', $row['id'], $data);

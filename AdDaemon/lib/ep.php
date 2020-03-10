@@ -49,7 +49,7 @@ try {
         'grant_type' => 'authorization_code',
         'redirect_uri' => 'http://staging.waivescreen.com/api/instagram',
         'code' => $all['code']
-      ], ['verb' => 'POST', 'log' => true]);
+      ], ['verb' => 'POST']);
       $_SESSION['instagram'] = $token;
 
       $user_id = find_or_create_user([
@@ -76,7 +76,8 @@ try {
           'posts' => json_decode(file_get_contents("https://api.instagram.com/v1/users/self/media/recent/?access_token=$token&count=18"), true)
         ];
         $service = Get::service(['token' => $token]);
-        pdo_update('service', $service['id'], ['data' => $info]);
+        $service['data']['posts'] = $info['posts'];
+        pdo_update('service', $service['id'], ['data' => $service['data']]);
 
         $_SESSION['instagram.posts'] = $info;
         jemit(doSuccess($info['posts']));
@@ -101,7 +102,7 @@ try {
   else if($func == 'screens' && ($verb == 'POST' || $verb == 'PUT')) {
     jemit(screen_edit($all));
   } else if(array_search($func, [
-    'ces', 
+    'services', 
     'purchases', 
     'users', 
     'jobs', 
