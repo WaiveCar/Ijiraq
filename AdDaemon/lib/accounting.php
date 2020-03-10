@@ -17,7 +17,7 @@ function get_user() {
 
 function me() {
   $res = [];
-  if(isset($_SESSION['user'])) {
+  if(isset($_SESSION['user']) && is_array($_SESSION['user'])) {
     $res = $_SESSION['user'];
   }
   foreach (['instagram', 'instagram.posts'] as $k) {
