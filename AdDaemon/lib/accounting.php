@@ -83,7 +83,11 @@ function upsert_user($all) {
 
 function login_as($user_id) {
   if($user_id) {
-    $user = Get::user($user_id);
+    if(is_numeric($user_id)) {
+      $user = Get::user($user_id);
+    } else {
+      $user = $user_id;
+    }
     $_SESSION['user'] = $user;
     return $user;
   }
@@ -241,20 +245,11 @@ function get_service($user, $service_string) {
 }
 
 
-function find_or_create_user($service_obj) {
+function find_or_create_user($service_obj, $data) {
   $row = Get::service($service_obj);
   if(!$row) {
-    pdo_insert(
-  'service' => [
-    'id'         => 'integer primary key autoincrement',
-    'user_id'    => 'integer',
-    'service'    => 'text',
-    'username'   => 'text',
-    'token'      => 'text',
-    // most recent data
-    'data'       => 'text',
-    'data_time'  => 'datetime default current_timestamp',
-    'created_at' => 'datetime default current_timestamp',
-  ],
+    $row = pdo_insert('service', $service_obj);
+  }
+  return pdo_update('service', $row['id'], $data);
 }
 
