@@ -578,14 +578,27 @@ $SCHEMA = [
     'data'       => 'text',
     'created_at' => 'datetime default current_timestamp',
   ],
+  // we should store the source data here for the future
+  // also the params/data that correspond to the service are done
+  // in a way to permit multi-sourcing
+  //
+  // data schema is:
+  //  {
+  //    service_id: { service: _string_, data: snapshot },
+  //    service_id: { service: _string_, data: snapshot },
+  //  }
+  //
   'template_config' => [
     'id'          => 'integer primary key autoincrement',
     'user_id'     => 'integer',
+    'template_id' => 'integer',
     'params'      => 'text',
+    'data'        => 'text',
     'created_at'  => 'datetime default current_timestamp',
   ],
   'template' => [
     'id'          => 'integer primary key autoincrement',
+    'name'        => 'text',
     'created_at'  => 'datetime default current_timestamp',
   ]
     
