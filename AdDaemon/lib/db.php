@@ -85,6 +85,28 @@ $RULES = [
       ]
     ]
   ],
+  'service' => [
+    'columns' => [
+      'data' => [
+        'pre' => function($v, $obj) {
+          // we are adding things on and
+          // giving them dates in the service.data
+          // row
+          $start = $obj['data'];
+          if(!$start) {
+            $start = [];
+          }
+
+          foreach(array_keys($v) as $k) {
+            $v[$k]['_t'] = date('c');
+          }
+          $v = json_encode(array_merge($start, $v));
+          return $type === 'pdo' ? $v : db_string($v); 
+        },
+        'post' => $JSON['post']
+      ]
+    ]
+  ],
   'screen' => [
     'columns' => [
       'features' => $JSON,
@@ -547,7 +569,6 @@ $SCHEMA = [
     'token'      => 'text',
     // most recent data
     'data'       => 'text',
-    'data_time'  => 'datetime default current_timestamp',
     'created_at' => 'datetime default current_timestamp',
   ],
   'template_config' => [
