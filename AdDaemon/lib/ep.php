@@ -51,6 +51,12 @@ try {
         'code' => $all['code']
       ], ['verb' => 'POST', 'log' => true]);
       $_SESSION['instagram'] = $token;
+      $user = find_or_create_user([
+        'service' => 'instagram',
+        'service_user_id' => aget($token, 'user.id'),
+        'username' => aget($token, 'user.username')
+      ]);
+
       header('Location: /campaigns/create');
     } else if(isset($all['logout'])) {
       unset( $_SESSION['instagram'] );
