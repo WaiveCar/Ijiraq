@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 {% block topbar %}
-<span class="top-bar-right ml-4 mt-2">
-</span>
 {% endblock %}
 {% block content %}
 <style>
@@ -71,37 +69,33 @@
 
   <div class="row mb-4 creatives-wrapper" >
     <div class="col-lg-12">
-      <div class="card">
-        <div class="card-body">
-            <div class="row no-gutters">
-              <div class="engine-holder">
-                <div id="engine"></div>
-              </div>
-            </div>
-            <div class="row no-gutters controls">
-              <div class="col-6">
-                <div class="btn-group" role="group" aria-label="Basic example">
-                  <button type="button" class="rewind btn btn-dark">
-                    <i class="fas fa-backward"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="float-right">
-                  <div class="btn-group ratios" role="group" style='margin-bottom:0.5rem;margin-right:1rem'>
-                    <button type="button" class="btn btn-dark">3:2</button>
-                    <button type="button" class="btn btn-dark">16:9</button>
-                    <button type="button" class="btn btn-dark active">Car</button>
-                  </div>
-                  <label for="image-upload" class="btn btn-dark">
-                    <i class="fas fa-plus-square"></i> Image/Video
-                  </label>
-                  <input id="image-upload" multiple class="form-control-file" type="file" name="ad-asset" accept="image/*,video/*">
-                </div>
-              </div>
-            </div>
+      <div class="row no-gutters">
+        <div class="engine-holder">
+          <div id="engine"></div>
+        </div>
+      </div>
+      <div class="row no-gutters controls">
+        <div class="col-6">
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="button" class="rewind btn btn-dark">
+              <i class="fas fa-backward"></i>
+            </button>
           </div>
         </div>
+        <div class="col-6">
+          <div class="float-right">
+            <div class="btn-group ratios" role="group" style='margin-bottom:0.5rem;margin-right:1rem'>
+              <button type="button" class="btn btn-dark">3:2</button>
+              <button type="button" class="btn btn-dark">16:9</button>
+              <button type="button" class="btn btn-dark active">Car</button>
+            </div>
+            <label for="image-upload" class="btn btn-dark">
+              <i class="fas fa-plus-square"></i> Image/Video
+            </label>
+            <input id="image-upload" multiple class="form-control-file" type="file" name="ad-asset" accept="image/*,video/*">
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -110,7 +104,6 @@
     <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
-          <div class="card-body">
             <div class="row no-gutters">
             </div>
 
@@ -144,7 +137,6 @@
           </div>
         </div>
       </div>
-    </div>
   </div>
 
   <div class="row mb-4">
