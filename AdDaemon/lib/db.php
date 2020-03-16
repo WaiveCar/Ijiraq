@@ -591,17 +591,11 @@ $SCHEMA = [
   'template_config' => [
     'id'          => 'integer primary key autoincrement',
     'user_id'     => 'integer',
-    'template_id' => 'integer',
+    'template_name' => 'text',
     'params'      => 'text',
     'data'        => 'text',
     'created_at'  => 'datetime default current_timestamp',
-  ],
-  'template' => [
-    'id'          => 'integer primary key autoincrement',
-    'name'        => 'text',
-    'created_at'  => 'datetime default current_timestamp',
   ]
-    
 ];
 /*
 
