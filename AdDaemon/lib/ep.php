@@ -149,6 +149,7 @@ try {
     'sow', 
     'tag', 
     'most_recent',
+    'provides',
     'task_dump',
   ]) !== false) { 
     post_return($func($all, $verb));
