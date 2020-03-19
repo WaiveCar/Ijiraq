@@ -266,3 +266,37 @@ function find_or_create_user($service_obj, $data) {
   return $user_id;
 }
 
+
+function provides() {
+  $res = [];
+  $serviceList = Many::service();
+  foreach($serviceList as $service) {
+    $row = [];
+    if($service['service'] == 'instagram') {
+      $data = $service['data'];
+      $row = [
+        'handle' => $service['handle'],
+        'logo' => aget($data, 'user.profile_picture'),
+        'description' => aget($data, 'data.user.bio'),
+        'name' => aget($data, 'user.full_name'),
+        'photoList' => []
+      ];
+
+      foreach(aget($data, 'posts.data') as $post) {
+        $row['photoList'][] = [
+          'url' => aget($post, 'images.standard_resolution.url'),
+          'length' => aget($post, 'images.standard_resolution.width'),
+          'height' => aget($post, 'images.standard_resolution.height'),
+          'pop' => aget($post, 'likes.count'),
+          'created' => aget($post, 'created_time')
+        ];
+      }
+      $res[] = $row;
+    }
+  }
+  return $row;
+}
+
+
+
+
