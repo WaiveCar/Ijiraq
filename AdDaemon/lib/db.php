@@ -846,13 +846,16 @@ class Get {
   }
 
   public static function __callStatic($name, $argList) {
-    $arg = $argList[0];
+    $arg = false;
+    if(count($argList) > 0) {
+      $arg = $argList[0];
+    }
     $cache = count($argList) > 1;
     $key = 'id';
     if(!is_array($arg)) {
       if((is_string($arg) || is_numeric($arg)) && !empty($arg)) {
         $arg = ['id' => $arg];
-      } else {
+      } else if(count($argList) > 0) {
         return null;
       }
     }
@@ -865,24 +868,27 @@ class Get {
 
     $fields = aget($argList, 1, '*');
     $kvargs = [];
-    foreach($arg as $key => $value) {
-      // this means a raw string was passed
-      if(is_integer($key)) {
-        $kvargs[] = $value;
-      } else {
-        if(is_array($value)) {
-          $kvargs[] = "$key like " . db_string('%' . $value['like']);
+    $kvstr = '';
+    if($arg) {
+      foreach($arg as $key => $value) {
+        // this means a raw string was passed
+        if(is_integer($key)) {
+          $kvargs[] = $value;
         } else {
-          if(is_string($value)) {
-            $value = db_string($value);
+          if(is_array($value)) {
+            $kvargs[] = "$key like " . db_string('%' . $value['like']);
+          } else {
+            if(is_string($value)) {
+              $value = db_string($value);
+            }
+            $kvargs[] = "$key=$value";
           }
-          $kvargs[] = "$key=$value";
         }
       }
+      $kvstr = "where " . implode(' and ', $kvargs);
     }
-    $kvstr = implode(' and ', $kvargs);
 
-    $qstr = "select $fields from $name where $kvstr";
+    $qstr = "select $fields from $name $kvstr";
     $res = static::doquery($qstr, $name);
 
     if($key === 'id' && $cache === true) {
