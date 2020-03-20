@@ -275,7 +275,7 @@ function provides() {
     if($service['service'] == 'instagram') {
       $data = $service['data'];
       $row = [
-        'handle' => $service['handle'],
+        'handle' => $service['username'],
         'logo' => aget($data, 'user.profile_picture'),
         'description' => aget($data, 'data.user.bio'),
         'name' => aget($data, 'user.full_name'),
