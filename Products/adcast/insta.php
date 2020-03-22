@@ -209,11 +209,11 @@ img.fill {
     <div id=brand>
       <div>
         <div id=logo-wrap>
-          <img src=<?= $logo ?>>
+          <img class="tpl-logo" src=<?= $logo ?>>
         </div>
         <div id=copy>
-          <h2><?= $bigtext ?></h2>
-          <h3><?= $smalltext ?></h3>
+          <h2 class="tpl-name"><?= $bigtext ?></h2>
+          <h3 class="tpl-description"><?= $smalltext ?></h3>
         </div>
       </div>
     </div>
