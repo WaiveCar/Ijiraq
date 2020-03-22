@@ -277,8 +277,9 @@ function provides() {
       $row = [
         'handle' => $service['username'],
         'logo' => aget($data, 'user.profile_picture'),
-        'description' => aget($data, 'data.user.bio'),
+        'description' => aget($data, 'user.bio'),
         'name' => aget($data, 'user.full_name'),
+        'created_at' => aget($data, 'posts._t'),
         'photoList' => []
       ];
 
@@ -288,7 +289,7 @@ function provides() {
           'length' => aget($post, 'images.standard_resolution.width'),
           'height' => aget($post, 'images.standard_resolution.height'),
           'pop' => aget($post, 'likes.count'),
-          'created' => aget($post, 'created_time')
+          'created_at' => aget($post, 'created_time')
         ];
       }
       $res[] = $row;
