@@ -218,14 +218,14 @@ img.fill {
       </div>
     </div>
     <div class='row up' style='left:calc(100% - 34.6vw * 2)'>
-    <? foreach([0,1,2] as $i){ ?>
-    <div><img <?=check($i);?>src=<?= $images[$i] ?>></div>
-    <? } ?>
+      <div><img class='tpl-photoList-0'></div>
+      <div><img class='tpl-photoList-1'></div>
+      <div><img class='tpl-photoList-2'></div>
     </div>
     <div class='row down' style='left:calc(100% - 35.1vw)'>
-    <? foreach([5,4,3] as $i){ ?>
-    <div><img <?=check($i);?>src=<?= $images[$i] ?>></div>
-    <? } ?>
+      <div><img class='tpl-photoList-5'></div>
+      <div><img class='tpl-photoList-4'></div>
+      <div><img class='tpl-photoList-3'></div>
     </div>
   </div>
 </body>
