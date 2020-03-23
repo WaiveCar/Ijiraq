@@ -218,14 +218,14 @@ img.fill {
       </div>
     </div>
     <div class='row up' style='left:calc(100% - 34.6vw * 2)'>
-      <div><img class='tpl-photoList-0'></div>
-      <div><img class='tpl-photoList-1'></div>
-      <div><img class='tpl-photoList-2'></div>
+      <div><img data-index="0" class='tpl-photoList'></div>
+      <div><img data-index="1" class='tpl-photoList'></div>
+      <div><img data-index="2" class='tpl-photoList'></div>
     </div>
     <div class='row down' style='left:calc(100% - 35.1vw)'>
-      <div><img class='tpl-photoList-5'></div>
-      <div><img class='tpl-photoList-4'></div>
-      <div><img class='tpl-photoList-3'></div>
+      <div><img data-index="5" class='tpl-photoList'></div>
+      <div><img data-index="4" class='tpl-photoList'></div>
+      <div><img data-index="3" class='tpl-photoList'></div>
     </div>
   </div>
 </body>
