@@ -203,17 +203,17 @@ img.fill {
 </style>
 <body>
   <div id=blur>
-    <img src=<?= $logo ?>>
+    <img class="tpl-logo">
   </div>
   <div id=wrap>
     <div id=brand>
       <div>
         <div id=logo-wrap>
-          <img class="tpl-logo" src=<?= $logo ?>>
+          <img class="tpl-logo">
         </div>
         <div id=copy>
-          <h2 class="tpl-name"><?= $bigtext ?></h2>
-          <h3 class="tpl-description"><?= $smalltext ?></h3>
+          <h2 class="tpl-name"></h2>
+          <h3 class="tpl-description"></h3>
         </div>
       </div>
     </div>
