@@ -1,0 +1,43 @@
+.m-show { display: none; }
+
+.m-hid { display: block; }
+
+.d-hid { display: none; }
+
+.wrapper { padding: 0 30px; max-width: 1060px; }
+
+.header .wrapper { padding: 0 30px; max-width: 1420px; }
+
+.header_logo { margin-left: 10px; }
+
+h1 { font-size: 70px; line-height: 70px; letter-spacing: -1.5px; }
+
+.main { margin: 0 auto; }
+
+.main_txt { margin: 13px 0 43px; font-size: 32px; letter-spacing: -0.25px; line-height: 44px; }
+
+.business_txt { margin: 19px 0 39px; }
+
+.business_img { margin: 0 0 0 99px; min-width: 40.9%; width: 40.9%; }
+
+.business_bg:nth-child(odd) .business .business_img { margin: 0 99px 0 0; width: 43%; min-width: 43%; }
+
+.business_bg:nth-child(even) h2 { margin-left: -30px; }
+
+.business_bg1 .business_img img { margin: 0 0px; max-width: -webkit-calc(100% + 60px); max-width: calc(100% + 60px); }
+
+.business_bg4 .business_img img { margin: 0 0px 0 -6px; max-width: -webkit-calc(100% + 60px); max-width: calc(100% + 60px); }
+
+.business_bg4 .business_txt { max-width: 344px; }
+
+.section-piqs .wrapper { max-width: 1211px; }
+
+.piqs_item { width: 25%; }
+
+.section-how { padding: 81px 0 37px; }
+
+.section-how .wrapper { max-width: 1190px; }
+
+/* */
+
+/*# sourceMappingURL=desktop.css.map */
