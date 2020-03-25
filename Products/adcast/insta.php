@@ -11,44 +11,6 @@
  *   Future:
  *     assetlist: Assets to show instead of "detecting" them
  */
-function get($what) {
-  global $contents;
-  preg_match_all('/"' . $what . '...([^"]*)/', $contents, $matchList);
-  return $matchList[1][0];
-}
-function check($x) {
-  global $sizes;
-  return $sizes[$x] > 1080 ? 'class=fill ' : '';
-}
-$handle = trim($_GET['user']);
-if (!file_exists("/tmp/$handle")) {
-  $str = shell_exec("curl 'https://www.instagram.com/$handle/' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:62.0) Gecko/20100101 Firefox/62.0' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' --compressed -H 'Connection: keep-alive' -H 'Upgrade-Insecure-Requests: 1' -H 'TE: Trailers'");
-  file_put_contents("/tmp/$handle", $str);
-}
-
-$contents = file_get_contents("/tmp/$handle");
-$smalltext = $_GET['smalltext'] ?: json_decode('"' . get('full_name') . '"');
-$bigtext = $_GET['bigtext'] ?: $handle;
-$logo = $_GET['logo'] ?: get('profile_pic_url_hd');
-$images_real = $_GET['images'];
-$sizes_real = $_GET['sizes'];
-
-/*
-//preg_match_all('/.height.:(\d*),.width.:1080},.display_url...([^"]*)/', $contents, $matchList);
-$sizes = [];//array_merge($sizes, $matchList[1]);
-$images = [];//array_merge($images, $matchList[2]);
- */
-
-$pattern = [0, 3, 1, 4, 2, 5];
-$len = count($images_real);
-$images = [];
-$sizes = [];
-for($ix = 0; $ix < 6; $ix ++) {
-  $place = $pattern[$ix];
-  $images[$place] = $images_real[$ix % $len];
-  $sizes[$place] = $sizes_real[$ix % $len];
-}
-
 $dur = $_GET['duration'] ?: 16;
 $loop = $_GET['loop'] ?: 'infinite';
 
@@ -229,3 +191,39 @@ img.fill {
     </div>
   </div>
 </body>
+<script>
+var id = 8;
+var exclude_list = new Set(['created_at','id']);
+function assign(node, value) {
+  let is_url = value.match(/^https?:\/\//i);
+  if(node.tagName === 'IMG') {
+    if(is_url) {
+      node.src = value;
+    }
+  } else {
+    node.innerHTML = value;
+  }
+}
+
+window.onload = function() {
+  fetch(`http://staging.waivescreen.com/api/provides?id=${id}`)
+    .then(response => response.json())
+    .then(res => {
+      let list = Object.keys(res).filter(x => !exclude_list.has(x));
+      for (let key of list) {
+        if(Array.isArray(res[key])) {
+          for(let node of document.querySelectorAll(`.tpl-${key}`)) {
+            var which = parseInt(node.dataset.index,10);
+            if(res[key][which]) {
+              assign(node, res[key][which].url);
+            }
+          }
+        } else {
+          for(let node of document.querySelectorAll(`.tpl-${key}`)) {
+            assign(node, res[key]);
+          }
+        } 
+      }
+    });
+}
+</script>
