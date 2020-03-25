@@ -203,29 +203,29 @@ img.fill {
 </style>
 <body>
   <div id=blur>
-    <img src=<?= $logo ?>>
+    <img class="tpl-logo">
   </div>
   <div id=wrap>
     <div id=brand>
       <div>
         <div id=logo-wrap>
-          <img class="tpl-logo" src=<?= $logo ?>>
+          <img class="tpl-logo">
         </div>
         <div id=copy>
-          <h2 class="tpl-name"><?= $bigtext ?></h2>
-          <h3 class="tpl-description"><?= $smalltext ?></h3>
+          <h2 class="tpl-name"></h2>
+          <h3 class="tpl-description"></h3>
         </div>
       </div>
     </div>
     <div class='row up' style='left:calc(100% - 34.6vw * 2)'>
-    <? foreach([0,1,2] as $i){ ?>
-    <div><img <?=check($i);?>src=<?= $images[$i] ?>></div>
-    <? } ?>
+      <div><img data-index="0" class='tpl-photoList'></div>
+      <div><img data-index="1" class='tpl-photoList'></div>
+      <div><img data-index="2" class='tpl-photoList'></div>
     </div>
     <div class='row down' style='left:calc(100% - 35.1vw)'>
-    <? foreach([5,4,3] as $i){ ?>
-    <div><img <?=check($i);?>src=<?= $images[$i] ?>></div>
-    <? } ?>
+      <div><img data-index="5" class='tpl-photoList'></div>
+      <div><img data-index="4" class='tpl-photoList'></div>
+      <div><img data-index="3" class='tpl-photoList'></div>
     </div>
   </div>
 </body>
