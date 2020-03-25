@@ -266,15 +266,15 @@ function find_or_create_user($service_obj, $data) {
   return $user_id;
 }
 
-
-function provides() {
+function provides($filter) {
   $res = [];
-  $serviceList = Many::service();
+  $serviceList = Many::service($filter);
   foreach($serviceList as $service) {
     $row = [];
     if($service['service'] == 'instagram') {
       $data = $service['data'];
       $row = [
+        'id' => $service['id'],
         'handle' => $service['username'],
         'logo' => aget($data, 'user.profile_picture'),
         'description' => aget($data, 'user.bio'),
