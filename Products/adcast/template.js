@@ -1,7 +1,7 @@
 function template(opts) {
   var
     _res = Object.assign({
-      server: "https://staging.waivescreen.com/api/provides",
+      server: "http://staging.waivescreen.com/api/provides",
 
       db: {},
 
@@ -9,8 +9,6 @@ function template(opts) {
       id: false,
 
       target: { width: 1920, height: 675 },
-
-      data: {},
 
     }, opts || {});
 

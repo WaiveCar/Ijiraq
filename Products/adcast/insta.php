@@ -192,3 +192,6 @@ img.fill {
   </div>
 </body>
 <script src=template.js></script>
+<script>
+template({id: 8});
+</script>
