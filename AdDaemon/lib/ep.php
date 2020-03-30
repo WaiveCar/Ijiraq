@@ -107,6 +107,7 @@ try {
     'users', 
     'jobs', 
     'sensor_history', 
+    'template_config',
     'campaigns', 
     'screens', 
     'tasks'
