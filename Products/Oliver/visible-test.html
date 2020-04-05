@@ -1,0 +1,50 @@
+<!doctype html5>
+<html>
+  <body>
+  </body>
+</html>
+<script>
+
+function whoami(){
+}
+var hidden, visibilityChange, isVisible, screentime = [];
+if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
+  hidden = "hidden";
+  visibilityChange = "visibilitychange";
+} else if (typeof document.msHidden !== "undefined") {
+  hidden = "msHidden";
+  visibilityChange = "msvisibilitychange";
+} else if (typeof document.webkitHidden !== "undefined") {
+  hidden = "webkitHidden";
+  visibilityChange = "webkitvisibilitychange";
+}
+
+function handleVisibilityChange() {
+  isVisible = document[hidden];
+  console.log(new Date(), isVisible);
+  screentime.push([new Date(), isVisible]);
+  let data = new FormData();
+  data.append('_', JSON.stringify(screentime));
+  navigator.sendBeacon("/tmp/beacon.php", data);//JSON.stringify(screentime));
+}
+
+if(hidden !== undefined) {
+   // Handle page visibility change
+  document.addEventListener(visibilityChange, handleVisibilityChange, false);
+  handleVisibilityChange()
+} else {
+  screentime.push([new Date(), false]);
+  console.log("Visibility not supported");
+}
+
+window.addEventListener("unload", function logData() {
+  screentime.push([new Date(), true]);
+  var postback = new Blob([JSON.stringify(screentime, null, 2)], {type : 'application/json'});
+  /*
+  let data = new FormData();
+data.append('hello', 'world');
+*/
+  navigator.sendBeacon("/tmp/beacon.php", postback);//JSON.stringify(screentime));
+});
+
+</script>
