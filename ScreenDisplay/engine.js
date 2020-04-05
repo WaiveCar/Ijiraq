@@ -25,6 +25,14 @@ var Engine = function(opts){
 
       target: { width: 1920, height: 675 },
 
+      // The identity of the screen ... can be esatblished
+      // elsewhere.
+      me: false,
+      
+      // inline means that we don't iframe things and instead
+      // inject everything into the dom.
+      doInline: false,
+
       listeners: {},
       data: {},
 
@@ -233,6 +241,30 @@ var Engine = function(opts){
     return asset;
   }
 
+  function inline(asset, obj) {
+    var dom = document.createElement('div');
+    dom.classList.add(_key('inline'));
+    dom.dataset.src = asset.url;
+
+    asset.dom = dom;
+    asset.rewind = asset.pause = asset.play = _nop;
+    asset.run = _passthru;
+    asset.active = false;
+    asset.duration = asset.duration || 1000 * _res.duration;
+    obj.duration += asset.duration;
+    obj.active = false;
+    asset.type = 'inline';
+
+    fetch(asset.url)
+      .then(res => res.text())
+      .then(res => {
+        // todo, we need to fire image/video load handlers
+        dom.innerHTML = res;
+        obj.active = asset.active = true;
+      });
+    return asset;
+  }
+
   function iframe(asset, obj) {
     var dom = document.createElement('iframe');
     dom.src = asset.url;
@@ -390,6 +422,8 @@ var Engine = function(opts){
       } else if(assetTest(asset, 'video', ['mp4', 'avi', 'mov', 'ogv'])) {
         asset = video(asset, obj);
         container.classList.add("hasvideo");
+      } else if(_res.doInline) {
+        asset = inline(asset, obj);
       } else {
         asset = iframe(asset, obj);
       }
