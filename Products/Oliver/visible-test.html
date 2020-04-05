@@ -22,8 +22,8 @@ if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and 
   visibilityChange = "webkitvisibilitychange";
 }
 
-function handleVisibilityChange() {
-  isVisible = document[hidden];
+function handleVisibility(isExiting) {
+  isVisible = isExiting || document[hidden];
   screentime.push([new Date(), isVisible]);
   let data = new FormData();
   data.append('_', JSON.stringify(screentime));
@@ -32,21 +32,15 @@ function handleVisibilityChange() {
 
 if(hidden !== undefined) {
    // Handle page visibility change
-  document.addEventListener(visibilityChange, handleVisibilityChange, false);
-  handleVisibilityChange()
+  document.addEventListener(visibilityChange, handleVisibility, false);
+  handleVisibility()
 } else {
   screentime.push([new Date(), false]);
   console.log("Visibility not supported");
 }
 
-window.addEventListener("unload", function logData() {
-  screentime.push([new Date(), true]);
-  var postback = new Blob([JSON.stringify(screentime, null, 2)], {type : 'application/json'});
-  /*
-  let data = new FormData();
-data.append('hello', 'world');
-*/
-  navigator.sendBeacon("/tmp/beacon.php", postback);//JSON.stringify(screentime));
+window.addEventListener("unload", function () {
+  handleVisibility(true);
 });
 
 </script>
