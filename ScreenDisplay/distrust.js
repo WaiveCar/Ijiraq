@@ -33,5 +33,10 @@ if(hidden !== undefined) {
   console.log("Visibility not supported");
 }
 
+function amIfullScreen() {
+  // we are allowing for some kind of window decoration or branding, we shouldn't be too brutal.
+  return Math.abs(window.outerHeight - screen.height) + Math.abs(window.outerWidth - screen.width) < 80;
+}
+
 window.addEventListener("unload", () => handleVisibility(true));
 
