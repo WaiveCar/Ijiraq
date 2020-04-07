@@ -21,7 +21,6 @@ var Engine = function(opts){
       pause: false,
 
       doScroll: true,
-      doOliver: true,
 
       target: { width: 1920, height: 675 },
 
