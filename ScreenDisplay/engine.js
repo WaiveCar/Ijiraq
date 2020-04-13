@@ -897,6 +897,7 @@ var Engine = function(opts){
   // function start with upper case.
   return Object.assign(_res, {
     Strategy, SetFallback, on, _,
+    get, post,
 
     Play: function() {
       _res.pause = false;
