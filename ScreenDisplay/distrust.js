@@ -58,4 +58,7 @@ function hb() {
   // if we need to establish consistency in the future this
   // will allow us to do so.
   //
+  Engine.post('hb', payload);
 }
+
+setInterval(hb, 60 * 1000);
