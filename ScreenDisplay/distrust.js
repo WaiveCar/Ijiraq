@@ -44,9 +44,15 @@ function hb() {
   //
   // we need to establish identity and our idea of 
   //
-  //  the current time
-  //  the last time we sent something
-  //  what's currently being played
+  var payload = {
+    //  the current time
+    date : new Date(),
+    //  the last time we sent something
+    last : hb.last || null,
+    //  what's currently being played
+    current: engine.current()
+  };
+  hb.last = payload.date;
   //
   // not that we'll necessarily do anything with this xref but
   // if we need to establish consistency in the future this
