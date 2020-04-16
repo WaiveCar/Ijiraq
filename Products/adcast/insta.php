@@ -2,14 +2,8 @@
 /*
  * Parameters:
  * 
- *   - bigtext: The text to replace the @handle
- *   - smalltext: The text to replace the words below
- *   - user: The user to parse
  *   - duration: The time in seconds to show
  *   - loop: Whether to loop the show or just stop 
- *
- *   Future:
- *     assetlist: Assets to show instead of "detecting" them
  */
 $dur = $_GET['duration'] ?: 16;
 $loop = $_GET['loop'] ?: 'infinite';
@@ -165,17 +159,17 @@ img.fill {
 </style>
 <body>
   <div id=blur>
-    <img class="tpl-logo">
+    <img class=tpl-logo>
   </div>
   <div id=wrap>
     <div id=brand>
       <div>
         <div id=logo-wrap>
-          <img class="tpl-logo">
+          <img class=tpl-logo>
         </div>
         <div id=copy>
-          <h2 class="tpl-name"></h2>
-          <h3 class="tpl-description"></h3>
+          <h2 class=tpl-name></h2>
+          <h3 class=tpl-description></h3>
         </div>
       </div>
     </div>
