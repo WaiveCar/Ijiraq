@@ -3,6 +3,7 @@ $handlerList = [];
 
 include('lib.php');
 include('accounting.php');
+include('dsp.php');
 
 $full_func = $_REQUEST['_VxiXw3BaQ4WAQClBoAsNTg_func'];
 unset($_REQUEST['_VxiXw3BaQ4WAQClBoAsNTg_func']);
@@ -101,6 +102,7 @@ try {
   }
   else if($func == 'screens' && ($verb == 'POST' || $verb == 'PUT')) {
     jemit(screen_edit($all));
+    // these are essentially resources with CRUD interfaces
   } else if(array_search($func, [
     'services', 
     'purchases', 
@@ -132,6 +134,7 @@ try {
     session_start();
     post_return($func($all, $verb));
   } else if(array_search($func, [
+    'dsp_create',
     'active_campaigns', 
     'campaign_history', 
     'heatmap',

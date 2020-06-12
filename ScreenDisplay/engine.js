@@ -43,6 +43,8 @@ var Engine = function(opts){
     _id = Engine._length,
     _box = {},
     _start = new Date(),
+
+    // asset uniq id
     _uniq = 0,
     _jobId = 0,
     _downweight = 0.7,
@@ -855,7 +857,7 @@ var Engine = function(opts){
     // We look for a system default
     if(_res.server && (force || !_res.fallback)) {
       // If we have a server we can get it from there
-      return get('/default', function(res) {
+      return get('default', function(res) {
         _.fallbackJob = makeJob(res.data.campaign);
 
         if(_res.data.topicList) {
