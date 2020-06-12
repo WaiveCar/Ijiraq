@@ -5,8 +5,10 @@ function dsp_create() {
   return Uuid::uuid4()->toString();
 }
 
-function dsp_sow() {
+function dsp_sow($params) {
+  error_log(print_r($params, true));
 }
 
-function dsp_default() {
+function dsp_default($params) {
+  error_log(print_r($params, true));
 }

@@ -155,6 +155,8 @@ try {
     'most_recent',
     'provides',
     'task_dump',
+    'dsp_default',
+    'dsp_sow',
   ]) !== false) { 
     post_return($func($all, $verb));
   } else {
