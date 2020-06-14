@@ -597,7 +597,10 @@ var Engine = function(opts){
       return;
     }
 
-    post('sow', payload, function(res) {
+    post('sow', Object.assign(
+        _res.meta && _res.meta.sow ? _res.meta.sow : {},
+        payload
+      ), function(res) {
       // This has to be somehow optional because
       // it's not always applicable
       if(res.res) {
