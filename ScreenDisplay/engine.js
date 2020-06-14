@@ -147,6 +147,7 @@ var Engine = function(opts){
       _res.listeners[what] = _res.listeners[what].filter(cb => !cb.once);
     }
   }
+
   function on(what, cb) {
     if(_res.data[what]) {
       return cb(_res.data[what]);

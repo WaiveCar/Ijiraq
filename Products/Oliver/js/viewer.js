@@ -1,9 +1,10 @@
 window.onload = function init() {
-  let id = window.location.href.split('/').pop();
+  let uid = window.location.href.split('/').pop();
 
   self.ads = Engine({
     doOliver: true,
-    server: "/adserver/" + id + "/"
+    server: "/adserver/" + id + "/",
+    meta: {sow: {uid: uid} }
   });
 
   ads.on('system', function(data) {
@@ -14,6 +15,20 @@ window.onload = function init() {
   ads.on('jobEnded', function() {
     fetch(`${server}saveLocation`);
   });
+
+
+  if(navigator.geolocation) {
+    navigator.geolocation.watchPosition(
+      function(pos) {
+        ads.meta.sow.lat = pos.coords.latitude;
+        ads.meta.sow.lng = pos.coords.longitude;
+      }, function() {
+      }, {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      });
+  }
 
   ads.Start();
 }
