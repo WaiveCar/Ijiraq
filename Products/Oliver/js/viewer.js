@@ -2,7 +2,8 @@ window.onload = function init() {
   let id = window.location.href.split('/').pop();
 
   self.ads = Engine({
-    server: "adserver/" + id + "/"
+    doOliver: true,
+    server: "/adserver/" + id + "/"
   });
 
   ads.on('system', function(data) {

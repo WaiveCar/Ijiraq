@@ -753,18 +753,16 @@ var Engine = function(opts){
   }
 
   Strategy.set = function(what) {
+    console.log(what);
     Strategy.current = what;
-    Strategy[what].enable();
+    _res.nextJob = Strategy.Freeform.nextJob;
+    sow.strategy = forgetAndReplace;
     // Make sure we don't try anything until we get a default
     on('system', _res.NextJob).once = true;
   };
 
   Strategy.Freeform = (function() {
     return {
-      enable: function() {
-        _res.nextJob = Freeform.nextJob;
-        sow.strategy = forgetAndReplace;
-      },
       nextJob: function () {
         // We note something we call "breaks" which designate which asset to show.
         // This is a composite of what remains - this is two pass, eh, kill me.
@@ -892,7 +890,7 @@ var Engine = function(opts){
   layout();
 
   // Our strategy of displaying ads
-  Strategy.set(_res.doOliver ? 'Oliver' : 'Freeform');
+  Strategy.set();
 
   // The convention we'll be using is that
   // variables start with lower case letters,
