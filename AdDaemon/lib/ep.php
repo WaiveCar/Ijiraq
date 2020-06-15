@@ -156,6 +156,7 @@ try {
     'provides',
     'task_dump',
     'dsp_default',
+    'dsp_ping',
     'dsp_sow',
   ]) !== false) { 
     post_return($func($all, $verb));

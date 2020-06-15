@@ -14,3 +14,6 @@ function dsp_sow($params) {
 function dsp_default($params) {
   error_log(print_r($params, true));
 }
+function dsp_ping($params) {
+  return ping($params);
+}
