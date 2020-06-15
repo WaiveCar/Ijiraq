@@ -34,6 +34,7 @@ var Engine = function(opts){
 
       listeners: {},
       data: {},
+      debug: false,
 
       cb: {
         getDefault: function(success, fail) {
@@ -59,7 +60,7 @@ var Engine = function(opts){
     _stHandleMap = {},
     _key = name => name + '-xA8tAY4YSBmn2RTQqnnXXw',
     _ = {
-      debug: false,
+      debug: _res.debug,
       last: false,
       last_sow: [+_start, +_start],
       last_uniq: false,

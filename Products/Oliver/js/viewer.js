@@ -48,14 +48,19 @@ window.onload = function init() {
     doOliver: true,
     server: "/adserver/" + uid + "/",
     meta: {sow: {uid: uid} },
+    debug: true,
     cb: {
       getDefault: function(success, fail) {
         function ondisk() {
-          var myDefault = db.kv_get('campaign');
-          if(myDefault) {
-            success(myDefault);
+          try{
+            var myDefault = JSON.parse(db.kv_get('campaign') || "");
+            if(myDefault) {
+              success(myDefault);
+            }
+            return myDefault;
+          } catch(ex) {
+            return false;
           }
-          return myDefault;
         }
 
         if(!ondisk()) {
@@ -100,7 +105,7 @@ window.onload = function init() {
         }
       });
 
-      db.kv_set('campaign', campaign);
+      db.kv_set('campaign', JSON.stringify(campaign));
       db.kv_set('lastping', db.kv_get('runcount')) 
 
       // task_ingest(data)
