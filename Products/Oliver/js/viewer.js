@@ -1,7 +1,50 @@
-window.onload = function init() {
-  let uid = window.location.href.split('/').pop();
 
-  self.ads = Engine({
+var start = new Date(), ads;
+
+function get_uptime() {
+  return new Date() - start;
+}
+var db = {
+  kv_set: function(key, value) {
+    if(window.localStorage) {
+      localStorage[key] = value;
+    }
+    return value;
+  },
+  kv_get: function(key) {
+    return (window.localStorage && key in localStorage) ? localStorage[key] : null;
+  },
+  incr: function(key) {
+    return db.kv_set(key, parseInt(db.kv_get(key) || "0", 10) + 1);
+  }
+};
+
+
+window.onload = function init() {
+  var bootcount = db.incr('bootcount'), 
+    uid = window.location.href.split('/').pop(),
+    features = {
+      location: {exists: !!navigator.geolocation, available: null},
+      localstorage: {exists: !!window.localStorage, available: db.kv_get('ping_count') > 0},
+      panels: window.screen
+    },
+
+    ping_payload = {
+      uid: uid,
+      uptime: get_uptime(),
+      bootcount: bootcount,
+      ping_count: db.incr('ping_count'),
+      // this is filled in by the navigator geoLocation watcher
+      location: null,
+      last_uptime: null, // for now
+      version: get_version(),
+      last_task: db.kv_get('last_task') || 0,
+      last_task_result: null,
+      features: features,
+      modem: null,
+    };
+
+  ads = Engine({
     doOliver: true,
     server: "/adserver/" + id + "/",
     meta: {sow: {uid: uid} }
@@ -16,13 +59,59 @@ window.onload = function init() {
     fetch(`${server}saveLocation`);
   });
 
+function ping() {
+  if(ping.lock) {
+    return false;
+  }
 
+  ping.lock = true;
+  post('ping', payload, function(data) {
+    var screen = data.screen,
+        default = data.default;
+
+    ['port','model','project','car','serial'].map(function(key) {
+      if (key in screen) {
+        db.kv_set(key, screen[key]);
+      }
+    });
+
+    ['bootcount','ping_count'].map(function(key) {
+      if (key in screen) {
+        var server_value = parseInt(screen[key], 10);
+        my_value = parseInt(db.kv_get(key)) || 0;
+        if (server_value > (3 + my_value)) {
+          db.kv_set(key, server_value);
+        }
+      }
+    });
+
+        db.kv_set('default', default.get('id'))
+  
+        # We run through it every time, should be fine
+        db.kv_set('campaign', default);
+        db.kv_set('lastping', db.kv_get('runcount')) 
+
+    // task_ingest(data)
+
+    ping.lock = false;
+
+  except Exception as ex:
+    _pinglock.release()
+    logging.exception("ping issue: {}".format(ex)) 
+
+    return False
   if(navigator.geolocation) {
     navigator.geolocation.watchPosition(
       function(pos) {
+        features.location.available = true;
         ads.meta.sow.lat = pos.coords.latitude;
         ads.meta.sow.lng = pos.coords.longitude;
+        ping_payload.location = {
+          lat: ads.meta.sow.lat
+          lng: ads.meta.sow.lng
+        };
       }, function() {
+        features.location.available = false;
       }, {
         enableHighAccuracy: true,
         timeout: 5000,
@@ -32,3 +121,13 @@ window.onload = function init() {
 
   ads.Start();
 }
+
+
+def task_response(which, payload):
+  db.update('command_history', {'ref_id': which}, {'response': payload})
+
+  post('response', {
+    'uid': get_uuid(),
+    'task_id': which,
+    'response': payload
+  })
