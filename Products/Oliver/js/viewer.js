@@ -37,7 +37,7 @@ window.onload = function init() {
       // this is filled in by the navigator geoLocation watcher
       location: null,
       last_uptime: null, // for now
-      version: get_version(),
+      //version: get_version(),
       last_task: db.kv_get('last_task') || 0,
       last_task_result: null,
       features: features,
@@ -46,7 +46,7 @@ window.onload = function init() {
 
   ads = Engine({
     doOliver: true,
-    server: "/adserver/" + id + "/",
+    server: "/adserver/" + uid + "/",
     meta: {sow: {uid: uid} }
   });
 
@@ -59,47 +59,41 @@ window.onload = function init() {
     fetch(`${server}saveLocation`);
   });
 
-function ping() {
-  if(ping.lock) {
-    return false;
+  function ping() {
+    if(ping.lock) {
+      return false;
+    }
+
+    ping.lock = true;
+    post('ping', payload, function(data) {
+      var screen = data.screen,
+          campaign = data.default;
+
+      ['port','model','project','serial'].map(function(key) {
+        if (key in screen) {
+          db.kv_set(key, screen[key]);
+        }
+      });
+
+      ['bootcount','ping_count'].map(function(key) {
+        if (key in screen) {
+          var server_value = parseInt(screen[key], 10);
+          my_value = parseInt(db.kv_get(key)) || 0;
+          if (server_value > (3 + my_value)) {
+            db.kv_set(key, server_value);
+          }
+        }
+      });
+
+      db.kv_set('campaign', campaign);
+      db.kv_set('lastping', db.kv_get('runcount')) 
+
+      // task_ingest(data)
+
+      ping.lock = false;
+    });
   }
 
-  ping.lock = true;
-  post('ping', payload, function(data) {
-    var screen = data.screen,
-        default = data.default;
-
-    ['port','model','project','car','serial'].map(function(key) {
-      if (key in screen) {
-        db.kv_set(key, screen[key]);
-      }
-    });
-
-    ['bootcount','ping_count'].map(function(key) {
-      if (key in screen) {
-        var server_value = parseInt(screen[key], 10);
-        my_value = parseInt(db.kv_get(key)) || 0;
-        if (server_value > (3 + my_value)) {
-          db.kv_set(key, server_value);
-        }
-      }
-    });
-
-        db.kv_set('default', default.get('id'))
-  
-        # We run through it every time, should be fine
-        db.kv_set('campaign', default);
-        db.kv_set('lastping', db.kv_get('runcount')) 
-
-    // task_ingest(data)
-
-    ping.lock = false;
-
-  except Exception as ex:
-    _pinglock.release()
-    logging.exception("ping issue: {}".format(ex)) 
-
-    return False
   if(navigator.geolocation) {
     navigator.geolocation.watchPosition(
       function(pos) {
@@ -107,7 +101,7 @@ function ping() {
         ads.meta.sow.lat = pos.coords.latitude;
         ads.meta.sow.lng = pos.coords.longitude;
         ping_payload.location = {
-          lat: ads.meta.sow.lat
+          lat: ads.meta.sow.lat,
           lng: ads.meta.sow.lng
         };
       }, function() {
@@ -122,12 +116,3 @@ function ping() {
   ads.Start();
 }
 
-
-def task_response(which, payload):
-  db.update('command_history', {'ref_id': which}, {'response': payload})
-
-  post('response', {
-    'uid': get_uuid(),
-    'task_id': which,
-    'response': payload
-  })
