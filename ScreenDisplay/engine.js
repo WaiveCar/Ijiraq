@@ -35,6 +35,11 @@ var Engine = function(opts){
       listeners: {},
       data: {},
 
+      cb: {
+        getDefault: function(success, fail) {
+          return get('default', success, fail);
+        }
+      },
       NextJob: false,
     }, opts || {}),
     // This is the actual breakdown of the content on
@@ -859,7 +864,7 @@ var Engine = function(opts){
     // We look for a system default
     if(_res.server && (force || !_res.fallback)) {
       // If we have a server we can get it from there
-      return get('default', function(res) {
+      return _res.cb.getDefault(function(res) {
         _.fallbackJob = makeJob(res.data.campaign);
 
         if(_res.data.topicList) {

@@ -47,7 +47,22 @@ window.onload = function init() {
   ads = Engine({
     doOliver: true,
     server: "/adserver/" + uid + "/",
-    meta: {sow: {uid: uid} }
+    meta: {sow: {uid: uid} },
+    cb: {
+      getDefault: function(success, fail) {
+        function ondisk() {
+          var myDefault = db.kv_get('campaign');
+          if(myDefault) {
+            success(myDefault);
+          }
+          return myDefault;
+        }
+
+        if(!ondisk()) {
+          return ping(ondisk);
+        }
+      }
+    }
   });
 
   ads.on('system', function(data) {
@@ -59,13 +74,13 @@ window.onload = function init() {
     fetch(`${server}saveLocation`);
   });
 
-  function ping() {
+  function ping(cb) {
     if(ping.lock) {
       return false;
     }
 
     ping.lock = true;
-    post('ping', payload, function(data) {
+    ads.post('ping', ping_payload, function(data) {
       var screen = data.screen,
           campaign = data.default;
 
@@ -91,6 +106,9 @@ window.onload = function init() {
       // task_ingest(data)
 
       ping.lock = false;
+      if(cb) { 
+        cb();
+      }
     });
   }
 
@@ -112,6 +130,8 @@ window.onload = function init() {
         maximumAge: 0
       });
   }
+
+  setInterval(ping, 3 * 60 * 1000);
 
   ads.Start();
 }
