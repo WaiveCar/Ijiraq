@@ -771,93 +771,91 @@ var Engine = function(opts){
     on('system', _res.NextJob).once = true;
   };
 
-  Strategy.Freeform = (function() {
-    return {
-      nextJob: function () {
-        // We note something we call "breaks" which designate which asset to show.
-        // This is a composite of what remains - this is two pass, eh, kill me.
-        //
-        // Also this heavily favors new jobs or pinpoint jobs in a linear distribution
-        // which may be the "right" thing to do but it makes the product look a little 
-        // bad.
-        // 
-        // We could sqrt() the game which would make the linear slant not look so crazy
-        // but that's not the point ... the point is to change if we can.
-        //
-        // so what we do is "downweight" the previous by some compounding constant, defined
-        // here by _downweight.
-        //
+  Strategy.Freeform = {
+    nextJob: function () {
+      // We note something we call "breaks" which designate which asset to show.
+      // This is a composite of what remains - this is two pass, eh, kill me.
+      //
+      // Also this heavily favors new jobs or pinpoint jobs in a linear distribution
+      // which may be the "right" thing to do but it makes the product look a little 
+      // bad.
+      // 
+      // We could sqrt() the game which would make the linear slant not look so crazy
+      // but that's not the point ... the point is to change if we can.
+      //
+      // so what we do is "downweight" the previous by some compounding constant, defined
+      // here by _downweight.
+      //
 
-        //
-        // Essentially we populate some range of number where each ad occupies part of the range
-        // Then we "toss a dice" and find what ad falls in the value we tossed.  For instance,
-        //
-        // Pretend we have 2 ads, we can make the following distribution:
-        //
-        // 0.0 - 0.2  ad 1
-        // 0.2 - 1.0  ad 2
-        //
-        // In this model, a fair dice would show ad 2 80% of the time.
-        //
+      //
+      // Essentially we populate some range of number where each ad occupies part of the range
+      // Then we "toss a dice" and find what ad falls in the value we tossed.  For instance,
+      //
+      // Pretend we have 2 ads, we can make the following distribution:
+      //
+      // 0.0 - 0.2  ad 1
+      // 0.2 - 1.0  ad 2
+      //
+      // In this model, a fair dice would show ad 2 80% of the time.
+      //
 
-        _.maxPriority = Math.max.apply(0, Object.values(_res.db).map(row => row.priority || 0));
+      _.maxPriority = Math.max.apply(0, Object.values(_res.db).map(row => row.priority || 0));
 
-        var 
-          row, accum = 0,
-          activeList = Object.values(_res.db).filter(row => row.active && row.duration),// && row.filter === maxPriority),
+      var 
+        row, accum = 0,
+        activeList = Object.values(_res.db).filter(row => row.active && row.duration),// && row.filter === maxPriority),
 
-          // Here's the range of numbers, calculated by looking at all the remaining things we have to satisfy
-          range = activeList.reduce( (a,b) => a + b.downweight * (b.goal - b.completed_seconds), 0),
+        // Here's the range of numbers, calculated by looking at all the remaining things we have to satisfy
+        range = activeList.reduce( (a,b) => a + b.downweight * (b.goal - b.completed_seconds), 0),
 
-          // We do this "dice roll" to see 
-          breakpoint = Math.random() * range;
+        // We do this "dice roll" to see 
+        breakpoint = Math.random() * range;
 
-        if(_.debug) {
-          console.log({active: activeList, db:_res.db, range: range, priority: _.maxPriority});
-        }
-        // If there's nothing we have to show then we fallback to our default asset
-        if( range <= 0 ) {
-
-          if(!_.fallbackJob) {
-            // woops what do we do now?! 
-            // I guess we just try this again?!
-            return _timeout(_res.NextJob, 1500, 'nextJob');
-          }
-
-          setNextJob(_.fallbackJob);
-
-          if(!_.firstRun && activeList.length == 0 && Object.values(_res.db) > 1) {
-            // If we just haven't loaded the assets then
-            // we can cut the duration down
-            _res.SetAssetDuration(_.current, 0, 0.2);
-          } else {
-            // Otherwise we have satisfied everything and
-            // maybe just can't contact the server ... push
-            // this out to some significant number
-            _res.SetAssetDuration(_.current, 0, _res.duration);
-          }
-
-        } else {
-          // This is needed for the end case.
-          _.firstRun = true;
-          _.current = false;
-          for(row of activeList) {
-
-            accum += row.downweight * (row.goal - row.completed_seconds);
-            if(accum > breakpoint) {
-              setNextJob(row);
-              break;
-            }
-          }
-          if(!_.current) {
-            setNextJob(row);
-          }
-        }
-
-        nextAsset();
+      if(_.debug) {
+        console.log({active: activeList, db:_res.db, range: range, priority: _.maxPriority});
       }
-    };
-  });
+      // If there's nothing we have to show then we fallback to our default asset
+      if( range <= 0 ) {
+
+        if(!_.fallbackJob) {
+          // woops what do we do now?! 
+          // I guess we just try this again?!
+          return _timeout(_res.NextJob, 1500, 'nextJob');
+        }
+
+        setNextJob(_.fallbackJob);
+
+        if(!_.firstRun && activeList.length == 0 && Object.values(_res.db) > 1) {
+          // If we just haven't loaded the assets then
+          // we can cut the duration down
+          _res.SetAssetDuration(_.current, 0, 0.2);
+        } else {
+          // Otherwise we have satisfied everything and
+          // maybe just can't contact the server ... push
+          // this out to some significant number
+          _res.SetAssetDuration(_.current, 0, _res.duration);
+        }
+
+      } else {
+        // This is needed for the end case.
+        _.firstRun = true;
+        _.current = false;
+        for(row of activeList) {
+
+          accum += row.downweight * (row.goal - row.completed_seconds);
+          if(accum > breakpoint) {
+            setNextJob(row);
+            break;
+          }
+        }
+        if(!_.current) {
+          setNextJob(row);
+        }
+      }
+
+      nextAsset();
+    }
+  };
 
   function SetFallback (assetList, force) {
     _res.fallback = _res.fallback || assetList;

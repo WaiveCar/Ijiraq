@@ -52,15 +52,11 @@ window.onload = function init() {
     cb: {
       getDefault: function(success, fail) {
         function ondisk() {
-          try{
             var myDefault = JSON.parse(db.kv_get('campaign') || "");
             if(myDefault) {
-              success(myDefault);
+              success({data: {campaign: myDefault} });
             }
             return myDefault;
-          } catch(ex) {
-            return false;
-          }
         }
 
         if(!ondisk()) {
