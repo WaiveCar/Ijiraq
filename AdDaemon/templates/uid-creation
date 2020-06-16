@@ -1,0 +1,15 @@
+<p>
+Thanks for signing up for olvr. Here is the url that you can add
+to your screens.
+</p>
+
+<p>
+Your url:
+</p>
+<p style=margin-left:2rem>
+<big>https://olvr.io/v/<?= $uid ?></big>
+</p>
+<p>
+We'll email you the first time we see one so you know it's working.
+</p>
+
