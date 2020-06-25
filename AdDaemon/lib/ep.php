@@ -134,7 +134,6 @@ try {
     session_start();
     post_return($func($all, $verb));
   } else if(array_search($func, [
-    'dsp_create',
     'active_campaigns', 
     'campaign_history', 
     'heatmap',
@@ -155,6 +154,8 @@ try {
     'most_recent',
     'provides',
     'task_dump',
+    'dsp_signup',
+    'dsp_create',
     'dsp_default',
     'dsp_ping',
     'dsp_sow',
