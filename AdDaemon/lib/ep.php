@@ -111,7 +111,6 @@ try {
     'users', 
     'jobs', 
     'sensor_data', 
-    'sensor_history', 
     'template_config',
     'campaigns', 
     'screens', 
