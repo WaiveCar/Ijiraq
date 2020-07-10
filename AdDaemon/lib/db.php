@@ -578,6 +578,30 @@ $SCHEMA = [
     'data'       => 'text',
     'created_at' => 'datetime default current_timestamp',
   ],
+  'sensor_history' => [
+    'id'          => 'integer primary key autoincrement',
+    'screen_id'   => 'integer',
+    'run'         => 'integer default 0',
+    'light'       => 'float default null',
+    'voltage'     => 'float default null',
+    'current'     => 'float default null',
+    'accel_x'     => 'float default null',
+    'accel_y'     => 'float default null',
+    'accel_z'     => 'float default null',
+    'gyro_x'      => 'float default null',
+    'gyro_y'      => 'float default null',
+    'gyro_z'      => 'float default null',
+    'temp_2'      => 'float default null',
+    'temp'        => 'float default null',
+    'humidity'    => 'float default null',
+    'pitch'       => 'float default null',
+    'roll'        => 'float default null',
+    'yaw'         => 'float default null',
+    'dpms1'       => 'boolean default false',
+    'dpms2'       => 'boolean default false',
+    'time'        => 'float default null',
+    'created_at'  => 'datetime default current_timestamp'
+  ],
   // we should store the source data here for the future
   // also the params/data that correspond to the service are done
   // in a way to permit multi-sourcing
