@@ -582,24 +582,24 @@ $SCHEMA = [
   'sensor_data' => [
     'id'          => 'integer primary key autoincrement',
     'screen_id'   => 'integer',
-    'run'         => 'integer default 0',
-    'light'       => 'float default null',
-    'voltage'     => 'float default null',
-    'current'     => 'float default null',
-    'accel_x'     => 'float default null',
-    'accel_y'     => 'float default null',
-    'accel_z'     => 'float default null',
-    'gyro_x'      => 'float default null',
-    'gyro_y'      => 'float default null',
-    'gyro_z'      => 'float default null',
-    'temp_2'      => 'float default null',
-    'temp'        => 'float default null',
-    'humidity'    => 'float default null',
-    'pitch'       => 'float default null',
-    'roll'        => 'float default null',
-    'yaw'         => 'float default null',
-    'dpms1'       => 'boolean default false',
-    'dpms2'       => 'boolean default false',
+    'Run'         => 'integer default 0',
+    'Light'       => 'float default null',
+    'Voltage'     => 'float default null',
+    'Current'     => 'float default null',
+    'Accel_x'     => 'float default null',
+    'Accel_y'     => 'float default null',
+    'Accel_z'     => 'float default null',
+    'Gyro_x'      => 'float default null',
+    'Gyro_y'      => 'float default null',
+    'Gyro_z'      => 'float default null',
+    'Temp_2'      => 'float default null',
+    'Temp'        => 'float default null',
+    'Humidity'    => 'float default null',
+    'Pitch'       => 'float default null',
+    'Roll'        => 'float default null',
+    'Yaw'         => 'float default null',
+    'DPMS1'       => 'boolean default false',
+    'DPMS2'       => 'boolean default false',
     'time'        => 'float default null',
     'created_at'  => 'datetime default current_timestamp'
   ],
@@ -1138,6 +1138,7 @@ function pdo_insert($table, $kv) {
 
     $qstr = "insert into $table($fields) values($pdo_values)";
   }
+  error_log(json_encode([$qstr, $values]));
 
   _pdo_query($qstr, $values);
   return pdo_connect()->lastInsertId();
