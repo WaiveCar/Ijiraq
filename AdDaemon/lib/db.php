@@ -578,7 +578,8 @@ $SCHEMA = [
     'data'       => 'text',
     'created_at' => 'datetime default current_timestamp',
   ],
-  'sensor_history' => [
+
+  'sensor_data' => [
     'id'          => 'integer primary key autoincrement',
     'screen_id'   => 'integer',
     'run'         => 'integer default 0',
