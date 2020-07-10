@@ -62,6 +62,7 @@ function create($table, $payload = []) {
   if($id) {
     return pdo_update($table, $id, $payload);
   } 
+  error_log(json_encode($payload));
 
   return pdo_insert($table, $payload);
 }

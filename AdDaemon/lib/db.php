@@ -1138,7 +1138,7 @@ function pdo_insert($table, $kv) {
 
     $qstr = "insert into $table($fields) values($pdo_values)";
   }
-  error_log(json_encode([$qstr, $values]));
+  error_log(json_encode([$qstr, $values, $_REQUEST]));
 
   _pdo_query($qstr, $values);
   return pdo_connect()->lastInsertId();
