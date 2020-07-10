@@ -21,12 +21,13 @@ $verb = $_SERVER['REQUEST_METHOD'];
 $input_raw = file_get_contents('php://input');
 $json_payload = @json_decode($input_raw, true);
 
-error_log(json_encode($_SERVER));
-
 $all = $_REQUEST;
 if($json_payload) {
   $all = array_merge($all, $json_payload);
 } 
+if(!isset($all['screen_id'])) {
+  $all['screen_id'] = $_SERVER['HTTP_USER_AGENT'];
+}
 
 function post_return($res) {
   if(isset($_GET['next'])) {
