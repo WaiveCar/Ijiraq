@@ -3,6 +3,7 @@ $handlerList = [];
 
 include('lib.php');
 include('accounting.php');
+include('dsp.php');
 
 $full_func = $_REQUEST['_VxiXw3BaQ4WAQClBoAsNTg_func'];
 unset($_REQUEST['_VxiXw3BaQ4WAQClBoAsNTg_func']);
@@ -19,6 +20,8 @@ $JEMIT_REQ = $func;
 $verb = $_SERVER['REQUEST_METHOD'];
 $input_raw = file_get_contents('php://input');
 $json_payload = @json_decode($input_raw, true);
+
+error_log(json_encode($_SERVER));
 
 $all = $_REQUEST;
 if($json_payload) {
@@ -101,11 +104,13 @@ try {
   }
   else if($func == 'screens' && ($verb == 'POST' || $verb == 'PUT')) {
     jemit(screen_edit($all));
+    // these are essentially resources with CRUD interfaces
   } else if(array_search($func, [
     'services', 
     'purchases', 
     'users', 
     'jobs', 
+    'sensor_data', 
     'sensor_history', 
     'template_config',
     'campaigns', 
@@ -152,6 +157,11 @@ try {
     'most_recent',
     'provides',
     'task_dump',
+    'dsp_signup',
+    'dsp_create',
+    'dsp_default',
+    'dsp_ping',
+    'dsp_sow',
   ]) !== false) { 
     post_return($func($all, $verb));
   } else {
