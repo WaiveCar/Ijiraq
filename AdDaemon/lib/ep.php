@@ -25,8 +25,8 @@ $all = $_REQUEST;
 if($json_payload) {
   $all = array_merge($all, $json_payload);
 } 
-if(!isset($all['screen_id'])) {
-  $all['screen_id'] = $_SERVER['HTTP_USER_AGENT'];
+if(!isset($all['id'])) {
+  $all['id'] = $_SERVER['HTTP_USER_AGENT'];
 }
 
 function post_return($res) {
