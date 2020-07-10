@@ -25,10 +25,6 @@ $all = $_REQUEST;
 if($json_payload) {
   $all = array_merge($all, $json_payload);
 } 
-if(!isset($all['id'])) {
-  $all['id'] = $_SERVER['HTTP_USER_AGENT'];
-}
-
 function post_return($res) {
   if(isset($_GET['next'])) {
     header('Location: ' . $_GET['next']);
@@ -125,6 +121,10 @@ try {
 
     if($verb == 'POST' || $verb == 'PUT') {
       $action = 'create';
+      if(!isset($all['screen_id']) && $func == 'sensor_data') {
+        $all['screen_id'] = $_SERVER['HTTP_USER_AGENT'];
+      }
+
     } 
     post_return($action($table, $all));
   }
