@@ -21,6 +21,8 @@ $verb = $_SERVER['REQUEST_METHOD'];
 $input_raw = file_get_contents('php://input');
 $json_payload = @json_decode($input_raw, true);
 
+error_log(json_encode($_SERVER));
+
 $all = $_REQUEST;
 if($json_payload) {
   $all = array_merge($all, $json_payload);
@@ -108,6 +110,7 @@ try {
     'purchases', 
     'users', 
     'jobs', 
+    'sensor_data', 
     'sensor_history', 
     'template_config',
     'campaigns', 
