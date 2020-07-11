@@ -44,11 +44,12 @@ function create($table, $payload = []) {
   foreach($payload as $k => $v) {
     $typeRaw = aget($SCHEMA, "$table.$k");
     if($typeRaw) {
+      //error_log(json_encode([$k, $typeRaw]));
       $parts = explode(' ', $typeRaw);
       $type = $parts[0];
       if($k === 'password') {
         $v = password_hash($v, PASSWORD_BCRYPT);
-      } else if(empty($payload[$k])) {
+      } else if(!isset($payload[$k])) {
         unset($payload[$k]);
       } else {
         $payload[$k] = $v;
@@ -62,7 +63,7 @@ function create($table, $payload = []) {
   if($id) {
     return pdo_update($table, $id, $payload);
   } 
-  error_log(json_encode($payload));
+  //error_log(json_encode($payload));
 
   return pdo_insert($table, $payload);
 }

@@ -121,6 +121,7 @@ try {
 
     if($verb == 'POST' || $verb == 'PUT') {
       $action = 'create';
+      error_log(json_encode([$verb, $func, $all]));
       if(!isset($all['screen_id']) && $func == 'sensor_data') {
         $all['screen_id'] = $_SERVER['HTTP_USER_AGENT'];
       }
