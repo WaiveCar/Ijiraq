@@ -582,7 +582,7 @@ $SCHEMA = [
   'sensor_data' => [
     'id'          => 'integer primary key autoincrement',
     'screen_id'   => 'integer',
-    'Run'         => 'integer default 0',
+    'run'         => 'integer default 0',
     'Light'       => 'float default null',
     'Voltage'     => 'float default null',
     'Current'     => 'float default null',
@@ -604,7 +604,7 @@ $SCHEMA = [
     'Jolt_event'  => 'boolean default null',
     'DPMS1'       => 'boolean default false',
     'DPMS2'       => 'boolean default false',
-    'time'        => 'float default null',
+    'Time'        => 'float default null',
     'created_at'  => 'datetime default current_timestamp'
   ],
   // we should store the source data here for the future
@@ -954,6 +954,14 @@ function process($table, $obj, $what, $type='none') {
   return $obj;
 }
 
+function pdo_bottom($v) {
+  if($v === 'null') {
+    return null;
+  } elseif($v === 'true' || $v === true || $v === false || $v === 'false') {
+    return intval(boolval($v));
+  }
+  return $v;
+}
 function db_bottom($v) {
   if($v === null) {
     return "null";
@@ -1129,10 +1137,11 @@ function db_insert_many($table, $kvList) {
 
 function pdo_insert($table, $kv) {
   $values = [];
+  //error_log(json_encode($kv));
 
   $kv = process($table, $kv, 'pre', 'pdo');
   foreach($kv as $k => $v) {
-    $values[] = db_bottom($v);
+    $values[] = pdo_bottom($v);
   } 
   if(count($values) === 0) {
     $qstr = "insert into $table default values";
