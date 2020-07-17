@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteBase /
+
+RewriteRule "^api/(.*)$" "http://api.olvr/api/$1" [L]
