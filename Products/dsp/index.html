@@ -1,14 +1,13 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Eventually by HTML5 UP</title>
+		<title>Olvr Supply Side Signup</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 	</head>
 	<body class="is-preload">
 
-		<!-- Header -->
 			<header id="header">
         <img style=width:400px; src=http://olvr.io/svg/oliver-Logo.svg>
 <h1>The quickest way to sell screen time</h1>
@@ -33,22 +32,31 @@ Signing up is easy.
 <p>That's it.
 </p>
 
-	<form id="signup-form" method="post" action="#">
+<form id="signup-form" action="javascript:signup()">
   <input type="email" name="email" id="email" placeholder="Email Address" />
   <input type="submit" value="Generate My Unique URL" />
-  </form>
-			</header>
+<div id='url-container'></div>
+</form>
+</header>
 
 
-		<!-- Footer -->
-			<footer id="footer">
-				<ul class="copyright">
-					<li>&copy; 2020 olvr.</li>
-				</ul>
-			</footer>
+    <footer id="footer">
+      <ul class="copyright">
+        <li>&copy; 2020 olvr.</li>
+      </ul>
+    </footer>
 
-		<!-- Scripts -->
-			<script src="assets/js/main.js"></script>
+ 	<script src="assets/js/main.js"></script>
 
 	</body>
 </html>
+
+<script>
+  function signup() {
+    fetch("/api/dsp_signup?email=" + document.getElementById('email').value)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+      });
+  }
+</script>
