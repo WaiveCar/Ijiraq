@@ -156,6 +156,9 @@ $RULES = [
 // campaigns have 0 or 1 contacts
 //
 $SCHEMA = [
+  //
+  // SCREEN SIDE
+  //
   'screen' => [
     'id'          => 'integer primary key autoincrement', 
 
@@ -243,6 +246,164 @@ $SCHEMA = [
     'created_at'    => 'datetime default current_timestamp',
   ],
 
+  'job' => [
+    'id'          => 'integer primary key autoincrement',
+    'campaign_id' => 'integer',
+    'screen_id'   => 'integer',
+    'goal'        => 'integer',
+    'completed_seconds' => 'integer default 0',
+
+    //
+    // We are very likely to increase the fidelity of
+    // this in the future to something more sophisticated
+    // but for now let's make it easy.
+    //
+    'is_boost'    => 'boolean default false',
+
+    // TODO: VV this can be used for re-allocation.
+    'last_update' => 'datetime',
+
+    'job_start'   => 'datetime',
+    'job_end'     => 'datetime'
+  ],
+
+  'sensor_data' => [
+    'id'          => 'integer primary key autoincrement',
+    'screen_id'   => 'integer',
+    'run'         => 'integer default 0',
+    'Light'       => 'float default null',
+    'Voltage'     => 'float default null',
+    'Current'     => 'float default null',
+    'Accel_x'     => 'float default null',
+    'Accel_y'     => 'float default null',
+    'Accel_z'     => 'float default null',
+    'Gyro_x'      => 'float default null',
+    'Gyro_y'      => 'float default null',
+    'Gyro_z'      => 'float default null',
+    'Temp_2'      => 'float default null',
+    'Temp'        => 'float default null',
+    'Humidity'    => 'float default null',
+    'Pitch'       => 'float default null',
+    'Roll'        => 'float default null',
+    'Yaw'         => 'float default null',
+    'Lat'         => 'float default null',
+    'Lng'         => 'float default null',
+    'Fridge_door' => 'boolean default null',
+    'Jolt_event'  => 'boolean default null',
+    'DPMS1'       => 'boolean default false',
+    'DPMS2'       => 'boolean default false',
+    'Time'        => 'float default null',
+    'created_at'  => 'datetime default current_timestamp'
+  ],
+
+  // #107 - scoped tasks
+  // The id here is the referential id so that we 
+  // can group the responses
+  'task' => [
+    'id'           => 'integer primary key autoincrement',
+    'created_at'   => 'datetime default current_timestamp',
+    'expiry_sec'   => 'integer default 172800',
+    'scope'        => 'text',
+    'command'      => 'text',
+    'args'         => 'text'
+  ],
+   
+  // #39
+  'task_screen' => [
+    'id'           => 'integer primary key autoincrement',
+    'task_id'      => 'integer',
+    'screen_id'    => 'integer',
+  ],
+
+  'task_response' => [
+    'id'          => 'integer primary key autoincrement',
+    'task_id'     => 'integer',
+    'screen_id'   => 'integer',
+    'response'    => 'text',
+    'ran_at'      => 'datetime default current_timestamp',
+    'created_at'  => 'datetime default current_timestamp',
+  ],
+    
+  'runtime_history' => [
+    'id'          => 'integer primary key autoincrement',
+    'screen_id'   => 'integer',
+    'bootcount'   => 'integer',
+    'uptime'      => 'integer',
+    'booted_at'   => 'datetime default current_timestamp',
+    'created_at'  => 'datetime default current_timestamp'
+  ],
+
+  'uptime_history' => [
+    'id'          => 'integer primary key autoincrement',
+    // either the carname (eg waive43) or uid
+    'name'      => 'text',
+    // either car or screen
+    'type'      => 'text',
+    // either on or off
+    'action'      => 'text',
+
+    // this is easier than stringing on/offs together
+    // and then trying to compute deltas
+    'uptime'      => 'integer default null',
+    
+    'lat'         => 'float default null',
+    'lng'         => 'float default null',
+
+    'created_at'  => 'datetime default current_timestamp'
+  ],
+
+  # 143
+  'screen_history' => [
+    'id'          => 'integer primary key autoincrement',
+    'screen_id'   => 'integer',
+    'action'      => 'text',
+    'value'       => 'text',
+    'old'         => 'text',
+    'created_at'  => 'datetime default current_timestamp'
+  ],
+
+  // #65
+  'job_history' => [
+    'id'        => 'integer primary key autoincrement',
+    'job_id'    => 'integer',
+    'start'     => 'datetime',
+    'end'       => 'datetime'
+  ],
+
+  'ping_history' => [
+    'id'        => 'integer primary key autoincrement',
+    'screen_id' => 'integer',
+    'created_at'=> 'datetime default current_timestamp',
+  ],
+
+  # This is a normalized system. Dunno if it's a good idea
+  # becaue most of the time this will return no results. Maybe
+  # keeping a counter in a screen definition of "has_campaigns"
+  # and then when they are purged from this list that gets updated.
+  #
+  # This "optimization" which shouldn't be done because of
+  # that word I just used, would avoid the extra query for no 
+  # results problem
+  'screen_campaign' => [
+    'id'          => 'integer primary key autoincrement',
+    'screen_id'   => 'integer',
+    'campaign_id' => 'integer',
+    'created_at'  => 'datetime default current_timestamp',
+  ],
+
+  'location_history' => [
+    'id'          => 'integer primary key autoincrement',
+    'job_id'      => 'integer',
+    'campaign_id' => 'integer',
+    'screen_id'   => 'integer',
+    'lat'         => 'float default null',
+    'lng'         => 'float default null',
+    'created_at'  => 'datetime default current_timestamp',
+  ],
+
+  // 
+  // DEMAND SIDE (advertiser)
+  //
   //
   // consider: potentially create a second table for "staging" campaigns
   // that aren't active as opposed to relying on a boolean
@@ -385,133 +546,6 @@ $SCHEMA = [
     'end_time'    => 'datetime'
   ],
 
-  'job' => [
-    'id'          => 'integer primary key autoincrement',
-    'campaign_id' => 'integer',
-    'screen_id'   => 'integer',
-    'goal'        => 'integer',
-    'completed_seconds' => 'integer default 0',
-
-    //
-    // We are very likely to increase the fidelity of
-    // this in the future to something more sophisticated
-    // but for now let's make it easy.
-    //
-    'is_boost'    => 'boolean default false',
-
-    // TODO: VV this can be used for re-allocation.
-    'last_update' => 'datetime',
-
-    'job_start'   => 'datetime',
-    'job_end'     => 'datetime'
-  ],
-
-  // #107 - scoped tasks
-  // The id here is the referential id so that we 
-  // can group the responses
-  'task' => [
-    'id'           => 'integer primary key autoincrement',
-    'created_at'   => 'datetime default current_timestamp',
-    'expiry_sec'   => 'integer default 172800',
-    'scope'        => 'text',
-    'command'      => 'text',
-    'args'         => 'text'
-  ],
-   
-  // #39
-  'task_screen' => [
-    'id'           => 'integer primary key autoincrement',
-    'task_id'      => 'integer',
-    'screen_id'    => 'integer',
-  ],
-
-  'task_response' => [
-    'id'          => 'integer primary key autoincrement',
-    'task_id'     => 'integer',
-    'screen_id'   => 'integer',
-    'response'    => 'text',
-    'ran_at'      => 'datetime default current_timestamp',
-    'created_at'  => 'datetime default current_timestamp',
-  ],
-    
-  'runtime_history' => [
-    'id'          => 'integer primary key autoincrement',
-    'screen_id'   => 'integer',
-    'bootcount'   => 'integer',
-    'uptime'      => 'integer',
-    'booted_at'   => 'datetime default current_timestamp',
-    'created_at'  => 'datetime default current_timestamp'
-  ],
-
-  'uptime_history' => [
-    'id'          => 'integer primary key autoincrement',
-    // either the carname (eg waive43) or uid
-    'name'      => 'text',
-    // either car or screen
-    'type'      => 'text',
-    // either on or off
-    'action'      => 'text',
-
-    // this is easier than stringing on/offs together
-    // and then trying to compute deltas
-    'uptime'      => 'integer default null',
-    
-    'lat'         => 'float default null',
-    'lng'         => 'float default null',
-
-    'created_at'  => 'datetime default current_timestamp'
-  ],
-
-  # 143
-  'screen_history' => [
-    'id'          => 'integer primary key autoincrement',
-    'screen_id'   => 'integer',
-    'action'      => 'text',
-    'value'       => 'text',
-    'old'         => 'text',
-    'created_at'  => 'datetime default current_timestamp'
-  ],
-
-  // #65
-  'job_history' => [
-    'id'        => 'integer primary key autoincrement',
-    'job_id'    => 'integer',
-    'start'     => 'datetime',
-    'end'       => 'datetime'
-  ],
-
-  'ping_history' => [
-    'id'        => 'integer primary key autoincrement',
-    'screen_id' => 'integer',
-    'created_at'=> 'datetime default current_timestamp',
-  ],
-
-  # This is a normalized system. Dunno if it's a good idea
-  # becaue most of the time this will return no results. Maybe
-  # keeping a counter in a screen definition of "has_campaigns"
-  # and then when they are purged from this list that gets updated.
-  #
-  # This "optimization" which shouldn't be done because of
-  # that word I just used, would avoid the extra query for no 
-  # results problem
-  'screen_campaign' => [
-    'id'          => 'integer primary key autoincrement',
-    'screen_id'   => 'integer',
-    'campaign_id' => 'integer',
-    'created_at'  => 'datetime default current_timestamp',
-  ],
-
-  'location_history' => [
-    'id'          => 'integer primary key autoincrement',
-    'job_id'      => 'integer',
-    'campaign_id' => 'integer',
-    'screen_id'   => 'integer',
-    'lat'         => 'float default null',
-    'lng'         => 'float default null',
-    'created_at'  => 'datetime default current_timestamp',
-  ],
-
-  // accounting, to be moved later.
   'contact' => [
     'id'         => 'integer primary key autoincrement',
     'name'       => 'text',
@@ -525,6 +559,7 @@ $SCHEMA = [
     'lat'        => 'float',
     'lng'        => 'float'
   ],
+
   'purchase' => [
     'id'         => 'integer primary key autoincrement',
     'user_id'    => 'integer',
@@ -547,25 +582,6 @@ $SCHEMA = [
     'created_at' => 'datetime default current_timestamp',
   ],
 
-  'user' => [
-    'id'         => 'integer primary key autoincrement',
-    'uuid'       => 'text',
-    'name'       => 'text',
-    'phone'      => 'text',
-    'email'      => 'text',
-    'password'   => 'text',
-    'image'      => 'text',
-    'credit'     => 'integer default 0',
-    'contact_id' => 'integer',
-    'is_verfied' => 'boolean default false',
-    'auto_approve' => 'boolean default false',
-    'title'      => 'text',
-    //'organization_id'     => 'integer',
-    //'brand_id'   => 'integer',
-    'role'       => 'text', // either admin/manager/viewer
-    'created_at' => 'datetime default current_timestamp',
-  ],
-
   'service' => [
     'id'         => 'integer primary key autoincrement',
     'user_id'    => 'integer',
@@ -579,34 +595,43 @@ $SCHEMA = [
     'created_at' => 'datetime default current_timestamp',
   ],
 
-  'sensor_data' => [
-    'id'          => 'integer primary key autoincrement',
-    'screen_id'   => 'integer',
-    'run'         => 'integer default 0',
-    'Light'       => 'float default null',
-    'Voltage'     => 'float default null',
-    'Current'     => 'float default null',
-    'Accel_x'     => 'float default null',
-    'Accel_y'     => 'float default null',
-    'Accel_z'     => 'float default null',
-    'Gyro_x'      => 'float default null',
-    'Gyro_y'      => 'float default null',
-    'Gyro_z'      => 'float default null',
-    'Temp_2'      => 'float default null',
-    'Temp'        => 'float default null',
-    'Humidity'    => 'float default null',
-    'Pitch'       => 'float default null',
-    'Roll'        => 'float default null',
-    'Yaw'         => 'float default null',
-    'Lat'         => 'float default null',
-    'Lng'         => 'float default null',
-    'Fridge_door' => 'boolean default null',
-    'Jolt_event'  => 'boolean default null',
-    'DPMS1'       => 'boolean default false',
-    'DPMS2'       => 'boolean default false',
-    'Time'        => 'float default null',
-    'created_at'  => 'datetime default current_timestamp'
+  'user' => [
+    'id'         => 'integer primary key autoincrement',
+    'uuid'       => 'text',
+    'name'       => 'text',
+    'phone'      => 'text',
+    'email'      => 'text',
+    'password'   => 'text',
+    'image'      => 'text',
+    'role'       => 'text', // either admin / supply / demand
+    'credit'     => 'integer default 0',
+    'contact_id' => 'integer',
+    'is_verfied' => 'boolean default false',
+    'auto_approve' => 'boolean default false',
+    'title'      => 'text',
+    //'organization_id'     => 'integer',
+    //'brand_id'   => 'integer',
+    'created_at' => 'datetime default current_timestamp',
   ],
+
+  // 
+  // SUPPLY SIDE (screen holders)
+  //
+  // a screen 'hoard' has a UUID that's generated from the
+  // dsp side.
+  //
+  // A hoard has one human and potentially many screens. 
+  // A screen may have multiple hoards.
+  'hoard' => [
+    'id'         => 'integer primary key autoincrement',
+    'uuid'       => 'text',
+    'user_id'    => 'integer',
+    'created_at' => 'datetime default current_timestamp',
+  ],
+
+  // 
+  // MISCELLANEOUS
+  //
   // we should store the source data here for the future
   // also the params/data that correspond to the service are done
   // in a way to permit multi-sourcing

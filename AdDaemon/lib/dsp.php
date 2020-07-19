@@ -7,8 +7,11 @@ function dsp_create() {
 }
 
 function dsp_signup($params) {
-
   $email = $params['email'];
+  $user = Get::user(['email' => $email]);
+  if(!$user) {
+    $user = create('user', ['email' => $email]);
+  }
 }
 
 function dsp_sow($params) {
