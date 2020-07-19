@@ -250,6 +250,7 @@ $SCHEMA = [
     'id'          => 'integer primary key autoincrement',
     'campaign_id' => 'integer',
     'screen_id'   => 'integer',
+    'hoard_id'    => 'integer',
     'goal'        => 'integer',
     'completed_seconds' => 'integer default 0',
 

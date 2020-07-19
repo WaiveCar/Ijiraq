@@ -38,6 +38,7 @@ function do_oth($oth) {
   }
 }
 
+// Returns null on error, otherwise the object.
 function create($table, $payload = []) {
   // TODO: whitelist the tables
   global $SCHEMA;
@@ -61,11 +62,15 @@ function create($table, $payload = []) {
 
   $id = aget($payload, 'id');
   if($id) {
-    return pdo_update($table, $id, $payload);
+    if(pdo_update($table, $id, $payload)) {
+      return Get::$table($id);
+    }
   } 
-  //error_log(json_encode($payload));
 
-  return pdo_insert($table, $payload);
+  $id = pdo_insert($table, $payload);
+  if(is_numeric($id)) {
+    return Get::$table($id);
+  }
 }
 
 function upsert_user($all) {
