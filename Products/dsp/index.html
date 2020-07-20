@@ -6,6 +6,24 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 	</head>
+<style>
+#url-container {
+  background: #3F536D;
+  padding: 2rem;
+  visibility: hidden;
+  border-radius: 1rem;
+  display:inline-block;
+  color: #ECEEF1;
+}
+#url-container p{
+  color: #ECEEF1;
+  margin-bottom:.5rem;
+ }
+#url {
+  color: #FF8E00;
+  margin: 0;
+}
+</style>
 	<body class="is-preload">
 
 	<header id="header">
@@ -31,9 +49,14 @@
 
     <form id="signup-form" action="#" onsubmit="signup()">
       <input type="email" name="email" id="email" placeholder="Email Address" />
-      <input type="submit" value="Generate My Unique URL" />
-    <div id='url-container'></div>
+      <input type="submit" id="sub" value="Generate My Unique URL" />
     </form>
+    <div id='url-container'>
+      <p>Use this special URL in your backend.<br/>
+      We've emailed it to you along with instructions on how to get to your dashboard.</p>
+      <h2 id="url">blank</h2>
+
+    </div>
   </header>
 
   <footer id="footer">
@@ -41,15 +64,29 @@
       <li>&copy; 2020 olvr.</li>
     </ul>
   </footer>
- 	<script src="assets/js/main.js"></script>
 	</body>
 </html>
 
 <script>
-  function signup() {
-    fetch("/api/dsp_signup?email=" + document.getElementById('email').value)
+  window.onload = function(){
+    document.getElementById('signup-form').addEventListener('submit', function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+    });
+  }
+  function signup(e) {
+    let sub = document.getElementById('sub');
+    sub.style.opacity = 0.5;
+    fetch(new Request(
+      "http://api.olvr/api/dsp_signup?email=" + document.getElementById('email').value,
+      {method: 'POST'}
+    ))
       .then(response => response.json())
       .then(data => {
+        sub.setAttribute('disabled', '1');
+        sub.value = 'See Below'
+        document.getElementById("url-container").style.visibility = 'visible';
+        document.getElementById("url").innerHTML = "https://olvr.io/v/" + data.data.uuid;
         console.log(data);
       });
   }
