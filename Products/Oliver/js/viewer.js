@@ -52,11 +52,17 @@ window.onload = function init() {
     cb: {
       getDefault: function(success, fail) {
         function ondisk() {
-            var myDefault = JSON.parse(db.kv_get('campaign') || "");
-            if(myDefault) {
-              success({data: {campaign: myDefault} });
-            }
-            return myDefault;
+          var myCampaign = db.kv_get('campaign');
+          var myDefault = JSON.parse(myCampaign || "{}");
+          if(myDefault) {
+            success({
+              data: {
+                system: {},
+                campaign: myDefault
+              } 
+            });
+          }
+          return myDefault;
         }
 
         if(!ondisk()) {
@@ -67,6 +73,7 @@ window.onload = function init() {
   });
 
   ads.on('system', function(data) {
+    console.log(data);
     var number = data.number ? data.number.slice(-7) : '??';
     document.getElementsByClassName('info')[0].innerHTML = [number, data.uuid.slice(0,5)].join(' ');
   });

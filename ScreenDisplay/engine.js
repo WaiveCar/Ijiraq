@@ -149,7 +149,7 @@ var Engine = function(opts){
     }
     _res.data[what] = data;
     if(_res.listeners[what]) {
-      _res.listeners[what].forEach(cb => cb(data))
+      _res.listeners[what].forEach(cb => cb ? cb(data) : null)
       _res.listeners[what] = _res.listeners[what].filter(cb => !cb.once);
     }
   }
@@ -496,7 +496,10 @@ var Engine = function(opts){
       }, obj)
     );
     
-    obj.assetList = ('asset_meta' in obj) ? obj.asset_meta.map(row => urlToAsset(row, obj)) : [];
+    obj.assetList = [];
+    if('asset_meta' in obj && obj.asset_meta) {
+      obj.assetList = obj.asset_meta.map(row => urlToAsset(row, obj));
+    }
 
     obj.remove = function(what) {
       obj.assetList = obj.assetList.filter(row => row.uniq != what.uniq );
