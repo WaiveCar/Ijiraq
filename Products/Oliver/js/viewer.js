@@ -12,7 +12,12 @@ var db = {
     return value;
   },
   kv_get: function(key) {
-    return (window.localStorage && key in localStorage) ? localStorage[key] : null;
+    if (window.localStorage) {
+      if (key) {
+        return (key in localStorage) ? localStorage[key] : null
+      }
+      return window.localStorage;
+    }
   },
   incr: function(key) {
     return db.kv_set(key, parseInt(db.kv_get(key) || "0", 10) + 1);
@@ -22,7 +27,7 @@ var db = {
 
 window.onload = function init() {
   var bootcount = db.incr('bootcount'), 
-    uid = window.location.href.split('/').pop(),
+    hoard_id = window.location.href.split('/').pop(),
     features = {
       location: {exists: !!navigator.geolocation, available: null},
       localstorage: {exists: !!window.localStorage, available: db.kv_get('ping_count') > 0},
@@ -30,7 +35,7 @@ window.onload = function init() {
     },
 
     ping_payload = {
-      uid: uid,
+      hoard_id: uid,
       uptime: get_uptime(),
       bootcount: bootcount,
       ping_count: db.incr('ping_count'),
@@ -74,8 +79,14 @@ window.onload = function init() {
 
   ads.on('system', function(data) {
     console.log(data);
-    var number = data.number ? data.number.slice(-7) : '??';
-    document.getElementsByClassName('info')[0].innerHTML = [number, data.uuid.slice(0,5)].join(' ');
+    var number, id;
+    if(data.uuid) {
+      number = data.number ? data.number.slice(-7) : '??';
+      id = [number, data.uuid.slice(0,5)].join(' ');
+    } else {
+      id = "unknown";
+    }
+    document.getElementsByClassName('info')[0].innerHTML = id;
   });
 
   ads.on('jobEnded', function() {
@@ -88,6 +99,7 @@ window.onload = function init() {
     }
 
     ping.lock = true;
+
     ads.post('ping', ping_payload, function(data) {
       var screen = data.screen,
           campaign = data.default;
@@ -121,22 +133,26 @@ window.onload = function init() {
   }
 
   if(navigator.geolocation) {
-    navigator.geolocation.watchPosition(
-      function(pos) {
-        features.location.available = true;
-        ads.meta.sow.lat = pos.coords.latitude;
-        ads.meta.sow.lng = pos.coords.longitude;
-        ping_payload.location = {
-          lat: ads.meta.sow.lat,
-          lng: ads.meta.sow.lng
-        };
-      }, function() {
-        features.location.available = false;
-      }, {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0
-      });
+    try {
+      navigator.geolocation.watchPosition(
+        function(pos) {
+          features.location.available = true;
+          ads.meta.sow.lat = pos.coords.latitude;
+          ads.meta.sow.lng = pos.coords.longitude;
+          ping_payload.location = {
+            lat: ads.meta.sow.lat,
+            lng: ads.meta.sow.lng
+          };
+        }, function() {
+          features.location.available = false;
+        }, {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0
+        });
+    } catch (ex) {
+      console.log('navigator.geolocation', ex)
+    }
   }
 
   setInterval(ping, 3 * 60 * 1000);
