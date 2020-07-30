@@ -520,6 +520,10 @@ function ping($payload) {
     }
   }
 
+  //
+  // This is for supporting 3rd party screens, essentially
+  // a bootstrap process.
+  //
 
   if(isset($payload['uid'])) {
     $screen = Get::screen(['uid' => $payload['uid']]);

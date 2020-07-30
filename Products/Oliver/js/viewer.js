@@ -35,7 +35,10 @@ window.onload = function init() {
     },
 
     ping_payload = {
-      hoard_id: uid,
+      // I'm certainly permitted to assert my uid, but the
+      // server is the one that decides here.
+      uid: db.kv_get('uid'),
+      hoard_id: hoard_id,
       uptime: get_uptime(),
       bootcount: bootcount,
       ping_count: db.incr('ping_count'),
