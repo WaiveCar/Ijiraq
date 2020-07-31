@@ -33,6 +33,10 @@ function post_return($res) {
   jemit($res);
 }
 
+if(isset($all['hoard_id'])) {
+  session_start();
+}
+
 try {
   if($func == 'state') {
     $list = array_values($_FILES);
