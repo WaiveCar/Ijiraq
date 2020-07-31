@@ -523,7 +523,10 @@ function ping($payload) {
   //
   // This is for supporting 3rd party screens, essentially
   // a bootstrap process.
-  //
+  if(isset($payload['hoard_id'])) {
+    // 
+    $payload = hoard_discover($payload);
+  }
 
   if(isset($payload['uid'])) {
     $screen = Get::screen(['uid' => $payload['uid']]);
@@ -1500,3 +1503,8 @@ function slackie($where, $what) {
   );
 }
 
+
+function compact_uuid() {
+  $b16 = str_replace('-', '', Uuid::uuid4()->toString());
+  return str_replace(['+','/','='], ['-','_',''], base64_encode(hex2bin($b16)));
+}
