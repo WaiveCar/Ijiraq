@@ -1503,7 +1503,6 @@ function slackie($where, $what) {
   );
 }
 
-
 function compact_uuid() {
   $b16 = str_replace('-', '', Uuid::uuid4()->toString());
   return str_replace(['+','/','='], ['-','_',''], base64_encode(hex2bin($b16)));

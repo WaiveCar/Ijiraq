@@ -1,9 +1,8 @@
 <?
 include_once('lib.php');
-use Ramsey\Uuid\Uuid;
 
 function dsp_create() {
-  return Uuid::uuid4()->toString();
+  return compact_uuid();
 }
 
 function dsp_signup($params) {
@@ -13,7 +12,7 @@ function dsp_signup($params) {
     $user = create('user', ['email' => $email]);
     $hoard = create('hoard', [
       'user_id' => $user['id'],
-      'uuid' => Uuid::uuid4()->toString()
+      'uuid' => compact_uuid(),
     ]);
   } else {
     $hoard = Get::hoard(['user_id' => $user['id']]);
