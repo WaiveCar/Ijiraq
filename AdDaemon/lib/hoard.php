@@ -1,6 +1,5 @@
 <?
 
-require  'vendor/autoload.php';
 function hoard_discover($payload) {
   // We're going to be stupid right now and do something that
   // could potentially, through sloppy coding, lead to collisions
@@ -13,9 +12,12 @@ function hoard_discover($payload) {
     // We'll trust the uid from the screen for now
     if(isset($_SESSION['uid'])) {
       $payload['uid'] = $_SESSION['uid'];
+      return $payload;
     } // otherwise we have to generate a new screen id
 
+    return create_screen(compact_uuid(), array_merge($payload, [ 'port' => false ] ));
   }
+  return $payload;
 }
 
 

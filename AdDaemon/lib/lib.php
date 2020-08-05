@@ -7,6 +7,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 $mypath = $_SERVER['DOCUMENT_ROOT'] . 'AdDaemon/lib/';
 include_once($mypath . 'db.php');
+include_once($mypath . 'hoard.php');
 $JEMIT_REQ = '';
 $JEMIT_EXT = '';
 
