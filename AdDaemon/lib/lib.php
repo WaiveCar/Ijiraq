@@ -255,15 +255,17 @@ function distance($pos1, $pos2) {
 function create_screen($uid, $data = []) {
   global $PORT_OFFSET;
   // we need to get the next available port number
-  $nextport = intval((db_connect())->querySingle('select max(port) from screen')) + 1;
-  if($nextport < $PORT_OFFSET) {
-    // gotta start from somewhere.
-    $nextport = $PORT_OFFSET;
+  if(!isset($data['port'])) {
+    $nextport = intval((db_connect())->querySingle('select max(port) from screen')) + 1;
+    if($nextport < $PORT_OFFSET) {
+      // gotta start from somewhere.
+      $nextport = $PORT_OFFSET;
+    }
+    $data['port'] = $nextport;
   }
 
   $data = array_merge($data, [
     'uid' => db_string($uid),
-    'port' => $nextport,
     'first_seen' => 'current_timestamp',
     'last_seen' => 'current_timestamp'
   ]);
