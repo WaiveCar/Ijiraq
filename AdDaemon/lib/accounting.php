@@ -137,6 +137,52 @@ function text_rando($number, $message) {
   }
 }
 
+// Check if the posted email/password is valid
+function authenticate_user($post) {
+  $who = aget($post, 'email');
+  if($who) {
+    $user = Get::user(['email' => $who]);
+    if ($user) {
+      if( password_verify($post['password'], $user['password'])) {
+        session_regenerate_id();
+        $_SESSION['user_id'] = $user['id'];
+        update_session_age();
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+// Users who haven't accessed the site in 7 days are asked to re-login
+function session_age_valid() {
+  $max_age = 7 * 24 * 60 * 60; // 7 days
+  $sess_last = aget($_SESSION, 'last_seen', $max_age + 1);
+  return ( time() - $sess_last < $max_age );
+}
+
+function update_session_age() {
+  $_SESSION['last_seen'] = time();
+}
+
+// Redirect to the login page and store where they want to go
+function send_to_login_page() {
+  $_SESSION['after_login_url'] = $_SERVER['REQUEST_URI'];
+  header("Location: /admin/login");
+  die();
+}
+
+// Check if the session is logged in and not too old
+function require_authorized_user() {
+  if( !$_SESSION['user_id'] ) {
+    send_to_login_page();
+  } elseif( !session_age_valid() ) {
+    send_to_login_page();
+  } else {
+    update_session_age();
+  }
+}
+
 function notification_sweep() {
   global $PLAYTIME;
   // This will just go through and basically get all the things that need to be notified.

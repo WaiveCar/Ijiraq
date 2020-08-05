@@ -1,6 +1,9 @@
 <?
 include('../AdDaemon/lib/lib.php');
 include('lib.php');
+include('../AdDaemon/lib/accounting.php');
+
+require_authorized_user();
 
 function get_screen($id) {
   global $screenMap;
