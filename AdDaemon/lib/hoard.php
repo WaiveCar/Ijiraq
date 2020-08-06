@@ -15,7 +15,9 @@ function hoard_discover($payload) {
       return $payload;
     } // otherwise we have to generate a new screen id
 
-    return create_screen(compact_uuid(), array_merge($payload, [ 'port' => false ] ));
+    $screen = array_merge($payload, [ 'port' => false ] );
+    error_log(json_encode($screen));
+    return create_screen(compact_uuid(), $screen);
   }
   return $payload;
 }

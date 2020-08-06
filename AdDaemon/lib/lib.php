@@ -512,7 +512,7 @@ function ping($payload) {
     'location', 'location.Lat', 'location.Lng',        // >v0.3-Chukwa-473-g725fa2c
     'last_uptime', 'last_task_result',                 // >v0.3-Chukwa-1316-g3b791be5-master
     'bootcount',
-    'modem.imsi', 'modem.icc'
+    'modem.imsi', 'modem.icc', 'hoard_id', 'uid'
   ] as $key) {
     $val = aget($payload, $key);
 
@@ -526,19 +526,19 @@ function ping($payload) {
   //
   // This is for supporting 3rd party screens, essentially
   // a bootstrap process.
-  if(isset($payload['hoard_id'])) {
-    // 
-    $payload = hoard_discover($payload);
+  if(isset($obj['hoard_id'])) {
+    $payload = hoard_discover($obj);
+    error_log(json_encode($obj));
   }
 
-  if(isset($payload['uid'])) {
-    $screen = Get::screen(['uid' => $payload['uid']]);
+  if(isset($obj['uid'])) {
+    $screen = Get::screen(['uid' => $obj['uid']]);
 
-    if(!isset($payload['uptime'])) {
-      error_log("Uptime not known for " . $payload['uid']);
+    if(!isset($obj['uptime'])) {
+      error_log("Uptime not known for " . $obj['uid']);
     }
     if($screen) {
-      if(isset($payload['uptime']) && intval($screen['uptime']) > intval($payload['uptime'])) {
+      if(isset($obj['uptime']) && intval($screen['uptime']) > intval($obj['uptime'])) {
         record_screen_on($screen, $payload);
       }
       //
@@ -550,7 +550,7 @@ function ping($payload) {
       }
     }
 
-    $screen = upsert_screen($payload['uid'], $obj);
+    $screen = upsert_screen($obj['uid'], $obj);
     //
     // After this point we know that $screen is valid.
     // 
@@ -560,7 +560,7 @@ function ping($payload) {
     //
 
     if(isset($obj['last_uptime'])) {
-      $bc = intval($payload['bootcount']) - 1;
+      $bc = intval($obj['bootcount']) - 1;
       $opts = [
         'screen_id' => $screen['id'],
         'bootcount' => $bc

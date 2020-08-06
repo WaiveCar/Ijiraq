@@ -56,7 +56,12 @@ window.onload = function init() {
   ads = Engine({
     doOliver: true,
     server: "/adserver/" + uid + "/",
-    meta: {sow: {uid: uid} },
+    meta: {
+      sow: {
+        hoard_id: hoard_id,
+        uid: uid
+      } 
+    },
     debug: true,
     cb: {
       getDefault: function(success, fail) {
@@ -159,6 +164,7 @@ window.onload = function init() {
     }
   }
 
+  ping();
   setInterval(ping, 3 * 60 * 1000);
 
   ads.Start();

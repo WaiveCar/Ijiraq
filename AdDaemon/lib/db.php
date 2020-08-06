@@ -235,7 +235,9 @@ $SCHEMA = [
     // 'goober_id'        => 'integer',
 
     'ignition_state'  => 'text',
-    'ignition_time'   => 'datetime'
+    'ignition_time'   => 'datetime',
+
+    'hoard_id'        => 'text'
   ],
 
   // revenue historicals

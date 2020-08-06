@@ -25,6 +25,12 @@ $all = $_REQUEST;
 if($json_payload) {
   $all = array_merge($all, $json_payload);
 } 
+foreach($all as $k => $v) {
+  if($v === 'null') {
+    $all[$k] = null;
+  }
+}
+
 function post_return($res) {
   if(isset($_GET['next'])) {
     header('Location: ' . $_GET['next']);
@@ -168,6 +174,7 @@ try {
     'dsp_ping',
     'dsp_sow',
   ]) !== false) { 
+    error_log(json_encode([$_GET, $_POST]));
     post_return($func($all, $verb));
   } else {
     $success = false;
