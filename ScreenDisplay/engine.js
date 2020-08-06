@@ -774,9 +774,10 @@ var Engine = function(opts){
   }
 
   Strategy.set = function(what) {
-    console.log(what);
+    what = what || 'Freeform'
+    console.log('strategy', what);
     Strategy.current = what;
-    _res.nextJob = Strategy.Freeform.nextJob;
+    _res.NextJob = Strategy.Freeform.nextJob;
     sow.strategy = forgetAndReplace;
     // Make sure we don't try anything until we get a default
     on('system', _res.NextJob).once = true;

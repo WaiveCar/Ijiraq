@@ -824,7 +824,7 @@ function sow($payload) {
 
     // If we know where we are then we can see if some are more
     // important than others.
-    if($payload['lat']) {
+    if(!empty($payload['lat'])) {
       $test = [floatval($payload['lng']), floatval($payload['lat'])];
 
       $inside_campaigns = array_filter($candidate_campaigns, function($campaign) use ($test) {
