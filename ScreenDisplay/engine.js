@@ -69,6 +69,7 @@ var Engine = function(opts){
       isNetUp: true,
       current: false,
       firstRun: false,
+      fail: {sow: 0},
       fallbackJob: false,
       maxPriority: 0,
     };
@@ -610,12 +611,19 @@ var Engine = function(opts){
         _res.meta && _res.meta.sow ? _res.meta.sow : {},
         payload
       ), function(res) {
+      _.fail.sow = 0;
       // This has to be somehow optional because
       // it's not always applicable
       if(res.res) {
         sow.strategy(res.data);
       }
       return cb && cb();
+    }, function(res) {
+      _.fail.sow ++;
+      console.log(">> sow failure (" + _.fail.sow + ")", payload, res);
+      _timeout(function() {
+        sow(payload, cb)
+      }, 1000, 'sow');
     });
   }
 

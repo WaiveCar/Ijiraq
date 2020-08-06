@@ -266,12 +266,12 @@ function create_screen($uid, $data = []) {
   }
 
   $data = array_merge($data, [
-    'uid' => db_string($uid),
+    'uid' => $uid,
     'first_seen' => 'current_timestamp',
     'last_seen' => 'current_timestamp'
   ]);
 
-  $screen_id = db_insert('screen', $data);
+  $screen_id = pdo_insert('screen', $data);
 
   return Get::screen($screen_id);
 }
@@ -434,7 +434,8 @@ function default_campaign($screen) {
   global $DEFAULT_CAMPAIGN_MAP, $screen_dbg_id;
   $id = $DEFAULT_CAMPAIGN_MAP['none'];
   if($screen['project']) {
-    $id = $DEFAULT_CAMPAIGN_MAP[$screen['project']];
+    error_log(json_encode($screen));
+    $id = aget($DEFAULT_CAMPAIGN_MAP,$screen['project'],3);
   }
   if($screen['uid'] == $screen_dbg_id) {
     error_log("Default campaign >> " . $screen['project'] . ' ' .$id);
@@ -527,8 +528,7 @@ function ping($payload) {
   // This is for supporting 3rd party screens, essentially
   // a bootstrap process.
   if(isset($obj['hoard_id'])) {
-    $payload = hoard_discover($obj);
-    error_log(json_encode($obj));
+    $obj = hoard_discover($obj);
   }
 
   if(isset($obj['uid'])) {
@@ -539,7 +539,7 @@ function ping($payload) {
     }
     if($screen) {
       if(isset($obj['uptime']) && intval($screen['uptime']) > intval($obj['uptime'])) {
-        record_screen_on($screen, $payload);
+        record_screen_on($screen, $obj);
       }
       //
       // If we are getting a bootcount from the screen that is less then what we

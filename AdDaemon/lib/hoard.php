@@ -10,14 +10,15 @@ function hoard_discover($payload) {
   // out the window in order to become unstuck.
   if(!isset($payload['uid'])) {
     // We'll trust the uid from the screen for now
-    if(isset($_SESSION['uid'])) {
-      $payload['uid'] = $_SESSION['uid'];
+    if(aget($_SESSION, 'screen.uid')) {
+      $payload['uid'] = aget($_SESSION, 'screen.uid');
       return $payload;
     } // otherwise we have to generate a new screen id
 
     $screen = array_merge($payload, [ 'port' => false ] );
-    error_log(json_encode($screen));
-    return create_screen(compact_uuid(), $screen);
+    $screen = create_screen(compact_uuid(), $screen);
+    $_SESSION['screen'] = $screen;
+    return $screen;
   }
   return $payload;
 }

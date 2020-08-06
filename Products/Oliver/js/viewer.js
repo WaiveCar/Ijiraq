@@ -25,6 +25,8 @@ var db = {
 };
 
 
+
+
 window.onload = function init() {
   var bootcount = db.incr('bootcount'), 
     uid = db.kv_get('uid'),
@@ -101,6 +103,30 @@ window.onload = function init() {
   ads.on('jobEnded', function() {
     fetch(`${server}saveLocation`);
   });
+  if(navigator.geolocation) {
+    try {
+      navigator.geolocation.watchPosition(
+        function(pos) {
+          features.location.available = true;
+          ping_payload.location = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+          };
+          if(ads && ads.meta) {
+            ads.meta.sow.lat = pos.coords.latitude;
+            ads.meta.sow.lng = pos.coords.longitude;
+          }
+        }, function() {
+          features.location.available = false;
+        }, {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0
+        });
+    } catch (ex) {
+      console.log('navigator.geolocation', ex)
+    }
+  }
 
   function ping(cb) {
     if(ping.lock) {
@@ -113,7 +139,7 @@ window.onload = function init() {
       var screen = data.screen,
           campaign = data.default;
 
-      ['port','model','project','serial'].map(function(key) {
+      ['port','model','project','serial','uid'].map(function(key) {
         if (key in screen) {
           db.kv_set(key, screen[key]);
         }
@@ -136,37 +162,15 @@ window.onload = function init() {
 
       ping.lock = false;
       if(cb) { 
-        cb();
+        cb(data);
       }
     });
   }
 
-  if(navigator.geolocation) {
-    try {
-      navigator.geolocation.watchPosition(
-        function(pos) {
-          features.location.available = true;
-          ads.meta.sow.lat = pos.coords.latitude;
-          ads.meta.sow.lng = pos.coords.longitude;
-          ping_payload.location = {
-            lat: ads.meta.sow.lat,
-            lng: ads.meta.sow.lng
-          };
-        }, function() {
-          features.location.available = false;
-        }, {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0
-        });
-    } catch (ex) {
-      console.log('navigator.geolocation', ex)
-    }
-  }
-
-  ping();
+  ping(function(res) {
+    ads.meta.sow.uid = db.kv_get('uid');
+    ads.Start();
+  });
   setInterval(ping, 3 * 60 * 1000);
-
-  ads.Start();
 }
 

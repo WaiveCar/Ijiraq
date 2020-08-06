@@ -174,7 +174,6 @@ try {
     'dsp_ping',
     'dsp_sow',
   ]) !== false) { 
-    error_log(json_encode([$_GET, $_POST]));
     post_return($func($all, $verb));
   } else {
     $success = false;
