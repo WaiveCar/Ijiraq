@@ -27,6 +27,7 @@ var db = {
 
 window.onload = function init() {
   var bootcount = db.incr('bootcount'), 
+    uid = db.kv_get('uid'),
     hoard_id = window.location.href.split('/').pop(),
     features = {
       location: {exists: !!navigator.geolocation, available: null},
@@ -37,7 +38,7 @@ window.onload = function init() {
     ping_payload = {
       // I'm certainly permitted to assert my uid, but the
       // server is the one that decides here.
-      uid: db.kv_get('uid'),
+      uid: uid,
       hoard_id: hoard_id,
       uptime: get_uptime(),
       bootcount: bootcount,
