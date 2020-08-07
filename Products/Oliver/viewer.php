@@ -1,7 +1,7 @@
 <!doctype html5>
 <html>
   <head>
-    <title>WaiveScreen</title>
+    <title>..loading...</title>
     <style>
     body {
       margin: 0;

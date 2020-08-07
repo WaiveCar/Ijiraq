@@ -77,6 +77,7 @@ window.onload = function init() {
       modem: null,
     };
 
+  document.title = hoard_id.slice(-6) + "@" + uid.slice(-6);
   ads = Engine({
     doOliver: true,
     server: "/adserver/" + uid + "/",
