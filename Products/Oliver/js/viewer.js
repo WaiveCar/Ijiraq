@@ -1,5 +1,7 @@
 
-var start = new Date(), ads;
+var start = new Date(), 
+    features,
+    ads;
 
 function get_uptime() {
   return new Date() - start;
@@ -25,17 +27,37 @@ var db = {
 };
 
 
+function middleware(verb, url, what, onsuccess, onfail) {
+  var args = Array.prototype.slice.call(arguments);
+
+  if(args[1] == 'sow') {
+
+    var payload = { uid: db.kv_get('uid') };
+    db.kv_set('last_sow', +new Date());
+
+    if (features.location.available) {
+      payload.lat = db.kv_get('lat');
+      payload.lng = db.kv_get('lng');
+    }
+    payload.jobs = what;
+    args[2] = payload;
+  }
+
+  return args;
+}
+
 
 
 window.onload = function init() {
+  features = {
+    location: {exists: !!navigator.geolocation, available: null},
+    localstorage: {exists: !!window.localStorage, available: db.kv_get('ping_count') > 0},
+    panels: window.screen
+  };
+
   var bootcount = db.incr('bootcount'), 
     uid = db.kv_get('uid'),
     hoard_id = window.location.href.split('/').pop(),
-    features = {
-      location: {exists: !!navigator.geolocation, available: null},
-      localstorage: {exists: !!window.localStorage, available: db.kv_get('ping_count') > 0},
-      panels: window.screen
-    },
 
     ping_payload = {
       // I'm certainly permitted to assert my uid, but the
@@ -58,6 +80,7 @@ window.onload = function init() {
   ads = Engine({
     doOliver: true,
     server: "/adserver/" + uid + "/",
+    middleware: middleware,
     meta: {
       sow: {
         hoard_id: hoard_id,
@@ -101,13 +124,16 @@ window.onload = function init() {
   });
 
   ads.on('jobEnded', function() {
-    fetch(`${server}saveLocation`);
+    fetch(ads.server + "saveLocation");
   });
   if(navigator.geolocation) {
     try {
       navigator.geolocation.watchPosition(
         function(pos) {
           features.location.available = true;
+          db.kv_set('lat', pos.coords.latitude);
+          db.kv_set('lng', pos.coords.longitude);
+
           ping_payload.location = {
             lat: pos.coords.latitude,
             lng: pos.coords.longitude

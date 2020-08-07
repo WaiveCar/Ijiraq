@@ -35,7 +35,10 @@ var Engine = function(opts){
       listeners: {},
       data: {},
       debug: false,
-
+      // a simple pass-thru by default.
+      middleware: function() {
+        return Array.prototype.slice.call(arguments);
+      },
       cb: {
         getDefault: function(success, fail) {
           return get('default', success, fail);
@@ -590,10 +593,14 @@ var Engine = function(opts){
   remote.ix = 0;
 
   function get(url, onsuccess, onfail) {
-    return remote('GET', url, false, onsuccess, onfail);
+    return remote.apply(0,
+      _res.middleware('GET', url, false, onsuccess, onfail)
+    );
   }
   function post(url, what, onsuccess, onfail) {
-    return remote('POST', url, what, onsuccess, onfail);
+    return remote.apply(0, 
+      _res.middleware('POST', url, what, onsuccess, onfail)
+    );
   }
 
   function forgetAndReplace(list) {
@@ -615,7 +622,11 @@ var Engine = function(opts){
       // This has to be somehow optional because
       // it's not always applicable
       if(res.res) {
-        sow.strategy(res.data);
+        // newer versions of php are tossing back this as an object.
+        // object.values on a list returns the elements, which means 
+        // this can be done to get the right results regardless of the 
+        // approach
+        sow.strategy(Object.values(res.data));
       }
       return cb && cb();
     }, function(res) {

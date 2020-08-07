@@ -1020,12 +1020,12 @@ function make_infinite($campaign_id) {
 }
 
 function active_campaigns($screen) {
-  //  end_time > current_timestamp     and 
   //return [];
+  //  and   project = '${screen['project']}'
   return show('campaign', "where 
           is_default = 0 
+    and   end_time > current_timestamp    
     and   completed_seconds < goal_seconds 
-    and   project = '${screen['project']}'
     order by start_time desc");
 }
 
