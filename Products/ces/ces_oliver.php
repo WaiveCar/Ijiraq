@@ -9,9 +9,12 @@ if(array_key_exists('message', $_GET)) {
   if(!$id) {
     exit;
   }
+  /*
   $payload_raw = file_get_contents("http://waivescreen.com/api/ces?id=$id");
   $payload = json_decode($payload_raw, true);
-  $message_md = $payload[0]['message'];
+   */
+  $payload = "deprecated";
+  $message_md = "deprecated"; //$payload[0]['message'];
 }
 
 $message = $Parsedown->text($message_md);
