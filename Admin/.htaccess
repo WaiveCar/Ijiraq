@@ -1,0 +1,6 @@
+php_value session.auto_start 1
+php_value session.use_strict_mode 1
+# Allow up to 7 days inactivity before forcing re-login
+php_value session.gc_maxlifetime 604800
+# Uncomment out the below line in production
+#php_value session.cookie_secure 1
