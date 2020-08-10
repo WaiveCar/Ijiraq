@@ -240,13 +240,6 @@ $SCHEMA = [
     'hoard_id'        => 'text'
   ],
 
-  // revenue historicals
-  'revenue_history' => [
-    'id'            => 'integer primary key autoincrement',
-    'screen_id'     => 'integer',
-    'revenue_total' => 'integer', // deltas can be manually computed for now
-    'created_at'    => 'datetime default current_timestamp',
-  ],
 
   'job' => [
     'id'          => 'integer primary key autoincrement',
@@ -632,6 +625,14 @@ $SCHEMA = [
     'created_at' => 'datetime default current_timestamp',
   ],
 
+  // revenue historicals
+  'revenue_history' => [
+    'id'            => 'integer primary key autoincrement',
+    'screen_id'     => 'integer',
+    'revenue_total' => 'integer', // deltas can be manually computed for now
+    'created_at'    => 'datetime default current_timestamp',
+  ],
+
   // 
   // MISCELLANEOUS
   //
@@ -652,6 +653,7 @@ $SCHEMA = [
     'params'      => 'text',
     'data'        => 'text',
     'created_at'  => 'datetime default current_timestamp',
+    'updated_at'  => 'datetime default current_timestamp',
   ]
 ];
 /*
