@@ -9,6 +9,12 @@ require $_SERVER['DOCUMENT_ROOT'] . 'AdDaemon/vendor/autoload.php';
 use Twilio\Rest\Client;
 include_once("lib.php");
 
+$SESSION_MAX_AGE = 7 * ( 24 * 60 * 60 ); // 7 days
+
+ini_set('session.gc_maxlifetime', $SESSION_MAX_AGE);
+ini_set('session.use_strict_mode', '1');
+session_start();
+
 function get_user() {
   if(isset($_SESSION['user_id'])) {
     return Get::user($_SESSION['user_id']);
@@ -156,9 +162,9 @@ function authenticate_user($post) {
 
 // Users who haven't accessed the site in 7 days are asked to re-login
 function session_age_valid() {
-  $max_age = 7 * 24 * 60 * 60; // 7 days
-  $sess_last = aget($_SESSION, 'last_seen', $max_age + 1);
-  return ( time() - $sess_last < $max_age );
+  global $SESSION_MAX_AGE;
+  $sess_last = aget($_SESSION, 'last_seen', $SESSION_MAX_AGE + 1);
+  return ( time() - $sess_last < $SESSION_MAX_AGE );
 }
 
 function update_session_age() {
