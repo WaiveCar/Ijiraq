@@ -1,3 +1,9 @@
+<?php
+
+$list = glob("../templates/*.php");
+var_dump($list);
+?>
+
 get templates
 
 show them with either placeholder data or if the user has the credentials, show the real deal.
