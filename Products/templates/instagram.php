@@ -7,6 +7,7 @@
  */
 $dur = $_GET['duration'] ?: 16;
 $loop = $_GET['loop'] ?: 'infinite';
+$id = $_GET['id'];
 
 ?>
 <link href=https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap rel=stylesheet>
@@ -187,5 +188,5 @@ img.fill {
 </body>
 <script src=template.js></script>
 <script>
-template({id: 8});
+template({id: <?= $id ?>});
 </script>

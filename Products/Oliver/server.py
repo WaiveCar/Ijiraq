@@ -120,6 +120,7 @@ def serve(path):
     return render_template("campaigns/show/index.html")
 
   elif os.path.exists("{}/templates/{}/index.html".format(ROOT, path)):
+    logging.warning(path + '/index.html')
     return render_template(path + '/index.html', rand=random.random())
 
   elif os.path.exists("{}/{}".format(ROOT, path)):
