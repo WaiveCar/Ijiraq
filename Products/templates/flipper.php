@@ -8,8 +8,8 @@ make the boxes real by using background/offset and then I *think* you can do a c
 The real one is superior because I believe there is more flexibility maybe? I think the animation feature puts us into modern browser space regardless.
 2020-08-13
 -->
-<meta http-equiv="refresh" content="5">
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&display=swap" rel="stylesheet">
+<meta http-equiv="refresh" content="50">
 <style>
 body {
   margin: 0;
@@ -20,10 +20,22 @@ body {
   display: flex;
 }
 #lhs {
-  margin: 8vh;
+  margin: 0 8vh;
   font-size: 6vh;
   color: white;
   flex-grow: 4;
+
+  display: flex;
+  flex-direction: column;
+}
+#lhs > div {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+#smalltext {
+  align-items: flex-start;
+  box-shadow: 0 0 2px 2px yellow;
 }
 #top div {
   display: inline-block;
@@ -31,6 +43,12 @@ body {
 #name,#bigtext,#contact {
   font-family: Lora;
 }
+#smalltext {
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  color: pink;
+}
+
 #bigtext {
   font-size: 12vh;
   font-weight: 700;
