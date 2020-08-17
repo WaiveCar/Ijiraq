@@ -1,3 +1,13 @@
+
+##20200817
+
+Current work is
+/Products/adcast
+
+then run the server.py then navigate to
+
+http://localhost:5000/stripped/create/
+
 Maelstroms:
 
   * Before Instagram - Done before the first tracer-bullet instagram way to buy ads
