@@ -54,6 +54,8 @@ function curldo($url, $params = false, $opts = []) {
     }
     curl_setopt($ch, CURLOPT_POSTFIELDS, $params);  
     // $header[] = 'Content-Length: ' . strlen($data_string);
+  } else if (!empty($params)) {
+    $url = implode('?', [$url, http_build_query($params)]);
   }
 
   if($verb === 'POST') {

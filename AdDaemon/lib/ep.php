@@ -2,6 +2,7 @@
 $handlerList = [];
 
 include('lib.php');
+// this has a session start in it
 include('accounting.php');
 include('dsp.php');
 
@@ -39,9 +40,11 @@ function post_return($res) {
   jemit($res);
 }
 
-if(isset($all['hoard_id'])) {
-  session_start();
-}
+$instagram_props = [
+  'client_id' => '1653482628156267',
+  'client_secret' => '14f30a04d86253bb435b6fed5d4d8e78',
+  'redirect_uri' => 'https://9ol.es/olvr/api/instagram'
+];
 
 try {
   if($func == 'state') {
@@ -51,29 +54,37 @@ try {
   } else if($func == 'location' && $verb == 'GET') {
     echo(file_get_contents('http://basic.waivecar.com/location.php?' . http_build_query($all)) );
   } else if($func == 'instagram') {
-    session_start();
     if(isset($all['code'])) {
-      $token = curldo('https://api.instagram.com/oauth/access_token', [
-        'client_id' => 'c49374cafc69431b945521bce7601840',
-        'client_secret' => '5f90ebdda3524895bfa9f636262c8a26',
-        'grant_type' => 'authorization_code',
-        'redirect_uri' => 'http://staging.waivescreen.com/api/instagram',
-        'code' => $all['code']
-      ], ['verb' => 'POST']);
+      $token = curldo('https://api.instagram.com/oauth/access_token', array_merge(
+        $instagram_props, [
+          'grant_type' => 'authorization_code',
+          'code' => $all['code']
+        ]), ['verb' => 'POST']);
       $_SESSION['instagram'] = $token;
 
-      $user_id = find_or_create_user([
+      error_log(json_encode($token));
+      
+      $userInfo = curldo('https://graph.instagram.com/me', [
+        'fields' => 'id,username',
+        'access_token' => $token['access_token']
+      ], ['log' => true]);
+
+      // instagram is profoundly fucking stupid under fb management.
+      $tester = insta_get_stuff($userInfo['username']);
+      error_log('user >>> ' . json_encode([$tester, $userInfo]));
+
+      $user = find_or_create_user([
         'service' => 'instagram',
         'service_user_id' => aget($token, 'user.id'),
         'username' => aget($token, 'user.username')
       ], [
         'token' => $token['access_token'],
         'data' => [
-          'user' => $token['user']
+          'user' => $token['user_id']
         ]
       ]);
 
-      login_as($user_id);
+      login_as($user['id']);
 
       header('Location: /campaigns/create');
     } else if(isset($all['logout'])) {
@@ -82,9 +93,16 @@ try {
     } else if(isset($all['info'])) {
       $token = aget($_SESSION, 'instagram.access_token');
       if($token) {
+        $fields = 'timestamp,permalink,caption,media_url,media_type,thumbnail_url';
+        $url = "https://graph.instagram.com/me/media?fields=$fields&access_token=$token";
+        $info = [
+          'posts' => json_decode(file_get_contents($url), true)
+        ];
+        /*
         $info = [
           'posts' => json_decode(file_get_contents("https://api.instagram.com/v1/users/self/media/recent/?access_token=$token&count=18"), true)
         ];
+         */
         $service = Get::service(['token' => $token]);
         $service['data']['posts'] = $info['posts'];
         pdo_update('service', $service['id'], ['data' => $service['data']]);
@@ -145,7 +163,6 @@ try {
     'logout',
     'signup',
   ]) !== false) { 
-    session_start();
     post_return($func($all, $verb));
   } else if(array_search($func, [
     'active_campaigns', 

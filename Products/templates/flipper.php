@@ -35,7 +35,6 @@ body {
 }
 #smalltext {
   align-items: flex-start;
-  box-shadow: 0 0 2px 2px yellow;
 }
 #top div {
   display: inline-block;
@@ -81,7 +80,7 @@ body {
   animation-fill-mode: forwards;
   transform-style: preserve-3d;
   transform: rotate3d(0.5, 0, 0, 180deg);
-/*  animation-name: flip; */
+  animation-name: flip; 
 }
 .card > div {
   position: absolute;

@@ -1,7 +1,8 @@
 var 
   uploadInput,
   _preview,
-  _server_url = 'staging.waivescreen.com',
+  _proto = 'https',
+  _server_url = '9ol.es',
   _assetList = [];
 
 function calcItems() {
@@ -56,13 +57,13 @@ function create_campaign(obj) {
 
   return axios({
     method: 'post',
-    url: `http://${_server_url}/api/campaign`,
+    url: `${_proto}://${_server_url}/api/campaign`,
     data: formData,
     config: {
       headers: { 'Content-Type': 'multipart/form-data' },
     },
   }).then(function(resp) {
-    window.location = 'http://' + window.location.hostname + '/campaigns';
+    window.location = '${_proto}://' + window.location.hostname + '/campaigns';
   });
 }
 function resize(asset, width, height) {
@@ -92,7 +93,7 @@ function setRatio(container, what) {
 }
 
 function get(ep, cb) {
-  fetch(new Request(`http://${_server_url}/api/${ep}`))
+  fetch(new Request(`${_proto}://${_server_url}/api/${ep}`))
     .then(res => {
       if (res.status === 200) {
         return res.json();
@@ -101,7 +102,7 @@ function get(ep, cb) {
 }
 
 function post(ep, body, cb) {
-  fetch(new Request(`http://${_server_url}/api/${ep}`, {
+  fetch(new Request(`${_proto}://${_server_url}/api/${ep}`, {
     method: 'POST', 
     body: JSON.stringify(body)
   })).then(res => {

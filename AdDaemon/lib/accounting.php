@@ -314,7 +314,7 @@ function find_or_create_user($service_obj, $data) {
       aget($user, 'id') : 
       aget($row, 'user_id');
   } else {
-    $row = pdo_insert('service', $service_obj);
+    $row = ['id' => pdo_insert('service', $service_obj)];
 
     $user_id = $user ? 
       $user['id'] : 
@@ -358,5 +358,20 @@ function provides($filter) {
 }
 
 
-
+function insta_get_stuff($user) {
+  $mset = [];
+  $fieldList = ['biography', 'external_url', 'full_name', 'profile_pic_url'];
+  $raw = file_get_contents("https://instagram.com/$user");
+  preg_match_all('/[{,]"('. implode('|', $fieldList)  . ')":"([^"]*)"/', $raw, $matches);
+  if($matches) {
+    $ix = 0;
+    foreach($matches[1] as $field) {
+      if(!isset($mset[$field])) {
+        $mset[$field] = $matches[2][$ix];
+      }
+      $ix++;
+    }
+    return $mset;
+  }
+}
 
