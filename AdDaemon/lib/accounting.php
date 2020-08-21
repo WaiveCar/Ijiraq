@@ -307,19 +307,22 @@ function get_service($user, $service_string) {
 // the same instagram account.
 function find_or_create_user($service_obj, $data) {
   $user = get_user();
+  error_log(">> find_or_create " . json_encode($service_obj) . " :: " . json_encode($data));
   $row = Get::service($service_obj);
 
-  if($row) {
-    $user_id = $user ? 
-      aget($user, 'id') : 
-      aget($row, 'user_id');
-  } else {
+  $user_id = $user ? 
+    aget($user, 'id') : 
+    aget($row, 'user_id');
+
+  if(!$row) {
     $row = ['id' => pdo_insert('service', $service_obj)];
 
-    $user_id = $user ? 
-      $user['id'] : 
-      create('user');
+    if(!$user_id) {
+      $user = create('user');
+      $user_id = $user['id'];
+    }
   }
+
   $data['user_id'] = $user_id;
   pdo_update('service', $row['id'], $data);
   return $user_id;

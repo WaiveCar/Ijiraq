@@ -62,29 +62,30 @@ try {
         ]), ['verb' => 'POST']);
       $_SESSION['instagram'] = $token;
 
-      error_log(json_encode($token));
-      
       $userInfo = curldo('https://graph.instagram.com/me', [
         'fields' => 'id,username',
         'access_token' => $token['access_token']
-      ], ['log' => true]);
-
-      // instagram is profoundly fucking stupid under fb management.
-      $tester = insta_get_stuff($userInfo['username']);
-      error_log('user >>> ' . json_encode([$tester, $userInfo]));
-
-      $user = find_or_create_user([
-        'service' => 'instagram',
-        'service_user_id' => aget($token, 'user.id'),
-        'username' => aget($token, 'user.username')
-      ], [
-        'token' => $token['access_token'],
-        'data' => [
-          'user' => $token['user_id']
-        ]
       ]);
 
-      login_as($user['id']);
+      // instagram is profoundly fucking stupid under fb management.
+      $scraped = insta_get_stuff($userInfo['username']);
+
+      $profile_data = array_merge(
+        $scraped, 
+        [ 'user' => $token['user_id'] ]
+      );
+      error_log('user >>> ' . json_encode([$token, $scraped, $userInfo]));
+
+      $user_id = find_or_create_user([
+        'service' => 'instagram',
+        'service_user_id' => aget($token, 'user_id'),
+        'username' => aget($userInfo, 'username')
+      ], [
+        'token' => $token['access_token'],
+        'data' => $scraped
+      ]);
+
+      login_as($user_id);
 
       header('Location: /campaigns/create');
     } else if(isset($all['logout'])) {
@@ -93,7 +94,7 @@ try {
     } else if(isset($all['info'])) {
       $token = aget($_SESSION, 'instagram.access_token');
       if($token) {
-        $fields = 'timestamp,permalink,caption,media_url,media_type,thumbnail_url';
+        $fields = 'timestamp,media_url,media_type';
         $url = "https://graph.instagram.com/me/media?fields=$fields&access_token=$token";
         $info = [
           'posts' => json_decode(file_get_contents($url), true)
@@ -109,6 +110,7 @@ try {
 
         $_SESSION['instagram.posts'] = $info;
         jemit(doSuccess($info['posts']));
+         
       } else {
         jemit(doError("login needed"));
       }

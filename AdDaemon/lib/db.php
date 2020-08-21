@@ -106,7 +106,9 @@ $RULES = [
           }
 
           foreach(array_keys($v) as $k) {
-            $v[$k]['_t'] = date('c');
+            if(is_array($v[$k])) {
+              $v[$k]['_t'] = date('c');
+            }
           }
           return json_encode(array_merge($start, $v));
         },
@@ -580,7 +582,7 @@ $SCHEMA = [
 
   'service' => [
     'id'         => 'integer primary key autoincrement',
-    'user_id'    => 'integer',
+    'user_id'    => 'text',
     'service'    => 'text',
 
     'service_user_id' => 'text',
