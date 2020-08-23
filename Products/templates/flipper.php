@@ -20,21 +20,16 @@ body {
   display: flex;
 }
 #lhs {
-  margin: 0 8vh;
+  margin: 2vh 8vh;
   font-size: 6vh;
   color: white;
-  flex-grow: 4;
-
-  display: flex;
-  flex-direction: column;
+  height: 96vh;
 }
 #lhs > div {
-  flex-grow: 1;
+  flex-direction: column;
+  justify-content: center;
   display: flex;
-  align-items: center;
-}
-#smalltext {
-  align-items: flex-start;
+  height: 25%;
 }
 #top div {
   display: inline-block;
@@ -42,15 +37,22 @@ body {
 #name,#bigtext,#contact {
   font-family: Lora;
 }
-#smalltext {
+div#smalltext {
   font-family: Helvetica, Arial, sans-serif;
   font-weight: normal;
   color: pink;
+  justify-content: flex-start;
+}
+div#smalltext div {
+  margin-top: 5vh;
 }
 
-#bigtext {
+div#bigtext {
   font-size: 12vh;
   font-weight: 700;
+  margin: 0;
+  line-height: 1;
+  justify-content: flex-end;
 }
 #image { 
   width: 100vh;
@@ -99,15 +101,19 @@ body {
   0% {transform: rotate3d(0.5, 0, 0, 180deg); }
   100% {transform: rotate3d(0.5, 0, 0, 0deg); }
 }
+#lhs > div {
+}
 </style>
 <div id=ad>
   <div id=lhs>
     <div id=top>
-      <div id=logo>L</div><div id=name>COMPANY</div>
+      <div>
+        <div id=logo>L</div><div id=name>COMPANY</div>
+      </div>
     </div>
 
-    <div id=bigtext>Big Text</div>
-    <div id=smalltext>Small Text for ad</div>
+    <div id=bigtext>Big Text that is maybe 2 lines</div>
+    <div id=smalltext><div>Small Text for ad</div></div>
     <div id=contact>@Contact</div> 
 
   </div>
