@@ -21,7 +21,7 @@ body {
 }
 #lhs {
   margin: 2vh 8vh;
-  font-size: 6vh;
+  font-size: 8vh;
   color: white;
   height: 96vh;
 }
@@ -53,6 +53,9 @@ div#bigtext {
   margin: 0;
   line-height: 1;
   justify-content: flex-end;
+}
+div#bigtext div {
+  margin-bottom: 5vh;
 }
 #image { 
   width: 100vh;
@@ -112,7 +115,7 @@ div#bigtext {
       </div>
     </div>
 
-    <div id=bigtext>Big Text that is maybe 2 lines</div>
+    <div id=bigtext><div>Big Text that is maybe 2 lines</div></div>
     <div id=smalltext><div>Small Text for ad</div></div>
     <div id=contact>@Contact</div> 
 
@@ -132,3 +135,26 @@ div#bigtext {
   <? } ?>
   </div>
 </div>
+<script>
+function randy(sz) {
+  var
+    s = [...Array(sz)].map((_, i) => i),
+    ix = 0,
+    swap,
+    newp;
+
+  for (; ix < sz; ix++) {
+    newp = Math.floor(Math.random() * (sz - ix));
+    if (newp != 0) {
+      newp += ix;
+      swap = s[newp];
+      s[newp] = s[ix];
+      s[ix] = swap;
+    }
+  }
+
+  return s;
+}
+let ixMap = randy(4);
+</script>
+
