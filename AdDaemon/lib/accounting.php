@@ -328,6 +328,10 @@ function find_or_create_user($service_obj, $data) {
   return $user_id;
 }
 
+function fix_unicode($what) {
+  return json_decode('"' . $what . '"');
+}
+
 function provides($filter) {
   $res = [];
   $serviceList = Many::service($filter);
@@ -338,20 +342,24 @@ function provides($filter) {
       $row = [
         'id' => $service['id'],
         'handle' => $service['username'],
-        'logo' => aget($data, 'user.profile_picture'),
-        'description' => aget($data, 'user.bio'),
+        'logo' => aget($data, 'user.profile_pic'),
+        'description' => aget($data, 'user.description'),
         'name' => aget($data, 'user.full_name'),
         'created_at' => aget($data, 'posts._t'),
         'photoList' => []
       ];
+      foreach($row as $k => $v) {
+        if(is_string($v)) {
+          error_log($v . "::". fix_unicode($v));
+          $row[$k] = fix_unicode($v);
+        }
+      }
 
       foreach(aget($data, 'posts.data') as $post) {
+        error_log(json_encode($post));
         $row['photoList'][] = [
-          'url' => aget($post, 'images.standard_resolution.url'),
-          'length' => aget($post, 'images.standard_resolution.width'),
-          'height' => aget($post, 'images.standard_resolution.height'),
-          'pop' => aget($post, 'likes.count'),
-          'created_at' => aget($post, 'created_time')
+          'url' => aget($post, 'media_url'),
+          'created_at' => aget($post, 'timestamp')
         ];
       }
       $res[] = $row;
