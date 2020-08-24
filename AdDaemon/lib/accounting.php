@@ -350,7 +350,6 @@ function provides($filter) {
       ];
       foreach($row as $k => $v) {
         if(is_string($v)) {
-          error_log($v . "::". fix_unicode($v));
           $row[$k] = fix_unicode($v);
         }
       }
