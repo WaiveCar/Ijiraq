@@ -68,13 +68,15 @@ try {
       ]);
 
       // instagram is profoundly fucking stupid under fb management.
+      // TODO: They stored the user_id as a number! so you'll get IEEE floating
+      // point errors without careful audits. We undo that stupidity here.
       $scraped = insta_get_stuff($userInfo['username']);
 
       $profile_data = array_merge(
         $scraped, 
-        [ 'user' => $token['user_id'] ]
+        [ 'user_id' => strval($token['user_id']) ],
+        $userInfo
       );
-      error_log('user >>> ' . json_encode([$token, $scraped, $userInfo]));
 
       $user_id = find_or_create_user([
         'service' => 'instagram',
@@ -82,7 +84,7 @@ try {
         'username' => aget($userInfo, 'username')
       ], [
         'token' => $token['access_token'],
-        'data' => $scraped
+        'data' => ['user' => $profile_data]
       ]);
 
       login_as($user_id);
@@ -109,7 +111,7 @@ try {
         pdo_update('service', $service['id'], ['data' => $service['data']]);
 
         $_SESSION['instagram.posts'] = $info;
-        jemit(doSuccess($info['posts']));
+        jemit(doSuccess($service));
          
       } else {
         jemit(doError("login needed"));

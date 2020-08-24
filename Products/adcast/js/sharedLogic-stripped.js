@@ -150,7 +150,8 @@ function instaGet() {
       return;
     }
     res = res.data;
-    user = res.data[0].user;
+    self.r = res;
+    user = res.data.user;
     var row, content = [];
     $('.insta .profile img').attr('src', user.profile_picture);
     $('.insta .info .name').html( user.username );

@@ -364,13 +364,20 @@ function provides($filter) {
 function insta_get_stuff($user) {
   $mset = [];
   $fieldList = ['biography', 'external_url', 'full_name', 'profile_pic_url'];
+  $fieldMap = [
+    'biography' => 'description',
+    'external_url' => 'website',
+    'profile_pic_url' => 'profile_pic',
+    'full_name' => 'full_name'
+  ];
   $raw = file_get_contents("https://instagram.com/$user");
   preg_match_all('/[{,]"('. implode('|', $fieldList)  . ')":"([^"]*)"/', $raw, $matches);
   if($matches) {
     $ix = 0;
     foreach($matches[1] as $field) {
-      if(!isset($mset[$field])) {
-        $mset[$field] = $matches[2][$ix];
+      $mapname = $fieldMap[$field];
+      if(!isset($mset[$mapname])) {
+        $mset[$mapname] = $matches[2][$ix];
       }
       $ix++;
     }

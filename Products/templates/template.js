@@ -1,7 +1,7 @@
 function template(opts) {
   var
     _res = Object.assign({
-      server: "http://staging.waivescreen.com/api/provides",
+      server: "/api/provides",
 
       db: {},
 
