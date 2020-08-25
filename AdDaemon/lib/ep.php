@@ -96,21 +96,16 @@ try {
     } else if(isset($all['info'])) {
       $token = aget($_SESSION, 'instagram.access_token');
       if($token) {
+        $service = Get::service(['token' => $token]);
+
         $fields = 'timestamp,media_url,media_type';
         $url = "https://graph.instagram.com/me/media?fields=$fields&access_token=$token";
-        $info = [
-          'posts' => json_decode(file_get_contents($url), true)
-        ];
-        /*
-        $info = [
-          'posts' => json_decode(file_get_contents("https://api.instagram.com/v1/users/self/media/recent/?access_token=$token&count=18"), true)
-        ];
-         */
-        $service = Get::service(['token' => $token]);
-        $service['data']['posts'] = $info['posts'];
+        $raw = file_get_contents($url);
+        $service['data']['posts'] = json_decode($raw, true);
+
         pdo_update('service', $service['id'], ['data' => $service['data']]);
 
-        $_SESSION['instagram.posts'] = $info;
+        $_SESSION['instagram.posts'] = $service['data']['posts'];
         jemit(doSuccess($service));
          
       } else {

@@ -80,11 +80,11 @@ function curldo($url, $params = false, $opts = []) {
       'header' => $header,
       'url' => $url,
       'params' => $params,
-      'res' => $res
     ]);
     //var_dump(['>>>', curl_getinfo ($ch), json_decode($tolog, true)]);
 
     error_log($tolog);
+    error_log(":: response => " . $res);
   }
 
   if(isset($opts['raw'])) {

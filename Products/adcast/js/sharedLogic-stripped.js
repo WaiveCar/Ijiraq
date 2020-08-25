@@ -3,6 +3,7 @@ var
   _preview,
   _proto = 'https',
   _server_url = '9ol.es',
+  _provides = {},
   _assetList = [];
 
 function calcItems() {
@@ -144,16 +145,18 @@ function instaGet() {
   var selector = [];
   self.s = selector;
   get('instagram?info=1', function(res) {
+    var row, content = [];
+
     $(".insta .loader").slideUp();
     if(!res.res) {
       $(".insta .login").css("display","flex");
       return;
     }
     res = res.data;
-    self.r = res;
+    _provides = res;
     user = res.data.user;
-    var row, content = [];
-    $('.insta .profile img').attr('src', user.profile_picture);
+
+    $('.insta .profile img').attr('src', user.profile_pic);
     $('.insta .info .name').html( user.username );
     $('.insta .info .description').html( user.full_name );
     for(var ix = 0; ix < res.data.length; ix++) {

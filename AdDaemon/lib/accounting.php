@@ -384,7 +384,8 @@ function insta_get_stuff($user) {
     foreach($matches[1] as $field) {
       $mapname = $fieldMap[$field];
       if(!isset($mset[$mapname])) {
-        $mset[$mapname] = $matches[2][$ix];
+        // we need to do this otherwise we're double escaped.
+        $mset[$mapname] = json_decode('"' . $matches[2][$ix] . '"');
       }
       $ix++;
     }
