@@ -139,8 +139,10 @@ function instaGet() {
       selected.push(row.dataset.standard);
     })
     var param = selected.map(row => `images[]=` + row.replace(/\?/,'%3F').replace(/\&/g, '%26')).join('&');
-    console.dir(param);
-    $('.insta .preview').attr('src', `/insta.php?user=${user.username}&${param}`);
+    _preview.AddJob({
+      url: `/templates/instagram.php?id=${_provides.id}`
+    });
+    _preview.Start();
   }
   var selector = [];
   self.s = selector;
@@ -211,17 +213,17 @@ window.onload = function(){
   if (self._container) {
     setRatio(_container, 'car'); 
     self._preview = Engine({ 
-    container: _container,
-    dynamicSize: true,
-    _debug: true });
-  self._job = _preview.AddJob();
+      container: _container,
+      dynamicSize: true,
+      _debug: true });
+    self._job = _preview.AddJob();
 
-  instaGet();
-  $(".controls .rewind").click(function() {
-    // this is a lovely trick to force the current job
-    // which effectively resets itself
-      _preview.PlayNow(_job, true);
-    });
+    instaGet();
+    $(".controls .rewind").click(function() {
+      // this is a lovely trick to force the current job
+      // which effectively resets itself
+        _preview.PlayNow(_job, true);
+      });
   }
 
   $(".ratios button").click(function(){
