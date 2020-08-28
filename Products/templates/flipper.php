@@ -12,7 +12,6 @@ The real one is superior because I believe there is more flexibility maybe? I th
 2020-08-13
 -->
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&display=swap" rel="stylesheet">
-<meta http-equiv="refresh" content="50">
 <style>
 body {
   margin: 0;
@@ -24,7 +23,7 @@ body {
 }
 #lhs {
   margin: 2vh 8vh;
-  font-size: 8vh;
+  font-size: 6vh;
   color: white;
   height: 96vh;
 }
@@ -32,10 +31,12 @@ body {
   flex-direction: column;
   justify-content: center;
   display: flex;
+  /* box-shadow: 0 0 4px pink; */
   height: 25%;
 }
 #top div {
-  display: inline-block;
+  display: flex;
+  align-items: center;
 }
 #name,#bigtext,#contact {
   font-family: Lora;
@@ -43,7 +44,6 @@ body {
 div#smalltext {
   font-family: Helvetica, Arial, sans-serif;
   font-weight: normal;
-  color: pink;
   justify-content: flex-start;
 }
 div#smalltext div {
@@ -58,7 +58,7 @@ div#bigtext {
   justify-content: flex-end;
 }
 div#bigtext div {
-  margin-bottom: 5vh;
+/*  margin-bottom: 5vh;*/
 }
 #image { 
   width: 100vh;
@@ -108,8 +108,9 @@ div#bigtext div {
 }
 .tpl-logo {
   border-radius: 50vw;
-  height: 15vh;
+  height: 14vh;
 }
+#name { margin-left: 3vh; }
 #lhs > div {
 }
 </style>
@@ -124,9 +125,14 @@ div#bigtext div {
 
     <div id=bigtext><div>Big Text that is maybe 2 lines</div></div>
     <div id=smalltext><div class=tpl-description>Small Text for ad</div></div>
-    <div id=contact>@Contact</div> 
+    <div id=contact>
+      <div>
+        <span>@</span><span class=tpl-handle></span>
+      </div>
+    </div> 
 
   </div>
+
   <div id=image>
   <? for($ix = 0; $ix < 4; $ix ++) { ?>
     <div class=row>
