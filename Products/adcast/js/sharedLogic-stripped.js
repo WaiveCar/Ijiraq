@@ -3,6 +3,7 @@ var
   _preview,
   _proto = 'https',
   _server_url = '9ol.es',
+  _gallery = {},
   _provides = {},
   _assetList = [];
 
@@ -224,6 +225,8 @@ window.onload = function(){
       // which effectively resets itself
         _preview.PlayNow(_job, true);
       });
+    $(".gallery-wrapper .adchoice").each(function() {
+
   }
 
   $(".ratios button").click(function(){
