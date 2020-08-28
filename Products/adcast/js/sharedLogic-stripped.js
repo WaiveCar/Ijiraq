@@ -3,7 +3,7 @@ var
   _preview,
   _proto = 'https',
   _server_url = '9ol.es',
-  _gallery = {},
+  _galleryMap = {},
   _provides = {},
   _assetList = [];
 
@@ -205,8 +205,6 @@ function instaGet() {
   });
 }
 
-
-
 window.onload = function(){
   self._container =  document.getElementById('engine');
   var isFirst = true;
@@ -225,7 +223,14 @@ window.onload = function(){
       // which effectively resets itself
         _preview.PlayNow(_job, true);
       });
+
     $(".gallery-wrapper .adchoice").each(function() {
+      _galleryMap[this.dataset.template] = Engine({
+        container: this,
+        dynamicSize: true,
+        _debug: true
+      });
+    });
 
   }
 
