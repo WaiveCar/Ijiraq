@@ -1,3 +1,6 @@
+<?php
+$id = $_GET['id'];
+?>
 <!--
 there's two ways
 
@@ -93,7 +96,6 @@ div#bigtext div {
   width: 100%;
 }
 .front {
-  background-image: url('square.jpg');
   background-size: 100vh 100vh;
 }
 .back {
@@ -104,19 +106,24 @@ div#bigtext div {
   0% {transform: rotate3d(0.5, 0, 0, 180deg); }
   100% {transform: rotate3d(0.5, 0, 0, 0deg); }
 }
+.tpl-logo {
+  border-radius: 50vw;
+  height: 15vh;
+}
 #lhs > div {
 }
 </style>
+<style id=custom></style>
 <div id=ad>
   <div id=lhs>
     <div id=top>
       <div>
-        <div id=logo>L</div><div id=name>COMPANY</div>
+        <div><img class=tpl-logo></div><div id=name class=tpl-name></div>
       </div>
     </div>
 
     <div id=bigtext><div>Big Text that is maybe 2 lines</div></div>
-    <div id=smalltext><div>Small Text for ad</div></div>
+    <div id=smalltext><div class=tpl-description>Small Text for ad</div></div>
     <div id=contact>@Contact</div> 
 
   </div>
@@ -135,6 +142,8 @@ div#bigtext div {
   <? } ?>
   </div>
 </div>
+
+<script src=template.js></script>
 <script>
 function randy(sz) {
   var
@@ -156,5 +165,15 @@ function randy(sz) {
   return s;
 }
 let ixMap = randy(4);
+let tpl = template({
+  id: <?= $id ?>,
+  custom: {
+    photoList: function (node, value, key, ix) {
+      let custom = document.getElementById('custom');
+      if(value.length) {
+        custom.innerHTML = '.front { background-image: url("' + value[0].url + '") }';
+      }
+    }
+  }
+});
 </script>
-

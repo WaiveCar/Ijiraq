@@ -4,6 +4,7 @@ function template(opts) {
       server: "/api/provides",
 
       db: {},
+      custom: {},
 
       duration: 7.5,
       id: false,
@@ -14,7 +15,11 @@ function template(opts) {
 
   var exclude_list = new Set(['created_at','id']);
 
-  function assign(node, value) {
+  function assign(node, value, key, ix) {
+    if(key in _res.custom) {
+      return _res.custom[key](node, value, key, ix);
+    }
+
     let is_url = value.match(/^https?:\/\//i);
     if(node.tagName === 'IMG') {
       if(is_url) {
@@ -26,20 +31,26 @@ function template(opts) {
   }
 
   function parser(data) {
+    _res._last_data = data;
     let list = Object.keys(data).filter(x => !exclude_list.has(x));
     for (let key of list) {
-      if(Array.isArray(data[key])) {
-        for(let node of document.querySelectorAll(`.tpl-${key}`)) {
+      let matchList = document.querySelectorAll(`.tpl-${key}`);
+
+      if(!matchList.length && key in _res.custom) { 
+        _res.custom[key](null, data[key], key);
+
+      } else if(Array.isArray(data[key])) {
+        for(let node of matchList) {
           var which = parseInt(node.dataset.index, 10);
           if(data[key][which]) {
-            assign(node, data[key][which].url);
+            assign(node, data[key][which].url, key, which);
           }
         }
       } else {
-        for(let node of document.querySelectorAll(`.tpl-${key}`)) {
-          assign(node, data[key]);
+        for(let node of matchList) {
+          assign(node, data[key], key);
         }
-      } 
+      }
     }
   }
 
