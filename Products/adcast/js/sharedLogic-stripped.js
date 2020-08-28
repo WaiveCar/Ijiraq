@@ -140,9 +140,22 @@ function instaGet() {
       selected.push(row.dataset.standard);
     })
     var param = selected.map(row => `images[]=` + row.replace(/\?/,'%3F').replace(/\&/g, '%26')).join('&');
+
     _preview.AddJob({
-      url: `/templates/instagram.php?id=${_provides.id}`
+      url: `/templates/aviv.php?id=${_provides.id}`
     });
+
+    for(var engine_ix = 0; engine_ix < Engine._length; engine_ix++) {
+      let engine = Engine[engine_ix];
+      if(engine.name) {
+        console.log("Loading " + engine.name);
+        engine.AddJob({ 
+          url: `/templates/${engine.name}.php?id=${_provides.id}`
+        });
+        engine.Start();
+      }
+    }
+
     _preview.Start();
   }
   var selector = [];
@@ -225,11 +238,15 @@ window.onload = function(){
       });
 
     $(".gallery-wrapper .adchoice").each(function() {
-      _galleryMap[this.dataset.template] = Engine({
+      let template = this.dataset.template;
+
+      _galleryMap[template] = Engine({
         container: this,
         dynamicSize: true,
         _debug: true
       });
+
+      _galleryMap[template].name = template;
     });
 
   }
