@@ -417,7 +417,7 @@ var Engine = function(opts){
     if(asset.type) { 
       return asset.type.match(mime);
     }
-    return asset.url.match('(' + ext.join('|') + ')');
+    return asset.url.match('\.(' + ext.join('|') + ')(\\?.*|)$');
   }
 
   // Similar to makeJob, we intend to come out of this
