@@ -171,20 +171,22 @@ function instaGet() {
     res = res.data;
     _provides = res;
     user = res.data.user;
+    if (user) {
 
-    $('.insta .profile img').attr('src', user.profile_pic);
-    $('.insta .info .name').html( user.username );
-    $('.insta .info .description').html( user.full_name );
-    for(var ix = 0; ix < res.data.length; ix++) {
-      if(!(ix % 3)) {
-        if(row) {
-          content.push("<div class=row>" + row.join('') + "</div>");
+      $('.insta .profile img').attr('src', user.profile_pic);
+      $('.insta .info .name').html( user.username );
+      $('.insta .info .description').html( user.full_name );
+      for(var ix = 0; ix < res.data.length; ix++) {
+        if(!(ix % 3)) {
+          if(row) {
+            content.push("<div class=row>" + row.join('') + "</div>");
+          }
+          row = [];
         }
-        row = [];
+        var big = res.data[ix].images.standard_resolution.url,
+            small = res.data[ix].images.thumbnail.url;
+        row.push( `<div class='box' data-standard='${big}'><img src=${small}></div>`);
       }
-      var big = res.data[ix].images.standard_resolution.url,
-          small = res.data[ix].images.thumbnail.url;
-      row.push( `<div class='box' data-standard='${big}'><img src=${small}></div>`);
     }
     if(row) {
       content.push("<div class=row>" + row.join('') + "</div>");
@@ -240,13 +242,11 @@ window.onload = function(){
     $(".gallery-wrapper .adchoice").each(function() {
       let template = this.dataset.template;
 
-      /*
       _galleryMap[template] = Engine({
         container: this,
         dynamicSize: true,
         _debug: true
       });
-      */
 
       _galleryMap[template].name = template;
     });
