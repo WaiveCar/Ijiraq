@@ -240,11 +240,13 @@ window.onload = function(){
     $(".gallery-wrapper .adchoice").each(function() {
       let template = this.dataset.template;
 
+      /*
       _galleryMap[template] = Engine({
         container: this,
         dynamicSize: true,
         _debug: true
       });
+      */
 
       _galleryMap[template].name = template;
     });
