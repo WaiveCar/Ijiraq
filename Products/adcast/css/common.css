@@ -94,10 +94,6 @@ body {
   font-size: 1.8rem;
 }
 
-.navbar-nav {
-  width: 160px !important;
-  overflow: hidden;
-}
 .main {
   margin-top: 3rem;
 }
@@ -112,19 +108,7 @@ body {
   display: block;
 }
 
-.nav-item {
-  width: 120px;
-}
 
-.top-bar {
-  background-color: white;
-  z-index: 1000;
-  position: fixed;
-  top: -5px;
-  color: black;
-  display: flex;
-  width: 100%;
-}
 
 @media (max-width: 768px) {
   .nav-item,
@@ -137,20 +121,7 @@ body {
   }
 }
 
-.top-bar-left {
-  max-width: 10rem;
-}
 
-.top-bar-left img {
-  width: 100%;
-}
-
-.top-bar-right {
-  flex: 1;
-  display: flex;
-  justify-content: space-between;
-  vertical-align: middle;
-}
 
 .company-name {
   background-color: black;
@@ -248,19 +219,6 @@ body {
 .with-links {
   border-bottom: 2px solid #e6e6e6;
 }
-
-.top-bar-right a {
-  color: black;
-}
-
-.top-bar-right a:hover {
-  text-decoration: none !important;
-}
-
-.top-bar-selected {
-  background-color: #cfcdce;
-}
-
 .update-campaign-btn,
 .top-bar-selected {
   border-radius: 40px;
@@ -276,13 +234,6 @@ body {
   padding: 0.3rem 1rem;
 }
 
-.navbar-nav {
-  position: sticky;
-  position: -webkit-sticky;
-  top: 60px;
-  z-index: 1100;
-  background-color: white;
-}
 
 .offset-top {
   margin-top: 80px;
