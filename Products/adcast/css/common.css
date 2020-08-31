@@ -498,14 +498,14 @@ select.form-control:focus,
 .insta .box img {
   border-radius: 6px;
 }
-.insta .login {
-  display: none;
-  height: 12rem;
-  width: calc(2rem + 150px * 3);
+.login {
+  display: flex;
+  height: 75px;
   border: 2px solid #e6e6e6;
   justify-content: center;
   font-size: 1.7rem;
   align-items: center;
+  border: 1px solid black;
 }
 .down-right {
   color: red;

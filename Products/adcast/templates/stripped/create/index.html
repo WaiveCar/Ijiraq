@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block topbar %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg  navbar-dark bg-dark ">
   <a class="navbar-brand" href="#">olvr</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -151,14 +151,21 @@
       <div class="card">
         <div class="card-body">
             <div class="row no-gutters">
+              <div class="col-4 login">
+                <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>Connect with Instagram</a>
+              </div>
+              <div class="col-4 login">
+                <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>Connect with Instagram</a>
+              </div>
+              <div class="col-4 login">
+                <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>Connect with Instagram</a>
+              </div>
             </div>
-
+            
+            <div class="row no-gutters">
             <div class=insta>
               <div class=loader>
                 <i class="fas fa-hourglass-start" style=margin-right:.5rem></i> Loading&hellip;
-              </div>
-              <div class=login>
-                <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>Log in with Instagram</a>
               </div>
               <div class=mock>
                 <div class=header>
