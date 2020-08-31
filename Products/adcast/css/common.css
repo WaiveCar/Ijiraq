@@ -507,6 +507,10 @@ select.form-control:focus,
   align-items: center;
   border: 1px solid black;
 }
+.login img {
+  width: 50px;
+  margin-right: 15px;
+}
 .down-right {
   color: red;
 }
