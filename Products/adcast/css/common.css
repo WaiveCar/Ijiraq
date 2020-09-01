@@ -537,3 +537,10 @@ select.form-control:focus,
 .wizard-page {
   width: 100%;
 }
+#footer-logo { 
+  height: 20px;
+}
+#footer-nav {
+  justify-content: center;
+}
+

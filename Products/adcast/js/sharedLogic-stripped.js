@@ -226,6 +226,28 @@ function instaGet() {
 
   });
 }
+function loadMap() {
+  var mymap = document.querySelector('#map-summary');
+  mymap.style.height = mymap.clientWidth * 675/1920 + 'px';
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    let loc = [
+      pos.coords.longitude,
+      pos.coords.latitude
+    ];
+    let mymap = map({
+      target: 'map-summary',
+
+      selectFirst: true,
+      opacity: 0.6,
+      tiles: 'stamen.toner',
+      move: true,
+      zoom: 12.5,
+
+      center: loc,
+    });
+    mymap.load([['Circle', loc, 2256]]);
+  });
+}
 
 window.onload = function(){
   self._container =  document.getElementById('engine');
@@ -260,6 +282,7 @@ window.onload = function(){
       _galleryMap[template].name = template;
     });
 
+    loadMap();
   }
 
   $(".ratios button").click(function(){

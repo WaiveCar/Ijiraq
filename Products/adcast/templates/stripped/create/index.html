@@ -109,6 +109,10 @@
     border-bottom: 0;
     filter: saturate(0);
   }
+  .break {
+    border-bottom: 1px solid #6c757d;
+    padding: 3rem 0; 
+  }
 
 </style>
 <div class="container main">
@@ -207,31 +211,31 @@
   </div>
   <div class="row mb-5 shown">
     <div class="col-lg-12">
-        <div class="row no-gutters socnet">
-          <div class="col-4 login">
+      <div class="row no-gutters socnet">
+        <div class="col-4 login">
+          <h4>
             <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>
-              <h4>
               <img src=/img/twitter.svg><span class=tab-title>Connect Twitter</span>
-              </h4>
             </a>
-          </div>
-          <div class="col-4 login active instagram">
-            <h4>
+          </h4>
+        </div>
+        <div class="col-4 login active instagram">
+          <h4>
             <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>
               <img src=/img/instagram.svg><span class=tab-title>Connect Instagram</span>
             </a>
-            </h4>
-          </div>
-          <div class="col-4 login">
-            <h4>
+          </h4>
+        </div>
+        <div class="col-4 login">
+          <h4>
             <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>
               <img src=/img/facebook.svg><span class=tab-title>Connect Facebook</span>
             </a>
-            </h4>
-          </div>
+          </h4>
         </div>
-        
-        <div class="row no-gutters customize">
+      </div>
+      
+      <div class="row no-gutters customize">
         <div class=insta>
           <div class=mock>
             <div class=header>
@@ -246,8 +250,7 @@
               </div>
               <div class=logout><a class="btn btn-primary btn-sm" href="/api/instagram?logout=1">Switch User</a></div>
             </div>
-            <div class=content>
-            </div>
+            <div class=content></div>
           </div>
         </div>
 
@@ -255,11 +258,89 @@
     </div>
   </div>
 
-  <div class="row mb-4">
-    <div class="col-lg-12">
-      <button onclick=create_campaign() type="button" class="btn float-right btn-primary btn-lg">Next: Choose Strategy &#8594;</button>
+  <div class="row mb-5" >
+    <div class="col-lg-1" style='white-space:nowrap;margin:.5rem 0'>
+      <h3 class=text-muted >Step 2</h3>
+    </div>
+    <div class="col-lg-11">
+
+      <h1>Create Your Strategy</h1>
+      <h4>Choose when and where to show your campaign<br>
+        with easy and affordable options.</h4>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col-12">
+      <h3 class=text-muted>Focus</h3>
+      <p>Your plays will be focused in a 4-mile boost zone. Drag it to where you want the most exposure.</p>
+    </div>
+  </div>
+
+  <div class="row mb-5 break" >
+    <div class="col-lg-12">
+      <div id='map-summary' class='map'></div>
+    </div>
+  </div>
+
+  <!--
+            <div class='summary-section'>
+              <h4>Start Date</h4>
+              <h2 class="summary-title">
+                <small> Over 3 days</small>
+                ${ state.startDate ? ` ${moment(state.startDate).format('MM/DD/YYYY')} ` : 'From Now' }
+              </h2>
+           </div>
+         -->
+
+  <div class="row mb-5" >
+    <div class="col-lg-1" style='white-space:nowrap;margin:.5rem 0'>
+      <h3 class=text-muted >Step 3</h3>
+    </div>
+    <div class="col-lg-11">
+      <h1>Payment & Info</h1>
+      <h4>Give us your email so we can notify you of the progress of your campaign<br>
+        You'll also get a dashboard to see where and when it played.</h4>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-4">
+      <h3 class=text-mute>Price</h3>
+      <h2 class="summary-title">
+        <small><b>200</b> plays</small> $3.99 
+      </h2>
+      <form>
+    </div>
+    <div class="col-lg-8">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputEmail4">Email</label>
+          <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="cardnumber">Credit Card</label>
+        <input type="text" class="form-control" id="inputAddress" placeholder="Credit Card Number">
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="inputEmail4">CCV</label>
+          <input type="email" class="form-control" id="inputEmail4" placeholder="CCV">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="inputEmail4">Exp</label>
+          <input type="email" class="form-control" id="inputEmail4" placeholder="MM/YY">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-5">
+    <div class="col-lg-12">
+      <button onclick=create_campaign() type="button" class="btn float-right btn-primary btn-lg">Buy</button>
+    </div>
+  </div>
+
 </div>
 {% endblock %}
 {% block additionalScripts %}
