@@ -11,7 +11,7 @@ make the boxes real by using background/offset and then I *think* you can do a c
 The real one is superior because I believe there is more flexibility maybe? I think the animation feature puts us into modern browser space regardless.
 2020-08-13
 -->
-<link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 body {
   margin: 0;
@@ -19,6 +19,7 @@ body {
   font-size: 6vh;
   text-align: center;
   color: white;
+  font-family: Lora;
 }
 #ad {
   background: #303040;
@@ -30,39 +31,34 @@ body {
 #ad > div {
   position: relative;
   width: 32%;
-  overflow: hidden;
+}
+#lhs, #rhs {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
   flex-direction: column;
 }
-#lhs > div {
-  flex-direction: column;
-  justify-content: center;
-  display: flex;
-  height: 25%;
+#lhs {
+  text-align: left;
+  align-items: flex-start;
 }
-#top div {
-  display: flex;
-  align-items: center;
+#lhs div{
+  padding: 0 2vw;
 }
-#name,#bigtext,#contact {
-  font-family: Lora;
+#smalltext {
+  font-weight: 300;
 }
-div#smalltext {
-  font-family: Helvetica, Arial, sans-serif;
-  font-weight: normal;
-  justify-content: flex-start;
+#contact { 
+  font-size: 7vh;
 }
-div#smalltext div {
-  margin-top: 5vh;
+#name {
+  font-size: 8vh;
+  margin-top: 3vh;
 }
 
 div#bigtext {
   font-size: 12vh;
   font-weight: 700;
-  margin: 0;
-  line-height: 1;
   justify-content: flex-end;
 }
 #image img { 
@@ -74,13 +70,10 @@ div#bigtext {
   height: 33vh;
 }
 </style>
-<style id=custom></style>
 <div id=ad>
   <div id=lhs>
-
-    <div id=bigtext><div>Big Text that is maybe 2 lines</div></div>
-    <div id=smalltext><div class=tpl-description>Small Text for ad</div></div>
-
+    <div id=bigtext>Big Text that is maybe 2 lines</div>
+    <div id=smalltext class=tpl-description>Small Text for ad</div>
   </div><div id=image>
     <img data-index="0" class='tpl-photoList'>
   </div><div id=rhs>
@@ -90,9 +83,7 @@ div#bigtext {
     </div>
 
     <div id=contact>
-      <div>
-        <span>@</span><span class=tpl-handle></span>
-      </div>
+      <span>@</span><span class=tpl-handle></span>
     </div> 
   </div>
 </div>
