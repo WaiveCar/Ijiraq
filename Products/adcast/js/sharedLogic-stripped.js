@@ -171,22 +171,28 @@ function instaGet() {
     res = res.data;
     _provides = res;
     user = res.data.user;
+    // todo: fix the data format post-demo
+    let posts = res.data.posts;
     if (user) {
 
       $('.insta .profile img').attr('src', user.profile_pic);
       $('.insta .info .name').html( user.username );
       $('.insta .info .description').html( user.full_name );
-      for(var ix = 0; ix < res.data.length; ix++) {
+      let ix = 0;
+
+      posts.data.forEach((post) => {
         if(!(ix % 3)) {
           if(row) {
             content.push("<div class=row>" + row.join('') + "</div>");
           }
           row = [];
         }
-        var big = res.data[ix].images.standard_resolution.url,
-            small = res.data[ix].images.thumbnail.url;
-        row.push( `<div class='box' data-standard='${big}'><img src=${small}></div>`);
-      }
+        let id = post.id, img = post.media_url;
+
+        row.push(`<div class='box' data-standard='${id}'><img src=${img}></div>`);
+
+        ix++;
+      });
     }
     if(row) {
       content.push("<div class=row>" + row.join('') + "</div>");
