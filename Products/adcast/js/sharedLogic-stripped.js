@@ -239,8 +239,10 @@ window.onload = function(){
         _preview.PlayNow(_job, true);
       });
 
-    $(".gallery-wrapper .adchoice").each(function() {
+    $(".engine-container").each(function() {
       let template = this.dataset.template;
+      this.style.height = .351 * this.clientWidth + "px";
+      this.parentNode.style.height = 1.5 * .351 * this.clientWidth + "px";
 
       _galleryMap[template] = Engine({
         container: this,
