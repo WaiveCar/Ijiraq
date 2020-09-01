@@ -163,7 +163,7 @@ function instaGet() {
   get('instagram?info=1', function(res) {
     var row, content = [];
 
-    $(".insta .loader").slideUp();
+    $(".login.instagram .tab-title").html("Instagram");
     if(!res.res) {
       $(".insta .login").css("display","flex");
       return;
@@ -181,6 +181,7 @@ function instaGet() {
       let ix = 0;
 
       posts.data.forEach((post) => {
+        if(ix > 17) { return }
         if(!(ix % 3)) {
           if(row) {
             content.push("<div class=row>" + row.join('') + "</div>");

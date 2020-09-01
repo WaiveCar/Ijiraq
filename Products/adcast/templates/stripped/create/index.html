@@ -63,7 +63,11 @@
     z-index:1
   }
   #engine { height: 400px; overflow: hidden; background: black }
-  .adchoice { 
+  .customize {
+    display: flex;
+    justify-content: center;
+    padding: 3rem 0; 
+    border-bottom: 1px solid #6c757d;
   }
   .adchoice .card {
     border: 1px solid #343a40;
@@ -76,6 +80,9 @@
   .screen .bg {
     width: 100%;
   }
+  .creatives-wrapper {
+    box-shadow: 0 0 7px 1px #ccc;
+  }
   .preview-holder {
     width: 100%;
   }
@@ -83,7 +90,6 @@
     padding: 10px;
     background: #334;
     padding-bottom: 3px;
-    margin-bottom: 1.5rem;
     border-radius: 0 0 6px 6px;
   }
   .asset-container {
@@ -98,10 +104,34 @@
     flex-direction: column;
     overflow: hidden;
   }
+  .socnet .active {
+    border: 1px solid black;
+    border-bottom: 0;
+    filter: saturate(0);
+  }
+
 </style>
 <div class="container main">
+  <div class="row mb-5" >
+    <div class="col-lg-1" style='white-space:nowrap;margin:.5rem 0'>
+      <h3 class=text-muted >Step 1</h3>
+    </div>
+    <div class="col-lg-11">
 
-  <div class="row mb-4 gallery-wrapper" >
+      <h1>Create Your Ad</h1>
+      <h4>Attractive, automatically generated campaigns from your social media content.<br>
+        Simply connect your networks and watch as everything is done quickly and painlessly.</h4>
+
+    </div>
+  </div>
+
+  <div class="row mt-4" >
+    <div class="col-12">
+      <h3 class=text-muted>Available Layouts</h3>
+      <p>Choose from any of the following layouts and customize your campaign</p>
+    </div>
+  </div>
+  <div class="row mb-5 gallery-wrapper" >
     <div class="col-4 adchoice">
       <div class="card mb-3" >
         <div class="card-header">Slider</div>
@@ -128,32 +158,40 @@
     </div>
   </div>
 
-  <div class="row mb-4 creatives-wrapper" >
+  <div class="row">
+    <div class="col-12">
+      <h3 class=text-muted>Preview Window</h3>
+      <p>Preview what your ad will feel like on different sized screens</p>
+    </div>
+  </div>
+  <div class="row mb-5" >
     <div class="col-lg-12">
-      <div class="row no-gutters">
-        <div class="engine-holder">
-          <div id="engine"></div>
-        </div>
-      </div>
-      <div class="row no-gutters controls">
-        <div class="col-6">
-          <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" class="rewind btn btn-dark">
-              <i class="fas fa-backward"></i>
-            </button>
+      <div class="creatives-wrapper">
+        <div class="row no-gutters">
+          <div class="engine-holder">
+            <div id="engine"></div>
           </div>
         </div>
-        <div class="col-6">
-          <div class="float-right">
-            <div class="btn-group ratios" role="group" style='margin-bottom:0.5rem;margin-right:1rem'>
-              <button type="button" class="btn btn-dark">3:2</button>
-              <button type="button" class="btn btn-dark">16:9</button>
-              <button type="button" class="btn btn-dark active">Custom</button>
+        <div class="row no-gutters controls">
+          <div class="col-6">
+            <div class="btn-group" role="group" aria-label="Basic example">
+              <button type="button" class="rewind btn btn-dark">
+                <i class="fas fa-backward"></i>
+              </button>
             </div>
-            <label for="image-upload" class="btn btn-dark">
-              <i class="fas fa-plus-square"></i> Image/Video
-            </label>
-            <input id="image-upload" multiple class="form-control-file" type="file" name="ad-asset" accept="image/*,video/*">
+          </div>
+          <div class="col-6">
+            <div class="float-right">
+              <div class="btn-group ratios" role="group" style='margin-right:1rem'>
+                <button type="button" class="btn btn-dark">3:2</button>
+                <button type="button" class="btn btn-dark">16:9</button>
+                <button type="button" class="btn btn-dark active">Custom</button>
+              </div>
+              <label for="image-upload" class="btn btn-dark">
+                <i class="fas fa-plus-square"></i> Image/Video
+              </label>
+              <input id="image-upload" multiple class="form-control-file" type="file" name="ad-asset" accept="image/*,video/*">
+            </div>
           </div>
         </div>
       </div>
@@ -161,65 +199,65 @@
   </div>
 
   
-  <div class="row mb-4 instagram-wrapper shown">
+  <div class="row">
+    <div class="col-12">
+      <h3 class=text-muted>Social Media</h3>
+      <p>Pull your content from anywhere and have it update your campaign automatically or only when you want</p>
+    </div>
+  </div>
+  <div class="row mb-5 shown">
     <div class="col-lg-12">
-      <div class="card">
-        <div class="card-body">
-            <div class="row no-gutters">
-              <div class="col-4 login">
-                <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>
-                  <img src=/img/twitter.svg>Connect Twitter
-                </a>
-              </div>
-              <div class="col-4 login">
-                <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>
-                  <img src=/img/instagram.svg>Connect Instagram
-                </a>
-              </div>
-              <div class="col-4 login">
-                <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>
-                  <img src=/img/facebook.svg>Connect Facebook
-                </a>
-              </div>
-            </div>
-            
-            <div class="row no-gutters">
-            <div class=insta>
-              <div class=loader>
-                <i class="fas fa-hourglass-start" style=margin-right:.5rem></i> Loading&hellip;
-              </div>
-              <div class=mock>
-                <div class=header>
-                  <div class=profile>
-                    <img />
-                  </div>
-                  <div class=info>
-                    <div style=height:100%;justify-content:center;display:flex;flex-direction:column;align-items:center;>
-                      <div class=name></div>
-                      <div class=description></div>
-                    </div>
-                  </div>
-                  <div class=logout><a class="btn btn-primary btn-sm" href="/api/instagram?logout=1">Switch User</a></div>
-                </div>
-                <div class=content>
-                </div>
-              </div>
-            </div>
-
+        <div class="row no-gutters socnet">
+          <div class="col-4 login">
+            <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>
+              <h4>
+              <img src=/img/twitter.svg><span class=tab-title>Connect Twitter</span>
+              </h4>
+            </a>
+          </div>
+          <div class="col-4 login active instagram">
+            <h4>
+            <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>
+              <img src=/img/instagram.svg><span class=tab-title>Connect Instagram</span>
+            </a>
+            </h4>
+          </div>
+          <div class="col-4 login">
+            <h4>
+            <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>
+              <img src=/img/facebook.svg><span class=tab-title>Connect Facebook</span>
+            </a>
+            </h4>
           </div>
         </div>
+        
+        <div class="row no-gutters customize">
+        <div class=insta>
+          <div class=mock>
+            <div class=header>
+              <div class=profile>
+                <img />
+              </div>
+              <div class=info>
+                <div style=height:100%;justify-content:center;display:flex;flex-direction:column;align-items:center;>
+                  <div class=name></div>
+                  <div class=description></div>
+                </div>
+              </div>
+              <div class=logout><a class="btn btn-primary btn-sm" href="/api/instagram?logout=1">Switch User</a></div>
+            </div>
+            <div class=content>
+            </div>
+          </div>
+        </div>
+
       </div>
+    </div>
   </div>
 
   <div class="row mb-4">
     <div class="col-lg-12">
-      <div class="card">
-        <div class="card-body">
-          <div class="card-text">
-            <button onclick=create_campaign() type="button" class="btn btn-primary btn-lg">Next: Choose Strategy &#8594;</button>
-          </div>
-        </div>
-      </div>
+      <button onclick=create_campaign() type="button" class="btn float-right btn-primary btn-lg">Next: Choose Strategy &#8594;</button>
     </div>
   </div>
 </div>

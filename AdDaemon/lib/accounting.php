@@ -14,6 +14,7 @@ $SESSION_MAX_AGE = 7 * ( 24 * 60 * 60 ); // 7 days
 ini_set('session.gc_maxlifetime', $SESSION_MAX_AGE);
 ini_set('session.use_strict_mode', '1');
 session_start();
+error_log(session_save_path());
 
 function get_user() {
   if(isset($_SESSION['user_id'])) {
