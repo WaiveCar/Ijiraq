@@ -105,13 +105,14 @@
     overflow: hidden;
   }
   .socnet .active {
-    border: 1px solid black;
+    border: 1px solid #6c757d;
     border-bottom: 0;
     filter: saturate(0);
   }
   .break {
     border-bottom: 1px solid #6c757d;
-    padding: 3rem 0; 
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
   }
 
 </style>
@@ -277,21 +278,24 @@
     </div>
   </div>
 
-  <div class="row mb-5 break" >
+  <div class="row">
     <div class="col-lg-12">
       <div id='map-summary' class='map'></div>
     </div>
   </div>
 
-  <!--
-            <div class='summary-section'>
-              <h4>Start Date</h4>
-              <h2 class="summary-title">
-                <small> Over 3 days</small>
-                ${ state.startDate ? ` ${moment(state.startDate).format('MM/DD/YYYY')} ` : 'From Now' }
-              </h2>
-           </div>
-         -->
+  <div class="row mb-5 break" >
+    <div class="col-lg-12">
+      <form>
+        <div class="form-group row">
+          <label for="inputPassword" class="col-sm-2 col-form-label">Start Date</label>
+          <div class="col-sm-10">
+            <input type="date" class="form-control" id="startdate">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <div class="row mb-5" >
     <div class="col-lg-1" style='white-space:nowrap;margin:.5rem 0'>
@@ -306,7 +310,7 @@
 
   <div class="row">
     <div class="col-lg-4">
-      <h3 class=text-mute>Price</h3>
+      <h3 class=text-muted>Price</h3>
       <h2 class="summary-title">
         <small><b>200</b> plays</small> $3.99 
       </h2>
