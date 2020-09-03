@@ -268,6 +268,14 @@ window.onload = function(){
         _preview.PlayNow(_job, true);
       });
 
+    let tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    document.getElementById('startdate').value = [
+      tomorrow.getFullYear(),
+      (100 + tomorrow.getMonth()).toString().slice(1),
+      (100 + tomorrow.getDay()).toString().slice(1),
+    ].join('-');
+
+
     $(".engine-container").each(function() {
       let template = this.dataset.template;
       this.style.height = .351 * this.clientWidth + "px";
@@ -305,7 +313,6 @@ window.onload = function(){
   uploadInput = document.getElementById('image-upload');
     if (uploadInput) {
     uploadInput.addEventListener('change', function() {
-      console.log("<<" + ratio);
       $(`.preview-holder-${ratio}`).siblings().removeClass('selector');
       $(`.preview-holder-${ratio}`).addClass('selector');
       var container = $(`.preview-holder-${ratio} .assets`);
