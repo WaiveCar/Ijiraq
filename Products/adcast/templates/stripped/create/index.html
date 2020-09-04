@@ -116,9 +116,21 @@
     display: inline-block;
     margin: 0.5rem 2rem;
   }
+  .unselected .socnet {
+    border-bottom: 1px solid #6c757d;
+    padding-bottom: 2rem;
+  }
+  .unselected .socnet .login{
+    border-bottom: 0;
+  }
   .unselected .socnet h4:hover{
     background: white;
-    filter: invert(100%) saturate(0) brightness(10);
+    cursor: pointer;
+    transition : filter 120ms linear;
+    filter: invert(100%) saturate(0) brightness(2) opacity(0.8); 
+  }
+  .unselected .socnet a:hover{
+    text-decoration: none;
   }
   .unselected .customize {
     display: none;
@@ -227,13 +239,6 @@
   <div class="row mb-5 unselected">
     <div class="col-lg-12">
       <div class="row no-gutters socnet">
-        <div class="col-4 login twitter">
-          <h4>
-            <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>
-              <img src=/img/twitter.svg><span class=tab-title>Connect Twitter</span>
-            </a>
-          </h4>
-        </div>
         <div class="col-4 login instagram">
           <h4>
             <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>
@@ -245,6 +250,13 @@
           <h4>
             <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>
               <img src=/img/facebook.svg><span class=tab-title>Connect Facebook</span>
+            </a>
+          </h4>
+        </div>
+        <div class="col-4 login twitter">
+          <h4>
+            <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>
+              <img src=/img/twitter.svg><span class=tab-title>Connect Twitter</span>
             </a>
           </h4>
         </div>
