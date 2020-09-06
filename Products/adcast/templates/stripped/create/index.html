@@ -69,14 +69,6 @@
     padding: 3rem 0; 
     border-bottom: 1px solid #6c757d;
   }
-  .adchoice .card {
-    border: 1px solid #343a40;
-  }
-  .adchoice .card:hover {
-    box-shadow: 0 0 7px 0px #6c757d;
-    transition : transform 120ms linear;
-    transform: scale(1.03);
-  }
   .screen {
     text-align: center;
     position: relative;
@@ -144,6 +136,18 @@
     border-bottom: 1px solid #6c757d;
     margin-bottom: 3rem;
     padding-bottom: 3rem;
+  }
+  .adchoice .card {
+    border: 1px solid #343a40;
+  }
+  .adchoice .card.selected {
+    border-color: #0056b3;
+    box-shadow: 0 0 7px 0px #0056b3;
+  }
+  .adchoice .card:hover {
+    box-shadow: 0 0 7px 0px #6c757d;
+    transition : transform 120ms linear;
+    transform: scale(1.03);
   }
 
 </style>
@@ -343,6 +347,10 @@
       <h2 class="summary-title">
         <small><b>200</b> plays</small> $3.99 
       </h2>
+      <h2 class="summary-title">
+        <small><b>Slider</b> Layout</small>
+      </h2>
+      <h2 class="summary-title">
       <form>
     </div>
     <div class="col-lg-8">

@@ -76,7 +76,6 @@ body {
 .selected {
   color: black;
 }
-.selected,
 .current-link {
   border-radius: 25px;
   background-color: #fedc47;

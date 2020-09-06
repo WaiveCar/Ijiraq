@@ -253,6 +253,11 @@ window.onload = function(){
   self._container =  document.getElementById('engine');
   var isFirst = true;
   var ratio = 'car';
+  $(".adchoice .card").click(function() {
+    $(".adchoice .card").removeClass('selected');
+    $(this).addClass('selected')
+  });
+
   if (self._container) {
     setRatio(_container, 'car'); 
     self._preview = Engine({ 
