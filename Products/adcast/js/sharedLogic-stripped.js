@@ -51,6 +51,29 @@ function setRatio(container, what) {
   }
 }
 
+function loadMap() {
+  var mymap = document.querySelector('#map-summary');
+  mymap.style.height = mymap.clientWidth * 675/1920 + 'px';
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    let loc = [
+      pos.coords.longitude,
+      pos.coords.latitude
+    ];
+    let mymap = map({
+      target: 'map-summary',
+
+      selectFirst: true,
+      opacity: 0.6,
+      tiles: 'stamen.toner',
+      move: true,
+      zoom: 12.5,
+
+      center: loc,
+    });
+    mymap.load([['Circle', loc, 2256]]);
+  });
+}
+
 function get(ep, cb) {
   fetch(new Request(`${_proto}://${_server_url}/api/${ep}`))
     .then(res => {
@@ -172,32 +195,8 @@ function instaGet() {
 
   });
 }
-function loadMap() {
-  var mymap = document.querySelector('#map-summary');
-  mymap.style.height = mymap.clientWidth * 675/1920 + 'px';
-  navigator.geolocation.getCurrentPosition(function(pos) {
-    let loc = [
-      pos.coords.longitude,
-      pos.coords.latitude
-    ];
-    let mymap = map({
-      target: 'map-summary',
-
-      selectFirst: true,
-      opacity: 0.6,
-      tiles: 'stamen.toner',
-      move: true,
-      zoom: 12.5,
-
-      center: loc,
-    });
-    mymap.load([['Circle', loc, 2256]]);
-  });
-}
 
 window.onload = function(){
-  self._container =  document.getElementById('engine');
-
   //
   // Layout selector
   //
@@ -211,32 +210,6 @@ window.onload = function(){
     $(".adchoice .card").removeClass('selected');
     $(this).addClass('selected')
   });
-
-  setRatio(_container, 'car'); 
-  self._preview = Engine({ 
-    container: _container,
-    dynamicSize: true,
-    _debug: true });
-  self._job = _preview.AddJob();
-
-  if(_me.instagram) {
-    $(".socnet-wrapper").removeClass('unselected');
-    $(".login.instagram").addClass('selected');
-    instaGet();
-  }
-  $(".controls .rewind").click(function() {
-    // this is a lovely trick to force the current job
-    // which effectively resets itself
-      _preview.PlayNow(_job, true);
-    });
-
-  let tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
-  document.getElementById('startdate').value = [
-    tomorrow.getFullYear(),
-    (100 + tomorrow.getMonth()).toString().slice(1),
-    (100 + tomorrow.getDay()).toString().slice(1),
-  ].join('-');
-
 
   $(".engine-container").each(function() {
     let template = this.dataset.template;
@@ -252,8 +225,23 @@ window.onload = function(){
     _galleryMap[template].name = template;
   });
 
-  loadMap();
+  
+  //
+  // Preview engine
+  //
+  self._container =  document.getElementById('engine');
+  setRatio(_container, 'car'); 
+  self._preview = Engine({ 
+    container: _container,
+    dynamicSize: true,
+    _debug: true });
+  self._job = _preview.AddJob();
 
+  $(".controls .rewind").click(function() {
+    // this is a lovely trick to force the current job
+    // which effectively resets itself
+      _preview.PlayNow(_job, true);
+    });
   $(".ratios button").click(function(){
     $(this).siblings().removeClass('active');
     $(this).addClass('active');
@@ -269,6 +257,25 @@ window.onload = function(){
       $(`.preview-holder-${ratio}`).addClass('selector');
   });
 
+  //
+  // Date Selector
+  //
+  let tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  document.getElementById('startdate').value = [
+    tomorrow.getFullYear(),
+    (100 + tomorrow.getMonth()).toString().slice(1),
+    (100 + tomorrow.getDay()).toString().slice(1),
+  ].join('-');
 
+  //
+  // Content loading
+  //
+  if(_me.instagram) {
+    $(".socnet-wrapper").removeClass('unselected');
+    $(".login.instagram").addClass('selected');
+    instaGet();
+  }
+
+  loadMap();
 }
 
