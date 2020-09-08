@@ -5,38 +5,8 @@ var
   _server_url = '9ol.es',
   _galleryMap = {},
   _provides = {},
+  _layout = 'aviv',
   _assetList = [];
-
-function calcItems() {
-  requestAnimationFrame(() => {
-    let schedule = JSON.parse($('#schedule').jqs('export'));
-    let minutesPerWeek = schedule.reduce((acc, item) => {
-      return (
-        acc +
-        item.periods.reduce((acc, period) => {
-          return (
-            acc +
-            moment(period.end, 'hh:mm').diff(
-              moment(period.start, 'hh:mm'),
-              'minutes',
-            )
-          );
-        }, 0)
-      );
-    }, 0);
-    let budget = document.querySelector('#budget').value;
-    let fakeNumImpressionsPerWeek = budget * 14.32;
-    let fakeCPM = (fakeNumImpressionsPerWeek / budget / 100).toFixed(2);
-    if (budget) {
-      document.querySelector('#budget').textContent = `$${budget}`;
-      document.querySelector('#cpm').textContent = `$${fakeCPM}`;
-      document.querySelector(
-        '#impressions',
-      ).textContent = `${fakeNumImpressionsPerWeek}`;
-      document.querySelector('#price').textContent = `$${budget}`;
-    }
-  });
-}
 
 function create_campaign(obj) {
   // Before the payment is processed by paypal, a user's purchase is sent to the server with 
@@ -90,17 +60,6 @@ function get(ep, cb) {
     }).then(cb);
 }
 
-function post(ep, body, cb) {
-  fetch(new Request(`${_proto}://${_server_url}/api/${ep}`, {
-    method: 'POST', 
-    body: JSON.stringify(body)
-  })).then(res => {
-    if (res.status === 200) {
-      return res.json();
-    }
-  }).then(cb);
-}
-
 var _shown = false;
 function show(what) {
   if(_shown && _shown != what) {
@@ -128,7 +87,7 @@ function instaGet() {
     var param = selected.map(row => `images[]=` + row.replace(/\?/,'%3F').replace(/\&/g, '%26')).join('&');
 
     _preview.AddJob({
-      url: `/templates/aviv.php?id=${_provides.id}`
+      url: `/templates/${_layout}.php?id=${_provides.id}`
     });
 
     for(var engine_ix = 0; engine_ix < Engine._length; engine_ix++) {
@@ -238,9 +197,17 @@ function loadMap() {
 
 window.onload = function(){
   self._container =  document.getElementById('engine');
-  var isFirst = true;
-  var ratio = 'car';
+
+  //
+  // Layout selector
+  //
   $(".adchoice .card").click(function() {
+    self.a = this;
+    let which = this.querySelector('.engine-container');
+    _layout = which.dataset.template;
+    _preview.AddJob({
+      url: `/templates/${_layout}.php?id=${_provides.id}`
+    });
     $(".adchoice .card").removeClass('selected');
     $(this).addClass('selected')
   });
@@ -288,7 +255,7 @@ window.onload = function(){
   $(".ratios button").click(function(){
     $(this).siblings().removeClass('active');
     $(this).addClass('active');
-    ratio = this.innerHTML.replace(':', '-').toLowerCase();
+    var ratio = this.innerHTML.replace(':', '-').toLowerCase();
     if(this.innerHTML == "16:9") {
       _container.style.width = _container.clientHeight * 16/9 + "px";
     } else if(this.innerHTML == "3:2") {

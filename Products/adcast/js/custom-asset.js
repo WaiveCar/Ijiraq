@@ -1,4 +1,46 @@
 
+function post(ep, body, cb) {
+  fetch(new Request(`${_proto}://${_server_url}/api/${ep}`, {
+    method: 'POST', 
+    body: JSON.stringify(body)
+  })).then(res => {
+    if (res.status === 200) {
+      return res.json();
+    }
+  }).then(cb);
+}
+
+function calcItems() {
+  requestAnimationFrame(() => {
+    let schedule = JSON.parse($('#schedule').jqs('export'));
+    let minutesPerWeek = schedule.reduce((acc, item) => {
+      return (
+        acc +
+        item.periods.reduce((acc, period) => {
+          return (
+            acc +
+            moment(period.end, 'hh:mm').diff(
+              moment(period.start, 'hh:mm'),
+              'minutes',
+            )
+          );
+        }, 0)
+      );
+    }, 0);
+    let budget = document.querySelector('#budget').value;
+    let fakeNumImpressionsPerWeek = budget * 14.32;
+    let fakeCPM = (fakeNumImpressionsPerWeek / budget / 100).toFixed(2);
+    if (budget) {
+      document.querySelector('#budget').textContent = `$${budget}`;
+      document.querySelector('#cpm').textContent = `$${fakeCPM}`;
+      document.querySelector(
+        '#impressions',
+      ).textContent = `${fakeNumImpressionsPerWeek}`;
+      document.querySelector('#price').textContent = `$${budget}`;
+    }
+  });
+}
+
 function addtime(n) {
   if(n === false) {
     duration = 0;
