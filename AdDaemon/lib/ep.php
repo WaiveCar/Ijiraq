@@ -94,6 +94,10 @@ try {
       unset( $_SESSION['instagram'] );
       header('Location: /campaigns/create');
     } else if(isset($all['info'])) {
+      //
+      // TODO: fix after demo:
+      // the instagram access token is only good for like an hour.
+      //
       $token = aget($_SESSION, 'instagram.access_token');
       if($token) {
         $service = Get::service(['token' => $token]);
@@ -101,9 +105,10 @@ try {
         $fields = 'timestamp,media_url,media_type';
         $url = "https://graph.instagram.com/me/media?fields=$fields&access_token=$token";
         $raw = file_get_contents($url);
-        $service['data']['posts'] = json_decode($raw, true);
-
-        pdo_update('service', $service['id'], ['data' => $service['data']]);
+        if($raw) {
+          $service['data']['posts'] = json_decode($raw, true);
+          pdo_update('service', $service['id'], ['data' => $service['data']]);
+        }
 
         $_SESSION['instagram.posts'] = $service['data']['posts'];
         jemit(doSuccess($service));
