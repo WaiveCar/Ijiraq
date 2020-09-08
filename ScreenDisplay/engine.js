@@ -262,7 +262,7 @@ var Engine = function(opts){
     asset.rewind = asset.pause = asset.play = _nop;
     asset.run = _passthru;
     asset.active = false;
-    asset.duration = asset.duration || 1000 * _res.duration;
+    asset.duration = asset.duration || _res.duration;
     obj.duration += asset.duration;
     obj.active = false;
     asset.type = 'inline';
@@ -284,7 +284,7 @@ var Engine = function(opts){
     asset.rewind = asset.pause = asset.play = _nop;
     asset.run = _passthru;
     asset.active = true;
-    asset.duration = asset.duration || 1000 * _res.duration;
+    asset.duration = asset.duration || _res.duration;
     obj.duration += asset.duration;
     obj.active = true;
     asset.type = 'iframe';
@@ -610,6 +610,9 @@ var Engine = function(opts){
   function sow(payload, cb) {
     // No server is set
     if(!_res.server) {
+      if(_.debug) {
+        console.log("sow", payload);
+      }
       remote.ix++;
       return;
     }
@@ -997,3 +1000,4 @@ var Engine = function(opts){
 };
 
 Engine._length = 0;
+Engine._version = '20200908-01';
