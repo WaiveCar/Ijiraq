@@ -75,19 +75,6 @@ function resize(asset, width, height) {
     asset.style.height = '100%';
   }
 }
-function addtime(n) {
-  if(n === false) {
-    duration = 0;
-    $("#runtime").hide();
-  } else {
-    duration += n;
-    if(duration == 0) {
-      $("#runtime").hide();
-    } else {
-      $("#runtime").html("Runtime: " + duration.toFixed(2) + " sec").show();
-    }
-  }
-}
 function setRatio(container, what) {
   if(what == 'car') {
     container.style.height = (.351 * container.clientWidth) + "px";
@@ -129,7 +116,6 @@ function show(what) {
 
 
 function instaGet() {
-  var user;
   function Gen() {
     $(".insta .selector").remove();
     var ix = 1;
@@ -158,6 +144,7 @@ function instaGet() {
 
     _preview.Start();
   }
+
   var selector = [];
   self.s = selector;
   get('instagram?info=1', function(res) {
@@ -170,7 +157,7 @@ function instaGet() {
     }
     res = res.data;
     _provides = res;
-    user = res.data.user;
+    var user = res.data.user;
     // todo: fix the data format post-demo
     let posts = res.data.posts;
     if (user) {
@@ -258,45 +245,45 @@ window.onload = function(){
     $(this).addClass('selected')
   });
 
-  if (self._container) {
-    setRatio(_container, 'car'); 
-    self._preview = Engine({ 
-      container: _container,
-      dynamicSize: true,
-      _debug: true });
-    self._job = _preview.AddJob();
+  setRatio(_container, 'car'); 
+  self._preview = Engine({ 
+    container: _container,
+    dynamicSize: true,
+    _debug: true });
+  self._job = _preview.AddJob();
 
+  if(_me.instagram) {
     instaGet();
-    $(".controls .rewind").click(function() {
-      // this is a lovely trick to force the current job
-      // which effectively resets itself
-        _preview.PlayNow(_job, true);
-      });
-
-    let tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
-    document.getElementById('startdate').value = [
-      tomorrow.getFullYear(),
-      (100 + tomorrow.getMonth()).toString().slice(1),
-      (100 + tomorrow.getDay()).toString().slice(1),
-    ].join('-');
-
-
-    $(".engine-container").each(function() {
-      let template = this.dataset.template;
-      this.style.height = .351 * this.clientWidth + "px";
-      this.parentNode.style.height = 1.5 * .351 * this.clientWidth + "px";
-
-      _galleryMap[template] = Engine({
-        container: this,
-        dynamicSize: true,
-        _debug: true
-      });
-
-      _galleryMap[template].name = template;
+  }
+  $(".controls .rewind").click(function() {
+    // this is a lovely trick to force the current job
+    // which effectively resets itself
+      _preview.PlayNow(_job, true);
     });
 
-    loadMap();
-  }
+  let tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  document.getElementById('startdate').value = [
+    tomorrow.getFullYear(),
+    (100 + tomorrow.getMonth()).toString().slice(1),
+    (100 + tomorrow.getDay()).toString().slice(1),
+  ].join('-');
+
+
+  $(".engine-container").each(function() {
+    let template = this.dataset.template;
+    this.style.height = .351 * this.clientWidth + "px";
+    this.parentNode.style.height = 1.5 * .351 * this.clientWidth + "px";
+
+    _galleryMap[template] = Engine({
+      container: this,
+      dynamicSize: true,
+      _debug: true
+    });
+
+    _galleryMap[template].name = template;
+  });
+
+  loadMap();
 
   $(".ratios button").click(function(){
     $(this).siblings().removeClass('active');
@@ -314,77 +301,5 @@ window.onload = function(){
   });
 
 
-  // The event handler below handles the user uploading new files
-  uploadInput = document.getElementById('image-upload');
-    if (uploadInput) {
-    uploadInput.addEventListener('change', function() {
-      $(`.preview-holder-${ratio}`).siblings().removeClass('selector');
-      $(`.preview-holder-${ratio}`).addClass('selector');
-      var container = $(`.preview-holder-${ratio} .assets`);
-
-      addtime(false);
-      Array.prototype.slice.call(uploadInput.files).forEach(function(file) {
-
-        let reader = new FileReader();
-
-        reader.onload = function(e) {
-          var asset, reference;
-
-          let row = $(
-            ['<div class="screen">',
-               '<img src="/screen-black.png" class="bg">',
-               '<button type="button" class="remove-asset btn btn-sm btn-dark">',
-               '<i class="fas fa-times"></i>',
-               '</button>',
-               '<div class="asset-container"></div>',
-            '</div>'].join(''));
-
-          reference = _job.append(e.target.result);
-
-          if(file.type.split('/')[0] === 'image') {
-            asset = document.createElement('img');
-            asset.onload = function() {
-              resize(asset, asset.width, asset.height);
-              container.append(row);
-              addtime( 7.5 );
-            }
-
-            asset.src = e.target.result;
-            asset.className = 'asset';
-          } else {
-            asset = document.createElement('video');
-            var src = document.createElement('source');
-
-            asset.setAttribute('preload', 'auto');
-            asset.setAttribute('loop', 'true');
-            asset.appendChild(src);
-
-            src.src = e.target.result;
-
-            asset.ondurationchange = function(e) {
-              asset.currentTime = 0;
-              asset.play();
-              resize(asset, asset.videoWidth, asset.videoHeight);
-              container.append(row);
-              addtime( e.target.duration );
-            }
-          }
-
-          $(".remove-asset", row).click(function() {
-            _job.remove(reference);
-            row.remove();
-          });
-
-          $(".asset-container", row).append(asset);
-        };
-        reader.readAsDataURL(file);
-      });
-
-      if(isFirst) {
-        _preview.Play();
-        isFirst = false;
-      }
-    });
-  }
 }
 

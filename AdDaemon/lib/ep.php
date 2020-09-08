@@ -160,6 +160,7 @@ try {
     'me',
     'login',
     'logout',
+    'sess',
     'signup',
   ]) !== false) { 
     post_return($func($all, $verb));
