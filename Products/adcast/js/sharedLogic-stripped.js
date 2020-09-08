@@ -220,6 +220,8 @@ window.onload = function(){
   self._job = _preview.AddJob();
 
   if(_me.instagram) {
+    $(".socnet-wrapper").removeClass('unselected');
+    $(".login.instagram").addClass('selected');
     instaGet();
   }
   $(".controls .rewind").click(function() {
