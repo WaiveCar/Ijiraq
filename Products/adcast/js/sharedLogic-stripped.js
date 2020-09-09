@@ -208,9 +208,9 @@ window.onload = function(){
     self.a = this;
     let which = this.querySelector('.engine-container');
     _layout = which.dataset.template;
-    _preview.AddJob({
+    _preview.PlayNow(_preview.AddJob({
       url: `/templates/${_layout}.php?id=${_provides.id}`
-    });
+    }));
     $(".adchoice .card").removeClass('selected');
     $(this).addClass('selected')
   });
