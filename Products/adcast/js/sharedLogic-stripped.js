@@ -196,6 +196,10 @@ function instaGet() {
   });
 }
 
+function receipt_update() {
+  $("#receipt-date").html(document.getElementById('startdate').value)
+}
+
 window.onload = function(){
   //
   // Layout selector
@@ -276,6 +280,7 @@ window.onload = function(){
     instaGet();
   }
 
+  receipt_update();
   loadMap();
 }
 
