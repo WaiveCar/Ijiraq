@@ -12,20 +12,13 @@ function create_campaign(obj) {
   // Before the payment is processed by paypal, a user's purchase is sent to the server with 
   // the information that has so far been obtained including the picture.
   let formData = new FormData();
-  let valMap = myform.getValues();
+
   for(var key in valMap) {
     formData.append(key, valMap[key]);
   }
   formData.append('geofence', _map.save());
 
-  /*
-  for(var ix = 0; ix < _job.assetList.length; ix++) {
-    formData.append('file' + ix, _job.assetList[ix].url);
-  }
-  */
-  for(var ix = 0; ix < uploadInput.files.length; ix++) {
-    formData.append('file' + ix, uploadInput.files[ix]);
-  }
+  console.log(formData);
 
   return axios({
     method: 'post',
