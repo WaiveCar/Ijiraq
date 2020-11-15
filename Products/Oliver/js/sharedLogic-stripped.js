@@ -47,11 +47,8 @@ function setRatio(container, what) {
 function loadMap() {
   var mymap = document.querySelector('#map-summary');
   mymap.style.height = mymap.clientWidth * 675/1920 + 'px';
-  navigator.geolocation.getCurrentPosition(function(pos) {
-    let loc = [
-      pos.coords.longitude,
-      pos.coords.latitude
-    ];
+
+  function showMap(loc) {
     let mymap = map({
       target: 'map-summary',
 
@@ -64,6 +61,17 @@ function loadMap() {
       center: loc,
     });
     mymap.load([['Circle', loc, 2256]]);
+  }
+
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    let loc = [
+      pos.coords.longitude,
+      pos.coords.latitude
+    ];
+    showMap(loc);
+  }, function(err) {
+    showMap([-118.32, 34.09]);
+    console.warn("geolocation issue:", err);
   });
 }
 
@@ -257,11 +265,13 @@ window.onload = function(){
   //
   // Date Selector
   //
+  
   let tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
   document.getElementById('startdate').value = [
     tomorrow.getFullYear(),
-    (100 + tomorrow.getMonth()).toString().slice(1),
-    (100 + tomorrow.getDay()).toString().slice(1),
+    (100 + tomorrow.getMonth() + 1).toString().slice(1),
+    (100 + tomorrow.getDate()).toString().slice(1),
   ].join('-');
 
   //
