@@ -384,10 +384,14 @@ function insta_get_stuff($user) {
   function method2($user) {
     $raw = json_decode(proxy_get("https://instagram.com/$user/?__a=1"), true);
     $map = [];
-    foreach(['biography', 'external_url', 'full_name', 'profile_pic_url_hd'] as $field) {
-      $map[$field] = aget($raw, "graphql.user.$field");
+    foreach([
+      'biography' => 'description',
+      'external_url' => 'website',
+      'profile_pic_url_hd' => 'profile_pic',
+      'full_name' => 'full_name'
+    ] as $key => $reduce) {
+      $map[$reduce] = aget($raw, "graphql.user.$key");
     }
-    $map['profile_pic_url'] = $map['profile_pic_url_hd'];
     return $map;
   }
 
