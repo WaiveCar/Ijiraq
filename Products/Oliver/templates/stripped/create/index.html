@@ -95,6 +95,9 @@
     padding-bottom: 3px;
     border-radius: 0 0 6px 6px;
   }
+  .customize > div {
+    display: none;
+  }
   .asset-container {
     position: absolute;
     top: 0;
@@ -219,24 +222,20 @@
       <div class="row no-gutters socnet">
         <div class="col-4 login instagram">
           <h4>
-            <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>
-              <img src=/assets/instagram.svg><span class=tab-title>Add Instagram</span>
-            </a>
-          </h4>
-        </div>
-        <div class="col-4 login facebook">
-          <h4>
-            <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>
-              <img src=/assets/facebook.svg><span class=tab-title>Add Facebook</span>
+            <a href=https://api.instagram.com/oauth/authorize/?client_id=339058577323741&scope=user_profile,user_media&redirect_uri=https://olvr.io/api/instagram&response_type=code>
+              <img src=/assets/instagram.svg><span class='d-none d-md-inline tab-title'>Add Instagram</span>
             </a>
           </h4>
         </div>
         <div class="col-4 login yelp">
           <h4>
-            <a href=https://api.instagram.com/oauth/authorize/?client_id=1653482628156267&scope=user_profile,user_media&redirect_uri=https://9ol.es/olvr/api/instagram&response_type=code>
-              <img src=/assets/yelp.svg><span class=tab-title>Add Yelp</span>
+            <a onclick=doyelp()>
+              <img src=/assets/yelp.svg><span class='d-none d-md-inline tab-title'>Add Yelp</span>
             </a>
           </h4>
+        </div>
+        <div class="col-4 login">
+          More Soon&hellip;
         </div>
       </div>
       
@@ -258,7 +257,11 @@
             <div class=content></div>
           </div>
         </div>
-
+        <div class='form-group row'>
+          <div class='search col-sm-10'>
+            <input class="form-control form-control-lg" type="text" placeholder="Type your business name" aria-label="Search">
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -399,7 +402,9 @@
             </tr><tr>
               <td>Plays:</td><td> <b>200</b> </td>
             </tr><tr>
-              <td><b>Price:</b></td><td> <h5>$4.00</h5> </td>
+              <td><b>Price:</b></td><td> <h5 id=price>$4.00</h5> </td>
+            </tr><tr>
+              <td><b>Promo</b></td><td> <input type="text" class="form-control" id="promo" placeholder=""></td>
             </tr>
           </tbody>
         </table>
@@ -411,18 +416,20 @@
           <input type="email" class="form-control" id="email" placeholder="Email">
         </div>
       </div>
-      <div class="form-group">
-        <label for="cardnumber">Credit Card</label>
-        <input type="text" class="form-control" id="cardnumber" placeholder="Credit Card Number">
-      </div>
-      <div class="form-row">
-        <div class="form-group col-md-3">
-          <label for="ccv">CCV</label>
-          <input type="email" class="form-control" id="ccv" placeholder="CCV">
+      <div id='cc-card'>
+        <div class="form-group">
+          <label for="cardnumber">Credit Card</label>
+          <input type="text" class="form-control" id="cardnumber" placeholder="Credit Card Number">
         </div>
-        <div class="form-group col-md-3">
-          <label for="exp">Exp</label>
-          <input type="email" class="form-control" id="exp" placeholder="MM/YY">
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="ccv">CCV</label>
+            <input type="email" class="form-control" id="ccv" placeholder="CCV">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="exp">Exp</label>
+            <input type="email" class="form-control" id="exp" placeholder="MM/YY">
+          </div>
         </div>
       </div>
     </div>

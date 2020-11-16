@@ -2,7 +2,8 @@ var
   uploadInput,
   _preview,
   _proto = 'https',
-  _server_url = '9ol.es',
+  _server_url = 'olvr.io',
+  _layout_base = '/layouts',
   _galleryMap = {},
   _provides = {},
   _layout = 'aviv',
@@ -78,7 +79,7 @@ function loadMap() {
 function get(ep, cb) {
   fetch(new Request(`${_proto}://${_server_url}/api/${ep}`))
     .then(res => {
-      if (res.status === 200) {
+      if (res.status === 201) {
         return res.json();
       }
     }).then(cb);
@@ -97,6 +98,11 @@ function show(what) {
   _shown = what;
 }
 
+function doyelp(){
+  $(".socnet-wrapper").removeClass('unselected');
+  $(".login.yelp").addClass('selected').siblings().removeClass('selected');
+  $(".customize .yelp").show();
+}
 
 function instaGet() {
   function Gen() {
@@ -111,7 +117,7 @@ function instaGet() {
     var param = selected.map(row => `images[]=` + row.replace(/\?/,'%3F').replace(/\&/g, '%26')).join('&');
 
     _preview.AddJob({
-      url: `/templates/${_layout}.php?id=${_provides.id}`
+      url: `${_layout_base}/${_layout}.php?id=${_provides.id}`
     });
 
     for(var engine_ix = 0; engine_ix < Engine._length; engine_ix++) {
@@ -119,7 +125,7 @@ function instaGet() {
       if(engine.name) {
         console.log("Loading " + engine.name);
         engine.AddJob({ 
-          url: `/templates/${engine.name}.php?id=${_provides.id}`
+          url: `${_layout_base}/${engine.name}.php?id=${_provides.id}`
         });
         engine.Start();
       }
@@ -127,6 +133,7 @@ function instaGet() {
 
     _preview.Start();
   }
+  $(".customize .insta").show();
 
   var selector = [];
   self.s = selector;
@@ -210,7 +217,7 @@ window.onload = function(){
     let which = this.querySelector('.engine-container');
     _layout = which.dataset.template;
     _preview.PlayNow(_preview.AddJob({
-      url: `/templates/${_layout}.php?id=${_provides.id}`
+      url: `${_layout_base}/${_layout}.php?id=${_provides.id}`
     }));
     $(".adchoice .card").removeClass('selected');
     $(this).addClass('selected')
@@ -231,6 +238,14 @@ window.onload = function(){
   });
 
   
+  $("#promo").on('keyup', function(){
+    console.log($("#promo").val().toUpperCase() );
+    if($("#promo").val().toUpperCase() == 'FREEME') {
+
+      $("#price").html('0.00');
+      $("#cc-card").fadeOut();
+    }
+  });
   //
   // Preview engine
   //
