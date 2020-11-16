@@ -1,6 +1,7 @@
 <?
 $handlerList = [];
 
+include('secrets.php');
 include('lib.php');
 // this has a session start in it
 include('accounting.php');
@@ -40,12 +41,6 @@ function post_return($res) {
   jemit($res);
 }
 
-$instagram_props = [
-  'client_id' => '1653482628156267',
-  'client_secret' => '14f30a04d86253bb435b6fed5d4d8e78',
-  'redirect_uri' => 'https://9ol.es/olvr/api/instagram'
-];
-
 try {
   if($func == 'state') {
     $list = array_values($_FILES);
@@ -54,9 +49,12 @@ try {
   } else if($func == 'location' && $verb == 'GET') {
     echo(file_get_contents('http://basic.waivecar.com/location.php?' . http_build_query($all)) );
   } else if($func == 'instagram') {
-    if(isset($all['code'])) {
+    if(isset($all['debug'])) {
+      var_dump(insta_get_stuff('kristopolous'));
+    }
+    else if(isset($all['code'])) {
       $token = curldo('https://api.instagram.com/oauth/access_token', array_merge(
-        $instagram_props, [
+        $secrets['instagram'], [
           'grant_type' => 'authorization_code',
           'code' => $all['code']
         ]), ['verb' => 'POST']);
@@ -71,6 +69,7 @@ try {
       // TODO: They stored the user_id as a number! so you'll get IEEE floating
       // point errors without careful audits. We undo that stupidity here.
       $scraped = insta_get_stuff($userInfo['username']);
+      $_SESSION['instagram.scraped'] = $scraped;
 
       $profile_data = array_merge(
         $scraped, 
@@ -190,6 +189,7 @@ try {
     'most_recent',
     'provides',
     'task_dump',
+    'yelp_search',
     'dsp_signup',
     'dsp_create',
     'dsp_default',
