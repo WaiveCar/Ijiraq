@@ -8,6 +8,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 $mypath = $_SERVER['DOCUMENT_ROOT'] . 'AdDaemon/lib/';
 include_once($mypath . 'db.php');
 include_once($mypath . 'hoard.php');
+include_once($mypath . 'secrets.php');
 $JEMIT_REQ = '';
 $JEMIT_EXT = '';
 
@@ -1511,4 +1512,8 @@ function slackie($where, $what) {
 function compact_uuid() {
   $b16 = str_replace('-', '', Uuid::uuid4()->toString());
   return str_replace(['+','/','='], ['-','_',''], base64_encode(hex2bin($b16)));
+}
+
+function yelp_search($all) {
+  var_dump($all);
 }

@@ -376,28 +376,45 @@ function provides($filter) {
 }
 
 
+function proxy_get($url) {
+  return file_get_contents("http://9ol.es/proxy.php?u=$url");
+}
+
 function insta_get_stuff($user) {
-  $mset = [];
-  $fieldList = ['biography', 'external_url', 'full_name', 'profile_pic_url'];
-  $fieldMap = [
-    'biography' => 'description',
-    'external_url' => 'website',
-    'profile_pic_url' => 'profile_pic',
-    'full_name' => 'full_name'
-  ];
-  $raw = file_get_contents("https://instagram.com/$user");
-  preg_match_all('/[{,]"('. implode('|', $fieldList)  . ')":"([^"]*)"/', $raw, $matches);
-  if($matches) {
-    $ix = 0;
-    foreach($matches[1] as $field) {
-      $mapname = $fieldMap[$field];
-      if(!isset($mset[$mapname])) {
-        // we need to do this otherwise we're double escaped.
-        $mset[$mapname] = json_decode('"' . $matches[2][$ix] . '"');
-      }
-      $ix++;
+  function method2($user) {
+    $raw = json_decode(proxy_get("https://instagram.com/$user/?__a=1"), true);
+    $map = [];
+    foreach(['biography', 'external_url', 'full_name', 'profile_pic_url_hd'] as $field) {
+      $map[$field] = aget($raw, "graphql.user.$field");
     }
-    return $mset;
+    $map['profile_pic_url'] = $map['profile_pic_url_hd'];
+    return $map;
   }
+
+  function method1($user) {
+    $mset = [];
+    $fieldList = ['biography', 'external_url', 'full_name', 'profile_pic_url'];
+    $fieldMap = [
+      'biography' => 'description',
+      'external_url' => 'website',
+      'profile_pic_url' => 'profile_pic',
+      'full_name' => 'full_name'
+    ];
+    $raw = file_get_contents("https://instagram.com/$user/");
+    preg_match_all('/[{,]"('. implode('|', $fieldList)  . ')":"([^"]*)"/', $raw, $matches);
+    if($matches) {
+      $ix = 0;
+      foreach($matches[1] as $field) {
+        $mapname = $fieldMap[$field];
+        if(!isset($mset[$mapname])) {
+          // we need to do this otherwise we're double escaped.
+          $mset[$mapname] = json_decode('"' . $matches[2][$ix] . '"');
+        }
+        $ix++;
+      }
+      return $mset;
+    }
+  }
+  return method2($user);
 }
 
