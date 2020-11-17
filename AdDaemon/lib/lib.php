@@ -1531,10 +1531,26 @@ function yelp_search($all) {
 }
 
 function yelp_save($all) {
-  $info = [
-    'info' => _yelp_get($all['id']),
-    'reviews' => _yelp_get("{$all['id']}/reviews")
-  ]
-  var_dump($info);
+  $user_id = aget($_SESSION, 'user.id');
+  $condition = [
+    'service' => 'yelp',
+    'service_user_id' => $all['id']
+  ];
+
+  if($user_id) {
+    $condition['user_id'] = $user_id;
+  }
+
+  $res = pdo_upsert('service', $condition, [
+    'data' => [
+      'info' => _yelp_get($all['id']),
+      'reviews' => _yelp_get("{$all['id']}/reviews")
+    ]
+  ]);
+  $res = Get::service([
+    'service' => 'yelp',
+    'service_user_id' => $all['id']
+  ]);
+  return $res['id'];
 }
 

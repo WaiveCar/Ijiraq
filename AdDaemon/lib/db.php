@@ -1005,6 +1005,7 @@ function db_bottom($v) {
 
 function pdo_upsert($table, $condition, $kv) {
   $res = Get::$table($condition);
+  $kv = array_merge($kv, $condition);
   return $res ? 
     pdo_update($table, $condition, $kv) : 
     pdo_insert($table, $kv);

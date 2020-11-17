@@ -83,6 +83,7 @@ try {
         'service_user_id' => aget($token, 'user_id'),
         'username' => aget($userInfo, 'username')
       ], [
+        //'uuid' => $_SESSION['uid'],
         'token' => $token['access_token'],
         'data' => ['user' => $profile_data]
       ]);
@@ -100,14 +101,21 @@ try {
       //
       $token = aget($_SESSION, 'instagram.access_token');
       if($token) {
-        $service = Get::service(['token' => $token]);
+        $service = Get::service([
+          'service' => 'instagram',
+          'user_id' => aget($_SESSION, 'user.id')
+        ]);
+        error_log($token . ":P:" . json_encode(array_keys($service)));
 
         $fields = 'timestamp,media_url,media_type';
         $url = "https://graph.instagram.com/me/media?fields=$fields&access_token=$token";
         $raw = file_get_contents($url);
         if($raw) {
           $service['data']['posts'] = json_decode($raw, true);
-          pdo_update('service', $service['id'], ['data' => $service['data']]);
+          pdo_update('service', $service['id'], [
+            'user_id' => aget($_SESSION, 'user.id'),
+            'data' => $service['data']
+          ]);
         }
 
         $_SESSION['instagram.posts'] = $service['data']['posts'];

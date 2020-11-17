@@ -18,6 +18,9 @@ session_start();
 if(!isset($_SESSION['start'])) {
   $_SESSION['start'] = date(DATE_RFC2822);
 }
+if(!isset($_SESSION['uid'])) {
+  $_SESSION['uid'] = compact_uuid();
+}
 
 function get_user() {
   if(isset($_SESSION['user_id'])) {
@@ -27,6 +30,7 @@ function get_user() {
 
 function sess() {
   var_dump($_SESSION);
+  return $_SESSION;
 }
 
 function me() {
@@ -315,12 +319,9 @@ function get_service($user, $service_string) {
 // the same instagram account.
 function find_or_create_user($service_obj, $data) {
   $user = get_user();
-  error_log(">> find_or_create " . json_encode($service_obj) . " :: " . json_encode($data));
   $row = Get::service($service_obj);
 
-  $user_id = $user ? 
-    aget($user, 'id') : 
-    aget($row, 'user_id');
+  $user_id = aget($user, 'id') ?: aget($row, 'user_id') ?: aget($_SESSION, 'user.id');
 
   if(!$row) {
     $row = ['id' => pdo_insert('service', $service_obj)];
@@ -344,7 +345,6 @@ function provides($filter) {
   $res = [];
   $serviceList = Many::service($filter);
   foreach($serviceList as $service) {
-    $row = [];
     if($service['service'] == 'instagram') {
       $data = $service['data'];
       $row = [
@@ -369,10 +369,19 @@ function provides($filter) {
           'created_at' => aget($post, 'timestamp')
         ];
       }
-      $res[] = $row;
+      $res = array_merge($res, $row);
+    }
+    if($service['service'] == 'yelp') {
+      foreach(aget($service, 'data.reviews.reviews') as  $review) {
+        if($review['rating'] == 5) {
+          $parts = explode('.', $review['text']);
+          $res['bigtext'] = $parts[0] . ".<br><small>&#9733;&#9733;&#9733;&#9733;&#9733; - yelp</small>";
+        }
+      }
+
     }
   }
-  return $row;
+  return $res;
 }
 
 
