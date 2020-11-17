@@ -11,7 +11,7 @@ make the boxes real by using background/offset and then I *think* you can do a c
 The real one is superior because I believe there is more flexibility maybe? I think the animation feature puts us into modern browser space regardless.
 2020-08-13
 -->
-<link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@300;600;700&display=swap" rel="stylesheet">
 <style>
 body {
   margin: 0;
@@ -22,7 +22,7 @@ body {
   display: flex;
 }
 #lhs {
-  margin: 2vh 8vh;
+  margin: 2vh 2vmax;
   font-size: 6vh;
   color: white;
   height: 96vh;
@@ -43,6 +43,7 @@ body {
 }
 div#smalltext {
   font-family: Helvetica, Arial, sans-serif;
+  font-size: 3vmax;
   font-weight: normal;
   justify-content: flex-start;
 }
@@ -50,11 +51,16 @@ div#smalltext div {
   margin-top: 5vh;
 }
 
+div#bigtext small {
+  opacity: .5;
+  font-style: italic;
+  float: right;
+}
 div#bigtext {
-  font-size: 12vh;
+  font-size: 3.2vmax;
   font-weight: 700;
   margin: 0;
-  line-height: 1;
+  line-height: 1.1;
   justify-content: flex-end;
 }
 div#bigtext div {
@@ -123,7 +129,7 @@ div#bigtext div {
       </div>
     </div>
 
-    <div id=bigtext><div>Big Text that is maybe 2 lines</div></div>
+    <div id=bigtext><div class=tpl-bigtext>Big Text that is maybe 2 lines</div></div>
     <div id=smalltext><div class=tpl-description>Small Text for ad</div></div>
     <div id=contact>
       <div>

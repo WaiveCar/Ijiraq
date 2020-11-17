@@ -58,7 +58,7 @@ function template(opts) {
   }
 
   function remote() {
-    fetch(`${_res.server}?id=${_res.id}`)
+    fetch(`${_res.server}?user_id=${_res.id}`)
       .then(response => response.json())
       .then(parser)
   }

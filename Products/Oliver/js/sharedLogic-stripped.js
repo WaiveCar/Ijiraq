@@ -7,6 +7,7 @@ var
   _galleryMap = {},
   _provides = {},
   _layout = 'aviv',
+  _loc = [-118.32, 34.09],
   _assetList = [];
 
 function create_campaign(obj) {
@@ -65,13 +66,13 @@ function loadMap() {
   }
 
   navigator.geolocation.getCurrentPosition(function(pos) {
-    let loc = [
+    _loc = [
       pos.coords.longitude,
       pos.coords.latitude
     ];
-    showMap(loc);
+    showMap(_loc);
   }, function(err) {
-    showMap([-118.32, 34.09]);
+    showMap(_loc);
     console.warn("geolocation issue:", err);
   });
 }
@@ -79,7 +80,7 @@ function loadMap() {
 function get(ep, cb) {
   fetch(new Request(`${_proto}://${_server_url}/api/${ep}`))
     .then(res => {
-      if (res.status === 201) {
+      if (res.status === 200) {
         return res.json();
       }
     }).then(cb);
@@ -98,10 +99,52 @@ function show(what) {
   _shown = what;
 }
 
-function doyelp(){
+function yelpchoose(el) {
+  $(el).addClass('selected').siblings().hide();
+  $('.btn', el).slideUp();
+  $('.chosen', el).slideDown();
+  get('yelp_save?id=' + el.dataset.id, (res) => {
+    console.log(res);
+  });
+}
+
+function yelpsearch(){
+  get("yelp_search?" +
+    $.param({
+      query: $("#yelp-search-input").val(),
+      longitude: _loc[0],
+      latitude: _loc[1]
+    }), (res) => {
+      $(".yelp .search .results").html('')
+      res.businesses.forEach(row => {
+        console.log(row);
+        $(".yelp .search .results").append(
+          `<div onclick=yelpchoose(this) data-id="${row['id']}" class="card mb-3" >
+          <div class="card-body row">
+            <div class="col-3">
+             <img src="${row['image_url']}">
+            </div>
+            <div class="col-9">
+              <h3>${row['name']}</h3>
+              <h4>${row['phone'].slice(1)}</h4>
+              <div class=bothstates>
+                <button class="btn" type="button">Use this business</button>
+                <div class=chosen>&check; Selected</div>
+              </div>
+            </div>
+          </div>
+         </div>
+        `);
+      });
+    } 
+  );
+}
+
+function yelpshow(){
   $(".socnet-wrapper").removeClass('unselected');
   $(".login.yelp").addClass('selected').siblings().removeClass('selected');
-  $(".customize .yelp").show();
+  $(".customize .yelp").show().siblings().hide();
+  $("#yelp-search-input").focus();
 }
 
 function instaGet() {
@@ -117,7 +160,7 @@ function instaGet() {
     var param = selected.map(row => `images[]=` + row.replace(/\?/,'%3F').replace(/\&/g, '%26')).join('&');
 
     _preview.AddJob({
-      url: `${_layout_base}/${_layout}.php?id=${_provides.id}`
+      url: `${_layout_base}/${_layout}.php?id=${_provides.user_id}`
     });
 
     for(var engine_ix = 0; engine_ix < Engine._length; engine_ix++) {
@@ -125,7 +168,7 @@ function instaGet() {
       if(engine.name) {
         console.log("Loading " + engine.name);
         engine.AddJob({ 
-          url: `${_layout_base}/${engine.name}.php?id=${_provides.id}`
+          url: `${_layout_base}/${engine.name}.php?id=${_provides.user_id}`
         });
         engine.Start();
       }
@@ -133,7 +176,7 @@ function instaGet() {
 
     _preview.Start();
   }
-  $(".customize .insta").show();
+  $(".customize .insta").show().siblings().hide();
 
   var selector = [];
   self.s = selector;
@@ -213,11 +256,10 @@ window.onload = function(){
   // Layout selector
   //
   $(".adchoice .card").click(function() {
-    self.a = this;
     let which = this.querySelector('.engine-container');
     _layout = which.dataset.template;
     _preview.PlayNow(_preview.AddJob({
-      url: `${_layout_base}/${_layout}.php?id=${_provides.id}`
+      url: `${_layout_base}/${_layout}.php?id=${_provides.user_id}`
     }));
     $(".adchoice .card").removeClass('selected');
     $(this).addClass('selected')
@@ -238,12 +280,24 @@ window.onload = function(){
   });
 
   
-  $("#promo").on('keyup', function(){
-    console.log($("#promo").val().toUpperCase() );
-    if($("#promo").val().toUpperCase() == 'FREEME') {
+  $("#yelp-search-input").keypress(function (e) {
+    if (e.which == 13) {
+      yelpsearch();
+    }
+  });
 
-      $("#price").html('0.00');
+
+  var promo_ison = false;
+  $("#promo").on('keyup', function(){
+    if($("#promo").val().toUpperCase() == 'FREEME') {
+      promo_ison = true;
+
+      $(".price").html('FREE');
       $("#cc-card").fadeOut();
+    } else if(promo_ison) {
+      promo_ison = false;
+      $(".price").html('$4.00');
+      $("#cc-card").fadeIn();
     }
   });
   //

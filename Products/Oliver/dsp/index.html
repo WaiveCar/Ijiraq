@@ -78,7 +78,7 @@
     let sub = document.getElementById('sub');
     sub.style.opacity = 0.5;
     fetch(new Request(
-      "http://api.olvr/api/dsp_signup?email=" + document.getElementById('email').value,
+      "/api/dsp_signup?email=" + document.getElementById('email').value,
       {method: 'POST'}
     ))
       .then(response => response.json())

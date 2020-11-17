@@ -1,0 +1,6 @@
+RewriteEngine On
+RewriteBase /
+
+DirectoryIndex index.html index.php
+Header set Access-Control-Allow-Origin "*"
+RewriteRule "v/(.*)$" "dsp/viewer.php?id=$1" [L]
