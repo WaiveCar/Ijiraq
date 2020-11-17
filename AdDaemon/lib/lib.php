@@ -994,7 +994,7 @@ function show($what, $clause = []) {
   //error_log(json_encode($_SESSION));
   if($me) {
     $schema = $SCHEMA[$what];
-    if($me['organization_id'] && isset($schema['organization_id'])) {
+    if(aget($me, 'organization_id') && isset($schema['organization_id'])) {
       $where['organization_id'] = $me['organization_id'];
     }
   }
@@ -1142,6 +1142,7 @@ function get_fields($what, $which) {
 // of creating this
 function campaign_create($data, $fileList, $user = false) {
   global $DAY, $PLAYTIME;
+  error_log(json_encode($data, JSON_PRETTY_PRINT));
 
   $duration_seconds = 0;
 
@@ -1156,6 +1157,8 @@ function campaign_create($data, $fileList, $user = false) {
     // sure that legacy installs don't crash
     'asset' => [],
     'asset_meta' => [],
+    'state' => 'ACTIVE',
+    'user_id' => aget($user, 'id') ?: get_user_id()
   ]);
 
   $extractList = [
@@ -1170,8 +1173,12 @@ function campaign_create($data, $fileList, $user = false) {
       $props[$key] = $data[$key];
     }
   }
+  $assetList = aget($data, 'asset', []);
+  if(is_string($assetList)) {
+    $assetList = [['url' => $assetList]];
+  }
 
-  foreach(aget($data, 'asset', []) as $asset) {
+  foreach($assetList as $asset) {
     $asset['duration'] = aget($asset, 'duration', $PLAYTIME);
     $props['asset_meta'][] = $asset;
     $duration_seconds += $asset['duration'];
@@ -1201,9 +1208,14 @@ function campaign_create($data, $fileList, $user = false) {
   } else {
     $candidate = $ph;
   }
-  $data['phone'] = $candidate;
+  if(strlen($candidate) > 1) {
+    $data['phone'] = $candidate;
+  }
 
-  // See if we can extract a user out of this.
+  user_update($data);
+  var_dump($_SESSION['user']);
+  var_dump($props);exit;
+
   $user = upsert_user(get_fields($data, ['name','email','phone']));
   if($user) {
     $props['user_id'] = $user['id'];

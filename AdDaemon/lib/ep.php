@@ -105,7 +105,6 @@ try {
           'service' => 'instagram',
           'user_id' => aget($_SESSION, 'user.id')
         ]);
-        error_log($token . ":P:" . json_encode(array_keys($service)));
 
         $fields = 'timestamp,media_url,media_type';
         $url = "https://graph.instagram.com/me/media?fields=$fields&access_token=$token";
