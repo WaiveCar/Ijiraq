@@ -375,7 +375,7 @@ function provides($filter) {
       foreach(aget($service, 'data.reviews.reviews') as  $review) {
         if($review['rating'] == 5) {
           $parts = explode('.', $review['text']);
-          $res['bigtext'] = $parts[0] . ".<br><small>&#9733;&#9733;&#9733;&#9733;&#9733; - yelp</small>";
+          $res['bigtext'] = $parts[0] . ".<small>&#9733;&#9733;&#9733;&#9733;&#9733; - yelp</small>";
         }
       }
 

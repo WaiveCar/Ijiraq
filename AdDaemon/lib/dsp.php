@@ -16,6 +16,12 @@ function dsp_signup($params) {
     ]);
   } else {
     $hoard = Get::hoard(['user_id' => $user['id']]);
+    if(!$hoard) {
+      $hoard = create('hoard', [
+        'user_id' => $user['id'],
+        'uuid' => compact_uuid(),
+      ]);
+    }
   }
   return doSuccess($hoard);
 }
