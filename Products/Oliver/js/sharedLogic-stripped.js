@@ -7,6 +7,8 @@ var
   _galleryMap = {},
   _provides = {},
   _layout = 'aviv',
+  _valMap = {},
+  _map = null,
   _loc = [-118.32, 34.09],
   _assetList = [];
 
@@ -15,10 +17,16 @@ function create_campaign(obj) {
   // the information that has so far been obtained including the picture.
   let formData = new FormData();
 
-  for(var key in valMap) {
-    formData.append(key, valMap[key]);
+  for(var key in _valMap) {
+    formData.append(key, _valMap[key]);
   }
+
+  ['email','phone','startdate'].forEach(row => formData.append(row, $(`#${row}`).val()));
+
   formData.append('geofence', _map.save());
+  formData.append('asset', [
+    `${_proto}://${_server_url}/${_layout}.php?id=${_provides.user_id}`
+  ]);
 
   console.log(formData);
 
@@ -30,7 +38,7 @@ function create_campaign(obj) {
       headers: { 'Content-Type': 'multipart/form-data' },
     },
   }).then(function(resp) {
-    window.location = '${_proto}://' + window.location.hostname + '/campaigns';
+    window.location = _proto + '://' + window.location.hostname + '/campaigns';
   });
 }
 function resize(asset, width, height) {
@@ -51,7 +59,7 @@ function loadMap() {
   mymap.style.height = mymap.clientWidth * 675/1920 + 'px';
 
   function showMap(loc) {
-    let mymap = map({
+    _map = map({
       target: 'map-summary',
 
       selectFirst: true,
@@ -62,7 +70,7 @@ function loadMap() {
 
       center: loc,
     });
-    mymap.load([['Circle', loc, 2256]]);
+    _map.load([['Circle', loc, 2256]]);
   }
 
   navigator.geolocation.getCurrentPosition(function(pos) {
@@ -258,6 +266,7 @@ window.onload = function(){
   $(".adchoice .card").click(function() {
     let which = this.querySelector('.engine-container');
     _layout = which.dataset.template;
+    _valMap.layout = _layout;
     _preview.PlayNow(_preview.AddJob({
       url: `${_layout_base}/${_layout}.php?id=${_provides.user_id}`
     }));
@@ -304,55 +313,57 @@ window.onload = function(){
   // Preview engine
   //
   self._container =  document.getElementById('engine');
-  setRatio(_container, 'car'); 
-  self._preview = Engine({ 
-    container: _container,
-    dynamicSize: true,
-    _debug: true });
-  self._job = _preview.AddJob();
+  if(_container) {
+    setRatio(_container, 'car'); 
+    self._preview = Engine({ 
+      container: _container,
+      dynamicSize: true,
+      _debug: true });
+    self._job = _preview.AddJob();
 
-  $(".controls .rewind").click(function() {
-    // this is a lovely trick to force the current job
-    // which effectively resets itself
-      _preview.PlayNow(_job, true);
+    $(".controls .rewind").click(function() {
+      // this is a lovely trick to force the current job
+      // which effectively resets itself
+        _preview.PlayNow(_job, true);
+      });
+    $(".ratios button").click(function(){
+      $(this).siblings().removeClass('active');
+      $(this).addClass('active');
+      var ratio = this.innerHTML.replace(':', '-').toLowerCase();
+      if(this.innerHTML == "16:9") {
+        _container.style.width = _container.clientHeight * 16/9 + "px";
+      } else if(this.innerHTML == "3:2") {
+        _container.style.width = _container.clientHeight * 3/2 + "px";
+      } else {
+        _container.style.width = "100%";
+      }
+        $(`.preview-holder-${ratio}`).siblings().removeClass('selector');
+        $(`.preview-holder-${ratio}`).addClass('selector');
     });
-  $(".ratios button").click(function(){
-    $(this).siblings().removeClass('active');
-    $(this).addClass('active');
-    var ratio = this.innerHTML.replace(':', '-').toLowerCase();
-    if(this.innerHTML == "16:9") {
-      _container.style.width = _container.clientHeight * 16/9 + "px";
-    } else if(this.innerHTML == "3:2") {
-      _container.style.width = _container.clientHeight * 3/2 + "px";
-    } else {
-      _container.style.width = "100%";
+
+    //
+    // Date Selector
+    //
+    
+    let tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+    document.getElementById('startdate').value = [
+      tomorrow.getFullYear(),
+      (100 + tomorrow.getMonth() + 1).toString().slice(1),
+      (100 + tomorrow.getDate()).toString().slice(1),
+    ].join('-');
+
+    //
+    // Content loading
+    //
+    if(_me.instagram) {
+      $(".socnet-wrapper").removeClass('unselected');
+      $(".login.instagram").addClass('selected');
+      instaGet();
     }
-      $(`.preview-holder-${ratio}`).siblings().removeClass('selector');
-      $(`.preview-holder-${ratio}`).addClass('selector');
-  });
 
-  //
-  // Date Selector
-  //
-  
-  let tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
-
-  document.getElementById('startdate').value = [
-    tomorrow.getFullYear(),
-    (100 + tomorrow.getMonth() + 1).toString().slice(1),
-    (100 + tomorrow.getDate()).toString().slice(1),
-  ].join('-');
-
-  //
-  // Content loading
-  //
-  if(_me.instagram) {
-    $(".socnet-wrapper").removeClass('unselected');
-    $(".login.instagram").addClass('selected');
-    instaGet();
+    receipt_update();
+    loadMap();
   }
-
-  receipt_update();
-  loadMap();
 }
 
