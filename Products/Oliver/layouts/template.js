@@ -20,6 +20,9 @@ function template(opts) {
       return _res.custom[key](node, value, key, ix);
     }
 
+    if(!value) {
+      return;
+    }
     let is_url = value.match(/^https?:\/\//i);
     if(node.tagName === 'IMG') {
       if(is_url) {

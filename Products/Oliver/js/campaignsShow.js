@@ -55,6 +55,7 @@ function changeSelected(newIdx) {
 
 (() => {
   console.log('href', window.location.href);
+  /*
   document.querySelector('#campaign-url').innerHTML = `URL: ${window.location.href}`;
   topBarRight.innerHTML = [
     'Overview',
@@ -77,6 +78,7 @@ function changeSelected(newIdx) {
     .concat(['<div class="top-bar-link update-campaign-btn p-manager">Update</div>'])
     .join('');
   topBarRight.children[selectedLinkIdx].classList.add('top-bar-selected');
+  */
 
   window.addEventListener('hashchange', function() {
     window.scrollTo(window.scrollX, window.scrollY - 50);
