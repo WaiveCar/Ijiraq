@@ -57,7 +57,7 @@ body {
 }
 
 div#bigtext {
-  font-size: 12vh;
+  font-size: 8vh;
   font-weight: 700;
   justify-content: flex-end;
 }
@@ -72,7 +72,7 @@ div#bigtext {
 </style>
 <div id=ad>
   <div id=lhs>
-    <div id=bigtext>Big Text that is maybe 2 lines</div>
+    <div id=bigtext class=tpl-bigtext>Big Text that is maybe 2 lines</div>
     <div id=smalltext class=tpl-description>Small Text for ad</div>
   </div><div id=image>
     <img data-index="0" class='tpl-photoList'>

@@ -123,7 +123,7 @@ div#bigtext div {
       </div>
     </div>
 
-    <div id=bigtext><div>Big Text that is maybe 2 lines</div></div>
+    <div id=bigtext><div class=tpl-bigtext>Big Text that is maybe 2 lines</div></div>
     <div id=smalltext><div class=tpl-description>Small Text for ad</div></div>
     <div id=contact>
       <div>
