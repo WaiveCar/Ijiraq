@@ -22,11 +22,34 @@ if(!isset($_SESSION['uid'])) {
   $_SESSION['uid'] = compact_uuid();
 }
 
+function get_user_id() {
+  return aget($_SESSION, 'user.id');
+}
 function get_user() {
-  if(isset($_SESSION['user_id'])) {
-    return Get::user($_SESSION['user_id']);
+  $user_id = get_user_id();
+  if($user_id) {
+    $_SESSION['user'] = Get::user($user_id);
+    return $_SESSION['user'];
   }
 }
+
+function user_update($data) {
+  $who = get_user_id();
+  if($who) {
+    $props = [];
+    foreach(['email','name','phone'] as $field) {
+      if(!empty($data[$field])) {
+        $props[$field] = $data[$field];
+      }
+    }
+    if(!empty($props)) {
+      pdo_update('user', $who, $props);
+      // refreshes the session;
+      get_user();
+    }
+  }
+}
+
 
 function sess() {
   var_dump($_SESSION);
@@ -50,7 +73,7 @@ function do_oth($oth) {
   $stuff = onetimehash($oth);
   if($stuff) {
     if($stuff['action'] == 'confirm') {
-      pdo_update('user', ['id' => $stuff['data']], ['is_erified' => true]);
+      pdo_update('user', ['id' => $stuff['data']], ['is_verified' => true]);
     }
     return true;
   }
@@ -252,11 +275,11 @@ function notify_if_needed($campaign, $event) {
 }
 
 function send_message($user, $template, $params) {
-  $params['user'] = $params['user'] ?: $user;
+  $params['user'] = $params['user'] ?: $user ?: get_user_id();
   $stuff = parser($template, $params);
 
   $res = [];
-  if($user['phone']) {
+  if(isset($user['phone'])) {
     $res['text'] = text_rando($user['phone'], $stuff['sms']); 
   }
 
@@ -375,7 +398,7 @@ function provides($filter) {
       foreach(aget($service, 'data.reviews.reviews') as  $review) {
         if($review['rating'] == 5) {
           $parts = explode('.', $review['text']);
-          $res['bigtext'] = $parts[0] . ".<br><small>&#9733;&#9733;&#9733;&#9733;&#9733; - yelp</small>";
+          $res['bigtext'] = $parts[0] . ".<small>&#9733;&#9733;&#9733;&#9733;&#9733; - yelp</small>";
         }
       }
 
