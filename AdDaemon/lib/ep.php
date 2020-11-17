@@ -38,6 +38,7 @@ function post_return($res) {
     header('Location: ' . $_GET['next']);
     exit;
   } 
+  header('Content-type: application/json');
   jemit($res);
 }
 
@@ -165,6 +166,8 @@ try {
     'login',
     'logout',
     'sess',
+    'yelp_search',
+    'yelp_save',
     'signup',
   ]) !== false) { 
     post_return($func($all, $verb));
@@ -189,7 +192,6 @@ try {
     'most_recent',
     'provides',
     'task_dump',
-    'yelp_search',
     'dsp_signup',
     'dsp_create',
     'dsp_default',

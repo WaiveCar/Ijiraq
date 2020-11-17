@@ -39,6 +39,10 @@ function curldo($url, $params = false, $opts = []) {
 
   $header = [];
     
+  if(isset($opts['header'])) {
+    $header[] = $opts['header'];
+  }
+
   if($verb !== 'GET') {
     if(!isset($opts['isFile'])) {
       if(!$params) {
@@ -1514,6 +1518,23 @@ function compact_uuid() {
   return str_replace(['+','/','='], ['-','_',''], base64_encode(hex2bin($b16)));
 }
 
-function yelp_search($all) {
-  var_dump($all);
+function _yelp_get($ep) {
+  global $secrets;
+  return curldo('http://9ol.es/proxy.php', [
+    'u' => "https://api.yelp.com/v3/businesses/$ep",
+    'h' => "Authorization: Bearer {$secrets['yelp']['api_key']}"
+  ]);
 }
+
+function yelp_search($all) {
+  return _yelp_get("search?term={$all['query']}&longitude={$all['longitude']}&latitude={$all['latitude']}");
+}
+
+function yelp_save($all) {
+  $info = [
+    'info' => _yelp_get($all['id']),
+    'reviews' => _yelp_get("{$all['id']}/reviews")
+  ]
+  var_dump($info);
+}
+
