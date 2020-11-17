@@ -56,7 +56,7 @@ window.onload = function init() {
   };
 
   var bootcount = db.incr('bootcount'), 
-    uid = db.kv_get('uid'),
+    uid = db.kv_get('uid') || Math.floor(Math.random() * 1e16).toString(36),
     hoard_id = window.location.href.split('/').pop(),
 
     ping_payload = {

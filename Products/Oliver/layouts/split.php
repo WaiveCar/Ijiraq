@@ -55,13 +55,20 @@ body {
   font-size: 8vh;
   margin-top: 3vh;
 }
-
+div#bigtext small {
+  opacity: .5;
+  font-style: italic;
+  float: right;
+}
 div#bigtext {
-  font-size: 8vh;
+  font-size: 3vmax;
   font-weight: 700;
   justify-content: flex-end;
 }
 #image img { 
+  object-fit: cover;
+  object-position: center;  
+  height: 100%;
   width: 100%;
 }
 

@@ -160,7 +160,7 @@ function instaGet() {
     var param = selected.map(row => `images[]=` + row.replace(/\?/,'%3F').replace(/\&/g, '%26')).join('&');
 
     _preview.AddJob({
-      url: `${_layout_base}/${_layout}.php?id=${_provides.id}`
+      url: `${_layout_base}/${_layout}.php?id=${_provides.user_id}`
     });
 
     for(var engine_ix = 0; engine_ix < Engine._length; engine_ix++) {
@@ -168,7 +168,7 @@ function instaGet() {
       if(engine.name) {
         console.log("Loading " + engine.name);
         engine.AddJob({ 
-          url: `${_layout_base}/${engine.name}.php?id=${_provides.id}`
+          url: `${_layout_base}/${engine.name}.php?id=${_provides.user_id}`
         });
         engine.Start();
       }
@@ -256,11 +256,10 @@ window.onload = function(){
   // Layout selector
   //
   $(".adchoice .card").click(function() {
-    self.a = this;
     let which = this.querySelector('.engine-container');
     _layout = which.dataset.template;
     _preview.PlayNow(_preview.AddJob({
-      url: `${_layout_base}/${_layout}.php?id=${_provides.id}`
+      url: `${_layout_base}/${_layout}.php?id=${_provides.user_id}`
     }));
     $(".adchoice .card").removeClass('selected');
     $(this).addClass('selected')

@@ -17,7 +17,7 @@
       z-index: 1000;
     }
     </style>
-    <link rel="stylesheet" href="css/engine.css">
+    <link rel="stylesheet" href="/css/engine.css">
   </head>
 
   <body>
@@ -27,6 +27,6 @@
     </div>
   </body>
 
-  <script src="js/viewer.js"></script>
-  <script src="js/engine.js"></script>
+  <script src="/js/viewer.js"></script>
+  <script src="/js/engine.js"></script>
 </html>
