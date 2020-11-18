@@ -446,6 +446,8 @@ select.form-control:focus,
 .insta .content .row img {
   height: 100%;
   width: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 .insta .content .row > div {
   height: 150px;

@@ -25,7 +25,7 @@ function create_campaign(obj) {
 
   formData.append('geofence', _map.save());
   formData.append('asset', [
-    `${_proto}://${_server_url}/${_layout}.php?id=${_provides.user_id}`
+    `${_proto}://${_server_url}/layouts/${_layout}.php?id=${_provides.user_id}`
   ]);
 
   console.log(formData);
