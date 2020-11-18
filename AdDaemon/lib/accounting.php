@@ -309,7 +309,7 @@ function send_campaign_message($campaign, $template, $user = false, $order = fal
   $params = [
     'date_start' => $campaign['start_time'],
     'date_end'  => $campaign['end_time'],
-    'campaign_link' => 'https://olvr.io/v/' . $campaign['id'],
+    'campaign_link' => 'https://olvr.io/dash/' . $campaign['id'],
     'play_count'=> $campaign['play_count'],
     'name'      => $user['name'],
     'amount'    => sprintf("$%.2f", $order['amount'] / 100),
