@@ -5,6 +5,7 @@ function template(opts) {
 
       db: {},
       custom: {},
+      all: {},
 
       duration: 7.5,
       id: false,
@@ -13,7 +14,14 @@ function template(opts) {
 
     }, opts || {});
 
-  var exclude_list = new Set(['created_at','id']);
+  var 
+    exclude_list = new Set(['created_at','id']), 
+    orderList = false;
+
+  if(_res.all.order) {
+    orderList = _res.all.order.split(',');
+    console.log(orderList);
+  }
 
   function assign(node, value, key, ix) {
     if(key in _res.custom) {
@@ -33,7 +41,18 @@ function template(opts) {
     }
   }
 
+  function reorder(data) {
+    if(orderList) {
+      var lookup = {};
+      data.photoList.forEach(row => lookup[row.id] = row);
+      data.photoList = orderList.map(row => lookup[row]);
+    }
+    return data;
+  }
+
   function parser(data) {
+    data = reorder(data);
+
     _res._last_data = data;
     let list = Object.keys(data).filter(x => !exclude_list.has(x));
     for (let key of list) {

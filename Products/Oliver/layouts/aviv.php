@@ -187,5 +187,8 @@ img.fill {
 </body>
 <script src=template.js></script>
 <script>
-template({id: <?= $id ?>});
+template({
+  all: <?= json_encode($_GET); ?>,
+  id: <?= $id ?>
+});
 </script>

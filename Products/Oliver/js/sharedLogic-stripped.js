@@ -167,10 +167,10 @@ function instaGet() {
     })
 
     // this is a hack. absolutely a hack.
-    var param = JSON.stringify(selected.map(row => row.replace(/\?/,'%3F').replace(/\&/g, '%26')));
+    var param = selected.map(row => row.replace(/\?/,'%3F').replace(/\&/g, '%26')).join(',');
 
     _preview.AddJob({
-      url: `${_layout_base}/${_layout.name}.php?id=${_provides.user_id}&asset=${param}`
+      url: `${_layout_base}/${_layout.name}.php?id=${_provides.user_id}&order=${param}`
     });
 
     for(var engine_ix = 0; engine_ix < Engine._length; engine_ix++) {
@@ -178,7 +178,7 @@ function instaGet() {
       if(engine.name) {
         console.log("Loading " + engine.name);
         engine.AddJob({ 
-          url: `${_layout_base}/${engine.name}.php?id=${_provides.user_id}&asset=${param}`
+          url: `${_layout_base}/${engine.name}.php?id=${_provides.user_id}&order=${param}`
         });
         engine.Start();
       }
