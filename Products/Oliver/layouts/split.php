@@ -98,6 +98,7 @@ div#bigtext {
 <script src=template.js></script>
 <script>
 let tpl = template({
+  all: <?= json_encode($_GET); ?>,
   id: <?= $id ?>
 });
 </script>

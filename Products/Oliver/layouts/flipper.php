@@ -179,6 +179,7 @@ function randy(sz) {
 let ixMap = randy(4);
 let tpl = template({
   id: <?= $id ?>,
+  all: <?= json_encode($_GET); ?>,
   custom: {
     photoList: function (node, value, key, ix) {
       let custom = document.getElementById('custom');

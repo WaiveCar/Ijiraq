@@ -5,7 +5,7 @@
  *   - duration: The time in seconds to show
  *   - loop: Whether to loop the show or just stop 
  */
-$dur = $_GET['duration'] ?: 16;
+$dur = $_GET['duration'] ?: 15;
 $loop = $_GET['loop'] ?: 'infinite';
 $id = $_GET['id'];
 
@@ -29,7 +29,6 @@ $id = $_GET['id'];
   height: 70.2vw;
   opacity: 0.05;
   border-radius: 500vw;
-  
 }
 body { 
   background: #fff;
@@ -188,5 +187,8 @@ img.fill {
 </body>
 <script src=template.js></script>
 <script>
-template({id: <?= $id ?>});
+template({
+  all: <?= json_encode($_GET); ?>,
+  id: <?= $id ?>
+});
 </script>

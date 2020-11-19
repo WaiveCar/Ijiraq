@@ -6,21 +6,30 @@ var
   _layout_base = '/layouts',
   _galleryMap = {},
   _provides = {},
-  _layout = 'aviv',
+  _layout = {name: 'aviv', duration: 15},
+  _valMap = {},
+  _map = null,
   _loc = [-118.32, 34.09],
   _assetList = [];
+
+function tplUrl(tpl) {
+  return `${_layout_base}/${tpl}.php?id=${_provides.user_id}&order=${_layout.order}`;
+}
 
 function create_campaign(obj) {
   // Before the payment is processed by paypal, a user's purchase is sent to the server with 
   // the information that has so far been obtained including the picture.
   let formData = new FormData();
 
-  for(var key in valMap) {
-    formData.append(key, valMap[key]);
+  for(var key in _valMap) {
+    formData.append(key, _valMap[key]);
   }
-  formData.append('geofence', _map.save());
 
-  console.log(formData);
+  ['email','phone','startdate'].forEach(row => formData.append(row, $(`#${row}`).val()));
+
+  formData.append('geofence', _map.save());
+  formData.append('asset[0][url]', `${_proto}://${_server_url}/layouts/${_layout.name}.php?id=${_provides.user_id}`);
+  formData.append('asset[0][duration]', _layout.duration);
 
   return axios({
     method: 'post',
@@ -30,7 +39,7 @@ function create_campaign(obj) {
       headers: { 'Content-Type': 'multipart/form-data' },
     },
   }).then(function(resp) {
-    window.location = '${_proto}://' + window.location.hostname + '/campaigns';
+    window.location = _proto + '://' + window.location.hostname + '/campaigns';
   });
 }
 function resize(asset, width, height) {
@@ -51,7 +60,7 @@ function loadMap() {
   mymap.style.height = mymap.clientWidth * 675/1920 + 'px';
 
   function showMap(loc) {
-    let mymap = map({
+    _map = map({
       target: 'map-summary',
 
       selectFirst: true,
@@ -62,7 +71,7 @@ function loadMap() {
 
       center: loc,
     });
-    mymap.load([['Circle', loc, 2256]]);
+    _map.load([['Circle', loc, 2256]]);
   }
 
   navigator.geolocation.getCurrentPosition(function(pos) {
@@ -109,11 +118,14 @@ function yelpchoose(el) {
 }
 
 function yelpsearch(){
+  // TODO: REMOVE AFTER DEMO
+  var loc = [-118.32, 34.09];
+
   get("yelp_search?" +
     $.param({
       query: $("#yelp-search-input").val(),
-      longitude: _loc[0],
-      latitude: _loc[1]
+      longitude: loc[0],
+      latitude: loc[1]
     }), (res) => {
       $(".yelp .search .results").html('')
       res.businesses.forEach(row => {
@@ -157,19 +169,17 @@ function instaGet() {
       ix++;
       selected.push(row.dataset.standard);
     })
-    var param = selected.map(row => `images[]=` + row.replace(/\?/,'%3F').replace(/\&/g, '%26')).join('&');
 
-    _preview.AddJob({
-      url: `${_layout_base}/${_layout}.php?id=${_provides.user_id}`
-    });
+    // this is a hack. absolutely a hack.
+    _layout.order = selected.map(row => row.replace(/\?/,'%3F').replace(/\&/g, '%26')).join(',');
+
+    _preview.FAP({ url: tplUrl(_layout.name) });
 
     for(var engine_ix = 0; engine_ix < Engine._length; engine_ix++) {
       let engine = Engine[engine_ix];
       if(engine.name) {
         console.log("Loading " + engine.name);
-        engine.AddJob({ 
-          url: `${_layout_base}/${engine.name}.php?id=${_provides.user_id}`
-        });
+        engine.FAP({ url: tplUrl(engine.name) });
         engine.Start();
       }
     }
@@ -257,16 +267,17 @@ window.onload = function(){
   //
   $(".adchoice .card").click(function() {
     let which = this.querySelector('.engine-container');
-    _layout = which.dataset.template;
-    _preview.PlayNow(_preview.AddJob({
-      url: `${_layout_base}/${_layout}.php?id=${_provides.user_id}`
-    }));
+    _layout.name = which.dataset.name; 
+    _layout.duration = which.dataset.duration;
+
+    _preview.FAP({ url: tplUrl(_layout.name) });
+
     $(".adchoice .card").removeClass('selected');
     $(this).addClass('selected')
   });
 
   $(".engine-container").each(function() {
-    let template = this.dataset.template;
+    let template = this.dataset.name;
     this.style.height = .351 * this.clientWidth + "px";
     this.parentNode.style.height = 1.5 * .351 * this.clientWidth + "px";
 
@@ -304,55 +315,52 @@ window.onload = function(){
   // Preview engine
   //
   self._container =  document.getElementById('engine');
-  setRatio(_container, 'car'); 
-  self._preview = Engine({ 
-    container: _container,
-    dynamicSize: true,
-    _debug: true });
-  self._job = _preview.AddJob();
+  if(_container) {
+    setRatio(_container, 'car'); 
+    self._preview = Engine({ 
+      container: _container,
+      dynamicSize: true,
+      _debug: true });
+    self._job = _preview.AddJob();
 
-  $(".controls .rewind").click(function() {
-    // this is a lovely trick to force the current job
-    // which effectively resets itself
-      _preview.PlayNow(_job, true);
+    $(".ratios button").click(function(){
+      $(this).siblings().removeClass('active');
+      $(this).addClass('active');
+      var ratio = this.innerHTML.replace(':', '-').toLowerCase();
+      if(this.innerHTML == "16:9") {
+        _container.style.width = _container.clientHeight * 16/9 + "px";
+      } else if(this.innerHTML == "3:2") {
+        _container.style.width = _container.clientHeight * 3/2 + "px";
+      } else {
+        _container.style.width = "100%";
+      }
+        $(`.preview-holder-${ratio}`).siblings().removeClass('selector');
+        $(`.preview-holder-${ratio}`).addClass('selector');
     });
-  $(".ratios button").click(function(){
-    $(this).siblings().removeClass('active');
-    $(this).addClass('active');
-    var ratio = this.innerHTML.replace(':', '-').toLowerCase();
-    if(this.innerHTML == "16:9") {
-      _container.style.width = _container.clientHeight * 16/9 + "px";
-    } else if(this.innerHTML == "3:2") {
-      _container.style.width = _container.clientHeight * 3/2 + "px";
-    } else {
-      _container.style.width = "100%";
+
+    //
+    // Date Selector
+    //
+    
+    let tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+    document.getElementById('startdate').value = [
+      tomorrow.getFullYear(),
+      (100 + tomorrow.getMonth() + 1).toString().slice(1),
+      (100 + tomorrow.getDate()).toString().slice(1),
+    ].join('-');
+
+    //
+    // Content loading
+    //
+    if(_me.instagram) {
+      $(".socnet-wrapper").removeClass('unselected');
+      $(".login.instagram").addClass('selected');
+      instaGet();
     }
-      $(`.preview-holder-${ratio}`).siblings().removeClass('selector');
-      $(`.preview-holder-${ratio}`).addClass('selector');
-  });
 
-  //
-  // Date Selector
-  //
-  
-  let tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
-
-  document.getElementById('startdate').value = [
-    tomorrow.getFullYear(),
-    (100 + tomorrow.getMonth() + 1).toString().slice(1),
-    (100 + tomorrow.getDate()).toString().slice(1),
-  ].join('-');
-
-  //
-  // Content loading
-  //
-  if(_me.instagram) {
-    $(".socnet-wrapper").removeClass('unselected');
-    $(".login.instagram").addClass('selected');
-    instaGet();
+    receipt_update();
+    loadMap();
   }
-
-  receipt_update();
-  loadMap();
 }
 

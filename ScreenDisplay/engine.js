@@ -985,6 +985,14 @@ var Engine = function(opts){
       // This is a race condition, the on(system) should fire this off.
       //_res.NextJob();
     },
+    // forget everything, add the job, play it now.
+    FAP: function(obj) {
+      return _res.PlayNow( _res.Amnesia().AddJob(obj) );
+    },
+    Amnesia: function() {
+      _res.db = {};
+      return _res;
+    },
     AddJob: function(obj, params) {
       if(isString(obj)) {
         obj = {url: obj};

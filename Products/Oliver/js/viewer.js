@@ -82,6 +82,8 @@ window.onload = function init() {
     doOliver: true,
     server: "/adserver/" + uid + "/",
     middleware: middleware,
+    // The hoard gets appended to the SOW requests and 
+    // that's how the accounting works.
     meta: {
       sow: {
         hoard_id: hoard_id,
