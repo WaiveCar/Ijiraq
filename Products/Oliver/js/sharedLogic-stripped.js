@@ -12,6 +12,10 @@ var
   _loc = [-118.32, 34.09],
   _assetList = [];
 
+function tplUrl(tpl) {
+  return `${_layout_base}/${tpl}.php?id=${_provides.user_id}&order=${_layout.order}`;
+}
+
 function create_campaign(obj) {
   // Before the payment is processed by paypal, a user's purchase is sent to the server with 
   // the information that has so far been obtained including the picture.
@@ -167,19 +171,15 @@ function instaGet() {
     })
 
     // this is a hack. absolutely a hack.
-    var param = selected.map(row => row.replace(/\?/,'%3F').replace(/\&/g, '%26')).join(',');
+    _layout.order = selected.map(row => row.replace(/\?/,'%3F').replace(/\&/g, '%26')).join(',');
 
-    _preview.AddJob({
-      url: `${_layout_base}/${_layout.name}.php?id=${_provides.user_id}&order=${param}`
-    });
+    _preview.FAP({ url: tplUrl(_layout.name) });
 
     for(var engine_ix = 0; engine_ix < Engine._length; engine_ix++) {
       let engine = Engine[engine_ix];
       if(engine.name) {
         console.log("Loading " + engine.name);
-        engine.AddJob({ 
-          url: `${_layout_base}/${engine.name}.php?id=${_provides.user_id}&order=${param}`
-        });
+        engine.FAP({ url: tplUrl(engine.name) });
         engine.Start();
       }
     }
@@ -267,10 +267,11 @@ window.onload = function(){
   //
   $(".adchoice .card").click(function() {
     let which = this.querySelector('.engine-container');
-    _layout = {name: which.dataset.name, duration: which.dataset.duration};
-    _preview.PlayNow(_preview.AddJob({
-      url: `${_layout_base}/${_layout.name}.php?id=${_provides.user_id}`
-    }));
+    _layout.name = which.dataset.name; 
+    _layout.duration = which.dataset.duration;
+
+    _preview.FAP({ url: tplUrl(_layout.name) });
+
     $(".adchoice .card").removeClass('selected');
     $(this).addClass('selected')
   });
@@ -322,11 +323,6 @@ window.onload = function(){
       _debug: true });
     self._job = _preview.AddJob();
 
-    $(".controls .rewind").click(function() {
-      // this is a lovely trick to force the current job
-      // which effectively resets itself
-        _preview.PlayNow(_job, true);
-      });
     $(".ratios button").click(function(){
       $(this).siblings().removeClass('active');
       $(this).addClass('active');
