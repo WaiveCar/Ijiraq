@@ -6,7 +6,7 @@ var
   _layout_base = '/layouts',
   _galleryMap = {},
   _provides = {},
-  _layout = 'aviv',
+  _layout = {name: 'aviv', duration: 15},
   _valMap = {},
   _map = null,
   _loc = [-118.32, 34.09],
@@ -24,11 +24,8 @@ function create_campaign(obj) {
   ['email','phone','startdate'].forEach(row => formData.append(row, $(`#${row}`).val()));
 
   formData.append('geofence', _map.save());
-  formData.append('asset', [
-    `${_proto}://${_server_url}/layouts/${_layout}.php?id=${_provides.user_id}`
-  ]);
-
-  console.log(formData);
+  formData.append('asset[0][url]', `${_proto}://${_server_url}/layouts/${_layout.name}.php?id=${_provides.user_id}`);
+  formData.append('asset[0][duration]', _layout.duration);
 
   return axios({
     method: 'post',
@@ -117,11 +114,14 @@ function yelpchoose(el) {
 }
 
 function yelpsearch(){
+  // TODO: REMOVE AFTER DEMO
+  var loc = [-118.32, 34.09];
+
   get("yelp_search?" +
     $.param({
       query: $("#yelp-search-input").val(),
-      longitude: _loc[0],
-      latitude: _loc[1]
+      longitude: loc[0],
+      latitude: loc[1]
     }), (res) => {
       $(".yelp .search .results").html('')
       res.businesses.forEach(row => {
@@ -165,10 +165,12 @@ function instaGet() {
       ix++;
       selected.push(row.dataset.standard);
     })
-    var param = selected.map(row => `images[]=` + row.replace(/\?/,'%3F').replace(/\&/g, '%26')).join('&');
+
+    // this is a hack. absolutely a hack.
+    var param = JSON.stringify(selected.map(row => row.replace(/\?/,'%3F').replace(/\&/g, '%26')));
 
     _preview.AddJob({
-      url: `${_layout_base}/${_layout}.php?id=${_provides.user_id}`
+      url: `${_layout_base}/${_layout.name}.php?id=${_provides.user_id}&asset=${param}`
     });
 
     for(var engine_ix = 0; engine_ix < Engine._length; engine_ix++) {
@@ -176,7 +178,7 @@ function instaGet() {
       if(engine.name) {
         console.log("Loading " + engine.name);
         engine.AddJob({ 
-          url: `${_layout_base}/${engine.name}.php?id=${_provides.user_id}`
+          url: `${_layout_base}/${engine.name}.php?id=${_provides.user_id}&asset=${param}`
         });
         engine.Start();
       }
@@ -265,17 +267,16 @@ window.onload = function(){
   //
   $(".adchoice .card").click(function() {
     let which = this.querySelector('.engine-container');
-    _layout = which.dataset.template;
-    _valMap.layout = _layout;
+    _layout = {name: which.dataset.name, duration: which.dataset.duration};
     _preview.PlayNow(_preview.AddJob({
-      url: `${_layout_base}/${_layout}.php?id=${_provides.user_id}`
+      url: `${_layout_base}/${_layout.name}.php?id=${_provides.user_id}`
     }));
     $(".adchoice .card").removeClass('selected');
     $(this).addClass('selected')
   });
 
   $(".engine-container").each(function() {
-    let template = this.dataset.template;
+    let template = this.dataset.name;
     this.style.height = .351 * this.clientWidth + "px";
     this.parentNode.style.height = 1.5 * .351 * this.clientWidth + "px";
 
