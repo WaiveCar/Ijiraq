@@ -1,5 +1,6 @@
 <?php
 $id = $_GET['id'];
+$dur = 4;
 ?>
 <!--
 there's two ways
@@ -70,6 +71,7 @@ div#bigtext div {
   width: 100vh;
   height: 100vh;
   flex: 0 0 100vh;
+  margin-left: auto;
 }
 
 .row {
@@ -89,11 +91,10 @@ div#bigtext div {
   width: 100%;
   height: 100%;
   font-size: 10vh;
-  animation: .5s;
+  animation: <?=$dur?>s;
   animation-timing-function: linear;
-  animation-fill-mode: forwards;
+animation-iteration-count: infinite;
   transform-style: preserve-3d;
-  transform: rotate3d(0.5, 0, 0, 180deg);
   animation-name: flip; 
 }
 .card > div {
@@ -109,8 +110,10 @@ div#bigtext div {
   background: #604050;
 }
 @keyframes flip {
-  0% {transform: rotate3d(0.5, 0, 0, 180deg); }
-  100% {transform: rotate3d(0.5, 0, 0, 0deg); }
+  0% {transform: rotate3d(0.5, 0, 0, 0deg); }
+  75% {transform: rotate3d(0.5, 0, 0, 0deg); }
+  87% {transform: rotate3d(0.5, 0, 0, 180deg); }
+  100% {transform: rotate3d(0.5, 0, 0, 360deg); }
 }
 .tpl-logo {
   border-radius: 50vw;
@@ -129,8 +132,8 @@ div#bigtext div {
       </div>
     </div>
 
-    <div id=bigtext><div class=tpl-bigtext>Big Text that is maybe 2 lines</div></div>
-    <div id=smalltext><div class=tpl-description>Small Text for ad</div></div>
+    <div id=bigtext><div class=tpl-bigtext>Please connect Yelp</div></div>
+    <div id=smalltext><div class=tpl-description>Please connect Yelp</div></div>
     <div id=contact>
       <div>
         <span>@</span><span class=tpl-handle></span>
@@ -144,9 +147,9 @@ div#bigtext div {
     <div class=row>
       <? for($iy = 0; $iy < 4; $iy ++) { ?>
       <div class=container>
-        <div style="animation-delay:<?= 40 * ($ix * 4 + $iy)?>ms" class="card">
-          <div class=front style="background-position:<?=$iy * 30?>% <?=$ix * 30?>%"></div>
-          <div class=back></div>
+        <div style="animation-delay:<?= 20 * ($ix * 4 + $iy)?>ms" class="card">
+          <div id=front-<?=$ix?>-<?=$iy?> class=front style="background-position:<?=$iy * 30?>% <?=$ix * 30?>%"></div>
+          <div class=back style="background-position:<?=$iy * 30?>% <?=$ix * 30?>%"></div>
         </div>
       </div>
       <? } ?>
@@ -155,6 +158,7 @@ div#bigtext div {
   </div>
 </div>
 
+<script src="/js/jquery-3.0.0.min.js"></script>
 <script src=template.js></script>
 <script>
 function randy(sz) {
@@ -176,7 +180,11 @@ function randy(sz) {
 
   return s;
 }
+
+var _data, ix = 1;
+let dur = <?= $dur ?>;
 let ixMap = randy(4);
+var start = new Date();
 let tpl = template({
   id: <?= $id ?>,
   all: <?= json_encode($_GET); ?>,
@@ -189,4 +197,25 @@ let tpl = template({
     }
   }
 });
+
+function changer() {
+  setTimeout(function() {
+    $(`.front`).css('background-image', 'url(' + _data.photoList[ix % _data.photoList.length].url + ')');
+    ix += 1;
+  }, dur * 1000 * .87);
+}
+
+window.onload = function() {
+  var el = document.querySelector('.card');
+  ['animationiteration','animationstart'].forEach(row => {
+    el.addEventListener(row, function() {
+      changer();
+    });
+  });
+}
+
+function _cb(data) {
+  _data = data;
+  changer();
+}
 </script>

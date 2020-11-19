@@ -65,7 +65,13 @@ div#bigtext {
   font-weight: 700;
   justify-content: flex-end;
 }
+#image {
+  position: relative;
+}
 #image img { 
+  position: absolute;
+  top: 0;
+  left: 0;
   object-fit: cover;
   object-position: center;  
   height: 100%;
@@ -79,9 +85,15 @@ div#bigtext {
 </style>
 <div id=ad>
   <div id=lhs>
-    <div id=bigtext class=tpl-bigtext>Big Text that is maybe 2 lines</div>
-    <div id=smalltext class=tpl-description>Small Text for ad</div>
+    <div id=bigtext class=tpl-bigtext>Please connect Yelp</div>
+    <div id=smalltext class=tpl-description>Please connect Yelp</div>
   </div><div id=image>
+    <img data-index="0" class='tpl-photoList'>
+    <img data-index="5" class='tpl-photoList'>
+    <img data-index="4" class='tpl-photoList'>
+    <img data-index="3" class='tpl-photoList'>
+    <img data-index="2" class='tpl-photoList'>
+    <img data-index="1" class='tpl-photoList'>
     <img data-index="0" class='tpl-photoList'>
   </div><div id=rhs>
     <div>
@@ -95,10 +107,31 @@ div#bigtext {
   </div>
 </div>
 
+<script src="/js/jquery-3.0.0.min.js"></script>
+<script src="/js/jquery-migrate-1.4.1.min.js" ></script>
 <script src=template.js></script>
 <script>
+
 let tpl = template({
   all: <?= json_encode($_GET); ?>,
   id: <?= $id ?>
 });
+
+function _cb(data) {
+  let ilist = [
+    document.getElementById("first"), 
+    document.getElementById("second"), 
+  ], ix = Math.min(6,data.photoList.length);
+  
+  window.setInterval(function() {
+    ix--; 
+    $($("#image img")[ix + 1]).fadeOut(1000, (el) => {
+      if(ix == 0) {
+        $("#image img").show();
+        ix = Math.min(6,data.photoList.length);
+      }
+    });
+  }, 4000);
+
+}
 </script>

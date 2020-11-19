@@ -3,7 +3,7 @@ var
   _preview,
   _proto = 'https',
   _server_url = 'olvr.io',
-  _layout_base = '/layouts',
+  _layout_base = `${_proto}://${_server_url}/layouts`,
   _galleryMap = {},
   _provides = {},
   _layout = {name: 'aviv', duration: 15},
@@ -28,7 +28,7 @@ function create_campaign(obj) {
   ['email','phone','startdate'].forEach(row => formData.append(row, $(`#${row}`).val()));
 
   formData.append('geofence', _map.save());
-  formData.append('asset[0][url]', `${_proto}://${_server_url}/layouts/${_layout.name}.php?id=${_provides.user_id}`);
+  formData.append('asset[0][url]', tplUrl(_layout.name));
   formData.append('asset[0][duration]', _layout.duration);
 
   return axios({
@@ -39,7 +39,7 @@ function create_campaign(obj) {
       headers: { 'Content-Type': 'multipart/form-data' },
     },
   }).then(function(resp) {
-    window.location = _proto + '://' + window.location.hostname + '/campaigns';
+    window.location = _proto + '://' + window.location.hostname + '/campaigns#' + resp.data;
   });
 }
 function resize(asset, width, height) {
@@ -113,7 +113,7 @@ function yelpchoose(el) {
   $('.btn', el).slideUp();
   $('.chosen', el).slideDown();
   get('yelp_save?id=' + el.dataset.id, (res) => {
-    console.log(res);
+    instaregen();
   });
 }
 
@@ -129,7 +129,6 @@ function yelpsearch(){
     }), (res) => {
       $(".yelp .search .results").html('')
       res.businesses.forEach(row => {
-        console.log(row);
         $(".yelp .search .results").append(
           `<div onclick=yelpchoose(this) data-id="${row['id']}" class="card mb-3" >
           <div class="card-body row">
@@ -160,7 +159,7 @@ function yelpshow(){
 }
 
 function instaGet() {
-  function Gen() {
+  var Gen = self.instaregen = function() {
     $(".insta .selector").remove();
     var ix = 1;
     var selected = [];
@@ -261,6 +260,12 @@ function receipt_update() {
   $("#receipt-date").html(document.getElementById('startdate').value)
 }
 
+function logout() {
+  get('logout', function(){
+    location.reload();
+  });
+}
+
 window.onload = function(){
   //
   // Layout selector
@@ -353,7 +358,7 @@ window.onload = function(){
     //
     // Content loading
     //
-    if(_me.instagram) {
+    if(_me.instagram && self._preview) {
       $(".socnet-wrapper").removeClass('unselected');
       $(".login.instagram").addClass('selected');
       instaGet();

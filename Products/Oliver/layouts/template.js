@@ -74,6 +74,9 @@ function template(opts) {
         }
       }
     }
+    if(self._cb) {
+      _cb(data);
+    }
   }
 
   function remote() {
