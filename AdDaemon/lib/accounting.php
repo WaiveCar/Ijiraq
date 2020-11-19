@@ -389,6 +389,7 @@ function provides($filter) {
         error_log(json_encode($post));
         $row['photoList'][] = [
           'url' => aget($post, 'media_url'),
+          'id' => aget($post, 'id'),
           'created_at' => aget($post, 'timestamp')
         ];
       }
@@ -454,3 +455,8 @@ function insta_get_stuff($user) {
   return method2($user);
 }
 
+function my_campaigns() {
+  $user_id = get_user_id();
+  $campaign_list = Many::campaigns(['user_id' => $user_id]);
+  var_dump($campaign_list);
+}
