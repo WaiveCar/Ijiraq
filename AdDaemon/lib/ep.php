@@ -65,6 +65,7 @@ try {
         'fields' => 'id,username',
         'access_token' => $token['access_token']
       ]);
+      $_SESSION['instagram.userInfo'] = $userInfo;
 
       // instagram is profoundly fucking stupid under fb management.
       // TODO: They stored the user_id as a number! so you'll get IEEE floating
@@ -175,6 +176,7 @@ try {
     'sess',
     'yelp_search',
     'yelp_save',
+    'my_campaigns',
     'signup',
   ]) !== false) { 
     post_return($func($all, $verb));

@@ -32,6 +32,10 @@ $DEFAULT_CAMPAIGN_MAP = [
 // Play time in seconds of one ad.
 $PLAYTIME = 7.5;
 
+function _e($what, $obj) {
+  error_log($what . ' :: ' . json_encode($obj));
+}
+
 function curldo($url, $params = false, $opts = []) {
   $verb = strtoupper(isset($opts['verb']) ? $opts['verb'] : 'GET');
 
@@ -822,12 +826,18 @@ function sow($payload) {
   
   // If we are told to run specific campaigns
   // then we do that.
-  $candidate_campaigns = show('screen_campaign', ['screen_id' => $screen['id']]);
+
+  // SPECIAL CAMPAIGN TO SCREEN ASSIGNMENT
+  // {
+    $candidate_campaigns = show('screen_campaign', ['screen_id' => $screen['id']]);
+  // }
+  //
 
   if(empty($candidate_campaigns)) {
     // If we have no campaigns to show then we 
     // start with all active campaigns.
     $candidate_campaigns = active_campaigns($screen);
+    _e('active', $candidate_campaigns);
 
     // If we know where we are then we can see if some are more
     // important than others.
@@ -856,6 +866,7 @@ function sow($payload) {
     }
   }
 
+  
   // If we aren't in boost mode then we should *probably* try to spread out the completion over
   // the time allotted. The current method of doing this is through thresholds.
   if(!$boost_mode) {
@@ -1208,18 +1219,17 @@ function campaign_create($data, $fileList, $user = false) {
   } else {
     $candidate = $ph;
   }
-  if(strlen($candidate) > 1) {
-    $data['phone'] = $candidate;
-  }
+  $data['phone'] = $candidate;
 
   user_update($data);
-  var_dump($_SESSION['user']);
-  var_dump($props);exit;
+  /*
+  $props['user_id'] = aget($_SESSION, 'user.id');
 
   $user = upsert_user(get_fields($data, ['name','email','phone']));
   if($user) {
     $props['user_id'] = $user['id'];
   }
+   */
 
   $purchase_id = pdo_insert('purchase', get_fields($data, ['card_id','user_id','charge_id','amount']));
 
@@ -1230,7 +1240,7 @@ function campaign_create($data, $fileList, $user = false) {
   if($campaign_id) {
     pdo_update('purchase', $purchase_id, ['campaign_id' => $campaign_id]);
     $res = notify_if_needed(Get::campaign($campaign_id), 'receipt');
-    error_log(json_encode($res, JSON_PRETTY_PRINT));
+    error_log(json_encode($res));
   }
 
   return $campaign_id;
