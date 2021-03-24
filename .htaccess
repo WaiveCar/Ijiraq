@@ -19,6 +19,8 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule "admin/(.*)$" "Admin/$1.php?%{QUERY_STRING}" [L]
 RewriteRule "^engine.js$" "ScreenDisplay/engine.js" [L]
 RewriteRule "^engine.css$" "ScreenDisplay/engine.css" [L]
+RewriteRule "v/(.*)$" "Products/Oliver/viewer.php?id=$1" [L]
+RewriteRule "^adserver/(.*)/(.*)$" "AdDaemon/lib/ep.php?_VxiXw3BaQ4WAQClBoAsNTg_func=dsp_$2&id=$1" [L]
 
 RewriteRule "install" "https://youtu.be/Yc7FoILU5vY" [L]
 

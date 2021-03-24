@@ -1,3 +1,17 @@
+
+##20201010
+
+Everything is so confusing in here. I have all the legacy stuff inside of a legacy branch. For now I'm going to clean up everything and then maybe I'll have more motivation to actually achieve some things.
+
+##20200817
+
+Current work is
+/Products/adcast
+
+then run the server.py then navigate to
+
+http://localhost:5000/stripped/create/
+
 Maelstroms:
 
   * Before Instagram - Done before the first tracer-bullet instagram way to buy ads

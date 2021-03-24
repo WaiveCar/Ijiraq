@@ -1,4 +1,5 @@
 (() => {
+  /*
   // Google Login init
   gapi.load('auth2', function() {
     let GoogleAuth = gapi.auth2
@@ -15,10 +16,11 @@
       .catch(e => console.log('Error loading google sigin api', e));
   });
 
+  */
   // Facebook login init
   window.fbAsyncInit = function() {
     FB.init({
-      appId: '536536940468408',
+      appId: '466908264229772',//'536536940468408',
       status: true,
       cookie: true,
       xfbml: true,
@@ -53,7 +55,7 @@ function getProfileInfo(cb) {
       FB.api(
         '/me',
         {
-          fields: 'id,picture,email,first_name,last_name,name',
+          fields: 'id,user_photos,picture,email,first_name,last_name,name',
         },
         function(response) {
           if (cb) {

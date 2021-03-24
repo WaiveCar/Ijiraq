@@ -9,5 +9,5 @@
   .receipt > div { display: table-cell; margin: 1rem }
 </style>
 <div class="main">
-Hi <?= $name ?>,
+Hi<?= !empty($name) ? " $name," : "" ?>
 

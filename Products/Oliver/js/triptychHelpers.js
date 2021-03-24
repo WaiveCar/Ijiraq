@@ -1,22 +1,20 @@
 let adTypes = {
-  other: {
+  announcement: {
     layouts: [
       {
         hasImage: true,
-        imagePosition: [12, 12, 268, 201],
-        textPosition: [300, 100],
-        textMaxWidth: 330,
-        textSize: 40,
+        imagePosition: [360, 12, 268, 201],
+        textPosition: [12, 80],
+        textMaxWidth: 340,
+        textSize: 36,
         maxLines: 3,
-        preview: '/assets/ad_preview.svg',
       },
       {
         hasImage: false,
-        textPosition: [20, 100],
-        textMaxWidth: 608,
+        textPosition: [12, 72],
+        textMaxWidth: 616,
         textSize: 48,
         maxLines: 3,
-        preview: '/assets/ad_preview.svg',
       },
     ],
   },
@@ -24,20 +22,18 @@ let adTypes = {
     layouts: [
       {
         hasImage: true,
-        imagePosition: [12, 12, 268, 201],
-        textPosition: [300, 100],
-        textMaxWidth: 330,
-        textSize: 40,
+        imagePosition: [360, 12, 268, 201],
+        textPosition: [12, 80],
+        textMaxWidth: 340,
+        textSize: 36,
         maxLines: 3,
-        preview: '/assets/ad_preview.svg',
       },
       {
         hasImage: false,
-        textPosition: [20, 100],
-        textMaxWidth: 608,
+        textPosition: [12, 72],
+        textMaxWidth: 616,
         textSize: 48,
         maxLines: 3,
-        preview: '/assets/ad_preview.svg',
       },
     ],
   },
@@ -45,20 +41,18 @@ let adTypes = {
     layouts: [
       {
         hasImage: true,
-        imagePosition: [12, 12, 268, 201],
-        textPosition: [300, 100],
-        textMaxWidth: 330,
-        textSize: 40,
+        imagePosition: [360, 12, 268, 201],
+        textPosition: [12, 80],
+        textMaxWidth: 340,
+        textSize: 36,
         maxLines: 3,
-        preview: '/assets/ad_preview.svg',
       },
       {
         hasImage: false,
-        textPosition: [20, 100],
-        textMaxWidth: 608,
+        textPosition: [12, 72],
+        textMaxWidth: 616,
         textSize: 48,
         maxLines: 3,
-        preview: '/assets/ad_preview.svg',
       },
     ],
   },
@@ -67,53 +61,21 @@ let adTypes = {
 let triptych = null;
 let ctx = null;
 let image = null;
-let scale = 1;
 
-function redraw() {
-  drawImage(null, state);
-  reRenderText();
-}
-
-function reset() {
-  localStorage.removeItem('savedState');
-  console.log(localStorage);
-  window.location = "https://olvr.io/notices/wizard/0";
-}
-function drawImage(e, state, isInit) {
+function drawImage(e, state) {
   let layout = adTypes[state.category].layouts[state.selectedLayout];
   ctx.clearRect(0, 0, triptych.width, triptych.height);
-  ctx.fillStyle = state.backgroundColor;
+  ctx.fillStyle = e ? e.target.value : state.backgroundColor;
   ctx.fillRect(0, 0, triptych.width, triptych.height);
-  if (layout.hasImage && !isInit) {
+  if (layout.hasImage) {
     ctx.drawImage(
       image,
       0,
       0,
       image.width,
       image.height,
-      ...layout.imagePosition.map(num => num * scale),
+      ...layout.imagePosition.map(num => num * state.scale),
     );
-  } else if (layout.hasImage) {
-    image = new Image();
-    image.onload = function() {
-      ctx.drawImage(
-        image,
-        0,
-        0,
-        image.width,
-        image.height,
-        ...layout.imagePosition.map(num => num * scale),
-      );
-      if (!image.src.includes('sample-image.svg')) {
-        setState({sampleImageUsed: false});
-      }
-    };
-    image.onerror = function() {
-      image.src = '/assets/sample-image.svg';
-      setState({imageSrc: image.src, sampleImageUsed: true});
-    };
-    image.src = state.imageSrc;
-    console.log(image.src);
   }
 }
 
@@ -123,20 +85,21 @@ function reRenderText() {
   textInput.dispatchEvent(event);
 }
 
+
 function handleCanvasText(e, state) {
   let layout = adTypes[state.category].layouts[state.selectedLayout];
-  ctx.font = `bold ${layout.textSize * scale}px Lato`;
-  let words = document.querySelector('.triptych-text').value.split(' ');
+  ctx.font = `${layout.textSize * state.scale}px Arial`;
+  let words = e.target.value.split(' ');
   let lines = [];
   let currentLine = '';
   for (let i = 0; i < words.length; i++) {
     let word = words[i];
-    if (ctx.measureText(word).width > layout.textMaxWidth * scale) {
+    if (ctx.measureText(word).width > layout.textMaxWidth * state.scale) {
       let firstPart = '';
       let idx = 0;
       while (
         ctx.measureText(firstPart + word[idx]).width <
-        layout.textMaxWidth * scale
+        layout.textMaxWidth * state.scale
       ) {
         firstPart += word[idx];
         idx++;
@@ -147,7 +110,7 @@ function handleCanvasText(e, state) {
     }
     if (
       ctx.measureText(currentLine + word).width <
-      layout.textMaxWidth * scale
+      layout.textMaxWidth * state.scale
     ) {
       currentLine += word + ' ';
     } else {
@@ -162,58 +125,57 @@ function handleCanvasText(e, state) {
       0,
       text.length - 1,
     );
-    reRenderText();
     return;
   }
   drawImage(null, state);
-  let textColor = state.foregroundColor || 'black';//document.querySelector('[name=text-color-picker]').value;
+  let textColor = document.querySelector('[name=text-color-picker]').value;
   ctx.fillStyle = textColor;
   for (let i = 0; i < lines.length && i < layout.maxLines; i++) {
     ctx.fillText(
       lines[i],
-      layout.textPosition[0] * scale,
-      layout.textPosition[1] * scale + 2 + layout.textSize * scale * i,
+      layout.textPosition[0] * state.scale,
+      layout.textPosition[1] * state.scale +
+        2 +
+        layout.textSize * state.scale * i,
     );
   }
   ctx.fillStyle = state.backgroundColor;
 }
 
 function handleFileInput(layout, state) {
-  let hasInput = document.querySelector('.file-upload');
-  if (!hasInput) {
-    let fileUpload = document.createElement('input');
-    fileUpload.type = 'file';
-    fileUpload.classList.add('file-upload');
-    fileUpload.accept = 'image/png, image/jpeg';
-    fileUpload.oninput = function() {
-      image = new Image();
-      image.onload = function() {
-        drawImage(null, state);
-        reRenderText();
+  if (layout.hasImage) {
+    let hasInput = document.querySelector('#fileUpload');
+    if (!hasInput) {
+      let fileUpload = document.createElement('input');
+      fileUpload.type = 'file';
+      fileUpload.id = 'fileUpload';
+      fileUpload.accept = 'image/png, image/jpeg';
+      fileUpload.oninput = function() {
+        image = new Image();
+        image.onload = function() {
+          drawImage(null, state);
+          reRenderText();
+        };
+        image.src = URL.createObjectURL(this.files[0]);
+        setState({imageSrc: image.src});
       };
-      image.src = URL.createObjectURL(this.files[0]);
-      setState({
-        selectedLayout: 0,
-        imageSrc: image.src, 
-        sampleImageUsed: false
-      });
-    };
-    let label = document.querySelector('.input-options');
-    label.style.visibility = 'visible';
-    label.innerHTML = 'Choose 4x3 Image';
-    label.appendChild(fileUpload);
+      document.querySelector('.input-options').appendChild(fileUpload);
+    }
+  } else {
+    let input = document.querySelector('#fileUpload');
+    if (input) {
+      document.querySelector('.input-options').removeChild(input);
+    }
   }
 }
 
 function getImageFromCanvas(e, state) {
-  state = state || window.state;
   let oldCanvas = triptych;
   let newCanvas = document.createElement('canvas');
   newCanvas.width = 1920;
   newCanvas.height = 675;
   triptych = newCanvas;
-  let oldScale = scale;
-  scale = 3;
+  setState({scale: 3});
   let oldCtx = ctx;
   let newCtx = newCanvas.getContext('2d');
   ctx = newCtx;
@@ -222,7 +184,7 @@ function getImageFromCanvas(e, state) {
   triptych = oldCanvas;
   ctx = oldCtx;
   // Change scale back here so that the further editing can be done if necessary
-  scale = oldScale;
+  setState({scale: 1});
   let src = newCanvas.toDataURL('img/jpeg');
   setState({finalImageSrc: src});
 }

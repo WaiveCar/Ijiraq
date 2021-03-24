@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Olvr Supply Side Signup</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+<style>
+#url-container {
+  background: #3F536D;
+  padding: 2rem;
+  visibility: hidden;
+  border-radius: 1rem;
+  display:inline-block;
+  color: #ECEEF1;
+}
+#url-container p{
+  color: #ECEEF1;
+  margin-bottom:.5rem;
+ }
+#url {
+  color: #FF8E00;
+  margin: 0;
+}
+</style>
+	<body class="is-preload">
+
+	<header id="header">
+    <img style=width:400px; src=http://olvr.io/svg/oliver-Logo.svg>
+    <h1>The quickest way to sell screen time</h1>
+    <p>
+      At olvr we focus on volume. Our ad making technology allows both less technically able people to advertise quicker and an engine that produces advertisements which can work on any screen.
+    </p>
+    <p>
+      All you need to do is add a URL to your web-enabled DSP platform.
+    </p>
+    <p>
+      It has code that will automatically track the number of screens it is on and how long our platform is on.
+      We find out the dimensions of each screen and serve appropriate ads all you need to do is collect your money.
+    </p>
+    <p>Signing up is easy.</p>
+    <ol>
+      <li>Give us your email and we'll email you a unique URL. </li>
+      <li>Add it to your platform and we'll email you along the way.</li>
+      <li>When you accrue $5 in revenue, we'll email you and you can set up payout options.</li>
+    </ol>
+    <p>That's it. </p>
+
+    <form id="signup-form" action="#" onsubmit="signup()">
+      <input type="email" name="email" id="email" placeholder="Email Address" />
+      <input type="submit" id="sub" value="Generate My Unique URL" />
+    </form>
+    <div id='url-container'>
+      <p>Use this special URL in your backend.<br/>
+      We've emailed it to you along with instructions on how to get to your dashboard.</p>
+      <h2 id="url">blank</h2>
+
+    </div>
+  </header>
+
+  <footer id="footer">
+    <ul class="copyright">
+      <li>&copy; 2020 olvr.</li>
+    </ul>
+  </footer>
+	</body>
+</html>
+
+<script>
+  window.onload = function(){
+    document.getElementById('signup-form').addEventListener('submit', function(event) {
+      event.stopPropagation();
+      event.preventDefault();
+    });
+  }
+  function signup(e) {
+    let sub = document.getElementById('sub');
+    sub.style.opacity = 0.5;
+    fetch(new Request(
+      "/api/dsp_signup?email=" + document.getElementById('email').value,
+      {method: 'POST'}
+    ))
+      .then(response => response.json())
+      .then(data => {
+        sub.setAttribute('disabled', '1');
+        sub.value = 'See Below'
+        document.getElementById("url-container").style.visibility = 'visible';
+        document.getElementById("url").innerHTML = "https://olvr.io/v/" + data.data.uuid;
+        console.log(data);
+      });
+  }
+</script>

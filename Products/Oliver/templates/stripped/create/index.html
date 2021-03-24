@@ -1,0 +1,480 @@
+{% extends "base.html" %}
+{% block topbar %}
+<nav class="navbar navbar-expand-lg  navbar-dark bg-dark ">
+  <a class="navbar-brand" href="#">olvr</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/campaigns/create">New Campaign</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/campaigns">Your Campaigns</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Account
+        </a>
+        <div class="dropdown-menu-right dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Settings</a>
+          <a class="dropdown-item" href="#">Billing</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Logout</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+{% endblock %}
+{% block content %}
+<style>
+  #content-wrapper span { color: #000 }
+  #image-upload { display: none }
+  .id,.version { font-family: monospace }
+  .edit { color: #999; cursor: pointer }
+  .last { text-align: right }
+  .bothstates {
+    position: relative;
+  }
+  .bothstates * {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .chosen { 
+    display: none;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #FF8E00 }
+  em { color: #555 }
+  .table td {padding: .75rem .2rem; }
+  td.edit { white-space: nowrap; }
+  .modal-body span {
+    min-width: 5rem; 
+    display: inline-block;
+    vertical-align: top;
+  }
+  .adchoice .card-header img { width: 1rem;margin: 0 0.25rem }
+  .edit:hover { color: #000 }
+  #notice { position: absolute; top:0; left:0; width: 100%; z-index: 100;display:none}
+  .results img {
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+    height: 150px;
+  }
+  .results h3 {
+    font-weight: 600;
+  }
+  .editor {
+    display: none;
+  }
+  .buy {
+    text-align: center;
+  }
+  .buy button {
+    text-transform: uppercase;
+  }
+  .show {
+    display: block;
+  }
+  #schedule {
+    height: 340px;
+  }
+  .remove-asset {
+    position:absolute;
+    right:0;
+    z-index:1
+  }
+  #engine { height: 400px; overflow: hidden; background: black }
+  .customize {
+    display: flex;
+    justify-content: center;
+    padding: 3rem 0; 
+    border-bottom: 1px solid #6c757d;
+  }
+  .screen {
+    text-align: center;
+    position: relative;
+    margin: 0.5rem 0;
+  }
+  .screen .bg {
+    width: 100%;
+  }
+  .creatives-wrapper {
+    box-shadow: 0 0 7px 1px #ccc;
+  }
+  .preview-holder {
+    width: 100%;
+  }
+  .controls { 
+    padding: 10px;
+    background: #334;
+    padding-bottom: 3px;
+    border-radius: 0 0 6px 6px;
+  }
+  .customize > div {
+    display: none;
+  }
+  .asset-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .socnet .selected {
+    border: 1px solid #6c757d;
+    border-bottom: 0;
+    filter: saturate(0);
+  }
+  .socnet h4 {
+    white-space: nowrap;
+  }
+  .unselected .socnet h4{
+    border: 1px solid #6c757d;
+  }
+  .unselected .socnet a{
+    display: inline-block;
+    margin: 0.5rem 2rem;
+  }
+  .unselected .socnet {
+    border-bottom: 1px solid #6c757d;
+    padding-bottom: 2rem;
+  }
+  .unselected .socnet .login{
+    border-bottom: 0;
+  }
+  .unselected .socnet h4:hover{
+    background: white;
+    cursor: pointer;
+    transition : filter 120ms linear;
+    filter: invert(100%) saturate(0) brightness(2) opacity(0.8); 
+  }
+  .unselected .socnet a:hover{
+    text-decoration: none;
+  }
+  .unselected .customize {
+    display: none;
+  }
+  .break {
+    border-bottom: 1px solid #6c757d;
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+  }
+  .card {
+    border: 1px solid #343a40;
+  }
+  .card.selected {
+    border-color: #0056b3;
+    box-shadow: 0 0 7px 0px #0056b3;
+  }
+  .card:hover {
+    box-shadow: 0 0 7px 0px #6c757d;
+    transition : transform 120ms linear;
+    transform: scale(1.03);
+  }
+  .pitch h1 {
+    margin-bottom: 1.5rem;
+  }
+  .pitch p {
+    margin: 0.75rem 0;
+  }
+  .pitch h4 {
+    margin-top: 2rem;
+  }
+  .breaker { 
+    margin-top: 9rem;
+  }
+  .hl {
+    color: #FF8E00;
+    weight: 700;
+  }
+
+</style>
+<div class="container main">
+  <div class="row mb-5" >
+    <div class="col-lg-12 pitch">
+      <h1>Easy, Effective, Affordable.<br/><small>choose any 3</small></h1>
+      <p>Your custom, dynamic, and compelling ad takes just seconds to set up.</p>
+      <p>You can even make it automatically update when new content is added to your social media accounts.</p>
+
+      <p>It will show <em>at least</em> 200 times on digital billboards.</p> 
+
+      <p>And best of all, it's only <b>$4.00</b>.</p>
+
+      <p>It can happen right now and it's as easy as posting on social media.</p>
+      <h4>Boost your posts in the real world with olvr.</h4>
+    </div>
+  </div>
+
+  <div class="row mb-5 breaker" >
+    <div class="col-lg-1" style='white-space:nowrap;margin:.5rem 0'>
+      <h3 class=hl >Step 1</h3>
+    </div>
+    <div class="col-lg-11">
+
+      <h1>Create Your Ad</h1>
+      <h4>Attractive, automatically generated campaigns from your social media content.<br>
+        Simply connect your networks and watch as everything is done quickly and painlessly.</h4>
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <h3 class=text-muted>Social Media</h3>
+      <p>Pull your content from anywhere and have it update your campaign automatically or only when you want</p>
+    </div>
+  </div>
+  <div class="row mb-5 unselected socnet-wrapper">
+    <div class="col-lg-12">
+      <div class="row no-gutters socnet">
+        <div class="col-4 login instagram">
+          <h4>
+            <a href=https://api.instagram.com/oauth/authorize/?client_id=339058577323741&scope=user_profile,user_media&redirect_uri=https://olvr.io/api/instagram&response_type=code>
+              <img src=/assets/instagram.svg><span class='d-none d-md-inline tab-title'>Add Instagram</span>
+            </a>
+          </h4>
+        </div>
+        <div class="col-4 login yelp">
+          <h4>
+            <a onclick=yelpshow()>
+              <img src=/assets/yelp.svg><span class='d-none d-md-inline tab-title'>Add Yelp</span>
+            </a>
+          </h4>
+        </div>
+        <div class="col-4 login">
+          More Soon&hellip;
+        </div>
+      </div>
+      
+      <div class="row no-gutters customize">
+        <div class=insta>
+          <div class=mock>
+            <div class=header>
+              <div class=profile>
+                <img />
+              </div>
+              <div class=info>
+                <div style=height:100%;justify-content:center;display:flex;flex-direction:column;align-items:center;>
+                  <div class=name></div>
+                  <div class=description></div>
+                </div>
+              </div>
+              <div class=logout><a class="btn btn-primary btn-sm" href="/api/instagram?logout=1">Switch User</a></div>
+            </div>
+            <div class=content></div>
+          </div>
+        </div>
+        <div class='form-group col-sm-10 yelp'>
+          <div class='search'>
+            <div class="input-group mb-3">
+              <input type="text" id="yelp-search-input" class="form-control form-control-lg" placeholder="Find your business" aria-label="search" >
+              <div class="input-group-append">
+                <button class="btn" type="button" onclick="yelpsearch()">Search</button>
+              </div>
+            </div>
+            <div class='results'>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4" >
+    <div class="col-12">
+      <h3 class=text-muted>Available Layouts</h3>
+      <p>Choose from any of the following layouts and customize your campaign</p>
+    </div>
+  </div>
+
+  <div class="row mb-5 gallery-not-connected" >
+    <div class="col-12">
+      <p>Add your social media account to see the different styles and layouts</p>
+    </div>
+  </div>
+
+  <div class="row mb-5 gallery-wrapper" >
+    <div class="col-4 adchoice">
+      <div class="card mb-3" >
+        <div class="card-header">Slider <img src=/assets/instagram.svg></div>
+        <div class="card-body">
+           <div class='engine-container' data-name='aviv' data-duration=15></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-4 adchoice">
+      <div class="card mb-3" >
+        <div class="card-header">Flipper <img src=/assets/instagram.svg><img src=/assets/yelp.svg></div>
+        <div class="card-body">
+          <div class='engine-container' data-name='flipper' data-duration=10></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-4 adchoice">
+      <div class="card mb-3" >
+        <div class="card-header">Split <img src=/assets/instagram.svg><img src=/assets/yelp.svg></div>
+        <div class="card-body">
+          <div class='engine-container' data-name='split' data-duration=10></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <h3 class=text-muted>Preview Window</h3>
+      <p>Preview what your ad will feel like on different sized screens</p>
+    </div>
+  </div>
+  <div class="row mb-5" >
+    <div class="col-lg-12">
+      <div class="creatives-wrapper">
+        <div class="row no-gutters">
+          <div class="engine-holder">
+            <div id="engine"></div>
+          </div>
+        </div>
+        <div class="row no-gutters controls">
+          <div class="col-12">
+            <div class="float-right">
+              <div class="btn-group ratios" role="group" style='margin-right:1rem'>
+                <button type="button" class="btn btn-dark">3:2</button>
+                <button type="button" class="btn btn-dark">16:9</button>
+                <button type="button" class="btn btn-dark active">Custom</button>
+              </div>
+              <!--
+              <label for="image-upload" class="btn btn-dark">
+                <i class="fas fa-plus-square"></i> Image/Video
+              </label>
+              <input id="image-upload" multiple class="form-control-file" type="file" name="ad-asset" accept="image/*,video/*">
+              -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row mb-5 breaker" >
+    <div class="col-lg-1" style='white-space:nowrap;margin:.5rem 0'>
+      <h3 class=hl >Step 2</h3>
+    </div>
+    <div class="col-lg-11">
+
+      <h1>Create Your Strategy</h1>
+      <h4>Choose when and where to show your campaign<br>
+        with easy and affordable options.</h4>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <h3 class=text-muted>Focus Area</h3>
+      <p>Your plays will be focused in a 4-mile boost zone. Drag it to where you want the most exposure.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div id='map-summary' class='map'></div>
+    </div>
+  </div>
+
+  <div class="row mb-5 form-group break" >
+    <div class="col-lg-12">
+      <h3 class=text-muted>Start Date</h3>
+      <p>Campaigns run for 7 days. The default start date is tomorrow.</p>
+    </div>
+    <div class="col-lg-12">
+      <input type="date" class="form-control" id="startdate">
+    </div>
+  </div>
+
+  <div class="row mb-5 breaker" >
+    <div class="col-lg-1" style='white-space:nowrap;margin:.5rem 0'>
+      <h3 class=hl >Step 3</h3>
+    </div>
+
+    <div class="col-lg-11">
+      <h1>Payment & Info</h1>
+      <h4>Give us your email so we can notify you of the progress of your campaign<br>
+        You'll also get a dashboard to see where and when it played.</h4>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-4">
+      <h3 class=text-muted>Summary</h3>
+        <table class="table">
+          <tbody>
+            <tr> 
+              <td>Layout:</td><td> <b id=layout-style>Slider</b> </td>
+            </tr><tr>
+              <td>Sources:</td><td> <b>Instagram</b> </td>
+            </tr><tr>
+              <td>Starts:</td><td> <b id=receipt-date></b></td>
+            </tr><tr>
+              <td>Plays:</td><td> <b>200</b> </td>
+            </tr><tr>
+              <td><b>Price:</b></td><td> <h5 class=price id=price>$4.00</h5> </td>
+            </tr><tr>
+              <td><b>Promo</b></td><td> <input type="text" class="form-control" id="promo" placeholder=""></td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+    <div class="col-lg-8">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" placeholder="Email">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="phone">Mobile</label>
+          <input type="phone" class="form-control" id="phone" placeholder="Phone">
+        </div>
+      </div>
+      <div id='cc-card'>
+        <div class="form-group">
+          <label for="cardnumber">Credit Card</label>
+          <input type="text" class="form-control" id="cardnumber" placeholder="Credit Card Number">
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="ccv">CCV</label>
+            <input type="email" class="form-control" id="ccv" placeholder="CCV">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="exp">Exp</label>
+            <input type="email" class="form-control" id="exp" placeholder="MM/YY">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-5 buy">
+    <div class="col-lg-12">
+      <p><b>That's it. Really.</b><br/>200 ad plays for <span class=price>$4.00</span>.</p>
+      <button onclick=create_campaign() type="button" class="btn btn-primary btn-lg">Start Your Campaign</button>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+{% block additionalScripts %}
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="/js/sharedLogic-stripped.js"></script>
+{% endblock %}

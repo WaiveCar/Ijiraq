@@ -8,10 +8,11 @@ function toggleMenu() {
         ${[
             ['approval', 'admin'], 
             ['screens', 'admin'], 
-            ['notices', 'viewer'], 
-            ['browse', 'viewer'],
-            ['account', 'viewer'],
-            ['users', 'admin'],
+            ['campaigns', 'viewer'], 
+            ['organizations', 'admin'],
+            ['brands', 'viewer'],
+            ['users', 'manager'],
+            ['widgets', 'admin']
           ].map(
             item => `
           <li class="ml-2 nav-item menu-item sidebar-link active p-${item[1]}" data-item="${item[0]}">

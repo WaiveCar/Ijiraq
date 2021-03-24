@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block topbar %}
+<span class="top-bar-right mt-2 with-links hidable-top-bar">
+</span>
 {% endblock %}
 {% block content %}
 <style>
-.top-bar { position: relative; display: block; margin-bottom: 2vmin;}
 #content-wrapper span { color: #000 }
 .id,.version { font-family: monospace }
 .edit { color: #999; cursor: pointer }
 .last { text-align: right }
-a, a:hover { color: #000;text-decoration: none }
 em { color: #555 }
 .table td {padding: .75rem .2rem; }
 td.edit { white-space: nowrap; }
@@ -25,7 +25,7 @@ td.edit { white-space: nowrap; }
 .show {
   display: block;
 }
-.billing, .editor {
+.editor {
   display: none;
 }
 #schedule {
@@ -79,14 +79,14 @@ td.edit { white-space: nowrap; }
 .preview-holder {
   width: 100%;
 }
-.controls { 
-  padding: 10px;
-  background: #334;
-  padding-bottom: 3px;
-  margin-bottom: 1.5rem;
-  border-radius: 0 0 6px 6px;
-}
-.asset-container {
+ .controls { 
+   padding: 10px;
+   background: #334;
+   padding-bottom: 3px;
+   margin-bottom: 1.5rem;
+   border-radius: 0 0 6px 6px;
+ }
+ .asset-container {
   position: absolute;
   top: 0;
   left: 0;
@@ -98,83 +98,57 @@ td.edit { white-space: nowrap; }
   flex-direction: column;
   overflow: hidden;
 }
-.account-tl {
-  float:right;
-  display: block;
-  font-size: 4.5vmin;
-}
-.account-tl span {
-  margin-left: 1vmin;
-}
-.container-fluid {
-  padding-left: 3vmin;
-  padding-right: 3vmin;
-}
-
-.top-bar-left {
-  display: flex;
-  justify-content: space-between;
-  vertical-align: middle;
-  align-items: flex-end;
-  min-width: 0;
-  width: auto;
-  margin: 5vmin 3vmin;
-}
-#logo {
-  width: 35vmin;
-}
-.title { text-transform: uppercase }
-.offset-top { margin-top: 0 }
-@media(max-width: 768px) {
-  .top-bar {
-    margin-bottom: 2vmin;
-  }
-}
-@media(max-width: 1100px) {
-  .top-bar-left {
-  margin: 5vmin 3vmin;
-  }
-  .offset-top { margin-top: 0 }
-
-}
 </style>
 <div class="container-fluid">
-  <div class="row mbv-2"></div>
-  <div id="campaign-preview"></div>
-
-  <div class="row">
-    <div class="col-lg-12 d-flex justify-content-center">
-      <div class="stat">
-        <div class="start date">
-         &#8987;
-        </div>
-        <div class="title mb-1">
-          Start Date
-        </div>
+  <div id="campaign-preview">
+  </div>
+  <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between campaign-show-sub mt-3">
+      <div class="advert-holder">
+        <div class="campaign-show-title"></div>
       </div>
-      <div class="stat">
-        <div class="end date">
-         &#8987;
-        </div>
-        <div class="title mb-1">
-          End Date
-        </div>
+      <div class="advert-holder">
+        <div class="advert-a"><!--Advert-A--></div>
+      </div>
+      <div class="advert-holder">
+        <div class="advert-b"><!--Advert-B--></div>
       </div>
     </div>
-  </div>
-  <div class="row mbv-8">
-    <div class="offset-6 col-5">
-      <button id='extend' class="btn size btn-lg btn-block control-btn">Extend</button>
+    <div class="sub-users mt-3">
+      <img src="assets/share-alt.svg" data-toggle="modal" data-target="#share-modal" id="share-icon">
     </div>
   </div>
 
-  <div class="row mbv-8">
+  <div class="campaign-dates">
+  </div>
+  <div class="row mb-4">
+    <div class="col-4">
+    <button class="btn btn-lg btn-block control-btn">Pause</button>
+    </div>
+    <div class="col-4">
+      <button class="btn btn-lg btn-block control-btn">Extend</button>
+    </div>
+    <div class="col-4">
+      <button class="btn btn-lg btn-block control-btn">Modify</button>
+    </div>
+  </div>
+
+  <div class="row mb-4">
     <a name="Performance"></a>
     <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
-          <h2 class="card-title">Locations</h2>
-          <div class='map' id='location-map' style='width:100%;height:40vw'> 
+          <h2 class="card-title">Performance</h2>
+          <div class="d-flex justify-content-center chart-contain">
+            <div style="width: 50%;" class="mobile-chart">
+            	<canvas id="campaign-chart-1"></canvas>
+            </div>
+            <div style="width: 20%;" class="mobile-chart">
+            	<canvas id="campaign-chart-2"></canvas>
+            </div>
+            <div style="width: 20%;" class="mobile-chart">
+            	<canvas id="campaign-chart-3"></canvas>
+            </div>
           </div>
         </div>
       </div>
@@ -182,36 +156,41 @@ td.edit { white-space: nowrap; }
     <div class="col-lg-12">
       <div class="card">
         <div class="card-body d-flex justify-content-center">
-          <div class="stat">
-            <div class="boost count">
-             &#8987;
+          <div class="performance-download">
+            <div class="plate-count">
+              506
             </div>
-            <div class="boost title mb-1">
-              BOOST ZONE PLAYS
+            <div class="plate-title mb-1">
+              LICENSE PLATES
             </div>
+            <button class="btn btn-outline-dark">Download</button>
           </div>
-          <div class="stat">
-            <div class="play count">
-             &#8987;
+          <div class="performance-download">
+            <div class="plate-count">
+              1327
             </div>
-            <div class="play title mb-1">
-              TOTAL PLAYS
+            <div class="plate-title mb-1">
+              MOBILE DEVICES
             </div>
+            <button class="btn btn-outline-dark">Download</button>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 
   <div class="row mb-4">
-    <a name="Boost Zone"></a>
+    <a name="Location"></a>
     <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
-          <h2 class="card-title">Boost Zone</h2>
+          <h2 class="card-title">Location</h2>
 
-          <div class='map' style='width:100%;height:40vw' id='boost-map'></div>
+          <select id="type" class="custom-select custom-select-lg">
+            <option value="Circle">Circle</option>
+            <option value="Polygon">Geofence</option>
+          </select>
+          <div style='width:100%;height:40vw' id='map'></div>
         </div>
       </div>
     </div>
@@ -233,6 +212,7 @@ td.edit { white-space: nowrap; }
       </div>
     </div>
   </div>
+  -->
   <div class="row mb-4 creatives-wrapper">
     <a name="creatives"></a>
     <div class="col-lg-12">
@@ -286,7 +266,6 @@ td.edit { white-space: nowrap; }
       </div>
     </div>
   </div>
-  -->
 
 
   <!--
@@ -315,6 +294,7 @@ td.edit { white-space: nowrap; }
       </div>
     </div>
   </div>
+  -->
 
 
   <div class="row mb-4">
@@ -377,13 +357,13 @@ td.edit { white-space: nowrap; }
     </div>
   </div>
 
-  -->
-  <div class="row mb-4 billing">
+  <div class="row mb-4">
     <a name="Billing"></a>
     <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
-          <h2 class="card-title mb-3">Billing</h2>
+          <h2 class="card-title mb-3">Billing & Invoices</h2>
+          <b class="black">Balance <span class="amount">$577.92</span></b>
           <div class="table-responsive billing-table mt-4">
             <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
               <thead>
@@ -391,46 +371,55 @@ td.edit { white-space: nowrap; }
                   <th style="font-weight: 600" scope="col">id</th>
                   <th style="font-weight: 600" scope="col">date</th>
                   <th style="font-weight: 600" scope="col">cost</th>
+                  <th style="font-weight: 600" scope="col">paid</th>
                   <th></th>
                 </tr>
               </thead>
-              <tbody id="billing-data"></tbody>
+              <tbody id="screen-table-body">
+                <tr>
+                  <td>4</td>
+                  <td>9/22/2019</td>
+                  <td>$894.15</td>
+                  <td class="center"><input type="checkbox" checked></td>
+                  <td class="center"><button class="btn btn-primary rounded-btn">download</button></td>
+                </tr>
+                <tr>
+                  <td>15</td>
+                  <td>10/1/2019</td>
+                  <td>$577.92</td>
+                  <td class="center"><input type="checkbox"></td>
+                  <td class="center"><button class="btn btn-primary rounded-btn">download</button></td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="row mb-4">
-    <div class="col-12">
-      <a href='/notices/wizard/0'>
-      <button class="btn size btn-lg btn-block control-btn">Create New</button>
-      </a>
-    </div>
-  </div>
 </div>
-  <div class="modal fade" id="share-modal" tabindex="-1" role="dialog" aria-labelledby="share-modal-label" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Share This Campaign</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div id="campaign-url"></div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Add Password Protection</button>
+    <div class="modal fade" id="share-modal" tabindex="-1" role="dialog" aria-labelledby="share-modal-label" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Share This Campaign</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div id="campaign-url"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Add Password Protection</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 {% endblock %}
 {% block additionalScripts %}
-  <script src="/js/map.js"></script>
+  <script src="/js/campaignCharts.js"></script>
   <script src="/js/sharedLogic.js"></script>
   <script src="/js/campaignsShow.js"></script>
 {% endblock %}

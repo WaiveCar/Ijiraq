@@ -10,4 +10,4 @@ bunzip2 -d $compress
 sudo sqlite3 $db < $sql
 sudo chown www-data.www-data $db
 sudo chmod 0666 $db
-rm $compress $sql
+rm $sql

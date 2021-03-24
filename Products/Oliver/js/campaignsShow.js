@@ -1,7 +1,4 @@
-let server = 'staging.waivescreen.com';
-let maps = {};
 function renderCampaign(campaign) {
-  /*
   document.querySelector('.campaign-show-title').textContent =
     campaign.project[0].toUpperCase() + campaign.project.slice(1);
   document.querySelector('.campaign-dates').innerHTML = `${`${moment(
@@ -13,7 +10,6 @@ function renderCampaign(campaign) {
     ' ',
   )[0];
   document.querySelector('#end-date').value = campaign.end_time.split(' ')[0];
-  */
 }
 
 function calcItems() {
@@ -58,58 +54,62 @@ function changeSelected(newIdx) {
 }
 
 (() => {
+  console.log('href', window.location.href);
+  /*
   document.querySelector('#campaign-url').innerHTML = `URL: ${window.location.href}`;
+  topBarRight.innerHTML = [
+    'Overview',
+    'Budget',
+    'Performance',
+    'Creatives',
+    'Billing',
+    'Summary',
+    'Location',
+  ]
+    .map(
+      (item, i) => `
+    <a href="#${item}">
+      <div class="top-bar-link" onclick="changeSelected(${i})">
+        ${item}
+      </div>
+    </a>
+  `,
+    )
+    .concat(['<div class="top-bar-link update-campaign-btn p-manager">Update</div>'])
+    .join('');
+  topBarRight.children[selectedLinkIdx].classList.add('top-bar-selected');
+  */
 
-  const id = location.href.split('/').pop();
-  if(!id) { return }
-  map.location = map({ 
-    opacity: 0.7,
-    tiles: 'stamen.toner',
-    target: 'location-map' });
-  fetch(`http://${server}/api/path?id=${id}`)
-    .then(response => response.json())
-    .then(points => {
-      map.location.clear();
-      map.location.load(points.map(row => ["Line", row]));
-      map.location.fit();
-      
-    });
-  map.boost = map({ 
-    target: 'boost-map',
-    opacity: 0.7,
-    tiles: 'stamen.toner',
+  window.addEventListener('hashchange', function() {
+    window.scrollTo(window.scrollX, window.scrollY - 50);
   });
-  fetch(`http://${server}/api/purchases?campaign_id=${id}`)
-    .then(response => response.json())
-    .then(json => {
-      console.log(json);
-    });
 
-  fetch(`http://${server}/api/campaigns?id=${id}`)
+  $('#schedule').jqs();
+  const id = new URL(location.href).searchParams.get('id');
+  fetch(`http://adcast/api/campaigns?id=${id}`)
     .then(response => response.json())
     .then(json => {
+      self.j = json;
       campaign = json[0];
-      Engine({
-        container: document.querySelector('#campaign-preview'),
-        fallback: json[0]
-      }).Start();
-      campaign.duration_seconds = campaign.duration_seconds || 7.5;
-
-      // this means the campaign lapsed over 1 day ago.
-      if(+new Date(campaign.end_time) + 60*60*24*1000 < +new Date()) {
-        document.querySelector('#extend').innerHTML = "Renew";
-      }
-      
-      document.querySelector('.stat .start').innerHTML = campaign.start_time.split(' ')[0];
-      document.querySelector('.stat .end').innerHTML = campaign.end_time.split(' ')[0];
-      document.querySelector('.boost.count').innerHTML = Math.floor(campaign.completed_seconds / campaign.duration_seconds);
-      document.querySelector('.play.count').innerHTML = Math.floor(campaign.completed_seconds / campaign.duration_seconds);
-      self.c = campaign;
-      renderCampaign(campaign);
-      map.boost.load(campaign.shape_list);
-      map.boost.fit();
+      var e = Engine({
+        container: document.querySelector('#campaign-preview')
+      })
+      e.AddJob({url: json[0].asset});
+      _preview.AddJob({url: json[0].asset});
+      e.Start();
+      _preview.Start();
+      renderCampaign(json[0]);
+      handleUploads(json[0].asset)
     })
     .catch(e => console.log('error fetching screens', e));
-
+  document
+    .getElementById('campaign-budget')
+    .addEventListener('change', calcItems);
+  document
+    .getElementById('campaign-budget')
+    .addEventListener('keyup', calcItems);
+  document
+    .querySelector('.jqs-table tbody')
+    .addEventListener('mouseup', calcItems);
 })();
 

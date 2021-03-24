@@ -1,4 +1,6 @@
 RewriteEngine On
 RewriteBase /
 
-RewriteRule ^buy$ /buy.php [L]
+DirectoryIndex index.html index.php
+Header set Access-Control-Allow-Origin "*"
+RewriteRule "v/(.*)$" "dsp/viewer.php?id=$1" [L]

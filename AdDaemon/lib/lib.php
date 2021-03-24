@@ -7,6 +7,8 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 $mypath = $_SERVER['DOCUMENT_ROOT'] . 'AdDaemon/lib/';
 include_once($mypath . 'db.php');
+include_once($mypath . 'hoard.php');
+include_once($mypath . 'secrets.php');
 $JEMIT_REQ = '';
 $JEMIT_EXT = '';
 
@@ -30,6 +32,10 @@ $DEFAULT_CAMPAIGN_MAP = [
 // Play time in seconds of one ad.
 $PLAYTIME = 7.5;
 
+function _e($what, $obj) {
+  error_log($what . ' :: ' . json_encode($obj));
+}
+
 function curldo($url, $params = false, $opts = []) {
   $verb = strtoupper(isset($opts['verb']) ? $opts['verb'] : 'GET');
 
@@ -37,6 +43,10 @@ function curldo($url, $params = false, $opts = []) {
 
   $header = [];
     
+  if(isset($opts['header'])) {
+    $header[] = $opts['header'];
+  }
+
   if($verb !== 'GET') {
     if(!isset($opts['isFile'])) {
       if(!$params) {
@@ -53,6 +63,8 @@ function curldo($url, $params = false, $opts = []) {
     }
     curl_setopt($ch, CURLOPT_POSTFIELDS, $params);  
     // $header[] = 'Content-Length: ' . strlen($data_string);
+  } else if (!empty($params)) {
+    $url = implode('?', [$url, http_build_query($params)]);
   }
 
   if($verb === 'POST') {
@@ -77,11 +89,11 @@ function curldo($url, $params = false, $opts = []) {
       'header' => $header,
       'url' => $url,
       'params' => $params,
-      'res' => $res
     ]);
     //var_dump(['>>>', curl_getinfo ($ch), json_decode($tolog, true)]);
 
     error_log($tolog);
+    error_log(":: response => " . $res);
   }
 
   if(isset($opts['raw'])) {
@@ -255,20 +267,22 @@ function distance($pos1, $pos2) {
 function create_screen($uid, $data = []) {
   global $PORT_OFFSET;
   // we need to get the next available port number
-  $nextport = intval((db_connect())->querySingle('select max(port) from screen')) + 1;
-  if($nextport < $PORT_OFFSET) {
-    // gotta start from somewhere.
-    $nextport = $PORT_OFFSET;
+  if(!isset($data['port'])) {
+    $nextport = intval((db_connect())->querySingle('select max(port) from screen')) + 1;
+    if($nextport < $PORT_OFFSET) {
+      // gotta start from somewhere.
+      $nextport = $PORT_OFFSET;
+    }
+    $data['port'] = $nextport;
   }
 
   $data = array_merge($data, [
-    'uid' => db_string($uid),
-    'port' => $nextport,
+    'uid' => $uid,
     'first_seen' => 'current_timestamp',
     'last_seen' => 'current_timestamp'
   ]);
 
-  $screen_id = db_insert('screen', $data);
+  $screen_id = pdo_insert('screen', $data);
 
   return Get::screen($screen_id);
 }
@@ -431,7 +445,8 @@ function default_campaign($screen) {
   global $DEFAULT_CAMPAIGN_MAP, $screen_dbg_id;
   $id = $DEFAULT_CAMPAIGN_MAP['none'];
   if($screen['project']) {
-    $id = $DEFAULT_CAMPAIGN_MAP[$screen['project']];
+    error_log(json_encode($screen));
+    $id = aget($DEFAULT_CAMPAIGN_MAP,$screen['project'],3);
   }
   if($screen['uid'] == $screen_dbg_id) {
     error_log("Default campaign >> " . $screen['project'] . ' ' .$id);
@@ -509,7 +524,7 @@ function ping($payload) {
     'location', 'location.Lat', 'location.Lng',        // >v0.3-Chukwa-473-g725fa2c
     'last_uptime', 'last_task_result',                 // >v0.3-Chukwa-1316-g3b791be5-master
     'bootcount',
-    'modem.imsi', 'modem.icc'
+    'modem.imsi', 'modem.icc', 'hoard_id', 'uid'
   ] as $key) {
     $val = aget($payload, $key);
 
@@ -520,16 +535,22 @@ function ping($payload) {
     }
   }
 
+  //
+  // This is for supporting 3rd party screens, essentially
+  // a bootstrap process.
+  if(isset($obj['hoard_id'])) {
+    $obj = hoard_discover($obj);
+  }
 
-  if(isset($payload['uid'])) {
-    $screen = Get::screen(['uid' => $payload['uid']]);
+  if(isset($obj['uid'])) {
+    $screen = Get::screen(['uid' => $obj['uid']]);
 
-    if(!isset($payload['uptime'])) {
-      error_log("Uptime not known for " . $payload['uid']);
+    if(!isset($obj['uptime'])) {
+      error_log("Uptime not known for " . $obj['uid']);
     }
     if($screen) {
-      if(isset($payload['uptime']) && intval($screen['uptime']) > intval($payload['uptime'])) {
-        record_screen_on($screen, $payload);
+      if(isset($obj['uptime']) && intval($screen['uptime']) > intval($obj['uptime'])) {
+        record_screen_on($screen, $obj);
       }
       //
       // If we are getting a bootcount from the screen that is less then what we
@@ -540,7 +561,7 @@ function ping($payload) {
       }
     }
 
-    $screen = upsert_screen($payload['uid'], $obj);
+    $screen = upsert_screen($obj['uid'], $obj);
     //
     // After this point we know that $screen is valid.
     // 
@@ -550,7 +571,7 @@ function ping($payload) {
     //
 
     if(isset($obj['last_uptime'])) {
-      $bc = intval($payload['bootcount']) - 1;
+      $bc = intval($obj['bootcount']) - 1;
       $opts = [
         'screen_id' => $screen['id'],
         'bootcount' => $bc
@@ -805,16 +826,22 @@ function sow($payload) {
   
   // If we are told to run specific campaigns
   // then we do that.
-  $candidate_campaigns = show('screen_campaign', ['screen_id' => $screen['id']]);
+
+  // SPECIAL CAMPAIGN TO SCREEN ASSIGNMENT
+  // {
+    $candidate_campaigns = show('screen_campaign', ['screen_id' => $screen['id']]);
+  // }
+  //
 
   if(empty($candidate_campaigns)) {
     // If we have no campaigns to show then we 
     // start with all active campaigns.
     $candidate_campaigns = active_campaigns($screen);
+    _e('active', $candidate_campaigns);
 
     // If we know where we are then we can see if some are more
     // important than others.
-    if($payload['lat']) {
+    if(!empty($payload['lat'])) {
       $test = [floatval($payload['lng']), floatval($payload['lat'])];
 
       $inside_campaigns = array_filter($candidate_campaigns, function($campaign) use ($test) {
@@ -839,6 +866,7 @@ function sow($payload) {
     }
   }
 
+  
   // If we aren't in boost mode then we should *probably* try to spread out the completion over
   // the time allotted. The current method of doing this is through thresholds.
   if(!$boost_mode) {
@@ -977,7 +1005,7 @@ function show($what, $clause = []) {
   //error_log(json_encode($_SESSION));
   if($me) {
     $schema = $SCHEMA[$what];
-    if($me['organization_id'] && isset($schema['organization_id'])) {
+    if(aget($me, 'organization_id') && isset($schema['organization_id'])) {
       $where['organization_id'] = $me['organization_id'];
     }
   }
@@ -1010,12 +1038,12 @@ function make_infinite($campaign_id) {
 }
 
 function active_campaigns($screen) {
-  //  end_time > current_timestamp     and 
   //return [];
+  //  and   project = '${screen['project']}'
   return show('campaign', "where 
           is_default = 0 
+    and   end_time > current_timestamp    
     and   completed_seconds < goal_seconds 
-    and   project = '${screen['project']}'
     order by start_time desc");
 }
 
@@ -1125,6 +1153,7 @@ function get_fields($what, $which) {
 // of creating this
 function campaign_create($data, $fileList, $user = false) {
   global $DAY, $PLAYTIME;
+  error_log(json_encode($data, JSON_PRETTY_PRINT));
 
   $duration_seconds = 0;
 
@@ -1139,6 +1168,8 @@ function campaign_create($data, $fileList, $user = false) {
     // sure that legacy installs don't crash
     'asset' => [],
     'asset_meta' => [],
+    'state' => 'ACTIVE',
+    'user_id' => aget($user, 'id') ?: get_user_id()
   ]);
 
   $extractList = [
@@ -1153,8 +1184,12 @@ function campaign_create($data, $fileList, $user = false) {
       $props[$key] = $data[$key];
     }
   }
+  $assetList = aget($data, 'asset', []);
+  if(is_string($assetList)) {
+    $assetList = [['url' => $assetList]];
+  }
 
-  foreach(aget($data, 'asset', []) as $asset) {
+  foreach($assetList as $asset) {
     $asset['duration'] = aget($asset, 'duration', $PLAYTIME);
     $props['asset_meta'][] = $asset;
     $duration_seconds += $asset['duration'];
@@ -1186,11 +1221,15 @@ function campaign_create($data, $fileList, $user = false) {
   }
   $data['phone'] = $candidate;
 
-  // See if we can extract a user out of this.
+  user_update($data);
+  /*
+  $props['user_id'] = aget($_SESSION, 'user.id');
+
   $user = upsert_user(get_fields($data, ['name','email','phone']));
   if($user) {
     $props['user_id'] = $user['id'];
   }
+   */
 
   $purchase_id = pdo_insert('purchase', get_fields($data, ['card_id','user_id','charge_id','amount']));
 
@@ -1201,7 +1240,7 @@ function campaign_create($data, $fileList, $user = false) {
   if($campaign_id) {
     pdo_update('purchase', $purchase_id, ['campaign_id' => $campaign_id]);
     $res = notify_if_needed(Get::campaign($campaign_id), 'receipt');
-    error_log(json_encode($res, JSON_PRETTY_PRINT));
+    error_log(json_encode($res));
   }
 
   return $campaign_id;
@@ -1494,5 +1533,46 @@ function slackie($where, $what) {
     ['channel' => $where, 'text' => $what],
     ['verb' => 'post', 'json' => true]
   );
+}
+
+function compact_uuid() {
+  $b16 = str_replace('-', '', Uuid::uuid4()->toString());
+  return str_replace(['+','/','='], ['-','_',''], base64_encode(hex2bin($b16)));
+}
+
+function _yelp_get($ep) {
+  global $secrets;
+  return curldo('http://9ol.es/proxy.php', [
+    'u' => "https://api.yelp.com/v3/businesses/$ep",
+    'h' => "Authorization: Bearer {$secrets['yelp']['api_key']}"
+  ]);
+}
+
+function yelp_search($all) {
+  return _yelp_get("search?term={$all['query']}&longitude={$all['longitude']}&latitude={$all['latitude']}");
+}
+
+function yelp_save($all) {
+  $user_id = aget($_SESSION, 'user.id');
+  $condition = [
+    'service' => 'yelp',
+    'service_user_id' => $all['id']
+  ];
+
+  if($user_id) {
+    $condition['user_id'] = $user_id;
+  }
+
+  $res = pdo_upsert('service', $condition, [
+    'data' => [
+      'info' => _yelp_get($all['id']),
+      'reviews' => _yelp_get("{$all['id']}/reviews")
+    ]
+  ]);
+  $res = Get::service([
+    'service' => 'yelp',
+    'service_user_id' => $all['id']
+  ]);
+  return $res['id'];
 }
 

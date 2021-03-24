@@ -1,6 +1,10 @@
 <?
 include('../AdDaemon/lib/lib.php');
 include('lib.php');
+include('../AdDaemon/lib/accounting.php');
+
+require_authorized_user();
+
 $DAY = 60 * 60 * 24;
 
 $carMap = [];
@@ -130,7 +134,12 @@ $props = [
     'order' => function($value, $row) {
       $base = substr($value, 3);
       $parts = explode('-', $base);
-      return intval($parts[0]) * 10000 + intval($parts[2]);
+      $sec = 0;
+      if(count($parts) > 2) {
+        $sec = intval($parts[2]);      
+      }
+
+      return intval($parts[0]) * 10000 + $sec;
     }
   ],
   'last' => [ 

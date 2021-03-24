@@ -1,8 +1,11 @@
 <?
 $handlerList = [];
 
+include('secrets.php');
 include('lib.php');
+// this has a session start in it
 include('accounting.php');
+include('dsp.php');
 
 $full_func = $_REQUEST['_VxiXw3BaQ4WAQClBoAsNTg_func'];
 unset($_REQUEST['_VxiXw3BaQ4WAQClBoAsNTg_func']);
@@ -24,12 +27,18 @@ $all = $_REQUEST;
 if($json_payload) {
   $all = array_merge($all, $json_payload);
 } 
+foreach($all as $k => $v) {
+  if($v === 'null') {
+    $all[$k] = null;
+  }
+}
 
 function post_return($res) {
   if(isset($_GET['next'])) {
     header('Location: ' . $_GET['next']);
     exit;
   } 
+  header('Content-type: application/json');
   jemit($res);
 }
 
@@ -41,26 +50,43 @@ try {
   } else if($func == 'location' && $verb == 'GET') {
     echo(file_get_contents('http://basic.waivecar.com/location.php?' . http_build_query($all)) );
   } else if($func == 'instagram') {
-    session_start();
-    if(isset($all['code'])) {
-      $token = curldo('https://api.instagram.com/oauth/access_token', [
-        'client_id' => 'c49374cafc69431b945521bce7601840',
-        'client_secret' => '5f90ebdda3524895bfa9f636262c8a26',
-        'grant_type' => 'authorization_code',
-        'redirect_uri' => 'http://staging.waivescreen.com/api/instagram',
-        'code' => $all['code']
-      ], ['verb' => 'POST']);
+    if(isset($all['debug'])) {
+      var_dump(insta_get_stuff('kristopolous'));
+    }
+    else if(isset($all['code'])) {
+      $token = curldo('https://api.instagram.com/oauth/access_token', array_merge(
+        $secrets['instagram'], [
+          'grant_type' => 'authorization_code',
+          'code' => $all['code']
+        ]), ['verb' => 'POST']);
       $_SESSION['instagram'] = $token;
+
+      $userInfo = curldo('https://graph.instagram.com/me', [
+        'fields' => 'id,username',
+        'access_token' => $token['access_token']
+      ]);
+      $_SESSION['instagram.userInfo'] = $userInfo;
+
+      // instagram is profoundly fucking stupid under fb management.
+      // TODO: They stored the user_id as a number! so you'll get IEEE floating
+      // point errors without careful audits. We undo that stupidity here.
+      $scraped = insta_get_stuff($userInfo['username']);
+      $_SESSION['instagram.scraped'] = $scraped;
+
+      $profile_data = array_merge(
+        $scraped, 
+        [ 'user_id' => strval($token['user_id']) ],
+        $userInfo
+      );
 
       $user_id = find_or_create_user([
         'service' => 'instagram',
-        'service_user_id' => aget($token, 'user.id'),
-        'username' => aget($token, 'user.username')
+        'service_user_id' => aget($token, 'user_id'),
+        'username' => aget($userInfo, 'username')
       ], [
+        //'uuid' => $_SESSION['uid'],
         'token' => $token['access_token'],
-        'data' => [
-          'user' => $token['user']
-        ]
+        'data' => ['user' => $profile_data]
       ]);
 
       login_as($user_id);
@@ -70,17 +96,31 @@ try {
       unset( $_SESSION['instagram'] );
       header('Location: /campaigns/create');
     } else if(isset($all['info'])) {
+      //
+      // TODO: fix after demo:
+      // the instagram access token is only good for like an hour.
+      //
       $token = aget($_SESSION, 'instagram.access_token');
       if($token) {
-        $info = [
-          'posts' => json_decode(file_get_contents("https://api.instagram.com/v1/users/self/media/recent/?access_token=$token&count=18"), true)
-        ];
-        $service = Get::service(['token' => $token]);
-        $service['data']['posts'] = $info['posts'];
-        pdo_update('service', $service['id'], ['data' => $service['data']]);
+        $service = Get::service([
+          'service' => 'instagram',
+          'user_id' => aget($_SESSION, 'user.id')
+        ]);
 
-        $_SESSION['instagram.posts'] = $info;
-        jemit(doSuccess($info['posts']));
+        $fields = 'timestamp,media_url,media_type';
+        $url = "https://graph.instagram.com/me/media?fields=$fields&access_token=$token";
+        $raw = file_get_contents($url);
+        if($raw) {
+          $service['data']['posts'] = json_decode($raw, true);
+          pdo_update('service', $service['id'], [
+            'user_id' => aget($_SESSION, 'user.id'),
+            'data' => $service['data']
+          ]);
+        }
+
+        $_SESSION['instagram.posts'] = $service['data']['posts'];
+        jemit(doSuccess($service));
+         
       } else {
         jemit(doError("login needed"));
       }
@@ -101,12 +141,13 @@ try {
   }
   else if($func == 'screens' && ($verb == 'POST' || $verb == 'PUT')) {
     jemit(screen_edit($all));
+    // these are essentially resources with CRUD interfaces
   } else if(array_search($func, [
     'services', 
     'purchases', 
     'users', 
     'jobs', 
-    'sensor_history', 
+    'sensor_data', 
     'template_config',
     'campaigns', 
     'screens', 
@@ -120,6 +161,11 @@ try {
 
     if($verb == 'POST' || $verb == 'PUT') {
       $action = 'create';
+      error_log(json_encode([$verb, $func, $all]));
+      if(!isset($all['screen_id']) && $func == 'sensor_data') {
+        $all['screen_id'] = $_SERVER['HTTP_USER_AGENT'];
+      }
+
     } 
     post_return($action($table, $all));
   }
@@ -127,9 +173,12 @@ try {
     'me',
     'login',
     'logout',
+    'sess',
+    'yelp_search',
+    'yelp_save',
+    'my_campaigns',
     'signup',
   ]) !== false) { 
-    session_start();
     post_return($func($all, $verb));
   } else if(array_search($func, [
     'active_campaigns', 
@@ -152,6 +201,11 @@ try {
     'most_recent',
     'provides',
     'task_dump',
+    'dsp_signup',
+    'dsp_create',
+    'dsp_default',
+    'dsp_ping',
+    'dsp_sow',
   ]) !== false) { 
     post_return($func($all, $verb));
   } else {

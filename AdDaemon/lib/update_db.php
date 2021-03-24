@@ -5,6 +5,7 @@ include_once('db.php');
 
 $db = db_connect();
 
+echo "Using $DBPATH";
 $did_backup = false;
 function backup_if_needed() {
   global $did_backup, $DBPATH;

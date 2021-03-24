@@ -29,7 +29,7 @@ window.map = function(opts) {
     move: false,
     // the dom id to attach the map to
     target: 'map',
-    // the default center point
+    // the default center point (lng, lat)
     center: [-118.3, 34.02],
     // the default zoom level
     zoom: 13,
