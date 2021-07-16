@@ -20,7 +20,7 @@ $id = $_GET['id'];
   position: absolute;
   top: 0; 
   left: 0;
-  height: 35.1vw;
+  height: 100vh;
   overflow: hidden;
 }
 #blur img {
@@ -29,6 +29,7 @@ $id = $_GET['id'];
   height: 70.2vw;
   opacity: 0.05;
   border-radius: 500vw;
+  
 }
 body { 
   background: #fff;
@@ -59,7 +60,7 @@ h3 {
   font-weight: 300;
 }
 #wrap {
-  height: 35.1vw;
+  height: 100%;
   position: relative;
   overflow: hidden;
 }
@@ -76,7 +77,7 @@ h3 {
 }
 .row img {
   object-fit: cover;
-  max-height: calc(35.1vw + 1vw);
+  max-height: 100vh;
   min-height: calc(35.1vw);
 }
 img.fill {
@@ -86,7 +87,7 @@ img.fill {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  height: 35.1vw;
+  height: 100vh;
   width: calc(100% - 2 * 34.6vw);
   transition-timing-function: ease;
   animation-name: logo;
@@ -121,7 +122,7 @@ img.fill {
   justify-content: space-around;
   box-shadow: 0 0.1vw 0.4vw 0vw rgba(0,0,0,0.25);
   border-radius: 2vw;
-  height: calc(35.1vw - 2vw);
+  height: calc(100vh - 2vw);
   width: calc(35.1vw - 2vw);
   margin: 1vw 0;
   overflow: hidden
@@ -143,18 +144,18 @@ img.fill {
   90%,100% { margin-left: 33% }
 }
 @keyframes slideup {
-  0% { transform: translateY(36.1vw); opacity: 0 }
+  0% { transform: translateY(calc(100vh + 1.1vw)); opacity: 0 }
   10%,23% { transform: translateY(0); opacity: 1 }
-  36%,50% { transform: translateY(-35.1vw) }
-  63%,77% { transform: translateY(calc(-35.1vw * 2)); opacity: 1 }
-  90%,100% { transform: translateY(calc(-35.1vw * 3)); opacity: 0 }
+  36%,50% { transform: translateY(-100vh) }
+  63%,77% { transform: translateY(calc(-100vh * 2)); opacity: 1 }
+  90%,100% { transform: translateY(calc(-100vh * 3)); opacity: 0 }
 }
 @keyframes slidedown {
-  from { transform: translateY(-35.1vw); opacity: 0 }
+  from { transform: translateY(-100vh); opacity: 0 }
   10%,23% { transform: translateY(0); opacity: 1 }
-  36%,50% { transform: translateY(35.1vw) }
-  63%,77% { transform: translateY(calc(35.1vw * 2)); opacity: 1 }
-  90%,100% { transform: translateY(calc(35.1vw * 3)); opacity: 0 }
+  36%,50% { transform: translateY(100vh) }
+  63%,77% { transform: translateY(calc(100vh * 2)); opacity: 1 }
+  90%,100% { transform: translateY(calc(100vh * 3)); opacity: 0 }
 }
 </style>
 <body>

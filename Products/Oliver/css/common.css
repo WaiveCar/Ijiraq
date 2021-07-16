@@ -548,3 +548,15 @@ select.form-control:focus,
 h1,h2,h3,h4,h5,h6 {
   color: #3F536D
 }
+.main {
+  min-height:75vh;
+}
+.preview-holder {
+  width: 100%;
+}
+  .controls { 
+    padding: 10px;
+    background: #334;
+    padding-bottom: 3px;
+    border-radius: 0 0 6px 6px;
+  }
