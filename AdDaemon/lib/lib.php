@@ -26,7 +26,8 @@ $DEFAULT_CAMPAIGN_MAP = [
   'LA' => 1,
   'NY' => 2,
   'dev' => 3,
-  'Oliver' => 79
+  'Oliver' => 79,
+  'ReefWeWorkMiami' => 128
 ];
 
 // Play time in seconds of one ad.
@@ -107,7 +108,7 @@ function curldo($url, $params = false, $opts = []) {
 }
 function upload_s3($file) {
   // lol we deploy this line of code with every screen. what awesome.
-  $credentials = new Aws\Credentials\Credentials('AKIAIL6YHEU5IWFSHELQ', 'q7Opcl3BSveH8TU9MR1W27pWuczhy16DqRg3asAd');
+  $credentials = new Aws\Credentials\Credentials('AKIA53KCVRAKH2BLUZ5E', 'u2t6XNh111iSz8aBQ6uqk8LFiFW1f/GqM5btuYhp');
 
   // this means there was an error uploading the file
   // currently we'll let this routine fail and then hit
@@ -364,6 +365,7 @@ function upsert_screen($screen_uid, $payload) {
     $data['last_loc'] = 'current_timestamp';
   }
 
+  error_log(json_encode($data));
   pdo_update('screen', ['uid' => $screen_uid], $data);
 
   return array_merge($screen, $data);

@@ -3,7 +3,7 @@ include('../AdDaemon/lib/lib.php');
 include('lib.php');
 include('../AdDaemon/lib/accounting.php');
 
-require_authorized_user();
+//require_authorized_user();
 
 $DAY = 60 * 60 * 24;
 
@@ -100,7 +100,8 @@ $PROJECT_LIST = [
   'dev' => 'dev',
   'Amazon' => 'CES/Amazon',
   'CES' => 'CES/Oliver',
-  'Oliver' => 'Oliver'
+  'Oliver' => 'Oliver',
+  'ReefWeWorkMiami' => 'ReefWeWorkMiami'
 ];
 $MODEL_LIST = [
   '' => 'none',

@@ -760,8 +760,6 @@ $SCHEMA = [
     'created_at' => 'datetime default current_timestamp',
   ],
 
-
-
  */
 $_db = false;
 $_pdo = false;
@@ -856,6 +854,14 @@ function unflag($campaign, $what) {
 
 function _pdo_query($qstr, $values, $func='execute') {
   $pdo = pdo_connect();
+  // current_timestamp doesn't seem to be working so
+  // we swap it out with what we think is working
+  for($ix = 0; $ix < count($values); $ix++) {
+    if($values[$ix] === 'current_timestamp') {
+      $values[$ix] =  date('Y-m-d H:i:s');
+    }
+  }
+
   try {
     return $pdo->prepare($qstr)->execute($values);
   } catch (\PDOException $e) {

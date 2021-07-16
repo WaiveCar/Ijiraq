@@ -3,7 +3,7 @@ include('../AdDaemon/lib/lib.php');
 include('lib.php');
 include('../AdDaemon/lib/accounting.php');
 
-require_authorized_user();
+//require_authorized_user();
 
 $campaignList = get('campaigns', $_GET);
 $addrList = get_addressList(array_map(function($row) { 
