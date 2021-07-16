@@ -2,7 +2,11 @@
 date_default_timezone_set('UTC');
 use Ramsey\Uuid\Uuid;
 
-$DBPATH = "/var/db/waivescreen/main.db";
+if(isset($MYDB)) {
+  $DBPATH = "/var/db/waivescreen/$MYDB";
+} else {
+  $DBPATH = "/var/db/waivescreen/main.db";
+}
 $JSON = [
   'pre' => function($v, $ignore, $type) { 
     if ($v === null) { return $v; } 

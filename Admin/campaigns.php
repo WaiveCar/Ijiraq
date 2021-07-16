@@ -1,4 +1,9 @@
 <?
+if(isset($_GET['db'])) {
+  $MYDB = $_GET['db'];
+  unset($_GET['db']);
+} 
+
 include('../AdDaemon/lib/lib.php');
 include('lib.php');
 include('../AdDaemon/lib/accounting.php');
