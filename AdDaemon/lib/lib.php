@@ -1578,3 +1578,6 @@ function yelp_save($all) {
   return $res['id'];
 }
 
+function proxy($all) {
+  echo file_get_contents($all['url']);
+}

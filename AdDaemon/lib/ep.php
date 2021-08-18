@@ -200,6 +200,7 @@ try {
     'tag', 
     'most_recent',
     'provides',
+    'proxy',
     'task_dump',
     'dsp_signup',
     'dsp_create',
