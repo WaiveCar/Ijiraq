@@ -23,6 +23,10 @@ function template(opts) {
     console.log(orderList);
   }
 
+  function proxy(url) {
+    return '/api/proxy?url=' + encodeURIComponent(url);
+  }
+
   function assign(node, value, key, ix) {
     if(key in _res.custom) {
       return _res.custom[key](node, value, key, ix);
@@ -34,7 +38,7 @@ function template(opts) {
     let is_url = value.match(/^https?:\/\//i);
     if(node.tagName === 'IMG') {
       if(is_url) {
-        node.src = value;
+        node.src = proxy(value);
       }
     } else {
       node.innerHTML = value;
