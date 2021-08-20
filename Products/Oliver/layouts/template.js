@@ -1,3 +1,34 @@
+// The cliff for the browser compatibility of this code is 7 years ago from now.
+if (typeof Object.assign !== 'function') {
+  // Must be writable: true, enumerable: false, configurable: true
+  Object.defineProperty(Object, "assign", {
+    value: function assign(target, varArgs) { // .length of function is 2
+      'use strict';
+      if (target === null || target === undefined) {
+        throw new TypeError('Cannot convert undefined or null to object');
+      }
+
+      var to = Object(target);
+
+      for (var index = 1; index < arguments.length; index++) {
+        var nextSource = arguments[index];
+
+        if (nextSource !== null && nextSource !== undefined) {
+          for (var nextKey in nextSource) {
+            // Avoid bugs when hasOwnProperty is shadowed
+            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+              to[nextKey] = nextSource[nextKey];
+            }
+          }
+        }
+      }
+      return to;
+    },
+    writable: true,
+    configurable: true
+  });
+}
+
 function template(opts) {
   var
     _res = Object.assign({
@@ -15,10 +46,14 @@ function template(opts) {
     }, opts || {});
 
   var 
-    exclude_list = new Set(['created_at','id']), 
+    exclude_list = ['created_at','id'], 
     orderList = false;
 
-  let obj2kvargs = params => Object.keys(params).map(key => key + '=' + params[key]).join('&');
+  let obj2kvargs = function(params){
+    return Object.keys(params).map(function(key){
+      return key + '=' + params[key];
+    }).join('&');
+  }
 
   if(_res.all.order) {
     orderList = _res.all.order.split(',');
@@ -46,8 +81,12 @@ function template(opts) {
   function reorder(data) {
     if(orderList) {
       var lookup = {};
-      data.photoList.forEach(row => lookup[row.id] = row);
-      data.photoList = orderList.map(row => lookup[row]);
+      data.photoList.forEach(function(row) {
+        return lookup[row.id] = row;
+      });
+      data.photoList = orderList.map(function(row) {  
+        return lookup[row];
+      });
     }
     return data;
   }
@@ -56,9 +95,11 @@ function template(opts) {
     data = reorder(data);
 
     _res._last_data = data;
-    let list = Object.keys(data).filter(x => !exclude_list.has(x));
+    let list = Object.keys(data).filter(function(x) {
+      return !(x in exclude_list);
+    });
     for (let key of list) {
-      let matchList = document.querySelectorAll(`.tpl-${key}`);
+      let matchList = document.querySelectorAll(".tpl-" + key);
 
       if(!matchList.length && key in _res.custom) { 
         _res.custom[key](null, data[key], key);
@@ -83,7 +124,9 @@ function template(opts) {
 
   function remote() {
     fetch([_res.server, obj2kvargs(_res.all)].join('?'))
-      .then(response => response.json())
+      .then(function(response) {
+        return response.json();
+      })
       .then(parser)
   }
   
@@ -103,7 +146,7 @@ function template(opts) {
   return _res;
 }
 template.assign = function(el, value) {
-  let matchList = document.querySelector(`.tpl-${el}`);
+  let matchList = document.querySelector('.tpl-' + el);
   if(matchList) {
     matchList.innerHTML = value;
   }
