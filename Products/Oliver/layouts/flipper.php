@@ -191,8 +191,9 @@ let tpl = template({
   custom: {
     photoList: function (node, value, key, ix) {
       let custom = document.getElementById('custom');
+      template.assign('bigtext', value[0].text);
       if(value.length) {
-        custom.innerHTML = '.front { background-image: url("' + value[0].url + '") }';
+        custom.innerHTML = '.front { background-image: url("' + template.proxy(value[0].url) + '") }';
       }
     }
   }
@@ -200,7 +201,11 @@ let tpl = template({
 
 function changer() {
   setTimeout(function() {
-    $(`.front`).css('background-image', 'url(' + _data.photoList[ix % _data.photoList.length].url + ')');
+    $(`.front`).css('background-image', 'url(' + template.proxy(_data.photoList[ix % _data.photoList.length].url) + ')');
+    let text = _data.photoList[ix % _data.photoList.length].text;
+    if(text) {
+      template.assign('bigtext', text.slice(0,100));
+    }
     ix += 1;
   }, dur * 1000 * .87);
 }
