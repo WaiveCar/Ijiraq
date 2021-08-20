@@ -221,7 +221,9 @@ function instaGet() {
           }
           row = [];
         }
-        let id = post.id, img = post.url;
+        let 
+          id = post.id, 
+          img = post.media_url;
 
         row.push(`<div class='box' data-standard='${id}'><img src=${img}></div>`);
 

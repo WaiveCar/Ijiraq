@@ -18,6 +18,8 @@ function template(opts) {
     exclude_list = new Set(['created_at','id']), 
     orderList = false;
 
+  let obj2kvargs = params => Object.keys(params).map(key => key + '=' + params[key]).join('&');
+
   if(_res.all.order) {
     orderList = _res.all.order.split(',');
     console.log(orderList);
@@ -80,7 +82,7 @@ function template(opts) {
   }
 
   function remote() {
-    fetch(`${_res.server}?user_id=${_res.id}`)
+    fetch([_res.server, obj2kvargs(_res.all)].join('?'))
       .then(response => response.json())
       .then(parser)
   }
@@ -88,7 +90,7 @@ function template(opts) {
   function load() {
     if(_res.data){
       parser(_res.data);
-    } else if(_res.id && _res.server) {
+    } else if((_res.id || _res.all.username) && _res.server) {
       remote();
     } else {
       console.log("woah partner, I need either data or id + server");
