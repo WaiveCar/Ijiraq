@@ -1,5 +1,5 @@
 <?php
-$id = $_GET['id'];
+$id = $_GET['id'] ?? 'false';
 ?>
 <!--
 there's two ways
@@ -85,7 +85,7 @@ div#bigtext {
 </style>
 <div id=ad>
   <div id=lhs>
-    <div id=bigtext class=tpl-bigtext>Please connect Yelp</div>
+    <!--<div id=bigtext class=tpl-bigtext>Please connect Yelp</div>-->
     <div id=smalltext class=tpl-description>Please connect Yelp</div>
   </div><div id=image>
     <img data-index="0" class='tpl-photoList'>

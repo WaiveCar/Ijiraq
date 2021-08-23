@@ -8,8 +8,13 @@ $secrets = [
     'client_id' => 466908264229772,
     'client_secret' => '1c0905d6190a9425b895cd57ef02ed11',
   ],
-
   'instagram' => [
+    'client_id' => '848680782447109',
+    'client_secret' => 'bf9a01b57b0172aadc72fb439e35dc66',
+    'redirect_uri' => 'https://olvr.io/api/instagram'
+  ]
+
+  'instagram_old' => [
     'client_id' => '339058577323741',
     'client_secret' => 'a18537ee40c2699f5685c8fa891e1975',
     'redirect_uri' => 'https://olvr.io/api/instagram'

@@ -158,6 +158,10 @@ function yelpshow(){
   $("#yelp-search-input").focus();
 }
 
+function proxy (url) {
+  return '/api/proxy?url=' + encodeURIComponent(url);
+}
+
 function instaGet() {
   var Gen = self.instaregen = function() {
     $(".insta .selector").remove();
@@ -204,7 +208,7 @@ function instaGet() {
     let posts = res.data.posts;
     if (user) {
 
-      $('.insta .profile img').attr('src', user.profile_pic);
+      $('.insta .profile img').attr('src', proxy(user.profile_pic));
       $('.insta .info .name').html( user.username );
       $('.insta .info .description').html( user.full_name );
       let ix = 0;
@@ -217,7 +221,9 @@ function instaGet() {
           }
           row = [];
         }
-        let id = post.id, img = post.media_url;
+        let 
+          id = post.id, 
+          img = post.media_url;
 
         row.push(`<div class='box' data-standard='${id}'><img src=${img}></div>`);
 

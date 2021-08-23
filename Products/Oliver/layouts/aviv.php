@@ -7,7 +7,7 @@
  */
 $dur = $_GET['duration'] ?: 15;
 $loop = $_GET['loop'] ?: 'infinite';
-$id = $_GET['id'];
+$id = $_GET['id'] ?? 'false';
 
 ?>
 <link href=https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap rel=stylesheet>

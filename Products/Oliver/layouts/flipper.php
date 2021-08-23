@@ -1,6 +1,6 @@
 <?php
-$id = $_GET['id'];
-$dur = 4;
+$id = $_GET['id'] ?? 'false';
+$dur = $_GET['duration'] ?? 7.5;
 ?>
 <!--
 there's two ways
@@ -17,6 +17,7 @@ The real one is superior because I believe there is more flexibility maybe? I th
 body {
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 #ad {
   background: #303040;
@@ -92,9 +93,9 @@ div#bigtext div {
   height: 100%;
   font-size: 10vh;
   animation: <?=$dur?>s;
-  animation-timing-function: linear;
-animation-iteration-count: infinite;
   transform-style: preserve-3d;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
   animation-name: flip; 
 }
 .card > div {
@@ -133,7 +134,7 @@ animation-iteration-count: infinite;
     </div>
 
     <div id=bigtext><div class=tpl-bigtext>Please connect Yelp</div></div>
-    <div id=smalltext><div class=tpl-description>Please connect Yelp</div></div>
+    <div id=smalltext><div class=tpl-description></div></div>
     <div id=contact>
       <div>
         <span>@</span><span class=tpl-handle></span>
@@ -159,7 +160,7 @@ animation-iteration-count: infinite;
 </div>
 
 <script src="/js/jquery-3.0.0.min.js"></script>
-<script src=template.js></script>
+<script src=template.js?2></script>
 <script>
 function randy(sz) {
   var
@@ -191,8 +192,9 @@ let tpl = template({
   custom: {
     photoList: function (node, value, key, ix) {
       let custom = document.getElementById('custom');
+      template.assign('bigtext', value[0].text);
       if(value.length) {
-        custom.innerHTML = '.front { background-image: url("' + value[0].url + '") }';
+        custom.innerHTML = '.front { background-image: url("' + template.proxy(value[0].url) + '") }';
       }
     }
   }
@@ -200,7 +202,14 @@ let tpl = template({
 
 function changer() {
   setTimeout(function() {
-    $(`.front`).css('background-image', 'url(' + _data.photoList[ix % _data.photoList.length].url + ')');
+    $(`.front`).css('background-image', 'url(' + template.proxy(_data.photoList[ix % _data.photoList.length].url) + ')');
+    let text = _data.photoList[ix % _data.photoList.length].text;
+    if(text) {
+      if(text.length > 80) {
+        text = text.slice(0,80) + '&hellip;';
+      }
+      template.assign('bigtext', text);
+    }
     ix += 1;
   }, dur * 1000 * .87);
 }
