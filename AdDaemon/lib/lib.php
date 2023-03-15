@@ -108,7 +108,7 @@ function curldo($url, $params = false, $opts = []) {
 }
 function upload_s3($file) {
   // lol we deploy this line of code with every screen. what awesome.
-  $credentials = new Aws\Credentials\Credentials('AKIA53KCVRAKH2BLUZ5E', 'u2t6XNh111iSz8aBQ6uqk8LFiFW1f/GqM5btuYhp');
+  $credentials = new Aws\Credentials\Credentials('', '/');
 
   // this means there was an error uploading the file
   // currently we'll let this routine fail and then hit
